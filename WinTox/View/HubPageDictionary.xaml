@@ -73,6 +73,8 @@
                                                   FontSize="{ThemeResource HubHeaderThemeFontSize}"
                                                   HorizontalAlignment="Stretch"
                                                   OpticalMarginAlignment="TrimSideBearings" TextLineBounds="Tight" />
+                                <!--The whole point of this style is HorizontalAlignment="Stretch", so the Hub header stretches through
+                                     the screen and we are able to put the user info to the right side of it.-->
                             </Border>
                         </Grid>
                     </Border>
