@@ -15,7 +15,7 @@
     </Page.Resources>
 
     <!-- This grid acts as a root panel for the page. -->
-    <Grid Background="{ThemeResource BackgroundColor}">
+    <Grid Background="{StaticResource BackgroundColor}">
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition />
@@ -43,7 +43,7 @@
     </Grid>
 
     <Page.BottomAppBar>
-        <CommandBar Background="{StaticResource AppBarColor}">
+        <CommandBar Background="{StaticResource MainColor}">
             <AppBarButton Label="add friend" Icon="AddFriend" />
             <AppBarButton Label="new gorup chat" Icon="People" />
         </CommandBar>
