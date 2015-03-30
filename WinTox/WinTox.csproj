@@ -106,6 +106,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\StatusToColorConverter.cs" />
     <Compile Include="ViewModel\ToxViewModel.cs" />
     <Compile Include="View\UserControls\FriendTile.xaml.cs">
       <DependentUpon>FriendTile.xaml</DependentUpon>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,13 @@ namespace WinTox.ViewModel {
                     foreach (ToxNode node in _nodes)
                         _tox.Bootstrap(node);
 
+                    _tox.Name = "User";
+                    _tox.StatusMessage = "This is a test.";
+
                     _tox.Start();
+
+                    string id = _tox.Id.ToString();
+                    Debug.WriteLine("ID: {0}", id);
                 }
                 return _tox;
             }

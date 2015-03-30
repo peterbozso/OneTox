@@ -2,6 +2,7 @@
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
+using WinTox.ViewModel;
 
 // The Hub Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=321224
 
@@ -24,6 +25,7 @@ namespace WinTox.View {
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
+            DataContext = ToxViewModel.Instance;
         }
 
         /// <summary>
