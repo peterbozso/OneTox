@@ -153,9 +153,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="SharpTox Portable, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpTox Portable, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharpTox\SharpTox\bin\x64\Debug\SharpTox Portable.dll</HintPath>
+      <HintPath>..\..\SharpTox\SharpTox\bin\x86\Debug\SharpTox Portable.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
