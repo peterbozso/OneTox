@@ -1,0 +1,17 @@
+﻿<UserControl
+    x:Class="WinTox.FriendTile"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinTox"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="150"
+    d:DesignWidth="150">
+    
+    <Grid Width="150" Height="150">
+        <Image Source="/Assets/default-profile-picture.png" Stretch="UniformToFill"/> <!-- TODO: Replace it with an image with proper resolution and implement binding when user picture loading works! -->
+        <Rectangle Height="26" Fill="#7F000000" VerticalAlignment="Bottom"/>
+        <TextBlock VerticalAlignment="Bottom" Margin="6,0,0,0" FontSize="20" FontWeight="Medium" Text="Asd"/>
+    </Grid>
+</UserControl>
