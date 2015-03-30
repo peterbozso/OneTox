@@ -109,8 +109,8 @@
     <Compile Include="View\UserControls\FriendTile.xaml.cs">
       <DependentUpon>FriendTile.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\HubPage.xaml.cs">
-      <DependentUpon>HubPage.xaml</DependentUpon>
+    <Compile Include="View\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
@@ -145,11 +145,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\HubPage.xaml">
+    <Page Include="View\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\HubPageDictionary.xaml">
+    <Page Include="View\MainPageDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

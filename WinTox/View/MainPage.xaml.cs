@@ -9,7 +9,7 @@ namespace WinTox.View {
     /// <summary>
     /// A page that displays a grouped collection of items.
     /// </summary>
-    public sealed partial class HubPage : Page {
+    public sealed partial class MainPage : Page {
         private NavigationHelper navigationHelper;
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace WinTox.View {
             get { return this.navigationHelper; }
         }
 
-        public HubPage() {
+        public MainPage() {
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
