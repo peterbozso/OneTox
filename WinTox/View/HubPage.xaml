@@ -6,6 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:WinTox"
     xmlns:common="using:WinTox.Common"
+    xmlns:userControls="using:WinTox.View.UserControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -31,7 +32,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Image Source="/Assets/tox-logo.jpg" Height="70" HorizontalAlignment="Left" />
-                    <!-- TODO: User's data comes here! -->
+                    <userControls:UserTile Grid.Column="1"/>
                 </Grid>
             </Hub.Header>
             <HubSection Header="friends">
