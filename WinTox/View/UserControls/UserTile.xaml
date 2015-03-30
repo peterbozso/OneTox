@@ -4,11 +4,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:WinTox.View.UserControls"
     xmlns:converters="using:WinTox.Converters"
+    xmlns:viewModel="using:WinTox.ViewModel"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     d:DesignHeight="70"
     d:DesignWidth="250">
+    
+    <UserControl.DataContext>
+        <viewModel:UserViewModel/>
+    </UserControl.DataContext>
     
     <UserControl.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter"/>

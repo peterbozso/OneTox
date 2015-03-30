@@ -25,7 +25,6 @@ namespace WinTox.View {
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
-            DataContext = ToxViewModel.Instance;
         }
 
         /// <summary>
