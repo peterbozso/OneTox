@@ -10,5 +10,6 @@
         <x:String x:Key="AppName">WinTox</x:String>
         <SolidColorBrush x:Key="BackgroundColor" Color="#23221E" />
         <SolidColorBrush x:Key="AppBarColor" Color="#5E7C88" />
+        <SolidColorBrush x:Key="TextColor" Color="#C4D2DF"/>
     </Application.Resources>
 </Application>
