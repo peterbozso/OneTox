@@ -33,7 +33,7 @@ namespace WinTox.ViewModel {
                     (object parameter) => {
                         var flyoutContent = (StackPanel)parameter;
 
-                        var friendIdTextBox = (TextBox)flyoutContent.FindName("FriendID");
+                        var friendIdTextBox = (TextBox)flyoutContent.FindName("FriendId");
                         var friendId = friendIdTextBox.Text;
                         if (friendId == String.Empty) {
                             friendIdTextBox.Focus(FocusState.Programmatic);

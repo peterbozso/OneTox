@@ -44,6 +44,7 @@
 
     <Page.BottomAppBar>
         <CommandBar Background="{StaticResource MainColor}">
+            <!-- TODO: Maybe refactor it out later. -->
             <AppBarButton Label="add friend" Icon="AddFriend" x:Name="AddFriendButton">
                 <AppBarButton.DataContext>
                     <viewModel:AddFriendFlyoutViewModel/>
@@ -51,10 +52,9 @@
                 <AppBarButton.Flyout>
                     <Flyout
                         viewModel:AddFriendFlyoutViewModel.Parent="{Binding ElementName=AddFriendButton}"
-                        viewModel:AddFriendFlyoutViewModel.IsOpen="{Binding IsFlyoutOpen, Mode=TwoWay}"
-                        > <!-- TODO: Maybe refactor it out later. -->
+                        viewModel:AddFriendFlyoutViewModel.IsOpen="{Binding IsFlyoutOpen, Mode=TwoWay}" >
                         <StackPanel Width="400" x:Name="AddFriendFlyoutContent">
-                            <TextBox x:Name="FriendID" Header="Your friend's ID" MaxLength="76" Height="80" TextWrapping="Wrap"/>
+                            <TextBox x:Name="FriendId" Header="Your friend's ID" MaxLength="76" Height="80" TextWrapping="Wrap"/>
                             <TextBox x:Name="InvitationMessage" Header="Invitation message" Height="160" TextWrapping="Wrap" PlaceholderText="Hello! I'd like to add you to my friends list."/>
                             <Button Margin="0,5,0,0" Content="Add" Command="{Binding AddFriendCommand}" CommandParameter="{Binding ElementName=AddFriendFlyoutContent}"/>
                         </StackPanel>
