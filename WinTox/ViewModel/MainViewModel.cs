@@ -17,16 +17,16 @@ namespace WinTox.ViewModel {
                 return _addFriendCommand
                     ?? (_addFriendCommand = new RelayCommand(
                     (object parameter) => {
-                        var content = (StackPanel)parameter;
+                        var flyoutContent = (StackPanel)parameter;
 
-                        var friendIdTextBox = (TextBox)content.FindName("FriendID");
+                        var friendIdTextBox = (TextBox)flyoutContent.FindName("FriendID");
                         var friendId = friendIdTextBox.Text;
                         if (friendId == String.Empty) {
                             friendIdTextBox.Focus(FocusState.Programmatic);
                             return;
                         }
 
-                        var invitationMessage = ((TextBox)content.FindName("InvitationMessage")).Text;
+                        var invitationMessage = ((TextBox)flyoutContent.FindName("InvitationMessage")).Text;
                         if (invitationMessage == String.Empty)
                             invitationMessage = "Hello! I'd like to add you to my friends list.";
 
