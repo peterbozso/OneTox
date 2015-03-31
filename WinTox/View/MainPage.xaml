@@ -51,10 +51,10 @@
         <CommandBar Background="{StaticResource MainColor}">
             <AppBarButton Label="add friend" Icon="AddFriend">
                 <AppBarButton.Flyout>
-                    <Flyout>
+                    <Flyout> <!-- TODO: Maybe refactor it out later. -->
                         <StackPanel Width="400" x:Name="AddFriendFlyoutContent">
                             <TextBox x:Name="FriendID" Header="Your friend's ID" MaxLength="76" Height="80" TextWrapping="Wrap"/>
-                            <TextBox x:Name="InvitationMessage" Header="Invitation message" Height="160" TextWrapping="Wrap" Text="Hello! I'd like to add you to my friends list."/>
+                            <TextBox x:Name="InvitationMessage" Header="Invitation message" Height="160" TextWrapping="Wrap" PlaceholderText="Hello! I'd like to add you to my friends list."/>
                             <Button Margin="0,5,0,0" Content="Add" Command="{Binding AddFriendCommand}" CommandParameter="{Binding ElementName=AddFriendFlyoutContent}"/>
                         </StackPanel>
                     </Flyout>
