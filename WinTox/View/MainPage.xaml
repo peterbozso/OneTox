@@ -50,8 +50,8 @@
                     <viewModel:AddFriendFlyoutViewModel/>
                 </AppBarButton.DataContext>
                 <AppBarButton.Flyout>
-                    <Flyout viewModel:AddFriendFlyoutViewModel.Parent="{Binding ElementName=AddFriendButton}"
-                            viewModel:AddFriendFlyoutViewModel.IsOpen="{Binding IsFlyoutOpen, Mode=TwoWay}" >
+                    <Flyout viewModel:AddFriendFlyoutHelpers.Parent="{Binding ElementName=AddFriendButton}"
+                            viewModel:AddFriendFlyoutHelpers.IsOpen="{Binding IsFlyoutOpen, Mode=TwoWay}" >
                         <StackPanel Width="400" x:Name="AddFriendFlyoutContent">
                             <TextBox x:Name="FriendId" Header="Your friend's ID" MaxLength="76" Height="80" TextWrapping="Wrap"/>
                             <TextBox x:Name="InvitationMessage" Header="Invitation message" Height="160" TextWrapping="Wrap" PlaceholderText="Hello! I'd like to add you to my friends list."/>
