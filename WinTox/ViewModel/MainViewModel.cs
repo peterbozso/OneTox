@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -9,7 +11,17 @@ using SharpTox.Core;
 using WinTox.Common;
 
 namespace WinTox.ViewModel {
-    class MainViewModel {
+    class MainViewModel : INotifyPropertyChanged {
+        private bool _isFlyoutOpen;
+
+        public bool IsFlyoutOpen {
+            get { return _isFlyoutOpen; }
+            set {
+                _isFlyoutOpen = value;
+                OnPropertyChanged();
+            }
+        }
+
         private RelayCommand _addFriendCommand;
 
         public RelayCommand AddFriendCommand {
@@ -33,8 +45,17 @@ namespace WinTox.ViewModel {
                         ToxErrorFriendAdd error;
                         ToxViewModel.Instance.AddFriend(new ToxId(friendId), invitationMessage, out error);
                         // TODO: Handle errors!!!
+
+                        IsFlyoutOpen = false;
                     }));
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
