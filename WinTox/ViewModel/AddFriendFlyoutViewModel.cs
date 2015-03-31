@@ -38,7 +38,8 @@ namespace WinTox.ViewModel {
                             return;
                         }
 
-                        var invitationMessage = ((TextBox)flyoutContent.FindName("InvitationMessage")).Text;
+                        var invitationMessageTextBox = (TextBox) flyoutContent.FindName("InvitationMessage");
+                        var invitationMessage = invitationMessageTextBox.Text;
                         if (invitationMessage == String.Empty)
                             invitationMessage = "Hello! I'd like to add you to my friends list.";
 
@@ -46,6 +47,8 @@ namespace WinTox.ViewModel {
                         ToxViewModel.Instance.AddFriend(new ToxId(friendId), invitationMessage, out error);
                         // TODO: Handle errors!!!
 
+                        friendIdTextBox.Text = String.Empty;
+                        invitationMessageTextBox.Text = String.Empty;
                         IsFlyoutOpen = false;
                     }));
             }
