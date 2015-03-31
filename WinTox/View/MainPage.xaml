@@ -9,10 +9,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
-    <Page.DataContext>
-        <viewModel:MainViewModel/>
-    </Page.DataContext>
     
     <Page.Resources>
         <ResourceDictionary Source="MainPageDictionary.xaml" />
@@ -49,10 +45,13 @@
     <Page.BottomAppBar>
         <CommandBar Background="{StaticResource MainColor}">
             <AppBarButton Label="add friend" Icon="AddFriend" x:Name="AddFriendButton">
+                <AppBarButton.DataContext>
+                    <viewModel:AddFriendFlyoutViewModel/>
+                </AppBarButton.DataContext>
                 <AppBarButton.Flyout>
                     <Flyout
-                        local:FlyoutHelpers.Parent="{Binding ElementName=AddFriendButton}"
-                        local:FlyoutHelpers.IsOpen="{Binding IsFlyoutOpen, Mode=TwoWay}"
+                        viewModel:AddFriendFlyoutViewModel.Parent="{Binding ElementName=AddFriendButton}"
+                        viewModel:AddFriendFlyoutViewModel.IsOpen="{Binding IsFlyoutOpen, Mode=TwoWay}"
                         > <!-- TODO: Maybe refactor it out later. -->
                         <StackPanel Width="400" x:Name="AddFriendFlyoutContent">
                             <TextBox x:Name="FriendID" Header="Your friend's ID" MaxLength="76" Height="80" TextWrapping="Wrap"/>
