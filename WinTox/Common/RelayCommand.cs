@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace WinTox.Common {
@@ -15,6 +11,7 @@ namespace WinTox.Common {
     /// </summary>
     public class RelayCommand : ICommand {
         private readonly Action _execute;
+        private readonly Action<object> _executeWithParameter;
         private readonly Func<bool> _canExecute;
 
         /// <summary>
@@ -27,8 +24,7 @@ namespace WinTox.Common {
         /// </summary>
         /// <param name="execute">The execution logic.</param>
         public RelayCommand(Action execute)
-            : this(execute, null) {
-        }
+            : this(execute, null) {}
 
         /// <summary>
         /// Creates a new command.
@@ -39,6 +35,25 @@ namespace WinTox.Common {
             if (execute == null)
                 throw new ArgumentNullException("execute");
             _execute = execute;
+            _canExecute = canExecute;
+        }
+
+        /// <summary>
+        /// Creates a new command with parameter that can always execute.
+        /// </summary>
+        /// <param name="executeWithParameter">The execution logic.</param>
+        public RelayCommand(Action<object> executeWithParameter)
+            : this(executeWithParameter, null) { }
+
+        /// <summary>
+        /// Creates a new command with parameter.
+        /// </summary>
+        /// <param name="executeWithParameter">The execution logic.</param>
+        /// <param name="canExecute">The execution status logic.</param>
+        public RelayCommand(Action<object> executeWithParameter, Func<bool> canExecute) {
+            if (executeWithParameter == null)
+                throw new ArgumentNullException("executeWithParameter");
+            _executeWithParameter = executeWithParameter;
             _canExecute = canExecute;
         }
 
@@ -60,7 +75,10 @@ namespace WinTox.Common {
         /// Data used by the command. If the command does not require data to be passed, this object can be set to null.
         /// </param>
         public void Execute(object parameter) {
-            _execute();
+            if (_execute != null) // Only one of them can be set thanks to the contructors.
+                _execute();
+            else
+                _executeWithParameter(parameter);
         }
 
         /// <summary>
