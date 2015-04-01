@@ -27,6 +27,8 @@ namespace WinTox.ViewModel {
                     foreach (ToxNode node in _nodes)
                         _tox.Bootstrap(node);
 
+                    _tox.OnFriendRequestReceived += _tox_OnFriendRequestReceived;
+
                     _tox.Name = "User";
                     _tox.StatusMessage = "This is a test.";
 
@@ -36,6 +38,17 @@ namespace WinTox.ViewModel {
                     Debug.WriteLine("ID: {0}", id);
                 }
                 return _tox;
+            }
+        }
+
+        public delegate void FriendRequestReceivedEventHandler(ToxEventArgs.FriendRequestEventArgs e);
+
+        public static event FriendRequestReceivedEventHandler FriendRequestReceived;
+
+        private static void _tox_OnFriendRequestReceived(object sender, ToxEventArgs.FriendRequestEventArgs e) {
+            Debug.WriteLine("Friend request received");
+            if (FriendRequestReceived != null) {
+                FriendRequestReceived(e);
             }
         }
     }

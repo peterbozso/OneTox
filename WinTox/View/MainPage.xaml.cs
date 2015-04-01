@@ -1,8 +1,10 @@
 ﻿using System;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
 using WinTox.ViewModel;
+using SharpTox.Core;
 
 // The Hub Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=321224
 
@@ -25,6 +27,24 @@ namespace WinTox.View {
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
+            ToxViewModel.FriendRequestReceived += ToxViewModel_FriendRequestReceived;
+        }
+
+        private void ToxViewModel_FriendRequestReceived(ToxEventArgs.FriendRequestEventArgs e) {
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => {
+
+                var str = e.PublicKey.ToString().Substring(0, 10);
+                var msgDialog = new MessageDialog(e.Message, str);
+
+                msgDialog.Commands.Add(new UICommand("Accept", null, "ACCEPT"));
+                msgDialog.Commands.Add(new UICommand("Decline"));
+
+                var answer = await msgDialog.ShowAsync();
+
+                if ((string) answer.Id == "YES") {
+                    ToxViewModel.Instance.AddFriendNoRequest(e.PublicKey);
+                }
+            });
         }
 
         /// <summary>
