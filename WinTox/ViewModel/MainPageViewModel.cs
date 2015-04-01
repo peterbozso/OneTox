@@ -23,5 +23,22 @@ namespace WinTox.ViewModel {
                 FriendRequestReceived(e);
             }
         }
+
+        internal enum FriendRequestAnswer {
+            Accept,
+            Decline,
+            Later
+        }
+
+        internal void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e) {
+            switch (answer) {
+                case FriendRequestAnswer.Accept:
+                    ToxSingletonModel.Instance.AddFriendNoRequest(e.PublicKey);
+                    return;
+                case FriendRequestAnswer.Later:
+                    // TODO: Postpone decision!
+                    return;
+            }
+        }
     }
 }
