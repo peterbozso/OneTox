@@ -10,14 +10,14 @@ namespace WinTox.Model {
             new ToxNode("144.76.60.215", 33445, new ToxKey(ToxKeyType.Public, "04119E835DF3E78BACF0F84235B300546AF8B936F035185E2A8E9E0A67C8924F"))
         };
 
-        private static Tox _tox;
+        private static ExtendedTox _tox;
 
         private ToxSingletonModel() {}
 
-        public static Tox Instance {
+        public static ExtendedTox Instance {
             get {
                 if (_tox == null) {
-                    _tox = new Tox(new ToxOptions(true, true));
+                    _tox = new ExtendedTox(new ToxOptions(true, true));
 
                     foreach (ToxNode node in _nodes)
                         _tox.Bootstrap(node);

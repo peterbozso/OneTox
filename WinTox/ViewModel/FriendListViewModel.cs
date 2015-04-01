@@ -19,6 +19,7 @@ namespace WinTox.ViewModel {
             ToxSingletonModel.Instance.OnFriendStatusMessageChanged += this.OnFriendStatusMessageChanged;
             ToxSingletonModel.Instance.OnFriendStatusChanged += this.OnFriendStatusChanged;
             ToxSingletonModel.Instance.OnFriendConnectionStatusChanged += this.OnFriendConnectionStatusChanged;
+            ToxSingletonModel.Instance.OnFriendAdded += this.OnFriendAdded;
         }
 
         private void OnFriendNameChanged(object sender, ToxEventArgs.NameChangeEventArgs e) {
@@ -35,6 +36,10 @@ namespace WinTox.ViewModel {
 
         private void OnFriendConnectionStatusChanged(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e) {
             FindFriend(e.FriendNumber).IsOnline = e.Status != ToxConnectionStatus.None;
+        }
+
+        void OnFriendAdded(int friendNumber) {
+            Friends.Add(new FriendViewModel(friendNumber));
         }
 
         private FriendViewModel FindFriend(int friendNumber) {

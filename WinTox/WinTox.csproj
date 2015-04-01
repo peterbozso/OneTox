@@ -107,6 +107,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\StatusToColorConverter.cs" />
+    <Compile Include="Model\ExtendedTox.cs" />
     <Compile Include="ViewModel\AddFriendFlyoutViewModel.cs" />
     <Compile Include="ViewModel\AddFriendFlyoutHelpers.cs" />
     <Compile Include="Model\ToxSingletonModel.cs" />
