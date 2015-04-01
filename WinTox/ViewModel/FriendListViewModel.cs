@@ -21,19 +21,19 @@ namespace WinTox.ViewModel {
             ToxSingletonModel.Instance.OnFriendConnectionStatusChanged += this.OnFriendConnectionStatusChanged;
         }
 
-        private void OnFriendNameChanged(object sender, SharpTox.Core.ToxEventArgs.NameChangeEventArgs e) {
+        private void OnFriendNameChanged(object sender, ToxEventArgs.NameChangeEventArgs e) {
             FindFriend(e.FriendNumber).Name = e.Name;
         }
 
-        private void OnFriendStatusMessageChanged(object sender, SharpTox.Core.ToxEventArgs.StatusMessageEventArgs e) {
+        private void OnFriendStatusMessageChanged(object sender, ToxEventArgs.StatusMessageEventArgs e) {
             FindFriend(e.FriendNumber).StatusMessage = e.StatusMessage;
         }
 
-        private void OnFriendStatusChanged(object sender, SharpTox.Core.ToxEventArgs.StatusEventArgs e) {
+        private void OnFriendStatusChanged(object sender, ToxEventArgs.StatusEventArgs e) {
             FindFriend(e.FriendNumber).Status = e.Status;
         }
 
-        private void OnFriendConnectionStatusChanged(object sender, SharpTox.Core.ToxEventArgs.FriendConnectionStatusEventArgs e) {
+        private void OnFriendConnectionStatusChanged(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e) {
             FindFriend(e.FriendNumber).IsOnline = e.Status != ToxConnectionStatus.None;
         }
 
