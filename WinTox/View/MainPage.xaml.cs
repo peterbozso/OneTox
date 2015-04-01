@@ -10,11 +10,13 @@ using WinTox.Model;
 
 // The Hub Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=321224
 
-namespace WinTox.View {
+namespace WinTox.View
+{
     /// <summary>
     /// A page that displays a grouped collection of items.
     /// </summary>
-    public sealed partial class MainPage : Page {
+    public sealed partial class MainPage : Page
+    {
         private NavigationHelper navigationHelper;
         private MainPageViewModel _viewModel;
 
@@ -22,26 +24,30 @@ namespace WinTox.View {
         /// NavigationHelper is used on each page to aid in navigation and 
         /// process lifetime management
         /// </summary>
-        public NavigationHelper NavigationHelper {
+        public NavigationHelper NavigationHelper
+        {
             get { return this.navigationHelper; }
         }
 
-        public MainPage() {
+        public MainPage()
+        {
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
-            _viewModel = (MainPageViewModel)DataContext;
+            _viewModel = (MainPageViewModel) DataContext;
             _viewModel.FriendRequestReceived += this.FriendRequestReceived;
         }
 
-        private void FriendRequestReceived(ToxEventArgs.FriendRequestEventArgs e) {
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => {
+        private void FriendRequestReceived(ToxEventArgs.FriendRequestEventArgs e)
+        {
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
                 var msgDialog = new MessageDialog(e.Message, e.PublicKey.ToString().Substring(0, 10));
                 msgDialog.Commands.Add(new UICommand("Accept", null, MainPageViewModel.FriendRequestAnswer.Accept));
                 msgDialog.Commands.Add(new UICommand("Decline"));
                 msgDialog.Commands.Add(new UICommand("Later", null, MainPageViewModel.FriendRequestAnswer.Later));
                 var answer = await msgDialog.ShowAsync();
-                _viewModel.HandleFriendRequestAnswer((MainPageViewModel.FriendRequestAnswer)answer.Id, e);
+                _viewModel.HandleFriendRequestAnswer((MainPageViewModel.FriendRequestAnswer) answer.Id, e);
             });
         }
 
@@ -56,7 +62,8 @@ namespace WinTox.View {
         /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested and
         /// a dictionary of state preserved by this page during an earlier
         /// session.  The state will be null the first time a page is visited.</param>
-        private async void navigationHelper_LoadState(object sender, LoadStateEventArgs e) {
+        private async void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        {
         }
 
         #region NavigationHelper registration
@@ -69,11 +76,13 @@ namespace WinTox.View {
         /// and <see cref="Common.NavigationHelper.SaveState"/>.
         /// The navigation parameter is available in the LoadState method 
         /// in addition to page state preserved during an earlier session.
-        protected override void OnNavigatedTo(NavigationEventArgs e) {
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
             navigationHelper.OnNavigatedTo(e);
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e) {
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
             navigationHelper.OnNavigatedFrom(e);
         }
 

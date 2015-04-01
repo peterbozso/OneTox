@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace WinTox.Common {
+namespace WinTox.Common
+{
     /// <summary>
     /// A command whose sole purpose is to relay its functionality 
     /// to other objects by invoking delegates. 
@@ -9,7 +10,8 @@ namespace WinTox.Common {
     /// <see cref="RaiseCanExecuteChanged"/> needs to be called whenever
     /// <see cref="CanExecute"/> is expected to return a different value.
     /// </summary>
-    public class RelayCommand : ICommand {
+    public class RelayCommand : ICommand
+    {
         private readonly Action _execute;
         private readonly Action<object> _executeWithParameter;
         private readonly Func<bool> _canExecute;
@@ -24,14 +26,17 @@ namespace WinTox.Common {
         /// </summary>
         /// <param name="execute">The execution logic.</param>
         public RelayCommand(Action execute)
-            : this(execute, null) {}
+            : this(execute, null)
+        {
+        }
 
         /// <summary>
         /// Creates a new command.
         /// </summary>
         /// <param name="execute">The execution logic.</param>
         /// <param name="canExecute">The execution status logic.</param>
-        public RelayCommand(Action execute, Func<bool> canExecute) {
+        public RelayCommand(Action execute, Func<bool> canExecute)
+        {
             if (execute == null)
                 throw new ArgumentNullException("execute");
             _execute = execute;
@@ -43,14 +48,17 @@ namespace WinTox.Common {
         /// </summary>
         /// <param name="executeWithParameter">The execution logic.</param>
         public RelayCommand(Action<object> executeWithParameter)
-            : this(executeWithParameter, null) { }
+            : this(executeWithParameter, null)
+        {
+        }
 
         /// <summary>
         /// Creates a new command with parameter.
         /// </summary>
         /// <param name="executeWithParameter">The execution logic.</param>
         /// <param name="canExecute">The execution status logic.</param>
-        public RelayCommand(Action<object> executeWithParameter, Func<bool> canExecute) {
+        public RelayCommand(Action<object> executeWithParameter, Func<bool> canExecute)
+        {
             if (executeWithParameter == null)
                 throw new ArgumentNullException("executeWithParameter");
             _executeWithParameter = executeWithParameter;
@@ -64,7 +72,8 @@ namespace WinTox.Common {
         /// Data used by the command. If the command does not require data to be passed, this object can be set to null.
         /// </param>
         /// <returns>true if this command can be executed; otherwise, false.</returns>
-        public bool CanExecute(object parameter) {
+        public bool CanExecute(object parameter)
+        {
             return _canExecute == null ? true : _canExecute();
         }
 
@@ -74,7 +83,8 @@ namespace WinTox.Common {
         /// <param name="parameter">
         /// Data used by the command. If the command does not require data to be passed, this object can be set to null.
         /// </param>
-        public void Execute(object parameter) {
+        public void Execute(object parameter)
+        {
             if (_execute != null) // Only one of them can be set thanks to the contructors.
                 _execute();
             else
@@ -86,9 +96,11 @@ namespace WinTox.Common {
         /// to indicate that the return value of the <see cref="CanExecute"/>
         /// method has changed.
         /// </summary>
-        public void RaiseCanExecuteChanged() {
+        public void RaiseCanExecuteChanged()
+        {
             var handler = CanExecuteChanged;
-            if (handler != null) {
+            if (handler != null)
+            {
                 handler(this, EventArgs.Empty);
             }
         }

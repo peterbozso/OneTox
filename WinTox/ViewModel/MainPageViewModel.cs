@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 using SharpTox.Core;
 using WinTox.Model;
 
-namespace WinTox.ViewModel {
-    internal class MainPageViewModel {
-        internal MainPageViewModel() {
+namespace WinTox.ViewModel
+{
+    internal class MainPageViewModel
+    {
+        internal MainPageViewModel()
+        {
             FriendList = new FriendListViewModel();
             ToxSingletonModel.Instance.OnFriendRequestReceived += this.OnFriendRequestReceived;
         }
@@ -20,20 +23,25 @@ namespace WinTox.ViewModel {
 
         internal event FriendRequestReceivedEventHandler FriendRequestReceived;
 
-        internal void OnFriendRequestReceived(object sender, ToxEventArgs.FriendRequestEventArgs e) {
-            if (FriendRequestReceived != null) {
+        internal void OnFriendRequestReceived(object sender, ToxEventArgs.FriendRequestEventArgs e)
+        {
+            if (FriendRequestReceived != null)
+            {
                 FriendRequestReceived(e);
             }
         }
 
-        internal enum FriendRequestAnswer {
+        internal enum FriendRequestAnswer
+        {
             Accept,
             Decline,
             Later
         }
 
-        internal void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e) {
-            switch (answer) {
+        internal void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e)
+        {
+            switch (answer)
+            {
                 case FriendRequestAnswer.Accept:
                     ToxSingletonModel.Instance.AddFriendNoRequest(e.PublicKey);
                     return;

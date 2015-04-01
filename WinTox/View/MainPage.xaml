@@ -9,11 +9,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    
+
     <Page.DataContext>
-        <viewModel:MainPageViewModel/>
+        <viewModel:MainPageViewModel />
     </Page.DataContext>
-    
+
     <Page.Resources>
         <ResourceDictionary Source="MainPageDictionary.xaml" />
     </Page.Resources>
@@ -35,7 +35,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Image Source="/Assets/tox-logo.jpg" Height="70" HorizontalAlignment="Left" />
-                    <userControls:UserTile Grid.Column="1"/>
+                    <userControls:UserTile Grid.Column="1" />
                 </Grid>
             </Hub.Header>
             <HubSection Header="friends">
@@ -43,7 +43,7 @@
                     <GridView ItemsSource="{Binding FriendList.Friends}" SelectionMode="None">
                         <GridView.ItemTemplate>
                             <DataTemplate>
-                                <userControls:FriendTile/>
+                                <userControls:FriendTile />
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
@@ -57,15 +57,19 @@
             <!-- TODO: Maybe refactor it out later. -->
             <AppBarButton Label="add friend" Icon="AddFriend" x:Name="AddFriendButton">
                 <AppBarButton.DataContext>
-                    <viewModel:AddFriendFlyoutViewModel/>
+                    <viewModel:AddFriendFlyoutViewModel />
                 </AppBarButton.DataContext>
                 <AppBarButton.Flyout>
                     <Flyout viewModel:AddFriendFlyoutHelpers.Parent="{Binding ElementName=AddFriendButton}"
-                            viewModel:AddFriendFlyoutHelpers.IsOpen="{Binding IsFlyoutOpen, Mode=TwoWay}" >
+                            viewModel:AddFriendFlyoutHelpers.IsOpen="{Binding IsFlyoutOpen, Mode=TwoWay}">
                         <StackPanel Width="400" x:Name="AddFriendFlyoutContent">
-                            <TextBox x:Name="FriendId" Header="Your friend's ID" MaxLength="76" Height="80" TextWrapping="Wrap"/>
-                            <TextBox x:Name="InvitationMessage" Header="Invitation message" Height="160" TextWrapping="Wrap" PlaceholderText="Hello! I'd like to add you to my friends list."/>
-                            <Button Margin="0,5,0,0" Content="Add" Command="{Binding AddFriendCommand}" CommandParameter="{Binding ElementName=AddFriendFlyoutContent}"/>
+                            <TextBox x:Name="FriendId" Header="Your friend's ID" MaxLength="76" Height="80"
+                                     TextWrapping="Wrap" />
+                            <TextBox x:Name="InvitationMessage" Header="Invitation message" Height="160"
+                                     TextWrapping="Wrap"
+                                     PlaceholderText="Hello! I'd like to add you to my friends list." />
+                            <Button Margin="0,5,0,0" Content="Add" Command="{Binding AddFriendCommand}"
+                                    CommandParameter="{Binding ElementName=AddFriendFlyoutContent}" />
                         </StackPanel>
                     </Flyout>
                 </AppBarButton.Flyout>

@@ -8,10 +8,11 @@
     mc:Ignorable="d"
     d:DesignHeight="150"
     d:DesignWidth="150">
-    
+
     <Grid Width="150" Height="150">
-        <Image Source="/Assets/default-profile-picture.png" Stretch="UniformToFill"/> <!-- TODO: Replace it with an image with proper resolution and implement binding when user picture loading works! -->
-        <Rectangle Height="26" Fill="#7F000000" VerticalAlignment="Bottom"/>
-        <TextBlock VerticalAlignment="Bottom" Margin="6,0,0,0" FontSize="20" FontWeight="Medium" Text="{Binding Name}"/>
+        <Image Source="/Assets/default-profile-picture.png" Stretch="UniformToFill" />
+        <!-- TODO: Replace it with an image with proper resolution and implement binding when user picture loading works! -->
+        <Rectangle Height="26" Fill="#7F000000" VerticalAlignment="Bottom" />
+        <TextBlock VerticalAlignment="Bottom" Margin="6,0,0,0" FontSize="20" FontWeight="Medium" Text="{Binding Name}" />
     </Grid>
 </UserControl>

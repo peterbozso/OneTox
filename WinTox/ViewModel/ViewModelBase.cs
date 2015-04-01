@@ -7,11 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 
-namespace WinTox.ViewModel {
-    class ViewModelBase : INotifyPropertyChanged {
+namespace WinTox.ViewModel
+{
+    internal class ViewModelBase : INotifyPropertyChanged
+    {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }

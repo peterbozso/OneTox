@@ -9,16 +9,21 @@ using Windows.UI.Core;
 using SharpTox.Core;
 using WinTox.Model;
 
-namespace WinTox.ViewModel {
-    internal class FriendViewModel : ViewModelBase {
-        public FriendViewModel(int friendNumber) {
+namespace WinTox.ViewModel
+{
+    internal class FriendViewModel : ViewModelBase
+    {
+        public FriendViewModel(int friendNumber)
+        {
             FriendNumber = friendNumber;
             Name = ToxSingletonModel.Instance.GetFriendName(friendNumber);
-            if (Name == String.Empty) {
+            if (Name == String.Empty)
+            {
                 Name = ToxSingletonModel.Instance.GetFriendPublicKey(friendNumber).ToString().Substring(0, 10);
             }
             StatusMessage = ToxSingletonModel.Instance.GetFriendStatusMessage(friendNumber);
-            if (StatusMessage == String.Empty) {
+            if (StatusMessage == String.Empty)
+            {
                 StatusMessage = "Friend request sent.";
             }
             Status = ToxSingletonModel.Instance.GetFriendStatus(friendNumber);
@@ -29,9 +34,11 @@ namespace WinTox.ViewModel {
 
         private string _name;
 
-        public string Name {
+        public string Name
+        {
             get { return _name; }
-            set {
+            set
+            {
                 _name = value;
                 OnPropertyChanged();
             }
@@ -39,9 +46,11 @@ namespace WinTox.ViewModel {
 
         private string _statusMessage;
 
-        public string StatusMessage {
+        public string StatusMessage
+        {
             get { return _statusMessage; }
-            set {
+            set
+            {
                 _statusMessage = value;
                 OnPropertyChanged();
             }
@@ -49,9 +58,11 @@ namespace WinTox.ViewModel {
 
         private ToxUserStatus _status;
 
-        public ToxUserStatus Status {
+        public ToxUserStatus Status
+        {
             get { return _status; }
-            set {
+            set
+            {
                 _status = value;
                 OnPropertyChanged();
             }
@@ -59,9 +70,11 @@ namespace WinTox.ViewModel {
 
         private bool _isOnline;
 
-        public bool IsOnline {
+        public bool IsOnline
+        {
             get { return _isOnline; }
-            set {
+            set
+            {
                 _isOnline = value;
                 OnPropertyChanged();
             }
