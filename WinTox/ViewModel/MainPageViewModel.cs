@@ -21,7 +21,6 @@ namespace WinTox.ViewModel {
         internal event FriendRequestReceivedEventHandler FriendRequestReceived;
 
         internal void OnFriendRequestReceived(object sender, ToxEventArgs.FriendRequestEventArgs e) {
-            Debug.WriteLine("Friend request received");
             if (FriendRequestReceived != null) {
                 FriendRequestReceived(e);
             }
