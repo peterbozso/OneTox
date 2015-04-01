@@ -110,6 +110,8 @@
     <Compile Include="ViewModel\AddFriendFlyoutViewModel.cs" />
     <Compile Include="ViewModel\AddFriendFlyoutHelpers.cs" />
     <Compile Include="Model\ToxSingletonModel.cs" />
+    <Compile Include="ViewModel\FriendListViewModel.cs" />
+    <Compile Include="ViewModel\FriendViewModel.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
     <Compile Include="View\UserControls\FriendTile.xaml.cs">
