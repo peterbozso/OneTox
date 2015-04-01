@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -34,7 +35,9 @@ namespace WinTox.ViewModel {
 
                         var friendIdTextBox = (TextBox)flyoutContent.FindName("FriendId");
                         var friendId = friendIdTextBox.Text;
-                        if (friendId == String.Empty) {
+
+                        if (!Regex.IsMatch(friendId, "([A-Z]|[0-9]){76}")) {
+                            friendIdTextBox.Text = String.Empty;
                             friendIdTextBox.Focus(FocusState.Programmatic);
                             return;
                         }
