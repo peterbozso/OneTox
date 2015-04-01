@@ -13,7 +13,7 @@ namespace WinTox.ViewModel {
             Name = ToxSingletonModel.Instance.GetFriendName(friendNumber);
             StatusMessage = ToxSingletonModel.Instance.GetFriendStatusMessage(friendNumber);
             Status = ToxSingletonModel.Instance.GetFriendStatus(friendNumber);
-            ConnectionStatus = ToxSingletonModel.Instance.GetFriendConnectionStatus(friendNumber);
+            IsOnline = ToxSingletonModel.Instance.IsFriendOnline(friendNumber);
         }
 
         public int FriendNumber { get; set; }
@@ -24,6 +24,6 @@ namespace WinTox.ViewModel {
 
         public ToxUserStatus Status { get; set; }
 
-        public ToxConnectionStatus ConnectionStatus { get; set; }
+        public bool IsOnline { get; set; }
     }
 }

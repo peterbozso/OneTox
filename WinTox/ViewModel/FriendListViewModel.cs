@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharpTox.Core;
 using WinTox.Model;
 
 namespace WinTox.ViewModel {
@@ -33,7 +34,7 @@ namespace WinTox.ViewModel {
         }
 
         private void OnFriendConnectionStatusChanged(object sender, SharpTox.Core.ToxEventArgs.FriendConnectionStatusEventArgs e) {
-            FindFriend(e.FriendNumber).ConnectionStatus = e.Status;
+            FindFriend(e.FriendNumber).IsOnline = e.Status != ToxConnectionStatus.None;
         }
 
         private FriendViewModel FindFriend(int friendNumber) {
