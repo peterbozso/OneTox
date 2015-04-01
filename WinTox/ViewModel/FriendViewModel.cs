@@ -14,7 +14,13 @@ namespace WinTox.ViewModel {
         public FriendViewModel(int friendNumber) {
             FriendNumber = friendNumber;
             Name = ToxSingletonModel.Instance.GetFriendName(friendNumber);
+            if (Name == String.Empty) {
+                Name = ToxSingletonModel.Instance.GetFriendPublicKey(friendNumber).ToString().Substring(0, 10);
+            }
             StatusMessage = ToxSingletonModel.Instance.GetFriendStatusMessage(friendNumber);
+            if (StatusMessage == String.Empty) {
+                StatusMessage = "Friend request sent.";
+            }
             Status = ToxSingletonModel.Instance.GetFriendStatus(friendNumber);
             IsOnline = ToxSingletonModel.Instance.IsFriendOnline(friendNumber);
         }
