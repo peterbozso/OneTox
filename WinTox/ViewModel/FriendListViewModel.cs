@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 using SharpTox.Core;
 using WinTox.Model;
 
@@ -22,24 +24,39 @@ namespace WinTox.ViewModel {
             ToxSingletonModel.Instance.OnFriendAdded += this.OnFriendAdded;
         }
 
+        // We need to run the event handlers from the UI thread.
+        // Otherwise the PropertyChanged events wouldn't work in FriendViewModel.
+
+        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+
         private void OnFriendNameChanged(object sender, ToxEventArgs.NameChangeEventArgs e) {
-            FindFriend(e.FriendNumber).Name = e.Name;
+            _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                FindFriend(e.FriendNumber).Name = e.Name;
+            });
         }
 
         private void OnFriendStatusMessageChanged(object sender, ToxEventArgs.StatusMessageEventArgs e) {
-            FindFriend(e.FriendNumber).StatusMessage = e.StatusMessage;
+            _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                FindFriend(e.FriendNumber).StatusMessage = e.StatusMessage;
+            });
         }
 
         private void OnFriendStatusChanged(object sender, ToxEventArgs.StatusEventArgs e) {
-            FindFriend(e.FriendNumber).Status = e.Status;
+            _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                FindFriend(e.FriendNumber).Status = e.Status;
+            });
         }
 
         private void OnFriendConnectionStatusChanged(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e) {
-            FindFriend(e.FriendNumber).IsOnline = e.Status != ToxConnectionStatus.None;
+            _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                FindFriend(e.FriendNumber).IsOnline = e.Status != ToxConnectionStatus.None;
+            });
         }
 
         void OnFriendAdded(int friendNumber) {
-            Friends.Add(new FriendViewModel(friendNumber));
+            _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                Friends.Add(new FriendViewModel(friendNumber));
+            });
         }
 
         private FriendViewModel FindFriend(int friendNumber) {
