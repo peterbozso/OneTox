@@ -17,18 +17,23 @@ namespace WinTox.ViewModel {
             ToxSingletonModel.Instance.OnFriendNameChanged += this.OnFriendNameChanged;
             ToxSingletonModel.Instance.OnFriendStatusMessageChanged += this.OnFriendStatusMessageChanged;
             ToxSingletonModel.Instance.OnFriendStatusChanged += this.OnFriendStatusChanged;
+            ToxSingletonModel.Instance.OnFriendConnectionStatusChanged += this.OnFriendConnectionStatusChanged;
         }
 
-        void OnFriendNameChanged(object sender, SharpTox.Core.ToxEventArgs.NameChangeEventArgs e) {
+        private void OnFriendNameChanged(object sender, SharpTox.Core.ToxEventArgs.NameChangeEventArgs e) {
             FindFriend(e.FriendNumber).Name = e.Name;
         }
 
-        void OnFriendStatusMessageChanged(object sender, SharpTox.Core.ToxEventArgs.StatusMessageEventArgs e) {
+        private void OnFriendStatusMessageChanged(object sender, SharpTox.Core.ToxEventArgs.StatusMessageEventArgs e) {
             FindFriend(e.FriendNumber).StatusMessage = e.StatusMessage;
         }
 
-        void OnFriendStatusChanged(object sender, SharpTox.Core.ToxEventArgs.StatusEventArgs e) {
+        private void OnFriendStatusChanged(object sender, SharpTox.Core.ToxEventArgs.StatusEventArgs e) {
             FindFriend(e.FriendNumber).Status = e.Status;
+        }
+
+        private void OnFriendConnectionStatusChanged(object sender, SharpTox.Core.ToxEventArgs.FriendConnectionStatusEventArgs e) {
+            FindFriend(e.FriendNumber).ConnectionStatus = e.Status;
         }
 
         private FriendViewModel FindFriend(int friendNumber) {

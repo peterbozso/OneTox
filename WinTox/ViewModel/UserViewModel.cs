@@ -19,5 +19,9 @@ namespace WinTox.ViewModel {
         public ToxUserStatus Status {
             get { return ToxSingletonModel.Instance.Status; }
         }
+
+        public bool IsConnected { // TODO: Bind to it in the View!
+            get { return ToxSingletonModel.Instance.IsConnected; }
+        }
     }
 }
