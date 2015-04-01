@@ -70,7 +70,7 @@
                     </Flyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
-            <AppBarButton Label="new gorup chat" Icon="People" />
+            <AppBarButton Label="new group chat" Icon="People" />
         </CommandBar>
     </Page.BottomAppBar>
 </Page>
