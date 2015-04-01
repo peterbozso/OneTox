@@ -40,7 +40,7 @@
             </Hub.Header>
             <HubSection Header="friends">
                 <DataTemplate>
-                    <GridView ItemsSource="{Binding FriendList.Friends}">
+                    <GridView ItemsSource="{Binding FriendList.Friends}" SelectionMode="None">
                         <GridView.ItemTemplate>
                             <DataTemplate>
                                 <userControls:FriendTile/>
