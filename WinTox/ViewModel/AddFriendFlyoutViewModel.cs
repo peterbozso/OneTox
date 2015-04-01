@@ -34,9 +34,9 @@ namespace WinTox.ViewModel {
                         var flyoutContent = (StackPanel)parameter;
 
                         var friendIdTextBox = (TextBox)flyoutContent.FindName("FriendId");
-                        var friendId = friendIdTextBox.Text;
+                        var friendId = friendIdTextBox.Text.Trim();
 
-                        if (!Regex.IsMatch(friendId, "([A-Z]|[0-9]){76}")) {
+                        if (!ToxId.IsValid(friendId)) {
                             friendIdTextBox.Text = String.Empty;
                             friendIdTextBox.Focus(FocusState.Programmatic);
                             return;
