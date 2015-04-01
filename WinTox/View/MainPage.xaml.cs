@@ -38,10 +38,16 @@ namespace WinTox.View {
                 var msgDialog = new MessageDialog(e.Message, e.PublicKey.ToString().Substring(0, 10));
                 msgDialog.Commands.Add(new UICommand("Accept", null, "ACCEPT"));
                 msgDialog.Commands.Add(new UICommand("Decline"));
+                msgDialog.Commands.Add(new UICommand("Later", null, "LATER"));
 
                 var answer = await msgDialog.ShowAsync();
-                if ((string) answer.Id == "YES") {
-                    ToxSingletonModel.Instance.AddFriendNoRequest(e.PublicKey);
+                switch ((string)answer.Id) {
+                    case "ACCEPT":
+                        ToxSingletonModel.Instance.AddFriendNoRequest(e.PublicKey);
+                        return;
+                    case "LATER":
+                        // TODO: Postpone decision!
+                        return;
                 }
             });
         }
