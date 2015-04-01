@@ -10,8 +10,11 @@ using WinTox.Model;
 namespace WinTox.ViewModel {
     internal class MainPageViewModel {
         internal MainPageViewModel() {
+            FriendList = new FriendListViewModel();
             ToxSingletonModel.Instance.OnFriendRequestReceived += this.OnFriendRequestReceived;
         }
+
+        public FriendListViewModel FriendList { get; set; }
 
         internal delegate void FriendRequestReceivedEventHandler(ToxEventArgs.FriendRequestEventArgs e);
 

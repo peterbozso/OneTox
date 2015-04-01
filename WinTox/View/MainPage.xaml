@@ -40,7 +40,13 @@
             </Hub.Header>
             <HubSection Header="friends">
                 <DataTemplate>
-                    <!-- TODO: Friends' GridView comes here! -->
+                    <GridView ItemsSource="{Binding FriendList.Friends}">
+                        <GridView.ItemTemplate>
+                            <DataTemplate>
+                                <userControls:FriendTile/>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
                 </DataTemplate>
             </HubSection>
         </Hub>

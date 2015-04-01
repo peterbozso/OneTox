@@ -9,10 +9,10 @@ using WinTox.Model;
 
 namespace WinTox.ViewModel {
     class FriendListViewModel {
-        internal FriendListViewModel() {
-            FriendList = new ObservableCollection<FriendViewModel>();
+        public FriendListViewModel() {
+            Friends = new ObservableCollection<FriendViewModel>();
             foreach (var friendNumber in ToxSingletonModel.Instance.Friends) {
-                FriendList.Add(new FriendViewModel(friendNumber));
+                Friends.Add(new FriendViewModel(friendNumber));
             }
 
             ToxSingletonModel.Instance.OnFriendNameChanged += this.OnFriendNameChanged;
@@ -38,13 +38,13 @@ namespace WinTox.ViewModel {
         }
 
         private FriendViewModel FindFriend(int friendNumber) {
-            foreach (var friend in FriendList) {
+            foreach (var friend in Friends) {
                 if (friend.FriendNumber == friendNumber)
                     return friend;
             }
             return null;
         }
 
-        internal ObservableCollection<FriendViewModel> FriendList { get; set; } 
+        public ObservableCollection<FriendViewModel> Friends { get; set; }
     }
 }
