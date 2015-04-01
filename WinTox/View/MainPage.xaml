@@ -10,6 +10,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     
+    <Page.DataContext>
+        <viewModel:MainPageViewModel/>
+    </Page.DataContext>
+    
     <Page.Resources>
         <ResourceDictionary Source="MainPageDictionary.xaml" />
     </Page.Resources>

@@ -5,6 +5,7 @@ using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
 using WinTox.ViewModel;
 using SharpTox.Core;
+using WinTox.Model;
 
 // The Hub Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=321224
 
@@ -14,6 +15,7 @@ namespace WinTox.View {
     /// </summary>
     public sealed partial class MainPage : Page {
         private NavigationHelper navigationHelper;
+        private MainPageViewModel _viewModel;
 
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and 
@@ -27,22 +29,19 @@ namespace WinTox.View {
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
-            ToxViewModel.FriendRequestReceived += ToxViewModel_FriendRequestReceived;
+            _viewModel = (MainPageViewModel)DataContext;
+            _viewModel.FriendRequestReceived += this.FriendRequestReceived;
         }
 
-        private void ToxViewModel_FriendRequestReceived(ToxEventArgs.FriendRequestEventArgs e) {
+        private void FriendRequestReceived(ToxEventArgs.FriendRequestEventArgs e) {
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => {
-
-                var str = e.PublicKey.ToString().Substring(0, 10);
-                var msgDialog = new MessageDialog(e.Message, str);
-
+                var msgDialog = new MessageDialog(e.Message, e.PublicKey.ToString().Substring(0, 10));
                 msgDialog.Commands.Add(new UICommand("Accept", null, "ACCEPT"));
                 msgDialog.Commands.Add(new UICommand("Decline"));
 
                 var answer = await msgDialog.ShowAsync();
-
                 if ((string) answer.Id == "YES") {
-                    ToxViewModel.Instance.AddFriendNoRequest(e.PublicKey);
+                    ToxSingletonModel.Instance.AddFriendNoRequest(e.PublicKey);
                 }
             });
         }

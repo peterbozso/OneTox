@@ -4,19 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SharpTox.Core;
+using WinTox.Model;
 
 namespace WinTox.ViewModel {
     class UserViewModel {
         public string Name {
-            get { return ToxViewModel.Instance.Name; }
+            get { return ToxSingletonModel.Instance.Name; }
         }
 
         public string StatusMessage {
-            get { return ToxViewModel.Instance.StatusMessage; }
+            get { return ToxSingletonModel.Instance.StatusMessage; }
         }
 
         public ToxUserStatus Status {
-            get { return ToxViewModel.Instance.Status; }
+            get { return ToxSingletonModel.Instance.Status; }
         }
     }
 }

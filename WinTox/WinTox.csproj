@@ -109,7 +109,8 @@
     <Compile Include="Converters\StatusToColorConverter.cs" />
     <Compile Include="ViewModel\AddFriendFlyoutViewModel.cs" />
     <Compile Include="ViewModel\AddFriendFlyoutHelpers.cs" />
-    <Compile Include="ViewModel\ToxViewModel.cs" />
+    <Compile Include="Model\ToxSingletonModel.cs" />
+    <Compile Include="ViewModel\MainPageViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
     <Compile Include="View\UserControls\FriendTile.xaml.cs">
       <DependentUpon>FriendTile.xaml</DependentUpon>
