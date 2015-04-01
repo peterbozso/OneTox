@@ -13,7 +13,7 @@ using WinTox.Common;
 using WinTox.Model;
 
 namespace WinTox.ViewModel {
-    class AddFriendFlyoutViewModel : INotifyPropertyChanged {
+    class AddFriendFlyoutViewModel : ViewModelBase {
         private bool _isFlyoutOpen;
 
         public bool IsFlyoutOpen {
@@ -56,13 +56,6 @@ namespace WinTox.ViewModel {
                         IsFlyoutOpen = false;
                     }));
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null) {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

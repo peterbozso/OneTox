@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 using SharpTox.Core;
 using WinTox.Model;
 
 namespace WinTox.ViewModel {
-    class FriendViewModel {
+    internal class FriendViewModel : ViewModelBase {
         public FriendViewModel(int friendNumber) {
             FriendNumber = friendNumber;
             Name = ToxSingletonModel.Instance.GetFriendName(friendNumber);
@@ -18,12 +21,44 @@ namespace WinTox.ViewModel {
 
         public int FriendNumber { get; set; }
 
-        public string Name { get; set; }
+        private string _name;
 
-        public string StatusMessage { get; set; }
+        public string Name {
+            get { return _name; }
+            set {
+                _name = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public ToxUserStatus Status { get; set; }
+        private string _statusMessage;
 
-        public bool IsOnline { get; set; }
+        public string StatusMessage {
+            get { return _statusMessage; }
+            set {
+                _statusMessage = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ToxUserStatus _status;
+
+        public ToxUserStatus Status {
+            get { return _status; }
+            set {
+                _status = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isOnline;
+
+        public bool IsOnline {
+            get { return _isOnline; }
+            set {
+                _isOnline = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }
