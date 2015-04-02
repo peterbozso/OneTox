@@ -1,13 +1,16 @@
 ﻿using SharpTox.Core;
 using System;
+using WinTox.Common;
 using WinTox.Model;
 
 namespace WinTox.ViewModel
 {
     internal class FriendViewModel : ViewModelBase
     {
-        public FriendViewModel(int friendNumber)
+        public FriendViewModel(FriendListViewModel friendList, int friendNumber)
         {
+            _friendList = friendList;
+
             FriendNumber = friendNumber;
             Name = ToxSingletonModel.Instance.GetFriendName(friendNumber);
             if (Name == String.Empty)
@@ -70,6 +73,25 @@ namespace WinTox.ViewModel
             {
                 _isOnline = value;
                 OnPropertyChanged();
+            }
+        }
+
+        // Only to notify the list if we want to delete a friend.
+        private FriendListViewModel _friendList;
+
+        private RelayCommand _deleteFriendCommand;
+
+        public RelayCommand DeleteFriendCommand
+        {
+            get
+            {
+                return _deleteFriendCommand
+                       ?? (_deleteFriendCommand = new RelayCommand(
+                           (object parameter) =>
+                           {
+                               _friendList.Friends.Remove(this);
+                               ToxSingletonModel.Instance.DeleteFriend(FriendNumber);
+                           }));
             }
         }
     }

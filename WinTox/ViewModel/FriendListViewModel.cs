@@ -13,7 +13,7 @@ namespace WinTox.ViewModel
             Friends = new ObservableCollection<FriendViewModel>();
             foreach (var friendNumber in ToxSingletonModel.Instance.Friends)
             {
-                Friends.Add(new FriendViewModel(friendNumber));
+                Friends.Add(new FriendViewModel(this, friendNumber));
             }
 
             ToxSingletonModel.Instance.OnFriendNameChanged += this.OnFriendNameChanged;
@@ -53,7 +53,7 @@ namespace WinTox.ViewModel
         private void OnFriendAdded(int friendNumber)
         {
             _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => { Friends.Add(new FriendViewModel(friendNumber)); });
+                () => { Friends.Add(new FriendViewModel(this, friendNumber)); });
         }
 
         private FriendViewModel FindFriend(int friendNumber)
