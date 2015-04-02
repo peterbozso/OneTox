@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SharpTox.Core;
+using System;
 using Windows.UI;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
-using SharpTox.Core;
 
 namespace WinTox.Converters
 {
@@ -14,13 +10,15 @@ namespace WinTox.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var status = (ToxUserStatus) value;
+            var status = (ToxUserStatus)value;
             switch (status)
             {
                 case ToxUserStatus.None:
                     return new SolidColorBrush(Colors.LawnGreen);
+
                 case ToxUserStatus.Busy:
                     return new SolidColorBrush(Colors.Red);
+
                 case ToxUserStatus.Away:
                     return new SolidColorBrush(Colors.Yellow);
             }

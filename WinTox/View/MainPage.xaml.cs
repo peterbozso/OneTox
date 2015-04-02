@@ -1,12 +1,10 @@
-﻿using System;
-using Windows.Storage;
+﻿using SharpTox.Core;
+using System;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
 using WinTox.ViewModel;
-using SharpTox.Core;
-using WinTox.Model;
 
 // The Hub Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=321224
 
@@ -21,7 +19,7 @@ namespace WinTox.View
         private MainPageViewModel _viewModel;
 
         /// <summary>
-        /// NavigationHelper is used on each page to aid in navigation and 
+        /// NavigationHelper is used on each page to aid in navigation and
         /// process lifetime management
         /// </summary>
         public NavigationHelper NavigationHelper
@@ -34,7 +32,7 @@ namespace WinTox.View
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
-            _viewModel = (MainPageViewModel) DataContext;
+            _viewModel = (MainPageViewModel)DataContext;
             _viewModel.FriendRequestReceived += this.FriendRequestReceived;
         }
 
@@ -47,7 +45,7 @@ namespace WinTox.View
                 msgDialog.Commands.Add(new UICommand("Decline"));
                 msgDialog.Commands.Add(new UICommand("Later", null, MainPageViewModel.FriendRequestAnswer.Later));
                 var answer = await msgDialog.ShowAsync();
-                _viewModel.HandleFriendRequestAnswer((MainPageViewModel.FriendRequestAnswer) answer.Id, e);
+                _viewModel.HandleFriendRequestAnswer((MainPageViewModel.FriendRequestAnswer)answer.Id, e);
             });
         }
 
@@ -70,11 +68,11 @@ namespace WinTox.View
 
         /// The methods provided in this section are simply used to allow
         /// NavigationHelper to respond to the page's navigation methods.
-        /// 
-        /// Page specific logic should be placed in event handlers for the  
+        ///
+        /// Page specific logic should be placed in event handlers for the
         /// <see cref="Common.NavigationHelper.LoadState"/>
         /// and <see cref="Common.NavigationHelper.SaveState"/>.
-        /// The navigation parameter is available in the LoadState method 
+        /// The navigation parameter is available in the LoadState method
         /// in addition to page state preserved during an earlier session.
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -86,6 +84,6 @@ namespace WinTox.View
             navigationHelper.OnNavigatedFrom(e);
         }
 
-        #endregion
+        #endregion NavigationHelper registration
     }
 }

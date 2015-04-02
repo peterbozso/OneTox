@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 // From: https://marcominerva.wordpress.com/2013/07/30/using-windows-8-1-flyout-xaml-control-with-mvvm/
@@ -13,12 +8,12 @@ namespace WinTox.ViewModel
     internal class AddFriendFlyoutHelpers
     {
         public static readonly DependencyProperty IsOpenProperty =
-            DependencyProperty.RegisterAttached("IsOpen", typeof (bool),
-                typeof (AddFriendFlyoutHelpers), new PropertyMetadata(false, OnIsOpenPropertyChanged));
+            DependencyProperty.RegisterAttached("IsOpen", typeof(bool),
+                typeof(AddFriendFlyoutHelpers), new PropertyMetadata(false, OnIsOpenPropertyChanged));
 
         public static readonly DependencyProperty ParentProperty =
-            DependencyProperty.RegisterAttached("Parent", typeof (Button),
-                typeof (AddFriendFlyoutHelpers), new PropertyMetadata(null, OnParentPropertyChanged));
+            DependencyProperty.RegisterAttached("Parent", typeof(Button),
+                typeof(AddFriendFlyoutHelpers), new PropertyMetadata(null, OnParentPropertyChanged));
 
         public static void SetIsOpen(DependencyObject d, bool value)
         {
@@ -27,7 +22,7 @@ namespace WinTox.ViewModel
 
         public static bool GetIsOpen(DependencyObject d)
         {
-            return (bool) d.GetValue(IsOpenProperty);
+            return (bool)d.GetValue(IsOpenProperty);
         }
 
         public static void SetParent(DependencyObject d, Button value)
@@ -37,7 +32,7 @@ namespace WinTox.ViewModel
 
         public static Button GetParent(DependencyObject d)
         {
-            return (Button) d.GetValue(ParentProperty);
+            return (Button)d.GetValue(ParentProperty);
         }
 
         private static void OnParentPropertyChanged(DependencyObject d,
@@ -56,11 +51,11 @@ namespace WinTox.ViewModel
             DependencyPropertyChangedEventArgs e)
         {
             var flyout = d as Flyout;
-            var parent = (Button) d.GetValue(ParentProperty);
+            var parent = (Button)d.GetValue(ParentProperty);
 
             if (flyout != null && parent != null)
             {
-                var newValue = (bool) e.NewValue;
+                var newValue = (bool)e.NewValue;
 
                 if (newValue)
                     flyout.ShowAt(parent);

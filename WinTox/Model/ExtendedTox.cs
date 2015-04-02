@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpTox.Core;
+﻿using SharpTox.Core;
 using SharpTox.Encryption;
 
 namespace WinTox.Model
 {
     internal class ExtendedTox : Tox
     {
-        public ExtendedTox(ToxOptions options) : base(options)
+        public ExtendedTox(ToxOptions options)
+            : base(options)
         {
         }
 

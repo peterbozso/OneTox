@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using SharpTox.Core;
+﻿using SharpTox.Core;
+using System.Diagnostics;
 
 // Implements the Singleton pattern.
 

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.ApplicationModel;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
@@ -72,7 +69,7 @@ namespace WinTox.Common
                 // Serialize the session state synchronously to avoid asynchronous access to shared
                 // state
                 MemoryStream sessionData = new MemoryStream();
-                DataContractSerializer serializer = new DataContractSerializer(typeof (Dictionary<string, object>),
+                DataContractSerializer serializer = new DataContractSerializer(typeof(Dictionary<string, object>),
                     _knownTypes);
                 serializer.WriteObject(sessionData, _sessionState);
 
@@ -115,9 +112,9 @@ namespace WinTox.Common
                 using (IInputStream inStream = await file.OpenSequentialReadAsync())
                 {
                     // Deserialize the Session State
-                    DataContractSerializer serializer = new DataContractSerializer(typeof (Dictionary<string, object>),
+                    DataContractSerializer serializer = new DataContractSerializer(typeof(Dictionary<string, object>),
                         _knownTypes);
-                    _sessionState = (Dictionary<string, object>) serializer.ReadObject(inStream.AsStreamForRead());
+                    _sessionState = (Dictionary<string, object>)serializer.ReadObject(inStream.AsStreamForRead());
                 }
 
                 // Restore any registered frames to their saved state
@@ -125,7 +122,7 @@ namespace WinTox.Common
                 {
                     Frame frame;
                     if (weakFrameReference.TryGetTarget(out frame) &&
-                        (string) frame.GetValue(FrameSessionBaseKeyProperty) == sessionBaseKey)
+                        (string)frame.GetValue(FrameSessionBaseKeyProperty) == sessionBaseKey)
                     {
                         frame.ClearValue(FrameSessionStateProperty);
                         RestoreFrameNavigationState(frame);
@@ -139,16 +136,16 @@ namespace WinTox.Common
         }
 
         private static DependencyProperty FrameSessionStateKeyProperty =
-            DependencyProperty.RegisterAttached("_FrameSessionStateKey", typeof (String), typeof (SuspensionManager),
+            DependencyProperty.RegisterAttached("_FrameSessionStateKey", typeof(String), typeof(SuspensionManager),
                 null);
 
         private static DependencyProperty FrameSessionBaseKeyProperty =
-            DependencyProperty.RegisterAttached("_FrameSessionBaseKeyParams", typeof (String),
-                typeof (SuspensionManager), null);
+            DependencyProperty.RegisterAttached("_FrameSessionBaseKeyParams", typeof(String),
+                typeof(SuspensionManager), null);
 
         private static DependencyProperty FrameSessionStateProperty =
-            DependencyProperty.RegisterAttached("_FrameSessionState", typeof (Dictionary<String, Object>),
-                typeof (SuspensionManager), null);
+            DependencyProperty.RegisterAttached("_FrameSessionState", typeof(Dictionary<String, Object>),
+                typeof(SuspensionManager), null);
 
         private static List<WeakReference<Frame>> _registeredFrames = new List<WeakReference<Frame>>();
 
@@ -205,7 +202,7 @@ namespace WinTox.Common
         {
             // Remove session state and remove the frame from the list of frames whose navigation
             // state will be saved (along with any weak references that are no longer reachable)
-            SessionState.Remove((String) frame.GetValue(FrameSessionStateKeyProperty));
+            SessionState.Remove((String)frame.GetValue(FrameSessionStateKeyProperty));
             _registeredFrames.RemoveAll((weakFrameReference) =>
             {
                 Frame testFrame;
@@ -228,11 +225,11 @@ namespace WinTox.Common
         /// <see cref="SessionState"/>.</returns>
         public static Dictionary<String, Object> SessionStateForFrame(Frame frame)
         {
-            var frameState = (Dictionary<String, Object>) frame.GetValue(FrameSessionStateProperty);
+            var frameState = (Dictionary<String, Object>)frame.GetValue(FrameSessionStateProperty);
 
             if (frameState == null)
             {
-                var frameSessionKey = (String) frame.GetValue(FrameSessionStateKeyProperty);
+                var frameSessionKey = (String)frame.GetValue(FrameSessionStateKeyProperty);
                 if (frameSessionKey != null)
                 {
                     // Registered frames reflect the corresponding session state
@@ -240,7 +237,7 @@ namespace WinTox.Common
                     {
                         _sessionState[frameSessionKey] = new Dictionary<String, Object>();
                     }
-                    frameState = (Dictionary<String, Object>) _sessionState[frameSessionKey];
+                    frameState = (Dictionary<String, Object>)_sessionState[frameSessionKey];
                 }
                 else
                 {
@@ -257,7 +254,7 @@ namespace WinTox.Common
             var frameState = SessionStateForFrame(frame);
             if (frameState.ContainsKey("Navigation"))
             {
-                frame.SetNavigationState((String) frameState["Navigation"]);
+                frame.SetNavigationState((String)frameState["Navigation"]);
             }
         }
 

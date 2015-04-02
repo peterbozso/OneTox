@@ -4,8 +4,8 @@ using System.Windows.Input;
 namespace WinTox.Common
 {
     /// <summary>
-    /// A command whose sole purpose is to relay its functionality 
-    /// to other objects by invoking delegates. 
+    /// A command whose sole purpose is to relay its functionality
+    /// to other objects by invoking delegates.
     /// The default return value for the CanExecute method is 'true'.
     /// <see cref="RaiseCanExecuteChanged"/> needs to be called whenever
     /// <see cref="CanExecute"/> is expected to return a different value.

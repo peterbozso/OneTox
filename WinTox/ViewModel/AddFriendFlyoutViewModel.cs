@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using SharpTox.Core;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using SharpTox.Core;
 using WinTox.Common;
 using WinTox.Model;
 
@@ -38,9 +31,9 @@ namespace WinTox.ViewModel
                        ?? (_addFriendCommand = new RelayCommand(
                            (object parameter) =>
                            {
-                               var flyoutContent = (StackPanel) parameter;
+                               var flyoutContent = (StackPanel)parameter;
 
-                               var friendIdTextBox = (TextBox) flyoutContent.FindName("FriendId");
+                               var friendIdTextBox = (TextBox)flyoutContent.FindName("FriendId");
                                var friendId = friendIdTextBox.Text.Trim();
 
                                if (!ToxId.IsValid(friendId))
@@ -50,7 +43,7 @@ namespace WinTox.ViewModel
                                    return;
                                }
 
-                               var invitationMessageTextBox = (TextBox) flyoutContent.FindName("InvitationMessage");
+                               var invitationMessageTextBox = (TextBox)flyoutContent.FindName("InvitationMessage");
                                var invitationMessage = invitationMessageTextBox.Text;
                                if (invitationMessage == String.Empty)
                                    invitationMessage = "Hello! I'd like to add you to my friends list.";

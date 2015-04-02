@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -13,8 +9,8 @@ using Windows.UI.Xaml.Navigation;
 namespace WinTox.Common
 {
     /// <summary>
-    /// NavigationHelper aids in navigation between pages.  It provides commands used to 
-    /// navigate back and forward as well as registers for standard mouse and keyboard 
+    /// NavigationHelper aids in navigation between pages.  It provides commands used to
+    /// navigate back and forward as well as registers for standard mouse and keyboard
     /// shortcuts used to go back and forward in Windows and the hardware back button in
     /// Windows Phone.  In addition it integrates SuspensionManger to handle process lifetime
     /// management and state management when navigating between pages.
@@ -22,9 +18,9 @@ namespace WinTox.Common
     /// <example>
     /// To make use of NavigationHelper, follow these two steps or
     /// start with a BasicPage or any other Page item template other than BlankPage.
-    /// 
-    /// 1) Create an instance of the NavigationHelper somewhere such as in the 
-    ///     constructor for the page and register a callback for the LoadState and 
+    ///
+    /// 1) Create an instance of the NavigationHelper somewhere such as in the
+    ///     constructor for the page and register a callback for the LoadState and
     ///     SaveState events.
     /// <code>
     ///     public MyPage()
@@ -34,22 +30,22 @@ namespace WinTox.Common
     ///         this.navigationHelper.LoadState += navigationHelper_LoadState;
     ///         this.navigationHelper.SaveState += navigationHelper_SaveState;
     ///     }
-    ///     
+    ///
     ///     private async void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
     ///     { }
     ///     private async void navigationHelper_SaveState(object sender, LoadStateEventArgs e)
     ///     { }
     /// </code>
-    /// 
-    /// 2) Register the page to call into the NavigationHelper whenever the page participates 
-    ///     in navigation by overriding the <see cref="Windows.UI.Xaml.Controls.Page.OnNavigatedTo"/> 
+    ///
+    /// 2) Register the page to call into the NavigationHelper whenever the page participates
+    ///     in navigation by overriding the <see cref="Windows.UI.Xaml.Controls.Page.OnNavigatedTo"/>
     ///     and <see cref="Windows.UI.Xaml.Controls.Page.OnNavigatedFrom"/> events.
     /// <code>
     ///     protected override void OnNavigatedTo(NavigationEventArgs e)
     ///     {
     ///         navigationHelper.OnNavigatedTo(e);
     ///     }
-    ///     
+    ///
     ///     protected override void OnNavigatedFrom(NavigationEventArgs e)
     ///     {
     ///         navigationHelper.OnNavigatedFrom(e);
@@ -69,8 +65,8 @@ namespace WinTox.Common
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationHelper"/> class.
         /// </summary>
-        /// <param name="page">A reference to the current page used for navigation.  
-        /// This reference allows for frame manipulation and to ensure that keyboard 
+        /// <param name="page">A reference to the current page used for navigation.
+        /// This reference allows for frame manipulation and to ensure that keyboard
         /// navigation requests only occur when the page is occupying the entire window.</param>
         public NavigationHelper(Page page)
         {
@@ -120,7 +116,7 @@ namespace WinTox.Common
         /// <see cref="RelayCommand"/> used to bind to the back Button's Command property
         /// for navigating to the most recent item in back navigation history, if a Frame
         /// manages its own navigation history.
-        /// 
+        ///
         /// The <see cref="RelayCommand"/> is set up to use the virtual method <see cref="GoBack"/>
         /// as the Execute Action and <see cref="CanGoBack"/> for CanExecute.
         /// </summary>
@@ -140,9 +136,9 @@ namespace WinTox.Common
         }
 
         /// <summary>
-        /// <see cref="RelayCommand"/> used for navigating to the most recent item in 
+        /// <see cref="RelayCommand"/> used for navigating to the most recent item in
         /// the forward navigation history, if a Frame manages its own navigation history.
-        /// 
+        ///
         /// The <see cref="RelayCommand"/> is set up to use the virtual method <see cref="GoForward"/>
         /// as the Execute Action and <see cref="CanGoForward"/> for CanExecute.
         /// </summary>
@@ -165,7 +161,7 @@ namespace WinTox.Common
         /// to determine if the <see cref="Frame"/> can go back.
         /// </summary>
         /// <returns>
-        /// true if the <see cref="Frame"/> has at least one entry 
+        /// true if the <see cref="Frame"/> has at least one entry
         /// in the back navigation history.
         /// </returns>
         public virtual bool CanGoBack()
@@ -178,7 +174,7 @@ namespace WinTox.Common
         /// to determine if the <see cref="Frame"/> can go forward.
         /// </summary>
         /// <returns>
-        /// true if the <see cref="Frame"/> has at least one entry 
+        /// true if the <see cref="Frame"/> has at least one entry
         /// in the forward navigation history.
         /// </returns>
         public virtual bool CanGoForward()
@@ -219,6 +215,7 @@ namespace WinTox.Common
             }
         }
 #else
+
         /// <summary>
         /// Invoked on every keystroke, including system keys such as Alt key combinations, when
         /// this page is active and occupies the entire window.  Used to detect keyboard navigation
@@ -236,7 +233,7 @@ namespace WinTox.Common
             if ((e.EventType == CoreAcceleratorKeyEventType.SystemKeyDown ||
                  e.EventType == CoreAcceleratorKeyEventType.KeyDown) &&
                 (virtualKey == VirtualKey.Left || virtualKey == VirtualKey.Right ||
-                 (int) virtualKey == 166 || (int) virtualKey == 167))
+                 (int)virtualKey == 166 || (int)virtualKey == 167))
             {
                 var coreWindow = Window.Current.CoreWindow;
                 var downState = CoreVirtualKeyStates.Down;
@@ -246,14 +243,14 @@ namespace WinTox.Common
                 bool noModifiers = !menuKey && !controlKey && !shiftKey;
                 bool onlyAlt = menuKey && !controlKey && !shiftKey;
 
-                if (((int) virtualKey == 166 && noModifiers) ||
+                if (((int)virtualKey == 166 && noModifiers) ||
                     (virtualKey == VirtualKey.Left && onlyAlt))
                 {
                     // When the previous key or Alt+Left are pressed navigate back
                     e.Handled = true;
                     this.GoBackCommand.Execute(null);
                 }
-                else if (((int) virtualKey == 167 && noModifiers) ||
+                else if (((int)virtualKey == 167 && noModifiers) ||
                          (virtualKey == VirtualKey.Right && onlyAlt))
                 {
                     // When the next key or Alt+Right are pressed navigate forward
@@ -289,9 +286,10 @@ namespace WinTox.Common
                 if (forwardPressed) this.GoForwardCommand.Execute(null);
             }
         }
+
 #endif
 
-        #endregion
+        #endregion Navigation support
 
         #region Process lifetime management
 
@@ -313,7 +311,7 @@ namespace WinTox.Common
         public event SaveStateEventHandler SaveState;
 
         /// <summary>
-        /// Invoked when this page is about to be displayed in a Frame.  
+        /// Invoked when this page is about to be displayed in a Frame.
         /// This method calls <see cref="LoadState"/>, where all page specific
         /// navigation and process lifetime management logic should be placed.
         /// </summary>
@@ -350,7 +348,7 @@ namespace WinTox.Common
                 if (this.LoadState != null)
                 {
                     this.LoadState(this,
-                        new LoadStateEventArgs(e.Parameter, (Dictionary<String, Object>) frameState[this._pageKey]));
+                        new LoadStateEventArgs(e.Parameter, (Dictionary<String, Object>)frameState[this._pageKey]));
                 }
             }
         }
@@ -373,7 +371,7 @@ namespace WinTox.Common
             frameState[_pageKey] = pageState;
         }
 
-        #endregion
+        #endregion Process lifetime management
     }
 
     /// <summary>
@@ -392,7 +390,7 @@ namespace WinTox.Common
     public class LoadStateEventArgs : EventArgs
     {
         /// <summary>
-        /// The parameter value passed to <see cref="Frame.Navigate(Type, Object)"/> 
+        /// The parameter value passed to <see cref="Frame.Navigate(Type, Object)"/>
         /// when this page was initially requested.
         /// </summary>
         public Object NavigationParameter { get; private set; }
@@ -407,7 +405,7 @@ namespace WinTox.Common
         /// Initializes a new instance of the <see cref="LoadStateEventArgs"/> class.
         /// </summary>
         /// <param name="navigationParameter">
-        /// The parameter value passed to <see cref="Frame.Navigate(Type, Object)"/> 
+        /// The parameter value passed to <see cref="Frame.Navigate(Type, Object)"/>
         /// when this page was initially requested.
         /// </param>
         /// <param name="pageState">
