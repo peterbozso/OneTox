@@ -1,8 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-
-// The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
+using Windows.UI.Xaml.Input;
 
 namespace WinTox.View.UserControls
 {
@@ -17,6 +16,11 @@ namespace WinTox.View.UserControls
         {
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
             e.Handled = true;
+        }
+
+        private void MainGridTapped(object sender, TappedRoutedEventArgs e)
+        {
+            (Window.Current.Content as Frame).Navigate(typeof(ChatPage), DataContext);
         }
     }
 }
