@@ -136,7 +136,6 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="Common\ReadMe.txt" />
-    <None Include="WinTox_TemporaryKey.pfx" />
     <Content Include="Assets\default-profile-picture.png" />
     <Content Include="Assets\tox-logo.jpg" />
   </ItemGroup>

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpTox.Core;
+﻿using SharpTox.Core;
 using WinTox.Model;
 
 namespace WinTox.ViewModel
@@ -45,6 +39,7 @@ namespace WinTox.ViewModel
                 case FriendRequestAnswer.Accept:
                     ToxSingletonModel.Instance.AddFriendNoRequest(e.PublicKey);
                     return;
+
                 case FriendRequestAnswer.Later:
                     // TODO: Postpone decision!
                     return;
