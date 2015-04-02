@@ -17,6 +17,8 @@
 
     <UserControl.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+        <converters:IsOnlineToVisibilityConverter x:Key="IsOnlineToVisibilityConverter" />
+        <converters:IsOnlineToOpacityConverter x:Key="IsOnlineToOpacityConverter" />
     </UserControl.Resources>
 
     <Grid Background="{StaticResource BackgroundColor}">
@@ -30,10 +32,12 @@
         </Grid.RowDefinitions>
 
         <Image Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Source="/Assets/default-profile-picture.png" Width="70"
-               Height="70" Stretch="UniformToFill" VerticalAlignment="Top" />
+               Height="70" Stretch="UniformToFill" VerticalAlignment="Top"
+               Opacity="{Binding IsOnline, Converter={StaticResource IsOnlineToOpacityConverter}}" />
         <Ellipse Width="10" Grid.Row="1" Grid.Column="1" Height="10" VerticalAlignment="Bottom"
                  HorizontalAlignment="Left" Margin="5,0,0,5"
-                 Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}" />
+                 Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}"
+                 Visibility="{Binding IsOnline, Converter={StaticResource IsOnlineToVisibilityConverter}}" />
         <TextBlock Grid.Column="0" Grid.Row="0" FontSize="24" Padding="10,10,10,0" FontWeight="Bold"
                    Foreground="{StaticResource MainColor}" HorizontalAlignment="Right" Text="{Binding Name}" />
         <TextBlock Grid.Column="0" Grid.Row="1" FontSize="18" Padding="10,0,10,0"
