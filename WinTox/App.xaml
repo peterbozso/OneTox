@@ -11,5 +11,6 @@
         <SolidColorBrush x:Key="BackgroundColor" Color="#23221E" />
         <SolidColorBrush x:Key="MainColor" Color="#5E7C88" />
         <SolidColorBrush x:Key="TextColor" Color="#C4D2DF" />
+        <SolidColorBrush x:Key="ChatBackgroundColor" Color="#ECF0F1" />
     </Application.Resources>
 </Application>
