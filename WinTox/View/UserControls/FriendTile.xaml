@@ -15,7 +15,7 @@
         </MenuFlyout>
     </UserControl.Resources>
 
-    <Grid Width="150" Height="150" FlyoutBase.AttachedFlyout="{StaticResource FriendTileFlyout}" RightTapped="Grid_RightTapped">
+    <Grid Width="150" Height="150" FlyoutBase.AttachedFlyout="{StaticResource FriendTileFlyout}" RightTapped="MainGridRightTapped">
         <Image Source="/Assets/default-profile-picture.png" Stretch="UniformToFill" />
         <!-- TODO: Replace it with an image with proper resolution and implement binding when user picture loading works! -->
         <Rectangle Height="26" Fill="#7F000000" VerticalAlignment="Bottom" />

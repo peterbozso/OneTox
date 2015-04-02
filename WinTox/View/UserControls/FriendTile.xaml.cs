@@ -13,7 +13,7 @@ namespace WinTox.View.UserControls
             this.InitializeComponent();
         }
 
-        private void Grid_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+        private void MainGridRightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
         {
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
             e.Handled = true;
