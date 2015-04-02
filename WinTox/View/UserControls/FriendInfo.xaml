@@ -15,7 +15,7 @@
     </UserControl.Resources>
 
     <StackPanel Background="{StaticResource BackgroundColor}">
-        <TextBlock FontSize="42" Margin="0,0,0,10" Foreground="{StaticResource MainColor}" VerticalAlignment="Bottom" Text="{Binding Name}" />
+        <TextBlock FontSize="42" Margin="0,0,0,5" Foreground="{StaticResource MainColor}" VerticalAlignment="Bottom" Text="{Binding Name}" />
         <TextBlock VerticalAlignment="Bottom" Margin="0,0,0,10" FontSize="22" Foreground="{StaticResource TextColor}" Text="{Binding StatusMessage}" />
         <Grid>
             <Image Source="/Assets/default-profile-picture.png" Width="250" Height="250" Stretch="UniformToFill" HorizontalAlignment="Left" />
