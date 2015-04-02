@@ -119,6 +119,9 @@
     <Compile Include="View\ChatPage.xaml.cs">
       <DependentUpon>ChatPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\UserControls\FriendInfo.xaml.cs">
+      <DependentUpon>FriendInfo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\UserControls\FriendTile.xaml.cs">
       <DependentUpon>FriendTile.xaml</DependentUpon>
     </Compile>
@@ -154,6 +157,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="View\ChatPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\FriendInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
