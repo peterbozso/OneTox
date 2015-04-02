@@ -12,14 +12,16 @@
 
     <UserControl.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+        <converters:IsOnlineToVisibilityConverter x:Key="IsOnlineToVisibilityConverter" />
+        <converters:IsOnlineToOpacityConverter x:Key="IsOnlineToOpacityConverter" />
     </UserControl.Resources>
 
     <StackPanel Background="{StaticResource BackgroundColor}">
         <TextBlock FontSize="42" Margin="0,0,0,5" Foreground="{StaticResource MainColor}" VerticalAlignment="Bottom" Text="{Binding Name}" />
         <TextBlock VerticalAlignment="Bottom" Margin="0,0,0,10" FontSize="22" Foreground="{StaticResource TextColor}" Text="{Binding StatusMessage}" />
         <Grid>
-            <Image Source="/Assets/default-profile-picture.png" Width="250" Height="250" Stretch="UniformToFill" HorizontalAlignment="Left" />
-            <Ellipse Width="15" Height="15" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,10" Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}" />
+            <Image Opacity="{Binding IsOnline, Converter={StaticResource IsOnlineToOpacityConverter}}" Source="/Assets/default-profile-picture.png" Width="250" Height="250" Stretch="UniformToFill" HorizontalAlignment="Left" />
+            <Ellipse Visibility="{Binding IsOnline, Converter={StaticResource IsOnlineToVisibilityConverter}}" Width="15" Height="15" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,10" Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}" />
         </Grid>
     </StackPanel>
 </UserControl>

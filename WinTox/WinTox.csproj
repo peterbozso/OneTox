@@ -106,6 +106,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\IsOnlineToOpacityConverter.cs" />
+    <Compile Include="Converters\IsOnlineToVisibilityConverter.cs" />
     <Compile Include="Converters\StatusToColorConverter.cs" />
     <Compile Include="Model\ExtendedTox.cs" />
     <Compile Include="ViewModel\AddFriendFlyoutViewModel.cs" />
