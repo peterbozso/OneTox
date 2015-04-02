@@ -60,6 +60,7 @@ namespace WinTox.ViewModel
                         case ExtendedTox.FriendListModificationType.Add:
                             Friends.Add(new FriendViewModel(friendNumber));
                             return;
+
                         case ExtendedTox.FriendListModificationType.Delete:
                             Friends.Remove(FindFriend(friendNumber));
                             return;

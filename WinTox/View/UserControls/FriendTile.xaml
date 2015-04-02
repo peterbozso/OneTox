@@ -8,10 +8,10 @@
     mc:Ignorable="d"
     d:DesignHeight="150"
     d:DesignWidth="150">
-    
+
     <UserControl.Resources>
         <MenuFlyout x:Key="FriendTileFlyout">
-            <MenuFlyoutItem Text="delete" Command="{Binding DeleteFriendCommand}"/>
+            <MenuFlyoutItem Text="delete" Command="{Binding DeleteFriendCommand}" />
         </MenuFlyout>
     </UserControl.Resources>
 
