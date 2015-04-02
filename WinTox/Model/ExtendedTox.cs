@@ -19,14 +19,14 @@ namespace WinTox.Model
         {
             var friendNumber = base.AddFriend(id, message, out error);
             if (error == ToxErrorFriendAdd.Ok)
-                FriendAdded(friendNumber);
+                FriendListModified(friendNumber, FriendListModificationType.Add);
             return friendNumber;
         }
 
         public new int AddFriend(ToxId id, string message)
         {
             var friendNumber = base.AddFriend(id, message);
-            FriendAdded(friendNumber);
+            FriendListModified(friendNumber, FriendListModificationType.Add);
             return friendNumber;
         }
 
@@ -34,26 +34,52 @@ namespace WinTox.Model
         {
             var friendNumber = base.AddFriendNoRequest(publicKey, out error);
             if (error == ToxErrorFriendAdd.Ok)
-                FriendAdded(friendNumber);
+                FriendListModified(friendNumber, FriendListModificationType.Add);
             return friendNumber;
         }
 
         public new int AddFriendNoRequest(ToxKey publicKey)
         {
             var friendNumber = base.AddFriendNoRequest(publicKey);
-            FriendAdded(friendNumber);
+            FriendListModified(friendNumber, FriendListModificationType.Add);
             return friendNumber;
         }
 
-        public delegate void FriendAddedEventHandler(int friendNumber);
-
-        public event FriendAddedEventHandler OnFriendAdded;
-
-        private void FriendAdded(int friendNumber)
+        public new bool DeleteFriend(int friendNumber, out ToxErrorFriendDelete error)
         {
-            if (OnFriendAdded != null)
+            var success = base.DeleteFriend(friendNumber, out error);
+            if (success)
             {
-                OnFriendAdded(friendNumber);
+                FriendListModified(friendNumber, FriendListModificationType.Delete);
+            }
+            return success;
+        }
+
+        public new bool DeleteFriend(int friendNumber)
+        {
+            var success = base.DeleteFriend(friendNumber);
+            if (success)
+            {
+                FriendListModified(friendNumber, FriendListModificationType.Delete);
+            }
+            return success;
+        }
+
+        public enum FriendListModificationType
+        {
+            Add,
+            Delete
+        }
+
+        public delegate void FriendListModifiedEventHandler(int friendNumber, FriendListModificationType modificationType);
+
+        public event FriendListModifiedEventHandler OnFriendListModified;
+
+        private void FriendListModified(int friendNumber, FriendListModificationType modificationType)
+        {
+            if (OnFriendListModified != null)
+            {
+                OnFriendListModified(friendNumber, modificationType);
             }
         }
     }

@@ -7,10 +7,8 @@ namespace WinTox.ViewModel
 {
     internal class FriendViewModel : ViewModelBase
     {
-        public FriendViewModel(FriendListViewModel friendList, int friendNumber)
+        public FriendViewModel(int friendNumber)
         {
-            _friendList = friendList;
-
             FriendNumber = friendNumber;
             Name = ToxSingletonModel.Instance.GetFriendName(friendNumber);
             if (Name == String.Empty)
@@ -76,9 +74,6 @@ namespace WinTox.ViewModel
             }
         }
 
-        // Only to notify the list if we want to delete a friend.
-        private FriendListViewModel _friendList;
-
         private RelayCommand _deleteFriendCommand;
 
         public RelayCommand DeleteFriendCommand
@@ -89,8 +84,9 @@ namespace WinTox.ViewModel
                        ?? (_deleteFriendCommand = new RelayCommand(
                            (object parameter) =>
                            {
-                               _friendList.Friends.Remove(this);
-                               ToxSingletonModel.Instance.DeleteFriend(FriendNumber);
+                               ToxErrorFriendDelete error;
+                               ToxSingletonModel.Instance.DeleteFriend(FriendNumber, out error);
+                               // TODO: Handle errors!!!
                            }));
             }
         }
