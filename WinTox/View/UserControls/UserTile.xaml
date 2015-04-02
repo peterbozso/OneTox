@@ -35,11 +35,11 @@
                Height="70" Stretch="UniformToFill" VerticalAlignment="Top"
                Opacity="{Binding IsOnline, Converter={StaticResource IsOnlineToOpacityConverter}}" />
         <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right">
-            <Ellipse Width="10" Height="10" VerticalAlignment="Center" HorizontalAlignment="Left"
+            <Ellipse Width="10" Height="10" VerticalAlignment="Center"
                      Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}"
                      Visibility="{Binding IsOnline, Converter={StaticResource IsOnlineToVisibilityConverter}}" />
             <TextBlock FontSize="24" Padding="10,10,10,0" FontWeight="Bold"
-                       Foreground="{StaticResource MainColor}" HorizontalAlignment="Right" Text="{Binding Name}" />
+                       Foreground="{StaticResource MainColor}" Text="{Binding Name}" />
         </StackPanel>
         <TextBlock Grid.Column="0" Grid.Row="1" FontSize="18" Padding="10,0,10,0"
                    Foreground="{StaticResource TextColor}" HorizontalAlignment="Right" Text="{Binding StatusMessage}" />
