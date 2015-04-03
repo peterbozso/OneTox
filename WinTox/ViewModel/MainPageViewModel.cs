@@ -40,6 +40,10 @@ namespace WinTox.ViewModel
                     ToxSingletonModel.Instance.AddFriendNoRequest(e.PublicKey);
                     return;
 
+                case FriendRequestAnswer.Decline:
+                    // TODO: ?
+                    return;
+
                 case FriendRequestAnswer.Later:
                     // TODO: Postpone decision!
                     return;

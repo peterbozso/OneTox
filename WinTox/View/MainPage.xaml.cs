@@ -1,5 +1,6 @@
 ﻿using SharpTox.Core;
 using System;
+using Windows.ApplicationModel.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -38,11 +39,11 @@ namespace WinTox.View
 
         private void FriendRequestReceived(ToxEventArgs.FriendRequestEventArgs e)
         {
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
                 var msgDialog = new MessageDialog(e.Message, e.PublicKey.ToString().Substring(0, 10));
                 msgDialog.Commands.Add(new UICommand("Accept", null, MainPageViewModel.FriendRequestAnswer.Accept));
-                msgDialog.Commands.Add(new UICommand("Decline"));
+                msgDialog.Commands.Add(new UICommand("Decline", null, MainPageViewModel.FriendRequestAnswer.Decline));
                 msgDialog.Commands.Add(new UICommand("Later", null, MainPageViewModel.FriendRequestAnswer.Later));
                 var answer = await msgDialog.ShowAsync();
                 _viewModel.HandleFriendRequestAnswer((MainPageViewModel.FriendRequestAnswer)answer.Id, e);
