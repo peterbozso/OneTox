@@ -1,5 +1,4 @@
 ﻿using SharpTox.Core;
-using WinTox.Model;
 
 namespace WinTox.ViewModel
 {
@@ -8,7 +7,7 @@ namespace WinTox.ViewModel
         internal MainPageViewModel()
         {
             FriendList = new FriendListViewModel();
-            ToxSingletonModel.Instance.OnFriendRequestReceived += this.OnFriendRequestReceived;
+            App.ToxModel.FriendRequestReceived += FriendRequestReceivedHandler;
         }
 
         public FriendListViewModel FriendList { get; set; }
@@ -17,7 +16,7 @@ namespace WinTox.ViewModel
 
         internal event FriendRequestReceivedEventHandler FriendRequestReceived;
 
-        internal void OnFriendRequestReceived(object sender, ToxEventArgs.FriendRequestEventArgs e)
+        internal void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
         {
             if (FriendRequestReceived != null)
             {
@@ -37,7 +36,9 @@ namespace WinTox.ViewModel
             switch (answer)
             {
                 case FriendRequestAnswer.Accept:
-                    ToxSingletonModel.Instance.AddFriendNoRequest(e.PublicKey);
+                    ToxErrorFriendAdd error;
+                    App.ToxModel.AddFriendNoRequest(e.PublicKey, out error);
+                    // TODO: Handle error!
                     return;
 
                 case FriendRequestAnswer.Decline:

@@ -1,10 +1,12 @@
-﻿using System;
+﻿using SharpTox.Core;
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
+using WinTox.Model;
 using WinTox.View;
 
 // The Hub App template is documented at http://go.microsoft.com/fwlink/?LinkId=321221
@@ -16,6 +18,8 @@ namespace WinTox
     /// </summary>
     sealed partial class App : Application
     {
+        internal static ToxModel ToxModel;
+
         /// <summary>
         /// Initializes the singleton Application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -24,6 +28,7 @@ namespace WinTox
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            ToxModel = new ToxModel(new ExtendedTox(new ToxOptions(true, true)));
         }
 
         /// <summary>
