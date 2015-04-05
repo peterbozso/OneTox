@@ -17,7 +17,6 @@ namespace WinTox.View
     public sealed partial class MainPage : Page
     {
         private NavigationHelper navigationHelper;
-        private MainPageViewModel _viewModel;
 
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and
@@ -33,7 +32,6 @@ namespace WinTox.View
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
-            _viewModel = (MainPageViewModel)DataContext;
         }
 
         /// <summary>
