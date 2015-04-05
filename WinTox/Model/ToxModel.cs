@@ -1,6 +1,9 @@
 ﻿using SharpTox.Core;
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace WinTox.Model
 {
@@ -25,6 +28,20 @@ namespace WinTox.Model
         {
             _tox = tox;
 
+            _tox.OnConnectionStatusChanged += ConnectionStatusChangedHandler;
+            _tox.OnFriendListModified += FriendListModifiedHandler;
+            _tox.OnFriendRequestReceived += FriendRequestReceivedHandler;
+            _tox.OnFriendNameChanged += FriendNameChangedHandler;
+            _tox.OnFriendStatusMessageChanged += FriendStatusMessageChangedHandler;
+            _tox.OnFriendStatusChanged += FriendStatusChangedHandler;
+            _tox.OnFriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
+
+            if (FriendListModified != null)
+                FriendListModified(-1, ExtendedTox.FriendListModificationType.Reset);
+        }
+
+        public void Start()
+        {
             foreach (ToxNode node in _nodes)
                 _tox.Bootstrap(node);
 
@@ -35,14 +52,6 @@ namespace WinTox.Model
 
             string id = _tox.Id.ToString();
             Debug.WriteLine("ID: {0}", id);
-
-            _tox.OnConnectionStatusChanged += ConnectionStatusChangedHandler;
-            _tox.OnFriendListModified += FriendListModifiedHandler;
-            _tox.OnFriendRequestReceived += FriendRequestReceivedHandler;
-            _tox.OnFriendNameChanged += FriendNameChangedHandler;
-            _tox.OnFriendStatusMessageChanged += FriendStatusMessageChangedHandler;
-            _tox.OnFriendStatusChanged += FriendStatusChangedHandler;
-            _tox.OnFriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
         }
 
         #region Properties
@@ -114,6 +123,25 @@ namespace WinTox.Model
         public ToxKey GetFriendPublicKey(int friendNumber)
         {
             return _tox.GetFriendPublicKey(friendNumber);
+        }
+
+        private const string _fileName = "ToxUserData.dat";
+
+        public async Task SaveDataAsync()
+        {
+            var stream = await ApplicationData.Current.LocalFolder.OpenStreamForWriteAsync(_fileName,
+                CreationCollisionOption.ReplaceExisting);
+            var dataToWrite = _tox.GetData().Bytes;
+            await stream.WriteAsync(dataToWrite, 0, dataToWrite.Length);
+        }
+
+        public async Task RestoreDataAsync()
+        {
+            var stream = await ApplicationData.Current.LocalFolder.OpenStreamForReadAsync(_fileName);
+            byte[] toxData = new byte[stream.Length];
+            await stream.ReadAsync(toxData, 0, toxData.Length);
+            var newTox = new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(toxData));
+            SetCurrent(newTox);
         }
 
         #endregion Methods

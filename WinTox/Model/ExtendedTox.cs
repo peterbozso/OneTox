@@ -50,7 +50,7 @@ namespace WinTox.Model
             var success = base.DeleteFriend(friendNumber, out error);
             if (success)
             {
-                FriendListModified(friendNumber, FriendListModificationType.Delete);
+                FriendListModified(friendNumber, FriendListModificationType.Remove);
             }
             return success;
         }
@@ -60,7 +60,7 @@ namespace WinTox.Model
             var success = base.DeleteFriend(friendNumber);
             if (success)
             {
-                FriendListModified(friendNumber, FriendListModificationType.Delete);
+                FriendListModified(friendNumber, FriendListModificationType.Remove);
             }
             return success;
         }
@@ -68,7 +68,8 @@ namespace WinTox.Model
         public enum FriendListModificationType
         {
             Add,
-            Delete
+            Remove,
+            Reset
         }
 
         public delegate void FriendListModifiedEventHandler(int friendNumber, FriendListModificationType modificationType);

@@ -1,11 +1,7 @@
-﻿using SharpTox.Core;
-using System;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Popups;
+﻿using System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
-using WinTox.ViewModel;
 
 // The Hub Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=321224
 

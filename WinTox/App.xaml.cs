@@ -28,6 +28,7 @@ namespace WinTox
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            this.Resuming += OnResuming;
             ToxModel = new ToxModel(new ExtendedTox(new ToxOptions(true, true)));
         }
 
@@ -63,6 +64,8 @@ namespace WinTox
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
+                    await ToxModel.RestoreDataAsync();
+
                     // Restore the saved session state only when appropriate
                     try
                     {
@@ -70,10 +73,15 @@ namespace WinTox
                     }
                     catch (SuspensionManagerException)
                     {
-                        //Something went wrong restoring state.
-                        //Assume there is no state and continue
+                        // Something went wrong restoring state.
+                        // Assume there is no state and continue.
                     }
                 }
+
+                if (e.PreviousExecutionState == ApplicationExecutionState.ClosedByUser)
+                    await ToxModel.RestoreDataAsync();
+
+                ToxModel.Start();
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
@@ -110,7 +118,15 @@ namespace WinTox
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             await SuspensionManager.SaveAsync();
+            await ToxModel.SaveDataAsync();
             deferral.Complete();
+        }
+
+        private async void OnResuming(object sender, object e)
+        {
+            await SuspensionManager.RestoreAsync();
+            await ToxModel.RestoreDataAsync();
+            ToxModel.Start();
         }
     }
 }
