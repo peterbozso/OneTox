@@ -1,4 +1,7 @@
 ﻿using SharpTox.Core;
+using System;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Popups;
 
 namespace WinTox.ViewModel
 {
@@ -12,26 +15,27 @@ namespace WinTox.ViewModel
 
         public FriendListViewModel FriendList { get; set; }
 
-        internal delegate void FriendRequestReceivedEventHandler(ToxEventArgs.FriendRequestEventArgs e);
-
-        internal event FriendRequestReceivedEventHandler FriendRequestReceived;
-
-        internal void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
-        {
-            if (FriendRequestReceived != null)
-            {
-                FriendRequestReceived(e);
-            }
-        }
-
-        internal enum FriendRequestAnswer
+        private enum FriendRequestAnswer
         {
             Accept,
             Decline,
             Later
         }
 
-        internal void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e)
+        private void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
+        {
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
+                var msgDialog = new MessageDialog(e.Message, e.PublicKey.ToString().Substring(0, 10));
+                msgDialog.Commands.Add(new UICommand("Accept", null, FriendRequestAnswer.Accept));
+                msgDialog.Commands.Add(new UICommand("Decline", null, FriendRequestAnswer.Decline));
+                msgDialog.Commands.Add(new UICommand("Later", null, FriendRequestAnswer.Later));
+                var answer = await msgDialog.ShowAsync();
+                HandleFriendRequestAnswer((FriendRequestAnswer)answer.Id, e);
+            });
+        }
+
+        private void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e)
         {
             switch (answer)
             {
