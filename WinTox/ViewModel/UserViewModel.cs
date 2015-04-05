@@ -1,7 +1,6 @@
 ﻿using SharpTox.Core;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
-using WinTox.Model;
 
 namespace WinTox.ViewModel
 {
@@ -9,39 +8,39 @@ namespace WinTox.ViewModel
     {
         public UserViewModel()
         {
-            _isOnline = ToxSingletonModel.Instance.IsConnected;
-            ToxSingletonModel.Instance.OnConnectionStatusChanged += OnConnectionStatusChanged;
+            _isOnline = App.ToxModel.IsUserConnected;
+            App.ToxModel.UserConnectionStatusChanged += UserConnectionStatusChangedHandler;
         }
 
-        private void OnConnectionStatusChanged(object sender, ToxEventArgs.ConnectionStatusEventArgs e)
+        private void UserConnectionStatusChangedHandler(object sender, ToxEventArgs.ConnectionStatusEventArgs e)
         {
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                IsOnline = ToxSingletonModel.Instance.IsConnected;
+                IsOnline = App.ToxModel.IsUserConnected;
             });
         }
 
         public string Name
         {
-            get { return ToxSingletonModel.Instance.Name; }
+            get { return App.ToxModel.UserName; }
         }
 
         public string StatusMessage
         {
-            get { return ToxSingletonModel.Instance.StatusMessage; }
+            get { return App.ToxModel.UserStatusMessage; }
         }
 
         public ToxUserStatus Status
         {
-            get { return ToxSingletonModel.Instance.Status; }
+            get { return App.ToxModel.UserStatus; }
         }
 
-        private bool _isOnline = false;
+        private bool _isOnline;
 
         public bool IsOnline
         {
             get { return _isOnline; }
-            set
+            private set
             {
                 _isOnline = value;
                 OnPropertyChanged();

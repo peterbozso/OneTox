@@ -1,7 +1,6 @@
 ﻿using SharpTox.Core;
 using System;
 using WinTox.Common;
-using WinTox.Model;
 
 namespace WinTox.ViewModel
 {
@@ -10,18 +9,21 @@ namespace WinTox.ViewModel
         public FriendViewModel(int friendNumber)
         {
             FriendNumber = friendNumber;
-            Name = ToxSingletonModel.Instance.GetFriendName(friendNumber);
+
+            Name = App.ToxModel.GetFriendName(friendNumber);
             if (Name == String.Empty)
             {
-                Name = ToxSingletonModel.Instance.GetFriendPublicKey(friendNumber).ToString().Substring(0, 10);
+                Name = App.ToxModel.GetFriendPublicKey(friendNumber).ToString().Substring(0, 10);
             }
-            StatusMessage = ToxSingletonModel.Instance.GetFriendStatusMessage(friendNumber);
+
+            StatusMessage = App.ToxModel.GetFriendStatusMessage(friendNumber);
             if (StatusMessage == String.Empty)
             {
                 StatusMessage = "Friend request sent.";
             }
-            Status = ToxSingletonModel.Instance.GetFriendStatus(friendNumber);
-            IsOnline = ToxSingletonModel.Instance.IsFriendOnline(friendNumber);
+
+            Status = App.ToxModel.GetFriendStatus(friendNumber);
+            IsOnline = App.ToxModel.IsFriendOnline(friendNumber);
         }
 
         public int FriendNumber { get; set; }
@@ -85,7 +87,7 @@ namespace WinTox.ViewModel
                            (object parameter) =>
                            {
                                ToxErrorFriendDelete error;
-                               ToxSingletonModel.Instance.DeleteFriend(FriendNumber, out error);
+                               App.ToxModel.DeleteFriend(FriendNumber, out error);
                                // TODO: Handle errors!!!
                            }));
             }

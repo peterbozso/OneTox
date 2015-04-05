@@ -11,16 +11,16 @@ namespace WinTox.ViewModel
         public FriendListViewModel()
         {
             Friends = new ObservableCollection<FriendViewModel>();
-            foreach (var friendNumber in ToxSingletonModel.Instance.Friends)
+            foreach (var friendNumber in App.ToxModel.Friends)
             {
                 Friends.Add(new FriendViewModel(friendNumber));
             }
 
-            ToxSingletonModel.Instance.OnFriendNameChanged += this.OnFriendNameChanged;
-            ToxSingletonModel.Instance.OnFriendStatusMessageChanged += this.OnFriendStatusMessageChanged;
-            ToxSingletonModel.Instance.OnFriendStatusChanged += this.OnFriendStatusChanged;
-            ToxSingletonModel.Instance.OnFriendConnectionStatusChanged += this.OnFriendConnectionStatusChanged;
-            ToxSingletonModel.Instance.OnFriendListModified += this.OnFriendListModified;
+            App.ToxModel.FriendNameChanged += FriendNameChangedHandler;
+            App.ToxModel.FriendStatusMessageChanged += FriendStatusMessageChangedHandler;
+            App.ToxModel.FriendStatusChanged += FriendStatusChangedHandler;
+            App.ToxModel.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
+            App.ToxModel.FriendListModified += FriendListModifiedHandler;
         }
 
         // We need to run the event handlers from the UI thread.
@@ -28,29 +28,29 @@ namespace WinTox.ViewModel
 
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
 
-        private void OnFriendNameChanged(object sender, ToxEventArgs.NameChangeEventArgs e)
+        private void FriendNameChangedHandler(object sender, ToxEventArgs.NameChangeEventArgs e)
         {
             _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { FindFriend(e.FriendNumber).Name = e.Name; });
         }
 
-        private void OnFriendStatusMessageChanged(object sender, ToxEventArgs.StatusMessageEventArgs e)
+        private void FriendStatusMessageChangedHandler(object sender, ToxEventArgs.StatusMessageEventArgs e)
         {
             _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () => { FindFriend(e.FriendNumber).StatusMessage = e.StatusMessage; });
         }
 
-        private void OnFriendStatusChanged(object sender, ToxEventArgs.StatusEventArgs e)
+        private void FriendStatusChangedHandler(object sender, ToxEventArgs.StatusEventArgs e)
         {
             _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { FindFriend(e.FriendNumber).Status = e.Status; });
         }
 
-        private void OnFriendConnectionStatusChanged(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
+        private void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
         {
             _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () => { FindFriend(e.FriendNumber).IsOnline = e.Status != ToxConnectionStatus.None; });
         }
 
-        private void OnFriendListModified(int friendNumber, ExtendedTox.FriendListModificationType modificationType)
+        private void FriendListModifiedHandler(int friendNumber, ExtendedTox.FriendListModificationType modificationType)
         {
             _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () =>
