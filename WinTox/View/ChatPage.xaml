@@ -9,6 +9,10 @@
     xmlns:viewModel="using:WinTox.ViewModel"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <ResourceDictionary Source="ChatPageDictionary.xaml" />
+    </Page.Resources>
+
     <Grid Background="{ThemeResource BackgroundColor}">
         <Grid.ChildrenTransitions>
             <TransitionCollection>
@@ -55,10 +59,7 @@
             <!-- TODO: List of messages in the currently open chat comes here! -->
             <ListView Grid.Row="0" Background="{StaticResource ChatBackgroundColor}" ItemsSource="{Binding Conversation.Messages}" SelectionMode="None" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                        <Setter Property="Margin" Value="-4,-4,-4,-4" />
-                    </Style>
+                    <StaticResource ResourceKey="ChatPageListViewItemStyle"></StaticResource>
                 </ListView.ItemContainerStyle>
 
                 <ListView.ItemTemplate>
