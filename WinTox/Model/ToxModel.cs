@@ -145,6 +145,11 @@ namespace WinTox.Model
             SetCurrent(newTox);
         }
 
+        public int SendMessage(int friendNumber, string message, ToxMessageType type, out ToxErrorSendMessage error)
+        {
+            return _tox.SendMessage(friendNumber, message, type, out error);
+        }
+
         #endregion Methods
 
         #region Events

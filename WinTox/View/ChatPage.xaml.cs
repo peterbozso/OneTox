@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
@@ -88,5 +89,15 @@ namespace WinTox.View
         }
 
         #endregion NavigationHelper registration
+
+        private void MessageInputKeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter)
+            {
+                _friendViewModel.Conversation.SendMessage(_friendViewModel.FriendNumber, MessageInput.Text);
+                MessageInput.Text = String.Empty;
+                e.Handled = true;
+            }
+        }
     }
 }
