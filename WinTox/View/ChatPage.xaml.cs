@@ -90,6 +90,7 @@ namespace WinTox.View
 
         #endregion NavigationHelper registration
 
+        // TODO: Implement it with command and binding:
         private void MessageInputKeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
             if (e.Key == VirtualKey.Enter)
