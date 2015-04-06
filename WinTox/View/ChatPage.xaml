@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:userControls="using:WinTox.View.UserControls"
+    xmlns:viewModel="using:WinTox.ViewModel"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource BackgroundColor}">
@@ -46,13 +47,29 @@
 
         <!-- List of messages and message input field -->
         <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
+            <Grid.DataContext>
+                <viewModel:MessageListViewModel />
+            </Grid.DataContext>
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="100" />
             </Grid.RowDefinitions>
 
             <!-- TODO: List of messages in the currently open chat comes here! -->
-            <ListView Grid.Row="0" Background="{StaticResource ChatBackgroundColor}" />
+            <ListView Grid.Row="0" Background="{StaticResource ChatBackgroundColor}" ItemsSource="{Binding Messages}" SelectionMode="None" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <userControls:MessageBox />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
 
             <!-- Message input field -->
             <Grid Grid.Row="1" Background="{StaticResource MainColor}">

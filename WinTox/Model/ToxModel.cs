@@ -35,6 +35,7 @@ namespace WinTox.Model
             _tox.OnFriendStatusMessageChanged += FriendStatusMessageChangedHandler;
             _tox.OnFriendStatusChanged += FriendStatusChangedHandler;
             _tox.OnFriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
+            _tox.OnFriendMessageReceived += FriendMessageReceivedHandler;
 
             if (FriendListModified != null)
                 FriendListModified(-1, ExtendedTox.FriendListModificationType.Reset);
@@ -202,6 +203,14 @@ namespace WinTox.Model
         {
             if (FriendConnectionStatusChanged != null)
                 FriendConnectionStatusChanged(sender, e);
+        }
+
+        public event EventHandler<ToxEventArgs.FriendMessageEventArgs> FriendMessageReceived;
+
+        private void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
+        {
+            if (FriendMessageReceived != null)
+                FriendMessageReceived(sender, e);
         }
 
         #endregion Events
