@@ -9,9 +9,9 @@ using Windows.ApplicationModel.Core;
 
 namespace WinTox.ViewModel
 {
-    internal class MessageListViewModel
+    internal class ConversationViewModel
     {
-        public MessageListViewModel()
+        public ConversationViewModel()
         {
             Messages = new ObservableCollection<MessageViewModel>();
             App.ToxModel.FriendMessageReceived += FriendMessageReceivedHandler;
