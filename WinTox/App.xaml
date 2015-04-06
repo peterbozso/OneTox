@@ -10,6 +10,6 @@
         <SolidColorBrush x:Key="MainColor" Color="#5E7C88" />
         <SolidColorBrush x:Key="TextColor" Color="#C4D2DF" />
         <SolidColorBrush x:Key="ChatBackgroundColor" Color="#ECF0F1" />
-        <SolidColorBrush x:Key="FriendMessageColor" Color="#4B5F6D" />
+        <SolidColorBrush x:Key="MessageColor" Color="#4B5F6D" />
     </Application.Resources>
 </Application>

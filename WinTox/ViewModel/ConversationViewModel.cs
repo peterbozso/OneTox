@@ -19,7 +19,7 @@ namespace WinTox.ViewModel
         public void ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
         {
             if (e.MessageType == ToxMessageType.Message)
-                StoreMessage(e.Message, App.ToxModel.GetFriendName(e.FriendNumber));
+                StoreMessage(e.Message, App.ToxModel.GetFriendName(e.FriendNumber), MessageViewModel.MessageSenderType.Friend);
         }
 
         public void SendMessage(int friendNumber, string message)
@@ -28,10 +28,10 @@ namespace WinTox.ViewModel
             App.ToxModel.SendMessage(friendNumber, message, ToxMessageType.Message, out error);
             // TODO: Error handling!
             if (error == ToxErrorSendMessage.Ok)
-                StoreMessage(message, App.ToxModel.UserName);
+                StoreMessage(message, App.ToxModel.UserName, MessageViewModel.MessageSenderType.User);
         }
 
-        private void StoreMessage(string message, string name)
+        private void StoreMessage(string message, string name, MessageViewModel.MessageSenderType senderType)
         {
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
@@ -39,7 +39,8 @@ namespace WinTox.ViewModel
                 {
                     Message = message.Trim(),
                     Timestamp = DateTime.Now.ToString(),
-                    Name = name
+                    SenderName = name,
+                    SenderType = senderType
                 });
             });
         }
