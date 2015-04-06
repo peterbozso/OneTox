@@ -14,7 +14,7 @@
         <converters:IsOnlineToOpacityConverter x:Key="IsOnlineToOpacityConverter" />
 
         <MenuFlyout x:Key="FriendTileFlyout">
-            <MenuFlyoutItem Text="delete" Command="{Binding DeleteFriendCommand}" />
+            <MenuFlyoutItem Text="remove" Command="{Binding RemoveFriendCommand}" />
         </MenuFlyout>
     </UserControl.Resources>
 

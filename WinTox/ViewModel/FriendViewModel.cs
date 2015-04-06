@@ -80,14 +80,14 @@ namespace WinTox.ViewModel
             }
         }
 
-        private RelayCommand _deleteFriendCommand;
+        private RelayCommand _removeFriendCommand;
 
-        public RelayCommand DeleteFriendCommand
+        public RelayCommand RemoveFriendCommand
         {
             get
             {
-                return _deleteFriendCommand
-                       ?? (_deleteFriendCommand = new RelayCommand(
+                return _removeFriendCommand
+                       ?? (_removeFriendCommand = new RelayCommand(
                            (object parameter) =>
                            {
                                ToxErrorFriendDelete error;
