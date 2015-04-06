@@ -28,7 +28,7 @@ namespace WinTox.ViewModel
             App.ToxModel.SendMessage(friendNumber, message, ToxMessageType.Message, out error);
             // TODO: Error handling!
             if (error == ToxErrorSendMessage.Ok)
-                StoreMessage(message, App.ToxModel.UserName, MessageViewModel.MessageSenderType.User);
+                StoreMessage(message, "me", MessageViewModel.MessageSenderType.User);
         }
 
         private void StoreMessage(string message, string name, MessageViewModel.MessageSenderType senderType)
