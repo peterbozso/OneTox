@@ -24,6 +24,6 @@
         <Image Grid.RowSpan="2" Margin="20,0,0,0" Source="/Assets/default-profile-picture.png" Height="50" Width="50" Stretch="UniformToFill" VerticalAlignment="Top" />
         <TextBlock x:Name="UserName" Grid.Row="0" Grid.Column="1" Foreground="{StaticResource MainColor}" FontSize="20" Margin="10,-5,0,0" Text="{Binding UserName}" />
         <TextBlock x:Name="MessageText" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="1" Foreground="{StaticResource FriendMessageColor}" FontSize="20" Margin="10,-10,20,0" TextWrapping="Wrap" Text="{Binding Message}" />
-        <TextBlock x:Name="Timestamp" Grid.Row="0" Grid.Column="2" FontSize="18" Margin="0,-5,20,0" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}" HorizontalAlignment="Right" Text="{Binding Timestamp}" />
+        <TextBlock x:Name="Timestamp" Grid.Row="0" Grid.Column="2" FontSize="18" Margin="0,-5,0,0" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}" HorizontalAlignment="Right" Text="{Binding Timestamp}" />
     </Grid>
 </UserControl>
