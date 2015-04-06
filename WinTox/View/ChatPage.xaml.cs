@@ -14,7 +14,7 @@ namespace WinTox.View
     public sealed partial class ChatPage : Page
     {
         private NavigationHelper navigationHelper;
-        private FriendViewModel _viewModel;
+        private FriendViewModel _friendViewModel;
 
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and
@@ -78,7 +78,7 @@ namespace WinTox.View
             var friendViewModel = e.Parameter as FriendViewModel;
             if (friendViewModel != null)
             {
-                DataContext = _viewModel = friendViewModel;
+                DataContext = _friendViewModel = friendViewModel;
             }
         }
 
