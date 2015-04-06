@@ -14,10 +14,9 @@ namespace WinTox.ViewModel
         public ConversationViewModel()
         {
             Messages = new ObservableCollection<MessageViewModel>();
-            App.ToxModel.FriendMessageReceived += FriendMessageReceivedHandler;
         }
 
-        private void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
+        public void ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
         {
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {

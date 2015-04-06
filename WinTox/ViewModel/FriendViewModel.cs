@@ -8,6 +8,8 @@ namespace WinTox.ViewModel
     {
         public FriendViewModel(int friendNumber)
         {
+            Conversation = new ConversationViewModel();
+
             FriendNumber = friendNumber;
 
             Name = App.ToxModel.GetFriendName(friendNumber);
@@ -25,6 +27,8 @@ namespace WinTox.ViewModel
             Status = App.ToxModel.GetFriendStatus(friendNumber);
             IsOnline = App.ToxModel.IsFriendOnline(friendNumber);
         }
+
+        public ConversationViewModel Conversation { get; set; }
 
         public int FriendNumber { get; set; }
 
@@ -91,6 +95,11 @@ namespace WinTox.ViewModel
                                // TODO: Handle errors!!!
                            }));
             }
+        }
+
+        public void ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
+        {
+            Conversation.ReceiveMessage(e);
         }
     }
 }

@@ -21,6 +21,7 @@ namespace WinTox.ViewModel
             App.ToxModel.FriendStatusChanged += FriendStatusChangedHandler;
             App.ToxModel.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
             App.ToxModel.FriendListModified += FriendListModifiedHandler;
+            App.ToxModel.FriendMessageReceived += FriendMessageReceivedHandler;
         }
 
         // We need to run the event handlers from the UI thread.
@@ -74,6 +75,11 @@ namespace WinTox.ViewModel
                             return;
                     }
                 });
+        }
+
+        private void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
+        {
+            FindFriend(e.FriendNumber).ReceiveMessage(e);
         }
 
         private FriendViewModel FindFriend(int friendNumber)
