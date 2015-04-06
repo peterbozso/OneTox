@@ -13,21 +13,22 @@
     <UserControl.Resources>
         <converters:SenderTypeToColorConverter x:Key="SenderTypeToColorConverter" />
     </UserControl.Resources>
-
-    <Grid Margin="0,5,0,5" Background="{Binding Path=SenderType, Converter={StaticResource SenderTypeToColorConverter}}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <!-- TODO: Replace image with data binding! -->
-        <Image Grid.RowSpan="2" Margin="20,0,0,0" Source="/Assets/default-profile-picture.png" Height="50" Width="50" Stretch="UniformToFill" VerticalAlignment="Top" />
-        <TextBlock x:Name="Name" Grid.Row="0" Grid.Column="1" Foreground="{StaticResource MainColor}" FontSize="20" Margin="10,-5,0,0" Text="{Binding SenderName}" />
-        <TextBlock x:Name="MessageText" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="1" Foreground="{StaticResource MessageColor}" FontSize="20" Margin="10,-10,20,0" TextWrapping="Wrap" Text="{Binding Message}" />
-        <TextBlock x:Name="Timestamp" Grid.Row="0" Grid.Column="2" FontSize="18" Margin="0,-5,0,0" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}" HorizontalAlignment="Right" Text="{Binding Timestamp}" />
+    <Grid Background="{Binding Path=SenderType, Converter={StaticResource SenderTypeToColorConverter}}">
+        <Grid Margin="20,10,20,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <!-- TODO: Replace image with data binding! -->
+            <Image Grid.RowSpan="2" Source="/Assets/default-profile-picture.png" Height="50" Width="50" Stretch="UniformToFill" VerticalAlignment="Top" />
+            <TextBlock x:Name="Name" Grid.Row="0" Grid.Column="1" Foreground="{StaticResource MainColor}" FontSize="20" Margin="10,-5,0,0" Text="{Binding SenderName}" />
+            <TextBlock x:Name="MessageText" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="1" Foreground="{StaticResource MessageColor}" FontSize="20" Margin="10,-10,0,0" TextWrapping="Wrap" Text="{Binding Message}" />
+            <TextBlock x:Name="Timestamp" Grid.Row="0" Grid.Column="2" FontSize="18" Margin="0,-5,0,0" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}" HorizontalAlignment="Right" Text="{Binding Timestamp}" />
+        </Grid>
     </Grid>
 </UserControl>
