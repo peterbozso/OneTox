@@ -26,7 +26,8 @@ namespace WinTox.ViewModel
         {
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
-                var msgDialog = new MessageDialog(e.Message, e.PublicKey.ToString().Substring(0, 10));
+                var message = "From: " + e.PublicKey + "\n" + "Message: " + e.Message;
+                var msgDialog = new MessageDialog(message, "Friend request received");
                 msgDialog.Commands.Add(new UICommand("Accept", null, FriendRequestAnswer.Accept));
                 msgDialog.Commands.Add(new UICommand("Decline", null, FriendRequestAnswer.Decline));
                 msgDialog.Commands.Add(new UICommand("Later", null, FriendRequestAnswer.Later));
