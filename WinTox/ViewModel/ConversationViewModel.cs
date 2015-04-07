@@ -24,7 +24,7 @@ namespace WinTox.ViewModel
         public void SendMessage(int friendNumber, string message)
         {
             ToxMessageType messageType;
-            if (message.Substring(0, 4).Equals("/me "))
+            if (message.Length > 3 && message.Substring(0, 4).Equals("/me "))
             {
                 message = message.Remove(0, 4);
                 messageType = ToxMessageType.Action;
