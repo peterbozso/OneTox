@@ -1,5 +1,6 @@
 ﻿using SharpTox.Core;
 using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -55,31 +56,14 @@ namespace WinTox
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
-                //Associate the frame with a SuspensionManager key
+                // Associate the frame with a SuspensionManager key
                 SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
                 // Set the default language
                 rootFrame.Language = Windows.Globalization.ApplicationLanguages.Languages[0];
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    await ToxModel.RestoreDataAsync();
-
-                    // Restore the saved session state only when appropriate
-                    try
-                    {
-                        await SuspensionManager.RestoreAsync();
-                    }
-                    catch (SuspensionManagerException)
-                    {
-                        // Something went wrong restoring state.
-                        // Assume there is no state and continue.
-                    }
-                }
-
-                if (e.PreviousExecutionState == ApplicationExecutionState.ClosedByUser)
-                    await ToxModel.RestoreDataAsync();
+                await HandlePreviousExecutionState(e.PreviousExecutionState);
 
                 ToxModel.Start();
 
@@ -95,6 +79,44 @@ namespace WinTox
             }
             // Ensure the current window is active
             Window.Current.Activate();
+        }
+
+        private async Task HandlePreviousExecutionState(ApplicationExecutionState previousExecutionState)
+        {
+            if (previousExecutionState == ApplicationExecutionState.Terminated ||
+                previousExecutionState == ApplicationExecutionState.ClosedByUser ||
+                previousExecutionState == ApplicationExecutionState.NotRunning)
+            {
+                bool successfulRestoration = true;
+                try
+                {
+                    await ToxModel.RestoreDataAsync();
+                }
+                catch
+                {
+                    successfulRestoration = false;
+                }
+                // If the restoration was unsuccessful, it means that we are starting up the app the
+                // very firs time or something went wrong restoring data.
+                // So we save the current Tox instance (set in App's constructor) as the default one.
+                if (!successfulRestoration)
+                    await ToxModel.SaveDataAsync();
+
+                if (previousExecutionState != ApplicationExecutionState.NotRunning)
+                // We only have to restore session state in the other two cases.
+                // See: https://msdn.microsoft.com/en-us/library/ie/windows.applicationmodel.activation.applicationexecutionstate
+                {
+                    try
+                    {
+                        await SuspensionManager.RestoreAsync();
+                    }
+                    catch (SuspensionManagerException)
+                    {
+                        // Something went wrong restoring state.
+                        // Assume there is no state and continue.
+                    }
+                }
+            }
         }
 
         /// <summary>

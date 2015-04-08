@@ -164,8 +164,10 @@ namespace WinTox.Model
 
         public event ExtendedTox.FriendListModifiedEventHandler FriendListModified;
 
-        private void FriendListModifiedHandler(int friendNumber, ExtendedTox.FriendListModificationType modificationType)
+        private async void FriendListModifiedHandler(int friendNumber, ExtendedTox.FriendListModificationType modificationType)
         {
+            await SaveDataAsync();
+
             if (FriendListModified != null)
                 FriendListModified(friendNumber, modificationType);
         }
