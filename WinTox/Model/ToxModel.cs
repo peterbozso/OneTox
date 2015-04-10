@@ -126,7 +126,7 @@ namespace WinTox.Model
             return _tox.GetFriendPublicKey(friendNumber);
         }
 
-        private const string _fileName = "ToxUserData.dat";
+        private const string _fileName = "ToxUserData.tox";
 
         public async Task SaveDataAsync()
         {
