@@ -47,7 +47,7 @@ namespace WinTox.ViewModel
         {
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                if (ConcatWithLast(message, senderType))
+                if (ConcatWithLast(message, senderType, messageType))
                     return;
 
                 Messages.Add(new MessageViewModel
@@ -68,13 +68,13 @@ namespace WinTox.ViewModel
         /// <param name="senderType">Type of the sender of the message.</param>
         /// <returns>True on success, false otherwise.</returns>
         /// TODO: Maybe storing chunks of messages as lists and display a timestamp for every message would be a better (more user friendly) approach of the problem..?
-        private bool ConcatWithLast(string message, MessageViewModel.MessageSenderType senderType)
+        private bool ConcatWithLast(string message, MessageViewModel.MessageSenderType senderType, ToxMessageType messageType)
         {
             if (Messages.Count == 0)
                 return false;
 
             var lastMessage = Messages.Last();
-            if (lastMessage.SenderType == senderType && lastMessage.MessageType == ToxMessageType.Message)
+            if (lastMessage.SenderType == senderType && lastMessage.MessageType == ToxMessageType.Message && messageType == ToxMessageType.Message)
             {
                 // Concat this message's text to the last one's.
                 lastMessage.Message = lastMessage.Message + '\n' + message.Trim();
