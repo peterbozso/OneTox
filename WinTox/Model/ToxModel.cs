@@ -187,7 +187,7 @@ namespace WinTox.Model
 
         public event EventHandler<ToxEventArgs.ConnectionStatusEventArgs> UserConnectionStatusChanged;
 
-        private async void ConnectionStatusChangedHandler(object sender, ToxEventArgs.ConnectionStatusEventArgs e)
+        private void ConnectionStatusChangedHandler(object sender, ToxEventArgs.ConnectionStatusEventArgs e)
         {
             if (UserConnectionStatusChanged != null)
                 UserConnectionStatusChanged(sender, e);
