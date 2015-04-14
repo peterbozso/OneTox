@@ -84,14 +84,14 @@ namespace WinTox.Model
                 FriendListModified(-1, ExtendedTox.FriendListModificationType.Reset);
         }
 
-        public async Task Start()
+        public async void Start()
         {
-            await BootstrapContinously();
-
             _tox.Name = "User";
             _tox.StatusMessage = "This is a test.";
 
             _tox.Start();
+
+            BootstrapContinously();
 
             string id = _tox.Id.ToString();
             Debug.WriteLine("ID: {0}", id);
@@ -100,25 +100,20 @@ namespace WinTox.Model
         /// <summary>
         /// Bootstrap off of 4 random nodes each time until we become connected.
         /// </summary>
-        private async Task BootstrapContinously()
+        private async void BootstrapContinously()
         {
             Random random = new Random();
 
-            while (true)
+            while (!_tox.IsConnected)
             {
                 for (int i = 0; i < 4; i++)
                 {
                     var randomIndex = random.Next(_nodes.Length);
-                    var success = _tox.Bootstrap(_nodes[randomIndex]);
-                    if (success)
-                    {
-                        Debug.WriteLine("Succesfully bootstrapped off: {0}, {1}",
-                            _nodes[randomIndex].Address, _nodes[randomIndex].PublicKey);
-                        return;
-                    }
+                    _tox.Bootstrap(_nodes[randomIndex]);
                 }
 
-                await Task.Delay(5000);
+                if (!_tox.IsConnected)
+                    await Task.Delay(5000);
             }
         }
 
@@ -198,7 +193,7 @@ namespace WinTox.Model
                 UserConnectionStatusChanged(sender, e);
 
             if (e.Status == ToxConnectionStatus.None)
-                await BootstrapContinously();
+                BootstrapContinously();
         }
 
         public event ExtendedTox.FriendListModifiedEventHandler FriendListModified;
