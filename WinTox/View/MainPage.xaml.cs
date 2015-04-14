@@ -1,7 +1,10 @@
 ﻿using System;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
+using WinTox.ViewModel;
 
 // The Hub Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=321224
 
@@ -13,6 +16,7 @@ namespace WinTox.View
     public sealed partial class MainPage : Page
     {
         private NavigationHelper navigationHelper;
+        private MainPageViewModel _viewModel;
 
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and
@@ -28,6 +32,22 @@ namespace WinTox.View
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
+            _viewModel = DataContext as MainPageViewModel;
+            _viewModel.FriendRequestReceived += FriendRequestReceivedHandler;
+        }
+
+        private void FriendRequestReceivedHandler(object sender, SharpTox.Core.ToxEventArgs.FriendRequestEventArgs e)
+        {
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => 
+            {
+                var message = "From: " + e.PublicKey + "\n" + "Message: " + e.Message;
+                var msgDialog = new MessageDialog(message, "Friend request received");
+                msgDialog.Commands.Add(new UICommand("Accept", null, MainPageViewModel.FriendRequestAnswer.Accept));
+                msgDialog.Commands.Add(new UICommand("Decline", null, MainPageViewModel.FriendRequestAnswer.Decline));
+                msgDialog.Commands.Add(new UICommand("Later", null, MainPageViewModel.FriendRequestAnswer.Later));
+                var answer = await msgDialog.ShowAsync();
+                _viewModel.HandleFriendRequestAnswer((MainPageViewModel.FriendRequestAnswer)answer.Id, e);
+            });
         }
 
         /// <summary>

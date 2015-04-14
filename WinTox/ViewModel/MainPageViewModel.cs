@@ -15,28 +15,14 @@ namespace WinTox.ViewModel
 
         public FriendListViewModel FriendList { get; set; }
 
-        private enum FriendRequestAnswer
+        internal enum FriendRequestAnswer
         {
             Accept,
             Decline,
             Later
         }
 
-        private void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
-        {
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
-            {
-                var message = "From: " + e.PublicKey + "\n" + "Message: " + e.Message;
-                var msgDialog = new MessageDialog(message, "Friend request received");
-                msgDialog.Commands.Add(new UICommand("Accept", null, FriendRequestAnswer.Accept));
-                msgDialog.Commands.Add(new UICommand("Decline", null, FriendRequestAnswer.Decline));
-                msgDialog.Commands.Add(new UICommand("Later", null, FriendRequestAnswer.Later));
-                var answer = await msgDialog.ShowAsync();
-                HandleFriendRequestAnswer((FriendRequestAnswer)answer.Id, e);
-            });
-        }
-
-        private void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e)
+        internal void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e)
         {
             switch (answer)
             {
@@ -54,6 +40,14 @@ namespace WinTox.ViewModel
                     // TODO: Postpone decision!
                     return;
             }
+        }
+
+        public event EventHandler<ToxEventArgs.FriendRequestEventArgs> FriendRequestReceived;
+
+        private void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
+        {
+            if (FriendRequestReceived != null)
+                FriendRequestReceived(sender, e);
         }
     }
 }
