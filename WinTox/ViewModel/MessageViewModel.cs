@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WinTox.ViewModel
 {
-    internal class MessageViewModel
+    internal class MessageViewModel : ViewModelBase
     {
         private string _senderName;
 
@@ -44,10 +44,24 @@ namespace WinTox.ViewModel
                 }
                 return null;
             }
-            set { _message = value; }
+            set
+            {
+                _message = value;
+                OnPropertyChanged();
+            }
         }
 
-        public string Timestamp { get; set; }
+        private string _timestamp;
+
+        public string Timestamp
+        {
+            get { return _timestamp; }
+            set
+            {
+                _timestamp = value;
+                OnPropertyChanged();
+            }
+        }
 
         public enum MessageSenderType
         {

@@ -47,6 +47,9 @@ namespace WinTox.ViewModel
         {
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
+                if (ConcatWithLast(message, senderType))
+                    return;
+
                 Messages.Add(new MessageViewModel
                 {
                     Message = message.Trim(),
@@ -56,6 +59,31 @@ namespace WinTox.ViewModel
                     MessageType = messageType
                 });
             });
+        }
+
+        /// <summary>
+        /// Try to concatenate the message with the last in the collection.
+        /// </summary>
+        /// <param name="message">The message to concatenate the last one with.</param>
+        /// <param name="senderType">Type of the sender of the message.</param>
+        /// <returns>True on success, false otherwise.</returns>
+        /// TODO: Maybe storing chunkes of messages as lists and display a timestamp for every message would be a better (more user friendly) approach of the problem..?
+        private bool ConcatWithLast(string message, MessageViewModel.MessageSenderType senderType)
+        {
+            if (Messages.Count == 0)
+                return false;
+
+            var lastMessage = Messages.Last();
+            if (lastMessage.SenderType == senderType && lastMessage.MessageType == ToxMessageType.Message)
+            {
+                // Concat this message's text to the last one's.
+                lastMessage.Message = lastMessage.Message + '\n' + message.Trim();
+                // Refresh timestamp to be equal to the last message's.
+                lastMessage.Timestamp = DateTime.Now.ToString();
+                return true;
+            }
+
+            return false;
         }
 
         public ObservableCollection<MessageViewModel> Messages { get; set; }
