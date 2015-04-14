@@ -66,6 +66,7 @@ namespace WinTox.ViewModel
         /// </summary>
         /// <param name="message">The message to concatenate the last one with.</param>
         /// <param name="senderType">Type of the sender of the message.</param>
+        /// <param name="messageType">Type of the message being send.</param>
         /// <returns>True on success, false otherwise.</returns>
         /// TODO: Maybe storing chunks of messages as lists and display a timestamp for every message would be a better (more user friendly) approach of the problem..?
         private bool ConcatWithLast(string message, MessageViewModel.MessageSenderType senderType, ToxMessageType messageType)
