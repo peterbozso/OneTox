@@ -11,10 +11,22 @@ namespace WinTox.Model
     {
         private static readonly ToxNode[] _nodes =
         {
-            new ToxNode("192.254.75.98", 33445,
+            new ToxNode("192.254.75.102", 33445,
                 new ToxKey(ToxKeyType.Public, "951C88B7E75C867418ACDB5D273821372BB5BD652740BCDF623A4FA293E75D2F")),
             new ToxNode("144.76.60.215", 33445,
-                new ToxKey(ToxKeyType.Public, "04119E835DF3E78BACF0F84235B300546AF8B936F035185E2A8E9E0A67C8924F"))
+                new ToxKey(ToxKeyType.Public, "04119E835DF3E78BACF0F84235B300546AF8B936F035185E2A8E9E0A67C8924F")),
+            new ToxNode("23.226.230.47", 33445,
+                new ToxKey(ToxKeyType.Public, "A09162D68618E742FFBCA1C2C70385E6679604B2D80EA6E84AD0996A1AC8A074")),
+            new ToxNode("178.62.125.224", 33445,
+                new ToxKey(ToxKeyType.Public, "10B20C49ACBD968D7C80F2E8438F92EA51F189F4E70CFBBB2C2C8C799E97F03E")),
+            new ToxNode("178.21.112.187", 33445,
+                new ToxKey(ToxKeyType.Public, "4B2C19E924972CB9B57732FB172F8A8604DE13EEDA2A6234E348983344B23057")),
+            new ToxNode("195.154.119.113 ", 33445,
+                new ToxKey(ToxKeyType.Public, "E398A69646B8CEACA9F0B84F553726C1C49270558C57DF5F3C368F05A7D71354")),
+            new ToxNode("192.210.149.121", 33445,
+                new ToxKey(ToxKeyType.Public, "F404ABAA1C99A9D37D61AB54898F56793E1DEF8BD46B1038B9D822E8460FAB67")),
+            new ToxNode("104.219.184.206", 33445,
+                new ToxKey(ToxKeyType.Public, "8CD087E31C67568103E8C2A28653337E90E6B8EDA0D765D57C6B5172B4F1F04C")),
         };
 
         private ExtendedTox _tox;
@@ -22,37 +34,6 @@ namespace WinTox.Model
         public ToxModel(ExtendedTox tox)
         {
             SetCurrent(tox);
-        }
-
-        private void SetCurrent(ExtendedTox tox)
-        {
-            _tox = tox;
-
-            _tox.OnConnectionStatusChanged += ConnectionStatusChangedHandler;
-            _tox.OnFriendListModified += FriendListModifiedHandler;
-            _tox.OnFriendRequestReceived += FriendRequestReceivedHandler;
-            _tox.OnFriendNameChanged += FriendNameChangedHandler;
-            _tox.OnFriendStatusMessageChanged += FriendStatusMessageChangedHandler;
-            _tox.OnFriendStatusChanged += FriendStatusChangedHandler;
-            _tox.OnFriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
-            _tox.OnFriendMessageReceived += FriendMessageReceivedHandler;
-
-            if (FriendListModified != null)
-                FriendListModified(-1, ExtendedTox.FriendListModificationType.Reset);
-        }
-
-        public void Start()
-        {
-            foreach (ToxNode node in _nodes)
-                _tox.Bootstrap(node);
-
-            _tox.Name = "User";
-            _tox.StatusMessage = "This is a test.";
-
-            _tox.Start();
-
-            string id = _tox.Id.ToString();
-            Debug.WriteLine("ID: {0}", id);
         }
 
         #region Properties
@@ -85,6 +66,61 @@ namespace WinTox.Model
         #endregion Properties
 
         #region Methods
+
+        private void SetCurrent(ExtendedTox tox)
+        {
+            _tox = tox;
+
+            _tox.OnConnectionStatusChanged += ConnectionStatusChangedHandler;
+            _tox.OnFriendListModified += FriendListModifiedHandler;
+            _tox.OnFriendRequestReceived += FriendRequestReceivedHandler;
+            _tox.OnFriendNameChanged += FriendNameChangedHandler;
+            _tox.OnFriendStatusMessageChanged += FriendStatusMessageChangedHandler;
+            _tox.OnFriendStatusChanged += FriendStatusChangedHandler;
+            _tox.OnFriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
+            _tox.OnFriendMessageReceived += FriendMessageReceivedHandler;
+
+            if (FriendListModified != null)
+                FriendListModified(-1, ExtendedTox.FriendListModificationType.Reset);
+        }
+
+        public async Task Start()
+        {
+            await BootstrapContinously();
+
+            _tox.Name = "User";
+            _tox.StatusMessage = "This is a test.";
+
+            _tox.Start();
+
+            string id = _tox.Id.ToString();
+            Debug.WriteLine("ID: {0}", id);
+        }
+
+        /// <summary>
+        /// Bootstrap off of 4 random nodes each time until we become connected.
+        /// </summary>
+        private async Task BootstrapContinously()
+        {
+            Random random = new Random();
+
+            while (true)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    var randomIndex = random.Next(_nodes.Length);
+                    var success = _tox.Bootstrap(_nodes[randomIndex]);
+                    if (success)
+                    {
+                        Debug.WriteLine("Succesfully bootstrapped off: {0}, {1}",
+                            _nodes[randomIndex].Address, _nodes[randomIndex].PublicKey);
+                        return;
+                    }
+                }
+
+                await Task.Delay(5000);
+            }
+        }
 
         public int AddFriend(ToxId id, string message, out ToxErrorFriendAdd error)
         {
@@ -156,10 +192,13 @@ namespace WinTox.Model
 
         public event EventHandler<ToxEventArgs.ConnectionStatusEventArgs> UserConnectionStatusChanged;
 
-        private void ConnectionStatusChangedHandler(object sender, ToxEventArgs.ConnectionStatusEventArgs e)
+        private async void ConnectionStatusChangedHandler(object sender, ToxEventArgs.ConnectionStatusEventArgs e)
         {
             if (UserConnectionStatusChanged != null)
                 UserConnectionStatusChanged(sender, e);
+
+            if (e.Status == ToxConnectionStatus.None)
+                await BootstrapContinously();
         }
 
         public event ExtendedTox.FriendListModifiedEventHandler FriendListModified;

@@ -65,7 +65,7 @@ namespace WinTox
 
                 await HandlePreviousExecutionState(e.PreviousExecutionState);
 
-                ToxModel.Start();
+                await ToxModel.Start();
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
@@ -148,7 +148,7 @@ namespace WinTox
         {
             await SuspensionManager.RestoreAsync();
             await ToxModel.RestoreDataAsync();
-            ToxModel.Start();
+            await ToxModel.Start();
         }
     }
 }
