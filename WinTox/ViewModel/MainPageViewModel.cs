@@ -1,7 +1,5 @@
-﻿using SharpTox.Core;
-using System;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Popups;
+﻿using System;
+using SharpTox.Core;
 
 namespace WinTox.ViewModel
 {
@@ -14,13 +12,6 @@ namespace WinTox.ViewModel
         }
 
         public FriendListViewModel FriendList { get; set; }
-
-        internal enum FriendRequestAnswer
-        {
-            Accept,
-            Decline,
-            Later
-        }
 
         internal void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e)
         {
@@ -48,6 +39,13 @@ namespace WinTox.ViewModel
         {
             if (FriendRequestReceived != null)
                 FriendRequestReceived(sender, e);
+        }
+
+        internal enum FriendRequestAnswer
+        {
+            Accept,
+            Decline,
+            Later
         }
     }
 }

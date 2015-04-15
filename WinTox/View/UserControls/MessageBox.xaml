@@ -14,7 +14,7 @@
         <converters:SenderTypeToColorConverter x:Key="SenderTypeToColorConverter" />
         <converters:MessageTypeToVisibilityConverter x:Key="MessageTypeToVisibilityConverter" />
     </UserControl.Resources>
-    
+
     <Grid Background="{Binding Path=SenderType, Converter={StaticResource SenderTypeToColorConverter}}">
         <Grid Margin="20,10,20,10">
             <Grid.RowDefinitions>
@@ -25,9 +25,12 @@
                 <ColumnDefinition Width="55" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            
+
             <!-- TODO: Replace image with data binding! -->
-            <Image Grid.RowSpan="2" Source="/Assets/default-profile-picture.png" MaxHeight="55" MaxWidth="55" Stretch="UniformToFill" Visibility="{Binding MessageType, Converter={StaticResource MessageTypeToVisibilityConverter}}" VerticalAlignment="Top" />
+            <Image Grid.RowSpan="2" Source="/Assets/default-profile-picture.png" MaxHeight="55" MaxWidth="55"
+                   Stretch="UniformToFill"
+                   Visibility="{Binding MessageType, Converter={StaticResource MessageTypeToVisibilityConverter}}"
+                   VerticalAlignment="Top" />
 
             <Grid Grid.Row="0" Grid.Column="1">
                 <Grid.ColumnDefinitions>
@@ -35,11 +38,16 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock x:Name="Name" Grid.Column="0" Foreground="{StaticResource MainColor}" Margin="10,0,0,0" FontSize="20" Text="{Binding SenderName}" TextWrapping="Wrap" />
-                <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="16" Margin="10,0,0,0" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}" HorizontalAlignment="Right" Text="{Binding Timestamp}" VerticalAlignment="Center" />
+                <TextBlock x:Name="Name" Grid.Column="0" Foreground="{StaticResource MainColor}" Margin="10,0,0,0"
+                           FontSize="20" Text="{Binding SenderName}" TextWrapping="Wrap" />
+                <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="16" Margin="10,0,0,0"
+                           Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}" HorizontalAlignment="Right"
+                           Text="{Binding Timestamp}" VerticalAlignment="Center" />
             </Grid>
-            
-            <TextBlock x:Name="MessageText" Grid.Row="1" Grid.Column="1" Foreground="{StaticResource MessageColor}" FontSize="20" Margin="10,0,0,0" TextWrapping="Wrap" Text="{Binding Message}" Visibility="{Binding MessageType, Converter={StaticResource MessageTypeToVisibilityConverter}}" />
+
+            <TextBlock x:Name="MessageText" Grid.Row="1" Grid.Column="1" Foreground="{StaticResource MessageColor}"
+                       FontSize="20" Margin="10,0,0,0" TextWrapping="Wrap" Text="{Binding Message}"
+                       Visibility="{Binding MessageType, Converter={StaticResource MessageTypeToVisibilityConverter}}" />
         </Grid>
     </Grid>
 </UserControl>

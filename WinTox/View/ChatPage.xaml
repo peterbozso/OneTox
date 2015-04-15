@@ -57,9 +57,11 @@
             </Grid.RowDefinitions>
 
             <!-- TODO: List of messages in the currently open chat comes here! -->
-            <ListView x:Name="MessagesListView" Grid.Row="0" Background="{StaticResource ChatBackgroundColor}" ItemsSource="{Binding Conversation.Messages}" SelectionMode="None" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <ListView x:Name="MessagesListView" Grid.Row="0" Background="{StaticResource ChatBackgroundColor}"
+                      ItemsSource="{Binding Conversation.Messages}" SelectionMode="None"
+                      HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <ListView.ItemContainerStyle>
-                    <StaticResource ResourceKey="ChatPageListViewItemStyle"></StaticResource>
+                    <StaticResource ResourceKey="ChatPageListViewItemStyle" />
                 </ListView.ItemContainerStyle>
 
                 <ListView.ItemTemplate>

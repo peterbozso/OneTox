@@ -1,13 +1,14 @@
-﻿using SharpTox.Core;
-using System;
+﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using SharpTox.Core;
 using WinTox.Common;
 
 namespace WinTox.ViewModel
 {
     internal class AddFriendFlyoutViewModel : ViewModelBase
     {
+        private RelayCommand _addFriendCommand;
         private bool _isFlyoutOpen;
 
         public bool IsFlyoutOpen
@@ -20,8 +21,6 @@ namespace WinTox.ViewModel
             }
         }
 
-        private RelayCommand _addFriendCommand;
-
         public RelayCommand AddFriendCommand
         {
             get
@@ -30,9 +29,9 @@ namespace WinTox.ViewModel
                        ?? (_addFriendCommand = new RelayCommand(
                            (object parameter) =>
                            {
-                               var flyoutContent = (StackPanel)parameter;
+                               var flyoutContent = (StackPanel) parameter;
 
-                               var friendIdTextBox = (TextBox)flyoutContent.FindName("FriendId");
+                               var friendIdTextBox = (TextBox) flyoutContent.FindName("FriendId");
                                var friendId = friendIdTextBox.Text.Trim();
 
                                if (!ToxId.IsValid(friendId))
@@ -42,7 +41,7 @@ namespace WinTox.ViewModel
                                    return;
                                }
 
-                               var invitationMessageTextBox = (TextBox)flyoutContent.FindName("InvitationMessage");
+                               var invitationMessageTextBox = (TextBox) flyoutContent.FindName("InvitationMessage");
                                var invitationMessage = invitationMessageTextBox.Text;
                                if (invitationMessage == String.Empty)
                                    invitationMessage = "Hello! I'd like to add you to my friends list.";

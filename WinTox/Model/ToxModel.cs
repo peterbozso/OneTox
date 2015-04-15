@@ -1,9 +1,9 @@
-﻿using SharpTox.Core;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SharpTox.Core;
 
 namespace WinTox.Model
 {
@@ -26,7 +26,7 @@ namespace WinTox.Model
             new ToxNode("192.210.149.121", 33445,
                 new ToxKey(ToxKeyType.Public, "F404ABAA1C99A9D37D61AB54898F56793E1DEF8BD46B1038B9D822E8460FAB67")),
             new ToxNode("104.219.184.206", 33445,
-                new ToxKey(ToxKeyType.Public, "8CD087E31C67568103E8C2A28653337E90E6B8EDA0D765D57C6B5172B4F1F04C")),
+                new ToxKey(ToxKeyType.Public, "8CD087E31C67568103E8C2A28653337E90E6B8EDA0D765D57C6B5172B4F1F04C"))
         };
 
         private ExtendedTox _tox;
@@ -93,20 +93,20 @@ namespace WinTox.Model
 
             BootstrapContinously();
 
-            string id = _tox.Id.ToString();
+            var id = _tox.Id.ToString();
             Debug.WriteLine("ID: {0}", id);
         }
 
         /// <summary>
-        /// Bootstrap off of 4 random nodes each time until we become connected.
+        ///     Bootstrap off of 4 random nodes each time until we become connected.
         /// </summary>
         private async void BootstrapContinously()
         {
-            Random random = new Random();
+            var random = new Random();
 
             while (!_tox.IsConnected)
             {
-                for (int i = 0; i < 4; i++)
+                for (var i = 0; i < 4; i++)
                 {
                     var randomIndex = random.Next(_nodes.Length);
                     _tox.Bootstrap(_nodes[randomIndex]);
@@ -170,7 +170,7 @@ namespace WinTox.Model
         public async Task RestoreDataAsync()
         {
             var stream = await ApplicationData.Current.LocalFolder.OpenStreamForReadAsync(_fileName);
-            byte[] toxData = new byte[stream.Length];
+            var toxData = new byte[stream.Length];
             await stream.ReadAsync(toxData, 0, toxData.Length);
             var newTox = new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(toxData));
             SetCurrent(newTox);
@@ -198,7 +198,8 @@ namespace WinTox.Model
 
         public event ExtendedTox.FriendListModifiedEventHandler FriendListModified;
 
-        private async void FriendListModifiedHandler(int friendNumber, ExtendedTox.FriendListModificationType modificationType)
+        private async void FriendListModifiedHandler(int friendNumber,
+            ExtendedTox.FriendListModificationType modificationType)
         {
             await SaveDataAsync();
 

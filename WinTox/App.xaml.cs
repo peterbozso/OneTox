@@ -1,11 +1,13 @@
-﻿using SharpTox.Core;
-using System;
+﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Globalization;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using SharpTox.Core;
 using WinTox.Common;
 using WinTox.Model;
 using WinTox.View;
@@ -15,39 +17,39 @@ using WinTox.View;
 namespace WinTox
 {
     /// <summary>
-    /// Provides application-specific behavior to supplement the default Application class.
+    ///     Provides application-specific behavior to supplement the default Application class.
     /// </summary>
     sealed partial class App : Application
     {
         internal static ToxModel ToxModel;
 
         /// <summary>
-        /// Initializes the singleton Application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
+        ///     Initializes the singleton Application object.  This is the first line of authored code
+        ///     executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
-            this.Resuming += OnResuming;
+            InitializeComponent();
+            Suspending += OnSuspending;
+            Resuming += OnResuming;
             ToxModel = new ToxModel(new ExtendedTox(new ToxOptions(true, true)));
         }
 
         /// <summary>
-        /// Invoked when the application is launched normally by the end user.  Other entry points
-        /// will be used such as when the application is launched to open a specific file.
+        ///     Invoked when the application is launched normally by the end user.  Other entry points
+        ///     will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
 #if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached)
+            if (Debugger.IsAttached)
             {
-                this.DebugSettings.EnableFrameRateCounter = true;
+                DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
 
-            Frame rootFrame = Window.Current.Content as Frame;
+            var rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
@@ -59,7 +61,7 @@ namespace WinTox
                 // Associate the frame with a SuspensionManager key
                 SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
                 // Set the default language
-                rootFrame.Language = Windows.Globalization.ApplicationLanguages.Languages[0];
+                rootFrame.Language = ApplicationLanguages.Languages[0];
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
@@ -75,7 +77,7 @@ namespace WinTox
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                rootFrame.Navigate(typeof (MainPage), e.Arguments);
             }
             // Ensure the current window is active
             Window.Current.Activate();
@@ -87,7 +89,7 @@ namespace WinTox
                 previousExecutionState == ApplicationExecutionState.ClosedByUser ||
                 previousExecutionState == ApplicationExecutionState.NotRunning)
             {
-                bool successfulRestoration = true;
+                var successfulRestoration = true;
                 try
                 {
                     await ToxModel.RestoreDataAsync();
@@ -103,8 +105,8 @@ namespace WinTox
                     await ToxModel.SaveDataAsync();
 
                 if (previousExecutionState != ApplicationExecutionState.NotRunning)
-                // We only have to restore session state in the other two cases.
-                // See: https://msdn.microsoft.com/en-us/library/ie/windows.applicationmodel.activation.applicationexecutionstate
+                    // We only have to restore session state in the other two cases.
+                    // See: https://msdn.microsoft.com/en-us/library/ie/windows.applicationmodel.activation.applicationexecutionstate
                 {
                     try
                     {
@@ -120,7 +122,7 @@ namespace WinTox
         }
 
         /// <summary>
-        /// Invoked when Navigation to a certain page fails
+        ///     Invoked when Navigation to a certain page fails
         /// </summary>
         /// <param name="sender">The Frame which failed navigation</param>
         /// <param name="e">Details about the navigation failure</param>
@@ -130,9 +132,9 @@ namespace WinTox
         }
 
         /// <summary>
-        /// Invoked when application execution is being suspended.  Application state is saved
-        /// without knowing whether the application will be terminated or resumed with the contents
-        /// of memory still intact.
+        ///     Invoked when application execution is being suspended.  Application state is saved
+        ///     without knowing whether the application will be terminated or resumed with the contents
+        ///     of memory still intact.
         /// </summary>
         /// <param name="sender">The source of the suspend request.</param>
         /// <param name="e">Details about the suspend request.</param>

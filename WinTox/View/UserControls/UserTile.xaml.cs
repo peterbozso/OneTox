@@ -8,7 +8,7 @@ namespace WinTox.View.UserControls
     {
         public UserTile()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

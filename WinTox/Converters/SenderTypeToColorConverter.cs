@@ -10,7 +10,7 @@ namespace WinTox.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var senderType = (MessageViewModel.MessageSenderType)value;
+            var senderType = (MessageViewModel.MessageSenderType) value;
             switch (senderType)
             {
                 case MessageViewModel.MessageSenderType.Friend:

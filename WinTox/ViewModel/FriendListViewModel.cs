@@ -1,13 +1,18 @@
-﻿using SharpTox.Core;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using SharpTox.Core;
 using WinTox.Model;
 
 namespace WinTox.ViewModel
 {
     internal class FriendListViewModel
     {
+        // We need to run the event handlers from the UI thread.
+        // Otherwise the PropertyChanged events wouldn't work in FriendViewModel.
+
+        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+
         public FriendListViewModel()
         {
             Friends = new ObservableCollection<FriendViewModel>();
@@ -24,10 +29,7 @@ namespace WinTox.ViewModel
             App.ToxModel.FriendMessageReceived += FriendMessageReceivedHandler;
         }
 
-        // We need to run the event handlers from the UI thread.
-        // Otherwise the PropertyChanged events wouldn't work in FriendViewModel.
-
-        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+        public ObservableCollection<FriendViewModel> Friends { get; set; }
 
         private void FriendNameChangedHandler(object sender, ToxEventArgs.NameChangeEventArgs e)
         {
@@ -91,7 +93,5 @@ namespace WinTox.ViewModel
             }
             return null;
         }
-
-        public ObservableCollection<FriendViewModel> Friends { get; set; }
     }
 }

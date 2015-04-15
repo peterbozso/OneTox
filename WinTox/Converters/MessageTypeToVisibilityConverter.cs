@@ -5,11 +5,11 @@ using SharpTox.Core;
 
 namespace WinTox.Converters
 {
-    class MessageTypeToVisibilityConverter : IValueConverter
+    internal class MessageTypeToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var messageType = (ToxMessageType)value;
+            var messageType = (ToxMessageType) value;
             switch (messageType)
             {
                 case ToxMessageType.Message:

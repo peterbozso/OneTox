@@ -1,11 +1,17 @@
-﻿using SharpTox.Core;
-using System;
+﻿using System;
+using SharpTox.Core;
 using WinTox.Common;
 
 namespace WinTox.ViewModel
 {
     internal class FriendViewModel : ViewModelBase
     {
+        private bool _isOnline;
+        private string _name;
+        private RelayCommand _removeFriendCommand;
+        private ToxUserStatus _status;
+        private string _statusMessage;
+
         public FriendViewModel(int friendNumber)
         {
             Conversation = new ConversationViewModel();
@@ -29,10 +35,7 @@ namespace WinTox.ViewModel
         }
 
         public ConversationViewModel Conversation { get; set; }
-
         public int FriendNumber { get; set; }
-
-        private string _name;
 
         public string Name
         {
@@ -44,8 +47,6 @@ namespace WinTox.ViewModel
             }
         }
 
-        private string _statusMessage;
-
         public string StatusMessage
         {
             get { return _statusMessage; }
@@ -55,8 +56,6 @@ namespace WinTox.ViewModel
                 OnPropertyChanged();
             }
         }
-
-        private ToxUserStatus _status;
 
         public ToxUserStatus Status
         {
@@ -68,8 +67,6 @@ namespace WinTox.ViewModel
             }
         }
 
-        private bool _isOnline;
-
         public bool IsOnline
         {
             get { return _isOnline; }
@@ -79,8 +76,6 @@ namespace WinTox.ViewModel
                 OnPropertyChanged();
             }
         }
-
-        private RelayCommand _removeFriendCommand;
 
         public RelayCommand RemoveFriendCommand
         {

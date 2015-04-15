@@ -6,7 +6,7 @@ namespace WinTox.View.UserControls
     {
         public FriendInfo()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

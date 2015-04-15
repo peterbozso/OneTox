@@ -9,18 +9,18 @@ namespace WinTox.View.UserControls
     {
         public FriendTile()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
-        private void MainGridRightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+        private void MainGridRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement) sender);
             e.Handled = true;
         }
 
         private void MainGridTapped(object sender, TappedRoutedEventArgs e)
         {
-            (Window.Current.Content as Frame).Navigate(typeof(ChatPage), DataContext);
+            (Window.Current.Content as Frame).Navigate(typeof (ChatPage), DataContext);
         }
     }
 }

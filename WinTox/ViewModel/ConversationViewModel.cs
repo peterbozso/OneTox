@@ -1,11 +1,9 @@
-﻿using SharpTox.Core;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
+using SharpTox.Core;
 
 namespace WinTox.ViewModel
 {
@@ -16,9 +14,12 @@ namespace WinTox.ViewModel
             Messages = new ObservableCollection<MessageViewModel>();
         }
 
+        public ObservableCollection<MessageViewModel> Messages { get; set; }
+
         public void ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
         {
-            StoreMessage(e.Message, App.ToxModel.GetFriendName(e.FriendNumber), MessageViewModel.MessageSenderType.Friend, e.MessageType);
+            StoreMessage(e.Message, App.ToxModel.GetFriendName(e.FriendNumber),
+                MessageViewModel.MessageSenderType.Friend, e.MessageType);
         }
 
         public void SendMessage(int friendNumber, string message)
@@ -43,9 +44,10 @@ namespace WinTox.ViewModel
                 StoreMessage(message, App.ToxModel.UserName, MessageViewModel.MessageSenderType.User, messageType);
         }
 
-        private void StoreMessage(string message, string name, MessageViewModel.MessageSenderType senderType, ToxMessageType messageType)
+        private void StoreMessage(string message, string name, MessageViewModel.MessageSenderType senderType,
+            ToxMessageType messageType)
         {
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (ConcatWithLast(message, senderType, messageType))
                     return;
@@ -63,20 +65,22 @@ namespace WinTox.ViewModel
         }
 
         /// <summary>
-        /// Try to concatenate the message with the last in the collection.
+        ///     Try to concatenate the message with the last in the collection.
         /// </summary>
         /// <param name="message">The message to concatenate the last one with.</param>
         /// <param name="senderType">Type of the sender of the message.</param>
         /// <param name="messageType">Type of the message being send.</param>
         /// <returns>True on success, false otherwise.</returns>
         /// TODO: Maybe storing chunks of messages as lists and display a timestamp for every message would be a better (more user friendly) approach of the problem..?
-        private bool ConcatWithLast(string message, MessageViewModel.MessageSenderType senderType, ToxMessageType messageType)
+        private bool ConcatWithLast(string message, MessageViewModel.MessageSenderType senderType,
+            ToxMessageType messageType)
         {
             if (Messages.Count == 0)
                 return false;
 
             var lastMessage = Messages.Last();
-            if (lastMessage.SenderType == senderType && lastMessage.MessageType == ToxMessageType.Message && messageType == ToxMessageType.Message)
+            if (lastMessage.SenderType == senderType && lastMessage.MessageType == ToxMessageType.Message &&
+                messageType == ToxMessageType.Message)
             {
                 // Concat this message's text to the last one's.
                 lastMessage.Message = lastMessage.Message + '\n' + message.Trim();
@@ -90,7 +94,5 @@ namespace WinTox.ViewModel
 
             return false;
         }
-
-        public ObservableCollection<MessageViewModel> Messages { get; set; }
     }
 }

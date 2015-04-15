@@ -1,15 +1,19 @@
-﻿using SharpTox.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using SharpTox.Core;
 
 namespace WinTox.ViewModel
 {
     internal class MessageViewModel : ViewModelBase
     {
+        public enum MessageSenderType
+        {
+            User,
+            Friend
+        }
+
+        private string _message;
         private string _senderName;
+        private string _timestamp;
 
         public string SenderName
         {
@@ -27,8 +31,6 @@ namespace WinTox.ViewModel
             }
             set { _senderName = value; }
         }
-
-        private string _message;
 
         public string Message
         {
@@ -51,8 +53,6 @@ namespace WinTox.ViewModel
             }
         }
 
-        private string _timestamp;
-
         public string Timestamp
         {
             get { return _timestamp; }
@@ -63,14 +63,7 @@ namespace WinTox.ViewModel
             }
         }
 
-        public enum MessageSenderType
-        {
-            User,
-            Friend
-        }
-
         public MessageSenderType SenderType { get; set; }
-
         public ToxMessageType MessageType { get; set; }
     }
 }

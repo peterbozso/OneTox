@@ -1,23 +1,17 @@
-﻿using SharpTox.Core;
-using Windows.ApplicationModel.Core;
+﻿using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using SharpTox.Core;
 
 namespace WinTox.ViewModel
 {
     internal class UserViewModel : ViewModelBase
     {
+        private bool _isOnline;
+
         public UserViewModel()
         {
             _isOnline = App.ToxModel.IsUserConnected;
             App.ToxModel.UserConnectionStatusChanged += UserConnectionStatusChangedHandler;
-        }
-
-        private void UserConnectionStatusChangedHandler(object sender, ToxEventArgs.ConnectionStatusEventArgs e)
-        {
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                IsOnline = App.ToxModel.IsUserConnected;
-            });
         }
 
         public string Name
@@ -35,8 +29,6 @@ namespace WinTox.ViewModel
             get { return App.ToxModel.UserStatus; }
         }
 
-        private bool _isOnline;
-
         public bool IsOnline
         {
             get { return _isOnline; }
@@ -45,6 +37,12 @@ namespace WinTox.ViewModel
                 _isOnline = value;
                 OnPropertyChanged();
             }
+        }
+
+        private void UserConnectionStatusChangedHandler(object sender, ToxEventArgs.ConnectionStatusEventArgs e)
+        {
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () => { IsOnline = App.ToxModel.IsUserConnected; });
         }
     }
 }

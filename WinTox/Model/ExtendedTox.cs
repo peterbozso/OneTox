@@ -5,6 +5,16 @@ namespace WinTox.Model
 {
     internal class ExtendedTox : Tox
     {
+        public delegate void FriendListModifiedEventHandler(
+            int friendNumber, FriendListModificationType modificationType);
+
+        public enum FriendListModificationType
+        {
+            Add,
+            Remove,
+            Reset
+        }
+
         public ExtendedTox(ToxOptions options)
             : base(options)
         {
@@ -64,15 +74,6 @@ namespace WinTox.Model
             }
             return success;
         }
-
-        public enum FriendListModificationType
-        {
-            Add,
-            Remove,
-            Reset
-        }
-
-        public delegate void FriendListModifiedEventHandler(int friendNumber, FriendListModificationType modificationType);
 
         public event FriendListModifiedEventHandler OnFriendListModified;
 

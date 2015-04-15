@@ -7,14 +7,6 @@ namespace WinTox.ViewModel
 {
     internal class AddFriendFlyoutHelpers
     {
-        public static readonly DependencyProperty IsOpenProperty =
-            DependencyProperty.RegisterAttached("IsOpen", typeof(bool),
-                typeof(AddFriendFlyoutHelpers), new PropertyMetadata(false, OnIsOpenPropertyChanged));
-
-        public static readonly DependencyProperty ParentProperty =
-            DependencyProperty.RegisterAttached("Parent", typeof(Button),
-                typeof(AddFriendFlyoutHelpers), new PropertyMetadata(null, OnParentPropertyChanged));
-
         public static void SetIsOpen(DependencyObject d, bool value)
         {
             d.SetValue(IsOpenProperty, value);
@@ -22,7 +14,7 @@ namespace WinTox.ViewModel
 
         public static bool GetIsOpen(DependencyObject d)
         {
-            return (bool)d.GetValue(IsOpenProperty);
+            return (bool) d.GetValue(IsOpenProperty);
         }
 
         public static void SetParent(DependencyObject d, Button value)
@@ -32,7 +24,7 @@ namespace WinTox.ViewModel
 
         public static Button GetParent(DependencyObject d)
         {
-            return (Button)d.GetValue(ParentProperty);
+            return (Button) d.GetValue(ParentProperty);
         }
 
         private static void OnParentPropertyChanged(DependencyObject d,
@@ -51,11 +43,11 @@ namespace WinTox.ViewModel
             DependencyPropertyChangedEventArgs e)
         {
             var flyout = d as Flyout;
-            var parent = (Button)d.GetValue(ParentProperty);
+            var parent = (Button) d.GetValue(ParentProperty);
 
             if (flyout != null && parent != null)
             {
-                var newValue = (bool)e.NewValue;
+                var newValue = (bool) e.NewValue;
 
                 if (newValue)
                     flyout.ShowAt(parent);
@@ -63,5 +55,13 @@ namespace WinTox.ViewModel
                     flyout.Hide();
             }
         }
+
+        public static readonly DependencyProperty IsOpenProperty =
+            DependencyProperty.RegisterAttached("IsOpen", typeof (bool),
+                typeof (AddFriendFlyoutHelpers), new PropertyMetadata(false, OnIsOpenPropertyChanged));
+
+        public static readonly DependencyProperty ParentProperty =
+            DependencyProperty.RegisterAttached("Parent", typeof (Button),
+                typeof (AddFriendFlyoutHelpers), new PropertyMetadata(null, OnParentPropertyChanged));
     }
 }
