@@ -93,9 +93,21 @@ namespace WinTox.View
             var friendViewModel = e.Parameter as FriendViewModel;
             if (friendViewModel != null)
             {
-                DataContext = _friendViewModel = friendViewModel;
-                _friendViewModel.Conversation.PropertyChanged += ConversationUpdatedHandler;
+                SetupViewModel(friendViewModel);
             }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            NavigationHelper.OnNavigatedFrom(e);
+        }
+
+        #endregion NavigationHelper registration
+
+        private void SetupViewModel(FriendViewModel friendViewModel)
+        {
+            DataContext = _friendViewModel = friendViewModel;
+            _friendViewModel.Conversation.PropertyChanged += ConversationUpdatedHandler;
         }
 
         private void ConversationUpdatedHandler(object sender, PropertyChangedEventArgs e)
@@ -105,12 +117,5 @@ namespace WinTox.View
             MessagesListView.UpdateLayout();
             MessagesListView.ScrollIntoView(MessagesListView.SelectedItem);
         }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            NavigationHelper.OnNavigatedFrom(e);
-        }
-
-        #endregion NavigationHelper registration
     }
 }
