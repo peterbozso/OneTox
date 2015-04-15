@@ -80,7 +80,16 @@ namespace WinTox.View
             if (friendViewModel != null)
             {
                 DataContext = _friendViewModel = friendViewModel;
+                _friendViewModel.Conversation.PropertyChanged += ConversationUpdatedHandler;
             }
+        }
+
+        private void ConversationUpdatedHandler(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            var selectedIndex = MessagesListView.Items.Count - 1;
+            MessagesListView.SelectedIndex = selectedIndex;
+            MessagesListView.UpdateLayout();
+            MessagesListView.ScrollIntoView(MessagesListView.SelectedItem); 
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

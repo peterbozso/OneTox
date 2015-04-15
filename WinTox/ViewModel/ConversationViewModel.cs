@@ -9,7 +9,7 @@ using Windows.ApplicationModel.Core;
 
 namespace WinTox.ViewModel
 {
-    internal class ConversationViewModel
+    internal class ConversationViewModel : ViewModelBase
     {
         public ConversationViewModel()
         {
@@ -58,6 +58,7 @@ namespace WinTox.ViewModel
                     SenderType = senderType,
                     MessageType = messageType
                 });
+                OnPropertyChanged("Messages");
             });
         }
 
@@ -81,6 +82,9 @@ namespace WinTox.ViewModel
                 lastMessage.Message = lastMessage.Message + '\n' + message.Trim();
                 // Refresh timestamp to be equal to the last message's.
                 lastMessage.Timestamp = DateTime.Now.ToString();
+
+                OnPropertyChanged("Messages");
+
                 return true;
             }
 
