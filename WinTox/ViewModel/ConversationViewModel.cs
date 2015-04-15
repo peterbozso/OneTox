@@ -24,16 +24,8 @@ namespace WinTox.ViewModel
 
         public void SendMessage(int friendNumber, string message)
         {
-            ToxMessageType messageType;
-            if (message.Length > 3 && message.Substring(0, 4).Equals("/me "))
-            {
-                message = message.Remove(0, 4);
-                messageType = ToxMessageType.Action;
-            }
-            else
-            {
-                messageType = ToxMessageType.Message;
-            }
+            var messageType = DecideMessageType(message);
+            message = TrimMessage(message, messageType);
 
             ToxErrorSendMessage error;
             App.ToxModel.SendMessage(friendNumber, message, messageType, out error);
@@ -42,6 +34,22 @@ namespace WinTox.ViewModel
 
             if (error == ToxErrorSendMessage.Ok)
                 StoreMessage(message, App.ToxModel.UserName, MessageViewModel.MessageSenderType.User, messageType);
+        }
+
+        private static ToxMessageType DecideMessageType(string message)
+        {
+            if (message.Length > 3 && message.Substring(0, 4).Equals("/me "))
+                return ToxMessageType.Action;
+            else
+                return ToxMessageType.Message;
+        }
+
+        private static string TrimMessage(string message, ToxMessageType messageType)
+        {
+            if (messageType == ToxMessageType.Action)
+                message = message.Remove(0, 4);
+            message = message.Trim();
+            return message;
         }
 
         private void StoreMessage(string message, string name, MessageViewModel.MessageSenderType senderType,
@@ -54,7 +62,7 @@ namespace WinTox.ViewModel
 
                 Messages.Add(new MessageViewModel
                 {
-                    Message = message.Trim(),
+                    Message = message,
                     Timestamp = DateTime.Now.ToString(),
                     SenderName = name,
                     SenderType = senderType,
@@ -83,7 +91,7 @@ namespace WinTox.ViewModel
                 messageType == ToxMessageType.Message)
             {
                 // Concat this message's text to the last one's.
-                lastMessage.Message = lastMessage.Message + '\n' + message.Trim();
+                lastMessage.Message = lastMessage.Message + '\n' + message;
                 // Refresh timestamp to be equal to the last message's.
                 lastMessage.Timestamp = DateTime.Now.ToString();
 
