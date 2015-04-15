@@ -36,7 +36,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock x:Name="Name" Grid.Column="0" Foreground="{StaticResource MainColor}" Margin="10,0,0,0" FontSize="20" Text="{Binding SenderName}" TextWrapping="Wrap" />
-                <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="16" Margin="10,0,0,0" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}" HorizontalAlignment="Right" Text="{Binding Timestamp}" />
+                <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="16" Margin="10,0,0,0" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}" HorizontalAlignment="Right" Text="{Binding Timestamp}" VerticalAlignment="Center" />
             </Grid>
             
             <TextBlock x:Name="MessageText" Grid.Row="1" Grid.Column="1" Foreground="{StaticResource MessageColor}" FontSize="20" Margin="10,0,0,0" TextWrapping="Wrap" Text="{Binding Message}" Visibility="{Binding MessageType, Converter={StaticResource MessageTypeToVisibilityConverter}}" />
