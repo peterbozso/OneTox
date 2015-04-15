@@ -53,7 +53,7 @@
         <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="100" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <!-- TODO: List of messages in the currently open chat comes here! -->
@@ -73,7 +73,7 @@
 
             <!-- Message input field -->
             <Grid Grid.Row="1" Background="{StaticResource MainColor}">
-                <TextBox x:Name="MessageInput" Margin="20,10" FontSize="20" Height="40" KeyDown="MessageInputKeyDown" />
+                <TextBox x:Name="MessageInput" Margin="20" FontSize="20" MinHeight="40" Height="Auto" KeyDown="MessageInputKeyDown" TextWrapping="Wrap" />
             </Grid>
         </Grid>
     </Grid>
