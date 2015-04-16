@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using SharpTox.Core;
@@ -27,13 +29,17 @@ namespace WinTox.ViewModel
             var messageType = DecideMessageType(message);
             message = TrimMessage(message, messageType);
 
-            ToxErrorSendMessage error;
-            App.ToxModel.SendMessage(friendNumber, message, messageType, out error);
+            var messages = SplitMessage(message);
+            foreach (var msg in messages)
+            {
+                ToxErrorSendMessage error;
+                App.ToxModel.SendMessage(friendNumber, msg, messageType, out error);
 
-            // TODO: Error handling!
+                // TODO: Error handling!
 
-            if (error == ToxErrorSendMessage.Ok)
-                StoreMessage(message, App.ToxModel.UserName, MessageViewModel.MessageSenderType.User, messageType);
+                if (error == ToxErrorSendMessage.Ok)
+                    StoreMessage(msg, App.ToxModel.UserName, MessageViewModel.MessageSenderType.User, messageType);
+            }
         }
 
         private static ToxMessageType DecideMessageType(string message)
@@ -50,6 +56,29 @@ namespace WinTox.ViewModel
                 message = message.Remove(0, 4);
             message = message.Trim();
             return message;
+        }
+
+        /// <summary>
+        /// Split a message into ToxConstants.MaxMessageLength long (in bytes) chunks.
+        /// </summary>
+        /// <param name="message">The message to split.</param>
+        /// <returns>The list of chunks.</returns>
+        private List<string> SplitMessage(string message)
+        {
+            var messages = new List<string>();
+
+            var lengthAsBytes = Encoding.Unicode.GetBytes(message).Length;
+            while (lengthAsBytes > ToxConstants.MaxMessageLength)
+            {
+                var lastSpaceIndex = message.LastIndexOf(" ", ToxConstants.MaxMessageLength, StringComparison.Ordinal);
+                var chunk = message.Substring(0, lastSpaceIndex);
+                messages.Add(chunk);
+                message = message.Substring(lastSpaceIndex + 1);
+                lengthAsBytes = Encoding.UTF8.GetBytes(message).Length;
+            }
+            messages.Add(message);
+
+            return messages;
         }
 
         private void StoreMessage(string message, string name, MessageViewModel.MessageSenderType senderType,
