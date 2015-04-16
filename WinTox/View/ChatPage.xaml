@@ -73,7 +73,7 @@
 
             <!-- Message input field -->
             <Grid Grid.Row="1" Background="{StaticResource MainColor}">
-                <TextBox x:Name="MessageInput" Margin="20" FontSize="20" MinHeight="40" Height="Auto" KeyDown="MessageInputKeyDown" TextWrapping="Wrap" />
+                <TextBox x:Name="MessageInput" Margin="20" FontSize="20" MinHeight="40" MaxHeight="250" Height="Auto" KeyDown="MessageInputKeyDown" TextWrapping="Wrap" />
             </Grid>
         </Grid>
     </Grid>
