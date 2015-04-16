@@ -29,16 +29,16 @@ namespace WinTox.ViewModel
             var messageType = DecideMessageType(message);
             message = TrimMessage(message, messageType);
 
-            var messages = SplitMessage(message);
-            foreach (var msg in messages)
+            var messageChunks = SplitMessage(message);
+            foreach (var chunk in messageChunks)
             {
                 ToxErrorSendMessage error;
-                App.ToxModel.SendMessage(friendNumber, msg, messageType, out error);
+                App.ToxModel.SendMessage(friendNumber, chunk, messageType, out error);
 
                 // TODO: Error handling!
 
                 if (error == ToxErrorSendMessage.Ok)
-                    StoreMessage(msg, App.ToxModel.UserName, MessageViewModel.MessageSenderType.User, messageType);
+                    StoreMessage(chunk, App.ToxModel.UserName, MessageViewModel.MessageSenderType.User, messageType);
             }
         }
 
@@ -65,20 +65,20 @@ namespace WinTox.ViewModel
         /// <returns>The list of chunks.</returns>
         private List<string> SplitMessage(string message)
         {
-            var messages = new List<string>();
+            var messageChunks = new List<string>();
 
             var lengthAsBytes = Encoding.Unicode.GetBytes(message).Length;
             while (lengthAsBytes > ToxConstants.MaxMessageLength)
             {
                 var lastSpaceIndex = message.LastIndexOf(" ", ToxConstants.MaxMessageLength, StringComparison.Ordinal);
                 var chunk = message.Substring(0, lastSpaceIndex);
-                messages.Add(chunk);
+                messageChunks.Add(chunk);
                 message = message.Substring(lastSpaceIndex + 1);
                 lengthAsBytes = Encoding.UTF8.GetBytes(message).Length;
             }
-            messages.Add(message);
+            messageChunks.Add(message);
 
-            return messages;
+            return messageChunks;
         }
 
         private void StoreMessage(string message, string name, MessageViewModel.MessageSenderType senderType,
