@@ -42,7 +42,7 @@ namespace WinTox.ViewModel
                         return _message;
 
                     case ToxMessageType.Action:
-                        return String.Empty;
+                        return _senderName + " " + _message;
                 }
                 return null;
             }

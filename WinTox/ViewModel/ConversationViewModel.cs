@@ -118,8 +118,7 @@ namespace WinTox.ViewModel
                 return false;
 
             var lastMessage = MessageGroups.Last().Messages.Last();
-            if (lastMessage.SenderType == senderType && lastMessage.MessageType == ToxMessageType.Message &&
-                messageType == ToxMessageType.Message)
+            if (lastMessage.SenderType == senderType)
             {
                 MessageGroups.Last().Messages.Add(new MessageViewModel
                 {

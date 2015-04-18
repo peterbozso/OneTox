@@ -28,7 +28,6 @@
             <!-- TODO: Replace image with data binding! -->
             <Image Grid.RowSpan="2" Source="/Assets/default-profile-picture.png" MaxHeight="55" MaxWidth="55"
                    Stretch="UniformToFill"
-                   Visibility="{Binding MessageType, Converter={StaticResource MessageTypeToVisibilityConverter}}"
                    VerticalAlignment="Top" />
 
             <TextBlock Grid.Row="0" Grid.Column="1" x:Name="Name" Foreground="{StaticResource MainColor}" Margin="10,0,0,0"
@@ -48,7 +47,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock x:Name="MessageText" Grid.Column="0" Foreground="{StaticResource MessageColor}" FontSize="20" Margin="10,0,0,0" TextWrapping="Wrap" Text="{Binding Message}" Visibility="{Binding MessageType, Converter={StaticResource MessageTypeToVisibilityConverter}}" />
+                            <TextBlock x:Name="MessageText" Grid.Column="0" Foreground="{StaticResource MessageColor}" FontSize="20" Margin="10,0,0,0" TextWrapping="Wrap" Text="{Binding Message}" />
 
                             <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="16" Margin="10,0,0,0" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}" HorizontalAlignment="Right" Text="{Binding Timestamp}" VerticalAlignment="Center" />
                         </Grid>
