@@ -11,8 +11,7 @@
     d:DesignWidth="400">
 
     <UserControl.Resources>
-        <converters:SenderTypeToColorConverter x:Key="SenderTypeToColorConverter" />
-        <converters:MessageTypeToVisibilityConverter x:Key="MessageTypeToVisibilityConverter" />
+        <ResourceDictionary Source="MessageBlockDictionary.xaml" />
     </UserControl.Resources>
 
     <Grid Background="{Binding Path=SenderType, Converter={StaticResource SenderTypeToColorConverter}}">
@@ -32,22 +31,30 @@
                    Visibility="{Binding MessageType, Converter={StaticResource MessageTypeToVisibilityConverter}}"
                    VerticalAlignment="Top" />
 
-            <Grid Grid.Row="0" Grid.Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock x:Name="Name" Grid.Column="0" Foreground="{StaticResource MainColor}" Margin="10,0,0,0"
+            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="Name" Foreground="{StaticResource MainColor}" Margin="10,0,0,0"
                            FontSize="20" Text="{Binding SenderName}" TextWrapping="Wrap" />
-                <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="16" Margin="10,0,0,0"
-                           Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}" HorizontalAlignment="Right"
-                           Text="{Binding Timestamp}" VerticalAlignment="Center" />
-            </Grid>
 
-            <TextBlock x:Name="MessageText" Grid.Row="1" Grid.Column="1" Foreground="{StaticResource MessageColor}"
-                       FontSize="20" Margin="10,0,0,0" TextWrapping="Wrap" Text="{Binding Message}"
-                       Visibility="{Binding MessageType, Converter={StaticResource MessageTypeToVisibilityConverter}}" />
+            <ListView Grid.Row="1" Grid.Column="1" x:Name="MessagesListView" Background="{StaticResource ChatBackgroundColor}"
+                      ItemsSource="{Binding Messages}" SelectionMode="None"
+                      HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                <ListView.ItemContainerStyle>
+                    <StaticResource ResourceKey="ChatPageListViewItemStyle" />
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock x:Name="MessageText" Grid.Column="0" Foreground="{StaticResource MessageColor}" FontSize="20" Margin="10,0,0,0" TextWrapping="Wrap" Text="{Binding Message}" Visibility="{Binding MessageType, Converter={StaticResource MessageTypeToVisibilityConverter}}" />
+
+                            <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="16" Margin="10,0,0,0" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}" HorizontalAlignment="Right" Text="{Binding Timestamp}" VerticalAlignment="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
     </Grid>
 </UserControl>

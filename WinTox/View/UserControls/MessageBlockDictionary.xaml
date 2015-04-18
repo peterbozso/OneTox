@@ -1,0 +1,13 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinTox.View.UserControls"
+    xmlns:converters="using:WinTox.Converters">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/View/ChatPageDictionary.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <converters:SenderTypeToColorConverter x:Key="SenderTypeToColorConverter" />
+    <converters:MessageTypeToVisibilityConverter x:Key="MessageTypeToVisibilityConverter" />
+</ResourceDictionary>
