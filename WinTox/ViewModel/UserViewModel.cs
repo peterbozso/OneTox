@@ -4,7 +4,7 @@ using SharpTox.Core;
 
 namespace WinTox.ViewModel
 {
-    internal class UserViewModel : ViewModelBase
+    internal class UserViewModel : ViewModelBase, IToxUserViewModel
     {
         private bool _isOnline;
 

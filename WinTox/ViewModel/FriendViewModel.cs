@@ -4,7 +4,7 @@ using WinTox.Common;
 
 namespace WinTox.ViewModel
 {
-    internal class FriendViewModel : ViewModelBase
+    internal class FriendViewModel : ViewModelBase, IToxUserViewModel
     {
         private bool _isOnline;
         private string _name;

@@ -117,6 +117,7 @@
     <Compile Include="ViewModel\AddFriendFlyoutHelpers.cs" />
     <Compile Include="ViewModel\FriendListViewModel.cs" />
     <Compile Include="ViewModel\FriendViewModel.cs" />
+    <Compile Include="ViewModel\IToxUserViewModel.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
     <Compile Include="ViewModel\ConversationViewModel.cs" />
     <Compile Include="ViewModel\MessageViewModel.cs" />
