@@ -139,8 +139,8 @@
     <Compile Include="Common\NavigationHelper.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />
-    <Compile Include="View\UserControls\MessageBox.xaml.cs">
-      <DependentUpon>MessageBox.xaml</DependentUpon>
+    <Compile Include="View\UserControls\MessageBlock.xaml.cs">
+      <DependentUpon>MessageBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserControls\UserTile.xaml.cs">
       <DependentUpon>UserTile.xaml</DependentUpon>
@@ -191,7 +191,7 @@
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
-    <Page Include="View\UserControls\MessageBox.xaml">
+    <Page Include="View\UserControls\MessageBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

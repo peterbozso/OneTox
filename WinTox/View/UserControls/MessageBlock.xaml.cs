@@ -2,9 +2,9 @@
 
 namespace WinTox.View.UserControls
 {
-    public sealed partial class MessageBox : UserControl
+    public sealed partial class MessageBlock : UserControl
     {
-        public MessageBox()
+        public MessageBlock()
         {
             InitializeComponent();
         }
