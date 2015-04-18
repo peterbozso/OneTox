@@ -14,7 +14,7 @@
         <ResourceDictionary Source="MessageBlockDictionary.xaml" />
     </UserControl.Resources>
 
-    <Grid> <!-- TODO: Remove it: Background="{Binding Path=SenderType, Converter={StaticResource SenderTypeToColorConverter}}"> -->
+    <Grid Background="{Binding Path=Sender, Converter={StaticResource SenderTypeToColorConverter}}">
         <Grid Margin="20,10,20,10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -33,7 +33,7 @@
             <TextBlock Grid.Row="0" Grid.Column="1" x:Name="Name" Foreground="{StaticResource MainColor}" Margin="10,0,0,0"
                            FontSize="20" Text="{Binding Sender.Name}" TextWrapping="Wrap" />
 
-            <ListView Grid.Row="1" Grid.Column="1" x:Name="MessagesListView" Background="{StaticResource ChatBackgroundColor}"
+            <ListView Grid.Row="1" Grid.Column="1" x:Name="MessagesListView"
                       ItemsSource="{Binding Messages}" SelectionMode="None"
                       HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <ListView.ItemContainerStyle>
