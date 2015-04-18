@@ -49,7 +49,7 @@
 
                             <TextBlock x:Name="MessageText" Grid.Column="0" Foreground="{StaticResource MessageColor}" FontSize="20" Margin="10,0,0,0" TextWrapping="Wrap" Text="{Binding Message}" />
 
-                            <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="16" Margin="10,0,0,0" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}" HorizontalAlignment="Right" Text="{Binding Timestamp}" VerticalAlignment="Center" />
+                            <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="16" Margin="10,0,0,0" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}" HorizontalAlignment="Left" Text="{Binding Timestamp}" VerticalAlignment="Center" />
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
