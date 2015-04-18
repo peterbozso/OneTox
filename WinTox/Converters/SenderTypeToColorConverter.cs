@@ -10,6 +10,7 @@ namespace WinTox.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+            /*
             var senderType = (MessageViewModel.MessageSenderType) value;
             switch (senderType)
             {
@@ -19,6 +20,7 @@ namespace WinTox.Converters
                 case MessageViewModel.MessageSenderType.User:
                     return Application.Current.Resources["ChatBackgroundColor"] as SolidColorBrush;
             }
+            */
             return null;
         }
 

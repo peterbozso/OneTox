@@ -9,6 +9,7 @@ namespace WinTox.View.UserControls
         public UserTile()
         {
             InitializeComponent();
+            DataContext = App.UserViewModel;
         }
     }
 }

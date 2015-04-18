@@ -14,7 +14,7 @@ namespace WinTox.ViewModel
 
         public FriendViewModel(int friendNumber)
         {
-            Conversation = new ConversationViewModel();
+            Conversation = new ConversationViewModel(this);
 
             FriendNumber = friendNumber;
 

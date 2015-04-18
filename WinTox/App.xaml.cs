@@ -11,6 +11,7 @@ using SharpTox.Core;
 using WinTox.Common;
 using WinTox.Model;
 using WinTox.View;
+using WinTox.ViewModel;
 
 // The Hub App template is documented at http://go.microsoft.com/fwlink/?LinkId=321221
 
@@ -22,6 +23,7 @@ namespace WinTox
     sealed partial class App : Application
     {
         internal static ToxModel ToxModel;
+        internal static UserViewModel UserViewModel;
 
         /// <summary>
         ///     Initializes the singleton Application object.  This is the first line of authored code
@@ -33,6 +35,7 @@ namespace WinTox
             Suspending += OnSuspending;
             Resuming += OnResuming;
             ToxModel = new ToxModel(new ExtendedTox(new ToxOptions(true, true)));
+            UserViewModel = new UserViewModel();
         }
 
         /// <summary>

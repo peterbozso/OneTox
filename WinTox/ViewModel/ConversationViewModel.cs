@@ -11,8 +11,10 @@ namespace WinTox.ViewModel
 {
     internal class ConversationViewModel : ViewModelBase
     {
-        public ConversationViewModel()
+        private FriendViewModel _friendViewModel;
+        public ConversationViewModel(FriendViewModel friendViewModel)
         {
+            _friendViewModel = friendViewModel;
             MessageGroups = new ObservableCollection<MessageGroupViewModel>();
         }
 
@@ -20,11 +22,10 @@ namespace WinTox.ViewModel
 
         public void ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
         {
-            StoreMessage(e.Message, App.ToxModel.GetFriendName(e.FriendNumber),
-                MessageViewModel.MessageSenderType.Friend, e.MessageType);
+            StoreMessage(e.Message, _friendViewModel, e.MessageType);
         }
 
-        public void SendMessage(int friendNumber, string message)
+        public void SendMessage(string message)
         {
             var messageType = DecideMessageType(message);
             message = TrimMessage(message, messageType);
@@ -33,12 +34,12 @@ namespace WinTox.ViewModel
             foreach (var chunk in messageChunks)
             {
                 ToxErrorSendMessage error;
-                App.ToxModel.SendMessage(friendNumber, chunk, messageType, out error);
+                App.ToxModel.SendMessage(_friendViewModel.FriendNumber, chunk, messageType, out error);
 
                 // TODO: Error handling!
 
                 if (error == ToxErrorSendMessage.Ok)
-                    StoreMessage(chunk, App.ToxModel.UserName, MessageViewModel.MessageSenderType.User, messageType);
+                    StoreMessage(chunk, App.UserViewModel, messageType);
             }
         }
 
@@ -81,21 +82,20 @@ namespace WinTox.ViewModel
             return messageChunks;
         }
 
-        private void StoreMessage(string message, string name, MessageViewModel.MessageSenderType senderType,
+        private void StoreMessage(string message, IToxUserViewModel sender,
             ToxMessageType messageType)
         {
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (ConcatWithLast(message, senderType, messageType))
+                if (ConcatWithLast(message, messageType, sender))
                     return;
 
-                var msgGroup = new MessageGroupViewModel();
+                var msgGroup = new MessageGroupViewModel(sender);
                 msgGroup.Messages.Add(new MessageViewModel
                 {
                     Message = message,
                     Timestamp = DateTime.Now.ToString(),
-                    SenderName = name,
-                    SenderType = senderType,
+                    Sender = sender,
                     MessageType = messageType
                 });
                 MessageGroups.Add(msgGroup);
@@ -107,25 +107,24 @@ namespace WinTox.ViewModel
         ///     Try to concatenate the message with the last in the collection.
         /// </summary>
         /// <param name="message">The message to concatenate the last one with.</param>
-        /// <param name="senderType">Type of the sender of the message.</param>
         /// <param name="messageType">Type of the message being send.</param>
+        /// <param name="sender">The sender of the message.</param>
         /// <returns>True on success, false otherwise.</returns>
         /// TODO: Maybe storing chunks of messages as lists and display a timestamp for every message would be a better (more user friendly) approach of the problem..?
-        private bool ConcatWithLast(string message, MessageViewModel.MessageSenderType senderType,
-            ToxMessageType messageType)
+        private bool ConcatWithLast(string message, ToxMessageType messageType, IToxUserViewModel sender)
         {
             if (MessageGroups.Count == 0 || MessageGroups.Last().Messages.Count == 0)
                 return false;
 
             var lastMessage = MessageGroups.Last().Messages.Last();
-            if (lastMessage.SenderType == senderType)
+            
+            if (lastMessage.Sender.GetType() == sender.GetType()) // TODO: Implement and use simple equality operator instead.
             {
                 MessageGroups.Last().Messages.Add(new MessageViewModel
                 {
                     Message = message,
                     Timestamp = DateTime.Now.ToString(),
-                    SenderName = lastMessage.SenderName,
-                    SenderType = senderType,
+                    Sender = sender,
                     MessageType = messageType
                 });
 

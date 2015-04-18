@@ -11,10 +11,6 @@
     d:DesignHeight="70"
     d:DesignWidth="250">
 
-    <UserControl.DataContext>
-        <viewModel:UserViewModel />
-    </UserControl.DataContext>
-
     <UserControl.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
         <converters:IsOnlineToVisibilityConverter x:Key="IsOnlineToVisibilityConverter" />

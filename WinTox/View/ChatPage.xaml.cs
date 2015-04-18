@@ -68,7 +68,7 @@ namespace WinTox.View
         {
             if (e.Key == VirtualKey.Enter)
             {
-                _friendViewModel.Conversation.SendMessage(_friendViewModel.FriendNumber, MessageInput.Text);
+                _friendViewModel.Conversation.SendMessage(MessageInput.Text);
                 MessageInput.Text = String.Empty;
                 e.Handled = true;
             }
