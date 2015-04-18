@@ -120,6 +120,7 @@
     <Compile Include="ViewModel\IToxUserViewModel.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
     <Compile Include="ViewModel\ConversationViewModel.cs" />
+    <Compile Include="ViewModel\MessageGroupViewModel.cs" />
     <Compile Include="ViewModel\MessageViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />

@@ -58,7 +58,7 @@
 
             <!-- List of messages -->
             <ListView x:Name="MessagesListView" Grid.Row="0" Background="{StaticResource ChatBackgroundColor}"
-                      ItemsSource="{Binding Conversation.Messages}" SelectionMode="None"
+                      ItemsSource="{Binding Conversation.MessageGroups}" SelectionMode="None"
                       HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <ListView.ItemContainerStyle>
                     <StaticResource ResourceKey="ChatPageListViewItemStyle" />

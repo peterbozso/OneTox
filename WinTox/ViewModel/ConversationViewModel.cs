@@ -13,10 +13,10 @@ namespace WinTox.ViewModel
     {
         public ConversationViewModel()
         {
-            Messages = new ObservableCollection<MessageViewModel>();
+            MessageGroups = new ObservableCollection<MessageGroupViewModel>();
         }
 
-        public ObservableCollection<MessageViewModel> Messages { get; set; }
+        public ObservableCollection<MessageGroupViewModel> MessageGroups { get; set; }
 
         public void ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
         {
@@ -89,7 +89,8 @@ namespace WinTox.ViewModel
                 if (ConcatWithLast(message, senderType, messageType))
                     return;
 
-                Messages.Add(new MessageViewModel
+                var msgGroup = new MessageGroupViewModel();
+                msgGroup.Messages.Add(new MessageViewModel
                 {
                     Message = message,
                     Timestamp = DateTime.Now.ToString(),
@@ -97,7 +98,8 @@ namespace WinTox.ViewModel
                     SenderType = senderType,
                     MessageType = messageType
                 });
-                OnPropertyChanged("Messages");
+                MessageGroups.Add(msgGroup);
+                OnPropertyChanged("MessageGroups");
             });
         }
 
@@ -112,19 +114,23 @@ namespace WinTox.ViewModel
         private bool ConcatWithLast(string message, MessageViewModel.MessageSenderType senderType,
             ToxMessageType messageType)
         {
-            if (Messages.Count == 0)
+            if (MessageGroups.Count == 0 || MessageGroups.Last().Messages.Count == 0)
                 return false;
 
-            var lastMessage = Messages.Last();
+            var lastMessage = MessageGroups.Last().Messages.Last();
             if (lastMessage.SenderType == senderType && lastMessage.MessageType == ToxMessageType.Message &&
                 messageType == ToxMessageType.Message)
             {
-                // Concat this message's text to the last one's.
-                lastMessage.Message = lastMessage.Message + '\n' + message;
-                // Refresh timestamp to be equal to the last message's.
-                lastMessage.Timestamp = DateTime.Now.ToString();
+                MessageGroups.Last().Messages.Add(new MessageViewModel
+                {
+                    Message = message,
+                    Timestamp = DateTime.Now.ToString(),
+                    SenderName = lastMessage.SenderName,
+                    SenderType = senderType,
+                    MessageType = messageType
+                });
 
-                OnPropertyChanged("Messages");
+                OnPropertyChanged("MessageGroups");
 
                 return true;
             }
