@@ -37,6 +37,21 @@ namespace WinTox.ViewModel
         public ConversationViewModel Conversation { get; set; }
         public int FriendNumber { get; set; }
 
+        public RelayCommand RemoveFriendCommand
+        {
+            get
+            {
+                return _removeFriendCommand
+                       ?? (_removeFriendCommand = new RelayCommand(
+                           (object parameter) =>
+                           {
+                               ToxErrorFriendDelete error;
+                               App.ToxModel.DeleteFriend(FriendNumber, out error);
+                               // TODO: Handle errors!!!
+                           }));
+            }
+        }
+
         public string Name
         {
             get { return _name; }
@@ -74,21 +89,6 @@ namespace WinTox.ViewModel
             {
                 _isOnline = value;
                 OnPropertyChanged();
-            }
-        }
-
-        public RelayCommand RemoveFriendCommand
-        {
-            get
-            {
-                return _removeFriendCommand
-                       ?? (_removeFriendCommand = new RelayCommand(
-                           (object parameter) =>
-                           {
-                               ToxErrorFriendDelete error;
-                               App.ToxModel.DeleteFriend(FriendNumber, out error);
-                               // TODO: Handle errors!!!
-                           }));
             }
         }
 

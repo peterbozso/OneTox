@@ -1,5 +1,4 @@
-﻿using System;
-using SharpTox.Core;
+﻿using SharpTox.Core;
 
 namespace WinTox.ViewModel
 {
@@ -7,7 +6,6 @@ namespace WinTox.ViewModel
     {
         private string _message;
         private string _timestamp;
-
         public IToxUserViewModel Sender { get; set; }
 
         public string Message

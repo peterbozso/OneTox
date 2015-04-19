@@ -11,7 +11,8 @@ namespace WinTox.ViewModel
 {
     internal class ConversationViewModel : ViewModelBase
     {
-        private FriendViewModel _friendViewModel;
+        private readonly FriendViewModel _friendViewModel;
+
         public ConversationViewModel(FriendViewModel friendViewModel)
         {
             _friendViewModel = friendViewModel;
@@ -47,8 +48,7 @@ namespace WinTox.ViewModel
         {
             if (message.Length > 3 && message.Substring(0, 4).Equals("/me "))
                 return ToxMessageType.Action;
-            else
-                return ToxMessageType.Message;
+            return ToxMessageType.Message;
         }
 
         private static string TrimMessage(string message, ToxMessageType messageType)
@@ -60,7 +60,7 @@ namespace WinTox.ViewModel
         }
 
         /// <summary>
-        /// Split a message into ToxConstants.MaxMessageLength long (in bytes) chunks.
+        ///     Split a message into ToxConstants.MaxMessageLength long (in bytes) chunks.
         /// </summary>
         /// <param name="message">The message to split.</param>
         /// <returns>The list of chunks.</returns>
@@ -117,8 +117,9 @@ namespace WinTox.ViewModel
                 return false;
 
             var lastMessage = MessageGroups.Last().Messages.Last();
-            
-            if (lastMessage.Sender.GetType() == sender.GetType()) // TODO: Implement and use simple equality operator instead.
+
+            if (lastMessage.Sender.GetType() == sender.GetType())
+                // TODO: Implement and use simple equality operator instead.
             {
                 MessageGroups.Last().Messages.Add(new MessageViewModel
                 {

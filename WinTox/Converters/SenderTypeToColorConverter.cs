@@ -15,7 +15,7 @@ namespace WinTox.Converters
 
             if (value is UserViewModel)
                 return Application.Current.Resources["ChatBackgroundColor"] as SolidColorBrush;
-            
+
             return null;
         }
 

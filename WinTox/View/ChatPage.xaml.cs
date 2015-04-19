@@ -74,6 +74,20 @@ namespace WinTox.View
             }
         }
 
+        private void SetupViewModel(FriendViewModel friendViewModel)
+        {
+            DataContext = _friendViewModel = friendViewModel;
+            _friendViewModel.Conversation.PropertyChanged += ConversationUpdatedHandler;
+        }
+
+        private void ConversationUpdatedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            var selectedIndex = MessagesListView.Items.Count - 1;
+            MessagesListView.SelectedIndex = selectedIndex;
+            MessagesListView.UpdateLayout();
+            MessagesListView.ScrollIntoView(MessagesListView.SelectedItem);
+        }
+
         #region NavigationHelper registration
 
         /// The methods provided in this section are simply used to allow
@@ -103,19 +117,5 @@ namespace WinTox.View
         }
 
         #endregion NavigationHelper registration
-
-        private void SetupViewModel(FriendViewModel friendViewModel)
-        {
-            DataContext = _friendViewModel = friendViewModel;
-            _friendViewModel.Conversation.PropertyChanged += ConversationUpdatedHandler;
-        }
-
-        private void ConversationUpdatedHandler(object sender, PropertyChangedEventArgs e)
-        {
-            var selectedIndex = MessagesListView.Items.Count - 1;
-            MessagesListView.SelectedIndex = selectedIndex;
-            MessagesListView.UpdateLayout();
-            MessagesListView.ScrollIntoView(MessagesListView.SelectedItem);
-        }
     }
 }
