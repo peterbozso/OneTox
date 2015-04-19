@@ -7,7 +7,7 @@ using SharpTox.Core;
 
 namespace WinTox.Model
 {
-    internal class ToxModel
+    public class ToxModel
     {
         private static readonly ToxNode[] _nodes =
         {

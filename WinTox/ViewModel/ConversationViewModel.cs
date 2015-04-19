@@ -9,7 +9,7 @@ using SharpTox.Core;
 
 namespace WinTox.ViewModel
 {
-    internal class ConversationViewModel : ViewModelBase
+    public class ConversationViewModel : ViewModelBase
     {
         private readonly FriendViewModel _friendViewModel;
 
@@ -91,13 +91,7 @@ namespace WinTox.ViewModel
                     return;
 
                 var msgGroup = new MessageGroupViewModel(sender);
-                msgGroup.Messages.Add(new MessageViewModel
-                {
-                    Message = message,
-                    Timestamp = DateTime.Now,
-                    Sender = sender,
-                    MessageType = messageType
-                });
+                msgGroup.Messages.Add(new MessageViewModel(message, DateTime.Now, messageType, sender));
                 MessageGroups.Add(msgGroup);
                 OnPropertyChanged("MessageGroups");
             });
@@ -121,16 +115,8 @@ namespace WinTox.ViewModel
             if (lastMessage.Sender.GetType() == sender.GetType())
                 // TODO: Implement and use simple equality operator instead.
             {
-                MessageGroups.Last().Messages.Add(new MessageViewModel
-                {
-                    Message = message,
-                    Timestamp = DateTime.Now,
-                    Sender = sender,
-                    MessageType = messageType
-                });
-
+                MessageGroups.Last().Messages.Add(new MessageViewModel(message, DateTime.Now, messageType, sender));
                 OnPropertyChanged("MessageGroups");
-
                 return true;
             }
 

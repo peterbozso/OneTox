@@ -3,7 +3,7 @@ using SharpTox.Encryption;
 
 namespace WinTox.Model
 {
-    internal class ExtendedTox : Tox
+    public class ExtendedTox : Tox
     {
         public delegate void FriendListModifiedEventHandler(
             int friendNumber, FriendListModificationType modificationType);

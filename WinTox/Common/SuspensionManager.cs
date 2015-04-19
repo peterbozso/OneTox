@@ -16,7 +16,7 @@ namespace WinTox.Common
     ///     carry across sessions, but that should be discarded when an application crashes or is
     ///     upgraded.
     /// </summary>
-    internal sealed class SuspensionManager
+    public sealed class SuspensionManager
     {
         private const string sessionStateFilename = "_sessionState.xml";
         private static Dictionary<string, object> _sessionState = new Dictionary<string, object>();

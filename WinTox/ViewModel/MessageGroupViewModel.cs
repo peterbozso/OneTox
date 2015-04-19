@@ -2,7 +2,7 @@
 
 namespace WinTox.ViewModel
 {
-    internal class MessageGroupViewModel
+    public class MessageGroupViewModel
     {
         public MessageGroupViewModel(IToxUserViewModel sender)
         {

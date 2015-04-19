@@ -2,7 +2,7 @@
 
 namespace WinTox.ViewModel
 {
-    internal interface IToxUserViewModel
+    public interface IToxUserViewModel
     {
         string Name { get; }
         string StatusMessage { get; }

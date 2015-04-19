@@ -4,7 +4,7 @@ using WinTox.Common;
 
 namespace WinTox.ViewModel
 {
-    internal class FriendViewModel : ViewModelBase, IToxUserViewModel
+    public class FriendViewModel : ViewModelBase, IToxUserViewModel
     {
         private bool _isOnline;
         private string _name;
@@ -34,8 +34,8 @@ namespace WinTox.ViewModel
             IsOnline = App.ToxModel.IsFriendOnline(friendNumber);
         }
 
-        public ConversationViewModel Conversation { get; set; }
-        public int FriendNumber { get; set; }
+        public ConversationViewModel Conversation { get; private set; }
+        public int FriendNumber { get; private set; }
 
         public RelayCommand RemoveFriendCommand
         {

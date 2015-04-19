@@ -3,9 +3,16 @@ using SharpTox.Core;
 
 namespace WinTox.ViewModel
 {
-    internal class MainPageViewModel
+    public class MainPageViewModel
     {
-        internal MainPageViewModel()
+        public enum FriendRequestAnswer
+        {
+            Accept,
+            Decline,
+            Later
+        }
+
+        public MainPageViewModel()
         {
             FriendList = new FriendListViewModel();
             App.ToxModel.FriendRequestReceived += FriendRequestReceivedHandler;
@@ -13,7 +20,7 @@ namespace WinTox.ViewModel
 
         public FriendListViewModel FriendList { get; set; }
 
-        internal void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e)
+        public void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e)
         {
             switch (answer)
             {
@@ -39,13 +46,6 @@ namespace WinTox.ViewModel
         {
             if (FriendRequestReceived != null)
                 FriendRequestReceived(sender, e);
-        }
-
-        internal enum FriendRequestAnswer
-        {
-            Accept,
-            Decline,
-            Later
         }
     }
 }

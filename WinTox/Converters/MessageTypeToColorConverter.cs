@@ -6,7 +6,7 @@ using SharpTox.Core;
 
 namespace WinTox.Converters
 {
-    internal class MessageTypeToColorConverter : IValueConverter
+    public class MessageTypeToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

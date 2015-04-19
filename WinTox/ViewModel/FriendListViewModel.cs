@@ -6,7 +6,7 @@ using WinTox.Model;
 
 namespace WinTox.ViewModel
 {
-    internal class FriendListViewModel
+    public class FriendListViewModel
     {
         // We need to run the event handlers from the UI thread.
         // Otherwise the PropertyChanged events wouldn't work in FriendViewModel.

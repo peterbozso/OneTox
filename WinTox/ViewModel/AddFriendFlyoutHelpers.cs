@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace WinTox.ViewModel
 {
-    internal class AddFriendFlyoutHelpers
+    public class AddFriendFlyoutHelpers
     {
         public static void SetIsOpen(DependencyObject d, bool value)
         {

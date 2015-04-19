@@ -6,7 +6,7 @@ using WinTox.Common;
 
 namespace WinTox.ViewModel
 {
-    internal class AddFriendFlyoutViewModel : ViewModelBase
+    public class AddFriendFlyoutViewModel : ViewModelBase
     {
         private RelayCommand _addFriendCommand;
         private bool _isFlyoutOpen;

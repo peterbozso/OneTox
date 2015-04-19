@@ -6,7 +6,7 @@ using WinTox.ViewModel;
 
 namespace WinTox.Converters
 {
-    internal class SenderTypeToColorConverter : IValueConverter
+    public class SenderTypeToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

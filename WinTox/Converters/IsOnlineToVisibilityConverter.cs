@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Data;
 
 namespace WinTox.Converters
 {
-    internal class IsOnlineToVisibilityConverter : IValueConverter
+    public class IsOnlineToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
