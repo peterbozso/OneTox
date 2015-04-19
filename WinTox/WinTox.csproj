@@ -106,6 +106,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\DateTimeConverter.cs" />
     <Compile Include="Converters\IsOnlineToOpacityConverter.cs" />
     <Compile Include="Converters\IsOnlineToVisibilityConverter.cs" />
     <Compile Include="Converters\MessageTypeToColorConverter.cs" />

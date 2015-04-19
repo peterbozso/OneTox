@@ -13,6 +13,7 @@
     <UserControl.Resources>
         <converters:SenderTypeToColorConverter x:Key="SenderTypeToColorConverter" />
         <converters:MessageTypeToColorConverter x:Key="MessageTypeToColorConverter" />
+        <converters:DateTimeConverter x:Key="DateTimeConverter" />
     </UserControl.Resources>
 
     <Grid Background="{Binding Path=Sender, Converter={StaticResource SenderTypeToColorConverter}}">
@@ -51,7 +52,7 @@
                                        FontSize="20" Margin="10,0,0,0" TextWrapping="Wrap" Text="{Binding Message}" />
                             <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="16" Margin="10,0,0,0"
                                        Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"
-                                       HorizontalAlignment="Left" Text="{Binding Timestamp}" VerticalAlignment="Center" />
+                                       HorizontalAlignment="Left" Text="{Binding Timestamp, Converter={StaticResource DateTimeConverter}}" VerticalAlignment="Center" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

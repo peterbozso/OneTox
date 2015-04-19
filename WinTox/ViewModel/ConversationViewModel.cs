@@ -94,7 +94,7 @@ namespace WinTox.ViewModel
                 msgGroup.Messages.Add(new MessageViewModel
                 {
                     Message = message,
-                    Timestamp = DateTime.Now.ToString(),
+                    Timestamp = DateTime.Now,
                     Sender = sender,
                     MessageType = messageType
                 });
@@ -124,7 +124,7 @@ namespace WinTox.ViewModel
                 MessageGroups.Last().Messages.Add(new MessageViewModel
                 {
                     Message = message,
-                    Timestamp = DateTime.Now.ToString(),
+                    Timestamp = DateTime.Now,
                     Sender = sender,
                     MessageType = messageType
                 });
