@@ -11,7 +11,8 @@
     d:DesignWidth="400">
 
     <UserControl.Resources>
-        <ResourceDictionary Source="MessageBlockDictionary.xaml" />
+        <converters:SenderTypeToColorConverter x:Key="SenderTypeToColorConverter" />
+        <converters:MessageTypeToColorConverter x:Key="MessageTypeToColorConverter"/>
     </UserControl.Resources>
 
     <Grid Background="{Binding Path=Sender, Converter={StaticResource SenderTypeToColorConverter}}">
@@ -33,13 +34,10 @@
             <TextBlock Grid.Row="0" Grid.Column="1" x:Name="Name" Foreground="{StaticResource MainColor}" Margin="10,0,0,0"
                            FontSize="20" Text="{Binding Sender.Name}" TextWrapping="Wrap" />
 
-            <ListView Grid.Row="1" Grid.Column="1" x:Name="MessagesListView"
-                      ItemsSource="{Binding Messages}" SelectionMode="None"
+            <ItemsControl  Grid.Row="1" Grid.Column="1"
+                      ItemsSource="{Binding Messages}"
                       HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-                <ListView.ItemContainerStyle>
-                    <StaticResource ResourceKey="ChatPageListViewItemStyle" />
-                </ListView.ItemContainerStyle>
-                <ListView.ItemTemplate>
+                <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -48,12 +46,11 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock x:Name="MessageText" Grid.Column="0" Foreground="{Binding MessageType, Converter={StaticResource MessageTypeToColorConverter}}" FontSize="20" Margin="10,0,0,0" TextWrapping="Wrap" Text="{Binding Message}" />
-
                             <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="16" Margin="10,0,0,0" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}" HorizontalAlignment="Left" Text="{Binding Timestamp}" VerticalAlignment="Center" />
                         </Grid>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
     </Grid>
 </UserControl>
