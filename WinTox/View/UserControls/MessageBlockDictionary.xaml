@@ -9,4 +9,5 @@
     </ResourceDictionary.MergedDictionaries>
 
     <converters:SenderTypeToColorConverter x:Key="SenderTypeToColorConverter" />
+    <converters:MessageTypeToColorConverter x:Key="MessageTypeToColorConverter"/>
 </ResourceDictionary>

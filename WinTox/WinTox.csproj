@@ -108,6 +108,7 @@
     </Compile>
     <Compile Include="Converters\IsOnlineToOpacityConverter.cs" />
     <Compile Include="Converters\IsOnlineToVisibilityConverter.cs" />
+    <Compile Include="Converters\MessageTypeToColorConverter.cs" />
     <Compile Include="Converters\SenderTypeToColorConverter.cs" />
     <Compile Include="Converters\StatusToColorConverter.cs" />
     <Compile Include="Model\ExtendedTox.cs" />
