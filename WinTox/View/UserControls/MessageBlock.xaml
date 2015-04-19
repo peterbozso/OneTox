@@ -16,7 +16,7 @@
     </UserControl.Resources>
 
     <Grid Background="{Binding Path=Sender, Converter={StaticResource SenderTypeToColorConverter}}">
-        <Grid Margin="20,10,20,10">
+        <Grid Margin="20,10,20,5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -31,15 +31,15 @@
                    Stretch="UniformToFill"
                    VerticalAlignment="Top" />
 
-            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="Name" Foreground="{StaticResource MainColor}" Margin="10,0,0,0"
-                           FontSize="20" Text="{Binding Sender.Name}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="Name" Foreground="{StaticResource MainColor}" Margin="10,-3,0,0"
+                           FontSize="20" Text="{Binding Sender.Name}" TextWrapping="Wrap" VerticalAlignment="Top" />
 
             <ItemsControl  Grid.Row="1" Grid.Column="1"
                       ItemsSource="{Binding Messages}"
                       HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid>
+                        <Grid Margin="0,0,0,5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
