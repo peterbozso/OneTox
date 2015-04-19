@@ -31,14 +31,10 @@ namespace WinTox.ViewModel
                 }
                 return null;
             }
-            private set
-            {
-                _message = value;
-            }
+            private set { _message = value; }
         }
 
         public DateTime Timestamp { get; private set; }
-
         public ToxMessageType MessageType { get; private set; }
     }
 }
