@@ -22,6 +22,7 @@ namespace WinTox.View
         public MainPage()
         {
             InitializeComponent();
+            NavigationCacheMode = NavigationCacheMode.Required;
             NavigationHelper = new NavigationHelper(this);
             NavigationHelper.LoadState += navigationHelper_LoadState;
             _viewModel = DataContext as MainPageViewModel;
