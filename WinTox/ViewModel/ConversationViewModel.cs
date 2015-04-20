@@ -87,7 +87,7 @@ namespace WinTox.ViewModel
         {
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (ConcatWithLast(message, messageType, sender))
+                if (AppendToLastGroup(message, messageType, sender))
                     return;
 
                 var msgGroup = new MessageGroupViewModel(sender);
@@ -98,14 +98,13 @@ namespace WinTox.ViewModel
         }
 
         /// <summary>
-        ///     Try to concatenate the message with the last in the collection.
+        ///     Try to append the message to the last message group.
         /// </summary>
-        /// <param name="message">The message to concatenate the last one with.</param>
-        /// <param name="messageType">Type of the message being send.</param>
+        /// <param name="message">The message to append.</param>
+        /// <param name="messageType">Type of the message.</param>
         /// <param name="sender">The sender of the message.</param>
         /// <returns>True on success, false otherwise.</returns>
-        /// TODO: Maybe storing chunks of messages as lists and display a timestamp for every message would be a better (more user friendly) approach of the problem..?
-        private bool ConcatWithLast(string message, ToxMessageType messageType, IToxUserViewModel sender)
+        private bool AppendToLastGroup(string message, ToxMessageType messageType, IToxUserViewModel sender)
         {
             if (MessageGroups.Count == 0 || MessageGroups.Last().Messages.Count == 0)
                 return false;
