@@ -63,7 +63,7 @@ namespace WinTox.Model
             get { return _tox.IsConnected; }
         }
 
-        #endregion Properties
+        #endregion
 
         #region Methods
 
@@ -181,7 +181,7 @@ namespace WinTox.Model
             return _tox.SendMessage(friendNumber, message, type, out error);
         }
 
-        #endregion Methods
+        #endregion
 
         #region Events
 
@@ -255,6 +255,6 @@ namespace WinTox.Model
                 FriendMessageReceived(sender, e);
         }
 
-        #endregion Events
+        #endregion
     }
 }

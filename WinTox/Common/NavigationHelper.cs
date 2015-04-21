@@ -288,7 +288,7 @@ namespace WinTox.Common
 
 #endif
 
-        #endregion Navigation support
+        #endregion
 
         #region Process lifetime management
 
@@ -374,7 +374,7 @@ namespace WinTox.Common
             frameState[_pageKey] = pageState;
         }
 
-        #endregion Process lifetime management
+        #endregion
     }
 
     /// <summary>

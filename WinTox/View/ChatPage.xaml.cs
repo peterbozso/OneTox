@@ -116,6 +116,6 @@ namespace WinTox.View
             NavigationHelper.OnNavigatedFrom(e);
         }
 
-        #endregion NavigationHelper registration
+        #endregion
     }
 }
