@@ -9,7 +9,8 @@
     mc:Ignorable="d"
     IconSource="Assets/SmallLogo.png"
     Title="Profile settings"
-    d:DesignWidth="346">
+    d:DesignWidth="346"
+    LostFocus="ProfileSettingsFlyoutLostFocus">
 
     <SettingsFlyout.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />

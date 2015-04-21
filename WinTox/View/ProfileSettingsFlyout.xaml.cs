@@ -30,5 +30,10 @@ namespace WinTox.View
             dataPackage.SetText(ToxIdTextBlock.Text);
             Clipboard.SetContent(dataPackage);
         }
+
+        private async void ProfileSettingsFlyoutLostFocus(object sender, RoutedEventArgs e)
+        {
+            await App.UserViewModel.SaveDataAsync();
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using SharpTox.Core;
@@ -72,6 +73,11 @@ namespace WinTox.ViewModel
         {
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () => { IsOnline = App.ToxModel.IsConnected; });
+        }
+
+        public async Task SaveDataAsync()
+        {
+            await App.ToxModel.SaveDataAsync();
         }
     }
 }
