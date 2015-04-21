@@ -47,24 +47,24 @@ namespace WinTox.Model
             get { return _tox.Friends; }
         }
 
-        public string UserName
+        public string Name
         {
             get { return _tox.Name; }
             set { _tox.Name = value; }
         }
 
-        public string UserStatusMessage
+        public string StatusMessage
         {
             get { return _tox.StatusMessage; }
             set { _tox.StatusMessage = value; }
         }
 
-        public ToxUserStatus UserStatus
+        public ToxUserStatus Status
         {
             get { return _tox.Status; }
         }
 
-        public bool IsUserConnected
+        public bool IsConnected
         {
             get { return _tox.IsConnected; }
         }

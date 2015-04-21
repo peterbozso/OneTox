@@ -12,40 +12,40 @@ namespace WinTox.ViewModel
 
         public UserViewModel()
         {
-            _isOnline = App.ToxModel.IsUserConnected;
+            _isOnline = App.ToxModel.IsConnected;
             App.ToxModel.UserConnectionStatusChanged += UserConnectionStatusChangedHandler;
         }
 
         public string Name
         {
-            get { return App.ToxModel.UserName; }
+            get { return App.ToxModel.Name; }
             set
             {
                 var lengthInBytes = Encoding.Unicode.GetBytes(value).Length;
                 if (value == String.Empty || lengthInBytes > ToxConstants.MaxNameLength ||
-                    App.ToxModel.UserName == value)
+                    App.ToxModel.Name == value)
                     return;
-                App.ToxModel.UserName = value;
+                App.ToxModel.Name = value;
                 OnPropertyChanged();
             }
         }
 
         public string StatusMessage
         {
-            get { return App.ToxModel.UserStatusMessage; }
+            get { return App.ToxModel.StatusMessage; }
             set
             {
                 var lengthInBytes = Encoding.Unicode.GetBytes(value).Length;
                 if (lengthInBytes > ToxConstants.MaxStatusMessageLength)
                     return;
-                App.ToxModel.UserStatusMessage = value;
+                App.ToxModel.StatusMessage = value;
                 OnPropertyChanged();
             }
         }
 
         public ToxUserStatus Status
         {
-            get { return App.ToxModel.UserStatus; }
+            get { return App.ToxModel.Status; }
         }
 
         public bool IsOnline
@@ -61,7 +61,7 @@ namespace WinTox.ViewModel
         private void UserConnectionStatusChangedHandler(object sender, ToxEventArgs.ConnectionStatusEventArgs e)
         {
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => { IsOnline = App.ToxModel.IsUserConnected; });
+                () => { IsOnline = App.ToxModel.IsConnected; });
         }
     }
 }
