@@ -16,6 +16,11 @@ namespace WinTox.ViewModel
             App.ToxModel.UserConnectionStatusChanged += UserConnectionStatusChangedHandler;
         }
 
+        public ToxId Id
+        {
+            get { return App.ToxModel.Id; }
+        }
+
         public string Name
         {
             get { return App.ToxModel.Name; }
