@@ -18,6 +18,8 @@
     <StackPanel Width="266">
         <TextBox Header="Name" Text="{Binding Name, Mode=TwoWay}" LostFocus="NameTextBoxLostFocus" />
         <TextBox Header="Status message" Text="{Binding StatusMessage, Mode=TwoWay}" />
+        
+        <!-- Status -->
         <Grid Margin="0,3,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -30,7 +32,8 @@
                      Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}"
                      HorizontalAlignment="Left" Margin="10,25,0,0" />
         </Grid>
-
+        
+        <!-- TODO: Add option to change profile picture! -->
     </StackPanel>
 
 </SettingsFlyout>
