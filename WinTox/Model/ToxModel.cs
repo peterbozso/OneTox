@@ -62,6 +62,7 @@ namespace WinTox.Model
         public ToxUserStatus Status
         {
             get { return _tox.Status; }
+            set { _tox.Status = value; }
         }
 
         public bool IsConnected

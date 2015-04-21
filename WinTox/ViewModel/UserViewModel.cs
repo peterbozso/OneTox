@@ -46,6 +46,11 @@ namespace WinTox.ViewModel
         public ToxUserStatus Status
         {
             get { return App.ToxModel.Status; }
+            set
+            {
+                App.ToxModel.Status = value;
+                OnPropertyChanged();
+            }
         }
 
         public bool IsOnline

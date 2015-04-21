@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using SharpTox.Core;
 
 namespace WinTox.View
 {
@@ -10,6 +12,7 @@ namespace WinTox.View
         {
             InitializeComponent();
             DataContext = App.UserViewModel;
+            StatusComboBox.ItemsSource = Enum.GetValues(typeof (ToxUserStatus)).Cast<ToxUserStatus>();
         }
 
         private void NameTextBoxLostFocus(object sender, RoutedEventArgs e)

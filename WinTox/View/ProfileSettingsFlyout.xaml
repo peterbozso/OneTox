@@ -5,14 +5,32 @@
     xmlns:local="using:WinTox.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:WinTox.Converters"
     mc:Ignorable="d"
     IconSource="Assets/SmallLogo.png"
     Title="Profile settings"
     d:DesignWidth="346">
 
+    <SettingsFlyout.Resources>
+        <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+    </SettingsFlyout.Resources>
+
     <StackPanel Width="266">
         <TextBox Header="Name" Text="{Binding Name, Mode=TwoWay}" LostFocus="NameTextBoxLostFocus" />
         <TextBox Header="Status message" Text="{Binding StatusMessage, Mode=TwoWay}" />
+        <Grid Margin="0,3,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="StatusComboBox" Grid.Column="0" Header="Status"
+                      SelectedItem="{Binding Path=Status, Mode=TwoWay}" />
+            <Ellipse Grid.Column="1" Width="10" Height="10" VerticalAlignment="Center"
+                     Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}"
+                     HorizontalAlignment="Left" Margin="10,25,0,0" />
+        </Grid>
+
     </StackPanel>
 
 </SettingsFlyout>

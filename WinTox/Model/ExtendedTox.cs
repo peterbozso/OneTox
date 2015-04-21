@@ -47,6 +47,16 @@ namespace WinTox.Model
             }
         }
 
+        public new ToxUserStatus Status
+        {
+            get { return base.Status; }
+            set
+            {
+                base.Status = value;
+                UserDataModified();
+            }
+        }
+
         public new int AddFriend(ToxId id, string message, out ToxErrorFriendAdd error)
         {
             var friendNumber = base.AddFriend(id, message, out error);
