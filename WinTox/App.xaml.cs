@@ -5,11 +5,9 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Globalization;
 using Windows.UI.ApplicationSettings;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using SharpTox.Core;
 using WinTox.Common;
 using WinTox.Model;
 using WinTox.View;
@@ -36,7 +34,7 @@ namespace WinTox
             InitializeComponent();
             Suspending += OnSuspending;
             Resuming += OnResuming;
-            ToxModel = new ToxModel(new ExtendedTox(new ToxOptions(true, true)));
+            ToxModel = new ToxModel();
             UserViewModel = new UserViewModel();
         }
 

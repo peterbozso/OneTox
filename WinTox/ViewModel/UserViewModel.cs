@@ -1,4 +1,6 @@
-﻿using Windows.ApplicationModel.Core;
+﻿using System;
+using System.Text;
+using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using SharpTox.Core;
 
@@ -17,6 +19,15 @@ namespace WinTox.ViewModel
         public string Name
         {
             get { return App.ToxModel.UserName; }
+            set
+            {
+                var lengthInBytes = Encoding.Unicode.GetBytes(value).Length;
+                if (value == String.Empty || lengthInBytes > ToxConstants.MaxNameLength ||
+                    App.ToxModel.UserName == value)
+                    return;
+                App.ToxModel.UserName = value;
+                OnPropertyChanged();
+            }
         }
 
         public string StatusMessage

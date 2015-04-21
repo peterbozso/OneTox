@@ -10,28 +10,8 @@
     Title="Profile settings"
     d:DesignWidth="346">
 
-    <!-- This StackPanel acts as a root panel for vertical layout of the content sections -->
-    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-
-        <!-- The StackPanel(s) below define individual content sections -->
-
-        <!-- Content Section 1-->
-        <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}">
-
-            <!-- Section 1 header -->
-            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Lorem ipsum" />
-
-            <!-- Section 1 body -->
-            <TextBlock Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,25" TextWrapping="Wrap">
-                <TextBlock.Text>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </TextBlock.Text>
-            </TextBlock>
-
-        </StackPanel>
-
-        <!-- Define more Content Sections below as necessary -->
-
+    <StackPanel Width="266">
+        <TextBox Header="Name" Text="{Binding Name, Mode=TwoWay}" LostFocus="NameTextBoxLostFocus" />
     </StackPanel>
+
 </SettingsFlyout>

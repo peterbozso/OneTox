@@ -8,6 +8,8 @@ namespace WinTox.Model
         public delegate void FriendListModifiedEventHandler(
             int friendNumber, FriendListModificationType modificationType);
 
+        public delegate void UserDataModifiedEventHandler();
+
         public enum FriendListModificationType
         {
             Add,
@@ -23,6 +25,16 @@ namespace WinTox.Model
         public ExtendedTox(ToxOptions options, ToxData data = null, ToxEncryptionKey key = null) :
             base(options, data, key)
         {
+        }
+
+        public new string Name
+        {
+            get { return base.Name; }
+            set
+            {
+                base.Name = value;
+                UserDataModified();
+            }
         }
 
         public new int AddFriend(ToxId id, string message, out ToxErrorFriendAdd error)
@@ -83,6 +95,14 @@ namespace WinTox.Model
             {
                 OnFriendListModified(friendNumber, modificationType);
             }
+        }
+
+        public event UserDataModifiedEventHandler OnUserDataModified;
+
+        private void UserDataModified()
+        {
+            if (OnUserDataModified != null)
+                OnUserDataModified();
         }
     }
 }

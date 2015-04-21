@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -31,8 +30,13 @@ namespace WinTox.Model
 
         private ExtendedTox _tox;
 
-        public ToxModel(ExtendedTox tox)
+        public ToxModel()
         {
+            var tox = new ExtendedTox(new ToxOptions(true, true))
+            {
+                Name = "User",
+                StatusMessage = "Using WinTox."
+            };
             SetCurrent(tox);
         }
 
@@ -46,6 +50,7 @@ namespace WinTox.Model
         public string UserName
         {
             get { return _tox.Name; }
+            set { _tox.Name = value; }
         }
 
         public string UserStatusMessage
@@ -79,22 +84,16 @@ namespace WinTox.Model
             _tox.OnFriendStatusChanged += FriendStatusChangedHandler;
             _tox.OnFriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
             _tox.OnFriendMessageReceived += FriendMessageReceivedHandler;
+            _tox.OnUserDataModified += UserDataModifiedHandler;
 
             if (FriendListModified != null)
                 FriendListModified(-1, ExtendedTox.FriendListModificationType.Reset);
         }
 
-        public async void Start()
+        public void Start()
         {
-            _tox.Name = "User";
-            _tox.StatusMessage = "This is a test.";
-
             _tox.Start();
-
             BootstrapContinously();
-
-            var id = _tox.Id.ToString();
-            Debug.WriteLine("ID: {0}", id);
         }
 
         /// <summary>
@@ -257,6 +256,11 @@ namespace WinTox.Model
         {
             if (FriendMessageReceived != null)
                 FriendMessageReceived(sender, e);
+        }
+
+        private async void UserDataModifiedHandler()
+        {
+            await SaveDataAsync();
         }
 
         #endregion

@@ -1,4 +1,5 @@
 ﻿using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace WinTox.View.UserControls
 {
@@ -10,7 +11,7 @@ namespace WinTox.View.UserControls
             DataContext = App.UserViewModel;
         }
 
-        private void UserTileTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private void UserTileTapped(object sender, TappedRoutedEventArgs e)
         {
             App.ShowProfileSettingsFlyout();
         }
