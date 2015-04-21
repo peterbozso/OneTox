@@ -12,6 +12,7 @@
 
     <StackPanel Width="266">
         <TextBox Header="Name" Text="{Binding Name, Mode=TwoWay}" LostFocus="NameTextBoxLostFocus" />
+        <TextBox Header="Status message" Text="{Binding StatusMessage, Mode=TwoWay}" />
     </StackPanel>
 
 </SettingsFlyout>

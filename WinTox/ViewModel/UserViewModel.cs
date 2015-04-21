@@ -33,6 +33,14 @@ namespace WinTox.ViewModel
         public string StatusMessage
         {
             get { return App.ToxModel.UserStatusMessage; }
+            set
+            {
+                var lengthInBytes = Encoding.Unicode.GetBytes(value).Length;
+                if (lengthInBytes > ToxConstants.MaxStatusMessageLength)
+                    return;
+                App.ToxModel.UserStatusMessage = value;
+                OnPropertyChanged();
+            }
         }
 
         public ToxUserStatus Status

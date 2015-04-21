@@ -56,6 +56,7 @@ namespace WinTox.Model
         public string UserStatusMessage
         {
             get { return _tox.StatusMessage; }
+            set { _tox.StatusMessage = value; }
         }
 
         public ToxUserStatus UserStatus
