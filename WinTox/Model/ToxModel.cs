@@ -161,19 +161,23 @@ namespace WinTox.Model
 
         public async Task SaveDataAsync()
         {
-            var stream = await ApplicationData.Current.LocalFolder.OpenStreamForWriteAsync(_fileName,
-                CreationCollisionOption.ReplaceExisting);
-            var dataToWrite = _tox.GetData().Bytes;
-            await stream.WriteAsync(dataToWrite, 0, dataToWrite.Length);
+            using (var stream = await ApplicationData.Current.LocalFolder.OpenStreamForWriteAsync(_fileName,
+                CreationCollisionOption.ReplaceExisting))
+            {
+                var dataToWrite = _tox.GetData().Bytes;
+                await stream.WriteAsync(dataToWrite, 0, dataToWrite.Length);
+            }
         }
 
         public async Task RestoreDataAsync()
         {
-            var stream = await ApplicationData.Current.LocalFolder.OpenStreamForReadAsync(_fileName);
-            var toxData = new byte[stream.Length];
-            await stream.ReadAsync(toxData, 0, toxData.Length);
-            var newTox = new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(toxData));
-            SetCurrent(newTox);
+            using (var stream = await ApplicationData.Current.LocalFolder.OpenStreamForReadAsync(_fileName))
+            {
+                var toxData = new byte[stream.Length];
+                await stream.ReadAsync(toxData, 0, toxData.Length);
+                var newTox = new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(toxData));
+                SetCurrent(newTox);
+            }
         }
 
         public int SendMessage(int friendNumber, string message, ToxMessageType type, out ToxErrorSendMessage error)
