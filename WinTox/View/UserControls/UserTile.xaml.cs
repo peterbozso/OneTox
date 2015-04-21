@@ -1,7 +1,5 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-// The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
-
 namespace WinTox.View.UserControls
 {
     public sealed partial class UserTile : UserControl
@@ -10,6 +8,11 @@ namespace WinTox.View.UserControls
         {
             InitializeComponent();
             DataContext = App.UserViewModel;
+        }
+
+        private void UserTileTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            App.ShowProfileSettingsFlyout();
         }
     }
 }

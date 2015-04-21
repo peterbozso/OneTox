@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Globalization;
+using Windows.UI.ApplicationSettings;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -155,5 +157,25 @@ namespace WinTox
             await ToxModel.RestoreDataAsync();
             ToxModel.Start();
         }
+
+        #region Profile settings flyout setup
+
+        protected override void OnWindowCreated(WindowCreatedEventArgs args)
+        {
+            SettingsPane.GetForCurrentView().CommandsRequested += OnCommandsRequested;
+        }
+
+        private static void OnCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
+        {
+            args.Request.ApplicationCommands.Add(new SettingsCommand(
+                "Profile settings", "Profile settings", handler => ShowProfileSettingsFlyout()));
+        }
+
+        public static void ShowProfileSettingsFlyout()
+        {
+            new ProfileSettingsFlyout().Show();
+        }
+
+        #endregion
     }
 }

@@ -17,7 +17,7 @@
         <converters:IsOnlineToOpacityConverter x:Key="IsOnlineToOpacityConverter" />
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource BackgroundColor}">
+    <Grid Background="{StaticResource BackgroundColor}" Tapped="UserTileTapped">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />

@@ -128,6 +128,9 @@
     <Compile Include="View\ChatPage.xaml.cs">
       <DependentUpon>ChatPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ProfileSettingsFlyout.xaml.cs">
+      <DependentUpon>ProfileSettingsFlyout.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\UserControls\FriendInfo.xaml.cs">
       <DependentUpon>FriendInfo.xaml</DependentUpon>
     </Compile>
@@ -176,6 +179,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="View\ProfileSettingsFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\UserControls\FriendInfo.xaml">
       <SubType>Designer</SubType>
