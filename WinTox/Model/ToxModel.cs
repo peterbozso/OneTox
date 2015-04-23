@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SharpTox.Core;
@@ -28,6 +29,7 @@ namespace WinTox.Model
                 new ToxKey(ToxKeyType.Public, "8CD087E31C67568103E8C2A28653337E90E6B8EDA0D765D57C6B5172B4F1F04C"))
         };
 
+        private readonly SemaphoreSlim _semaphore;
         private ExtendedTox _tox;
 
         public ToxModel()
@@ -38,6 +40,8 @@ namespace WinTox.Model
                 StatusMessage = "Using WinTox."
             };
             SetCurrent(tox);
+
+            _semaphore = new SemaphoreSlim(1);
         }
 
         #region Properties
@@ -166,11 +170,19 @@ namespace WinTox.Model
 
         public async Task SaveDataAsync()
         {
-            using (var stream = await ApplicationData.Current.LocalFolder.OpenStreamForWriteAsync(_fileName,
-                CreationCollisionOption.ReplaceExisting))
+            await _semaphore.WaitAsync();
+            try
             {
-                var dataToWrite = _tox.GetData().Bytes;
-                await stream.WriteAsync(dataToWrite, 0, dataToWrite.Length);
+                using (var stream = await ApplicationData.Current.LocalFolder.OpenStreamForWriteAsync(_fileName,
+                    CreationCollisionOption.ReplaceExisting))
+                {
+                    var dataToWrite = _tox.GetData().Bytes;
+                    await stream.WriteAsync(dataToWrite, 0, dataToWrite.Length);
+                }
+            }
+            finally
+            {
+                _semaphore.Release();
             }
         }
 
