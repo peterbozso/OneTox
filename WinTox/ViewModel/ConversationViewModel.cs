@@ -12,10 +12,12 @@ namespace WinTox.ViewModel
     public class ConversationViewModel : ViewModelBase
     {
         private readonly FriendViewModel _friendViewModel;
+        private readonly UserViewModel _userViewModel;
 
         public ConversationViewModel(FriendViewModel friendViewModel)
         {
             _friendViewModel = friendViewModel;
+            _userViewModel = new UserViewModel();
             MessageGroups = new ObservableCollection<MessageGroupViewModel>();
         }
 
@@ -40,7 +42,7 @@ namespace WinTox.ViewModel
                 // TODO: Error handling!
 
                 if (error == ToxErrorSendMessage.Ok)
-                    StoreMessage(chunk, App.UserViewModel, messageType);
+                    StoreMessage(chunk, _userViewModel, messageType);
             }
         }
 
