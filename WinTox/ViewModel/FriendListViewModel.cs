@@ -50,7 +50,7 @@ namespace WinTox.ViewModel
         private void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
         {
             _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => { FindFriend(e.FriendNumber).IsOnline = e.Status != ToxConnectionStatus.None; });
+                () => { FindFriend(e.FriendNumber).IsConnected = e.Status != ToxConnectionStatus.None; });
         }
 
         private void FriendListModifiedHandler(int friendNumber, ExtendedTox.FriendListModificationType modificationType)

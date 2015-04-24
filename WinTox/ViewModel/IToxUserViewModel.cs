@@ -7,6 +7,6 @@ namespace WinTox.ViewModel
         string Name { get; }
         string StatusMessage { get; }
         ToxUserStatus Status { get; }
-        bool IsOnline { get; }
+        bool IsConnected { get; }
     }
 }

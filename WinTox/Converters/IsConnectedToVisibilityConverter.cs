@@ -4,12 +4,12 @@ using Windows.UI.Xaml.Data;
 
 namespace WinTox.Converters
 {
-    public class IsOnlineToVisibilityConverter : IValueConverter
+    public class IsConnectedToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var isOnline = (bool) value;
-            if (isOnline)
+            var IsConnected = (bool) value;
+            if (IsConnected)
                 return Visibility.Visible;
             return Visibility.Collapsed;
         }

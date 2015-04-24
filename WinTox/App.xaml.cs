@@ -23,7 +23,6 @@ namespace WinTox
     sealed partial class App : Application
     {
         public static ToxModel ToxModel;
-        public static UserViewModel UserViewModel;
 
         /// <summary>
         ///     Initializes the singleton Application object.  This is the first line of authored code
@@ -35,7 +34,6 @@ namespace WinTox
             Suspending += OnSuspending;
             Resuming += OnResuming;
             ToxModel = new ToxModel();
-            UserViewModel = new UserViewModel();
         }
 
         /// <summary>

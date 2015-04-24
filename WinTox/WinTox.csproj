@@ -107,8 +107,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\DateTimeConverter.cs" />
-    <Compile Include="Converters\IsOnlineToOpacityConverter.cs" />
-    <Compile Include="Converters\IsOnlineToVisibilityConverter.cs" />
+    <Compile Include="Converters\IsConnectedToOpacityConverter.cs" />
+    <Compile Include="Converters\IsConnectedToVisibilityConverter.cs" />
     <Compile Include="Converters\MessageTypeToColorConverter.cs" />
     <Compile Include="Converters\SenderTypeToColorConverter.cs" />
     <Compile Include="Converters\StatusToColorConverter.cs" />
@@ -123,6 +123,7 @@
     <Compile Include="ViewModel\ConversationViewModel.cs" />
     <Compile Include="ViewModel\MessageGroupViewModel.cs" />
     <Compile Include="ViewModel\MessageViewModel.cs" />
+    <Compile Include="ViewModel\ProfileSettingsViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\ChatPage.xaml.cs">

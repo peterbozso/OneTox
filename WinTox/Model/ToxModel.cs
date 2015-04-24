@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -54,19 +56,31 @@ namespace WinTox.Model
         public string Name
         {
             get { return _tox.Name; }
-            set { _tox.Name = value; }
+            set
+            {
+                _tox.Name = value;
+                OnPropertyChanged();
+            }
         }
 
         public string StatusMessage
         {
             get { return _tox.StatusMessage; }
-            set { _tox.StatusMessage = value; }
+            set
+            {
+                _tox.StatusMessage = value;
+                OnPropertyChanged();
+            }
         }
 
         public ToxUserStatus Status
         {
             get { return _tox.Status; }
-            set { _tox.Status = value; }
+            set
+            {
+                _tox.Status = value;
+                OnPropertyChanged();
+            }
         }
 
         public ToxId Id
@@ -206,12 +220,17 @@ namespace WinTox.Model
 
         #region Events
 
-        public event EventHandler<ToxEventArgs.ConnectionStatusEventArgs> UserConnectionStatusChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         private void ConnectionStatusChangedHandler(object sender, ToxEventArgs.ConnectionStatusEventArgs e)
         {
-            if (UserConnectionStatusChanged != null)
-                UserConnectionStatusChanged(sender, e);
+            OnPropertyChanged("IsConnected");
 
             if (e.Status == ToxConnectionStatus.None)
                 BootstrapContinously();

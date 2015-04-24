@@ -8,7 +8,6 @@ namespace WinTox.View.UserControls
         public UserTile()
         {
             InitializeComponent();
-            DataContext = App.UserViewModel;
         }
 
         private void UserTileTapped(object sender, TappedRoutedEventArgs e)

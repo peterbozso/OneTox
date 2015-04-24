@@ -4,15 +4,18 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using SharpTox.Core;
+using WinTox.ViewModel;
 
 namespace WinTox.View
 {
     public sealed partial class ProfileSettingsFlyout : SettingsFlyout
     {
+        private ProfileSettingsViewModel _viewModel;
+
         public ProfileSettingsFlyout()
         {
             InitializeComponent();
-            DataContext = App.UserViewModel;
+            _viewModel = DataContext as ProfileSettingsViewModel;
             StatusComboBox.ItemsSource = Enum.GetValues(typeof (ToxUserStatus)).Cast<ToxUserStatus>();
         }
 
@@ -20,7 +23,7 @@ namespace WinTox.View
         {
             var textBox = sender as TextBox;
             if (textBox.Text == String.Empty)
-                textBox.Text = App.UserViewModel.Name;
+                textBox.Text = _viewModel.Name;
         }
 
         private void CopyButtonClick(object sender, RoutedEventArgs e)
@@ -33,7 +36,7 @@ namespace WinTox.View
 
         private async void ProfileSettingsFlyoutLostFocus(object sender, RoutedEventArgs e)
         {
-            await App.UserViewModel.SaveDataAsync();
+            await _viewModel.SaveDataAsync();
         }
     }
 }

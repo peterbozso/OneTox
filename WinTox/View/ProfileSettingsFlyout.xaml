@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:WinTox.Converters"
+    xmlns:viewModel="using:WinTox.ViewModel"
     mc:Ignorable="d"
     IconSource="Assets/SmallLogo.png"
     Title="Profile settings"
@@ -15,6 +16,10 @@
     <SettingsFlyout.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
     </SettingsFlyout.Resources>
+    
+    <SettingsFlyout.DataContext>
+        <viewModel:ProfileSettingsViewModel/>
+    </SettingsFlyout.DataContext>
 
     <StackPanel Width="266">
         <TextBox Header="Name" Text="{Binding Name, Mode=TwoWay}" LostFocus="NameTextBoxLostFocus" />

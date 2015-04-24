@@ -6,7 +6,7 @@ namespace WinTox.ViewModel
 {
     public class FriendViewModel : ViewModelBase, IToxUserViewModel
     {
-        private bool _isOnline;
+        private bool _IsConnected;
         private string _name;
         private RelayCommand _removeFriendCommand;
         private ToxUserStatus _status;
@@ -31,7 +31,7 @@ namespace WinTox.ViewModel
             }
 
             Status = App.ToxModel.GetFriendStatus(friendNumber);
-            IsOnline = App.ToxModel.IsFriendOnline(friendNumber);
+            IsConnected = App.ToxModel.IsFriendOnline(friendNumber);
         }
 
         public ConversationViewModel Conversation { get; private set; }
@@ -82,12 +82,12 @@ namespace WinTox.ViewModel
             }
         }
 
-        public bool IsOnline
+        public bool IsConnected
         {
-            get { return _isOnline; }
+            get { return _IsConnected; }
             set
             {
-                _isOnline = value;
+                _IsConnected = value;
                 OnPropertyChanged();
             }
         }
