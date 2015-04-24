@@ -216,16 +216,46 @@ namespace WinTox.Model
             return _tox.SendMessage(friendNumber, message, type, out error);
         }
 
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         #endregion
 
         #region Events
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public event ExtendedTox.FriendListModifiedEventHandler FriendListModified;
+
+        public event EventHandler<ToxEventArgs.FriendRequestEventArgs> FriendRequestReceived;
+
+        public event EventHandler<ToxEventArgs.NameChangeEventArgs> FriendNameChanged;
+
+        public event EventHandler<ToxEventArgs.StatusMessageEventArgs> FriendStatusMessageChanged;
+
+        public event EventHandler<ToxEventArgs.StatusEventArgs> FriendStatusChanged;
+
+        public event EventHandler<ToxEventArgs.FriendConnectionStatusEventArgs> FriendConnectionStatusChanged;
+
+        public event EventHandler<ToxEventArgs.FriendMessageEventArgs> FriendMessageReceived;
+
+        #endregion
+
+        #region Event handlers
+
+        private void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            if (FriendConnectionStatusChanged != null)
+                FriendConnectionStatusChanged(sender, e);
+        }
+
+        private void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
+        {
+            if (FriendMessageReceived != null)
+                FriendMessageReceived(sender, e);
         }
 
         private void ConnectionStatusChangedHandler(object sender, ToxEventArgs.ConnectionStatusEventArgs e)
@@ -236,8 +266,6 @@ namespace WinTox.Model
                 BootstrapContinously();
         }
 
-        public event ExtendedTox.FriendListModifiedEventHandler FriendListModified;
-
         private async void FriendListModifiedHandler(int friendNumber,
             ExtendedTox.FriendListModificationType modificationType)
         {
@@ -247,15 +275,11 @@ namespace WinTox.Model
                 FriendListModified(friendNumber, modificationType);
         }
 
-        public event EventHandler<ToxEventArgs.FriendRequestEventArgs> FriendRequestReceived;
-
         private void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
         {
             if (FriendRequestReceived != null)
                 FriendRequestReceived(sender, e);
         }
-
-        public event EventHandler<ToxEventArgs.NameChangeEventArgs> FriendNameChanged;
 
         private void FriendNameChangedHandler(object sender, ToxEventArgs.NameChangeEventArgs e)
         {
@@ -263,36 +287,16 @@ namespace WinTox.Model
                 FriendNameChanged(sender, e);
         }
 
-        public event EventHandler<ToxEventArgs.StatusMessageEventArgs> FriendStatusMessageChanged;
-
         private void FriendStatusMessageChangedHandler(object sender, ToxEventArgs.StatusMessageEventArgs e)
         {
             if (FriendStatusMessageChanged != null)
                 FriendStatusMessageChanged(sender, e);
         }
 
-        public event EventHandler<ToxEventArgs.StatusEventArgs> FriendStatusChanged;
-
         private void FriendStatusChangedHandler(object sender, ToxEventArgs.StatusEventArgs e)
         {
             if (FriendStatusChanged != null)
                 FriendStatusChanged(sender, e);
-        }
-
-        public event EventHandler<ToxEventArgs.FriendConnectionStatusEventArgs> FriendConnectionStatusChanged;
-
-        private void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
-        {
-            if (FriendConnectionStatusChanged != null)
-                FriendConnectionStatusChanged(sender, e);
-        }
-
-        public event EventHandler<ToxEventArgs.FriendMessageEventArgs> FriendMessageReceived;
-
-        private void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
-        {
-            if (FriendMessageReceived != null)
-                FriendMessageReceived(sender, e);
         }
 
         #endregion
