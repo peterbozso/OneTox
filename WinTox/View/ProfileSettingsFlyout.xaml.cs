@@ -10,7 +10,7 @@ namespace WinTox.View
 {
     public sealed partial class ProfileSettingsFlyout : SettingsFlyout
     {
-        private ProfileSettingsViewModel _viewModel;
+        private readonly ProfileSettingsViewModel _viewModel;
 
         public ProfileSettingsFlyout()
         {

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Text;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
-using SharpTox.Core;
 using System.Threading.Tasks;
+using SharpTox.Core;
 
 namespace WinTox.ViewModel
 {
-    class ProfileSettingsViewModel : ViewModelBase
+    internal class ProfileSettingsViewModel : ViewModelBase
     {
         public ToxId Id
         {

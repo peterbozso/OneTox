@@ -12,9 +12,9 @@
     d:DesignWidth="250">
 
     <UserControl.DataContext>
-        <viewModel:UserViewModel/>
+        <viewModel:UserViewModel />
     </UserControl.DataContext>
-    
+
     <UserControl.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
         <converters:IsConnectedToVisibilityConverter x:Key="IsConnectedToVisibilityConverter" />

@@ -16,9 +16,9 @@
     <SettingsFlyout.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
     </SettingsFlyout.Resources>
-    
+
     <SettingsFlyout.DataContext>
-        <viewModel:ProfileSettingsViewModel/>
+        <viewModel:ProfileSettingsViewModel />
     </SettingsFlyout.DataContext>
 
     <StackPanel Width="266">

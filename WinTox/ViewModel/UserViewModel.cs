@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using SharpTox.Core;
@@ -11,13 +9,7 @@ namespace WinTox.ViewModel
     {
         public UserViewModel()
         {
-            App.ToxModel.PropertyChanged += ToxModel_PropertyChanged;
-        }
-
-        void ToxModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => { OnPropertyChanged(e.PropertyName); });
+            App.ToxModel.PropertyChanged += ToxModelPropertyChangedHandler;
         }
 
         public ToxId Id
@@ -43,6 +35,12 @@ namespace WinTox.ViewModel
         public bool IsConnected
         {
             get { return App.ToxModel.IsConnected; }
+        }
+
+        private void ToxModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () => { OnPropertyChanged(e.PropertyName); });
         }
     }
 }

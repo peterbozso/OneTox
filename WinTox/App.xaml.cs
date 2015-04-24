@@ -11,7 +11,6 @@ using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
 using WinTox.Model;
 using WinTox.View;
-using WinTox.ViewModel;
 
 // The Hub App template is documented at http://go.microsoft.com/fwlink/?LinkId=321221
 
