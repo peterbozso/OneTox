@@ -36,7 +36,7 @@ namespace WinTox.View
 
         private void NospamButtonClick(object sender, RoutedEventArgs e)
         {
-            _viewModel.ResetNospam();
+            _viewModel.RandomizeNospam();
         }
 
         private async void ProfileSettingsFlyoutLostFocus(object sender, RoutedEventArgs e)

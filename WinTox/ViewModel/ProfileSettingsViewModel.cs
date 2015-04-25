@@ -54,7 +54,7 @@ namespace WinTox.ViewModel
             await App.ToxModel.SaveDataAsync();
         }
 
-        public void ResetNospam()
+        public void RandomizeNospam()
         {
             var rand = new Random();
             var nospam = new byte[4];

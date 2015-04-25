@@ -48,11 +48,12 @@
         <Grid Margin="0,5,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Content="Copy ID" Click="CopyButtonClick" HorizontalAlignment="Stretch" Margin="0,0,3,0" />
-            <Button Grid.Column="1" Content="Reset Nospam" Click="NospamButtonClick" HorizontalAlignment="Stretch" Margin="3,0,0,0" />
+            <Button Grid.Column="1" Content="Randomize nospam" Click="NospamButtonClick" HorizontalAlignment="Stretch" Margin="3,0,0,0" 
+                   ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." />
         </Grid>
         
     </StackPanel>
