@@ -97,6 +97,11 @@ namespace WinTox.Model
 
         #region Methods
 
+        public void SetNospam(uint nospam)
+        {
+            _tox.SetNospam(nospam);
+        }
+
         private void SetCurrent(ExtendedTox tox)
         {
             _tox = tox;

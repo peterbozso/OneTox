@@ -44,7 +44,17 @@
         <TextBlock Text="Tox ID" Style="{StaticResource BodyTextBlockStyle}" />
         <TextBlock x:Name="ToxIdTextBlock" TextWrapping="Wrap" Text="{Binding Id}"
                    Style="{StaticResource BodyTextBlockStyle}" Margin="10,0,0,0" />
-        <Button Content="Copy" Click="CopyButtonClick" Margin="0,5,0,0" />
+
+        <Grid Margin="0,5,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="Copy ID" Click="CopyButtonClick" HorizontalAlignment="Stretch" Margin="0,0,3,0" />
+            <Button Grid.Column="1" Content="Reset Nospam" Click="NospamButtonClick" HorizontalAlignment="Stretch" Margin="3,0,0,0" />
+        </Grid>
+        
     </StackPanel>
 
 </SettingsFlyout>

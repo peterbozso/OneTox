@@ -34,6 +34,11 @@ namespace WinTox.View
             Clipboard.SetContent(dataPackage);
         }
 
+        private void NospamButtonClick(object sender, RoutedEventArgs e)
+        {
+            _viewModel.ResetNospam();
+        }
+
         private async void ProfileSettingsFlyoutLostFocus(object sender, RoutedEventArgs e)
         {
             await _viewModel.SaveDataAsync();

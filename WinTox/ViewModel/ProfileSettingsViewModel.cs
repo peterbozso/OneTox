@@ -53,5 +53,17 @@ namespace WinTox.ViewModel
         {
             await App.ToxModel.SaveDataAsync();
         }
+
+        public void ResetNospam()
+        {
+            var rand = new Random();
+            var nospam = new byte[4];
+            for (var i = 0; i < 4; i++)
+            {
+                nospam[i] = (byte) rand.Next(10);
+            }
+            App.ToxModel.SetNospam(BitConverter.ToUInt32(nospam, 0));
+            OnPropertyChanged("Id");
+        }
     }
 }
