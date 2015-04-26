@@ -15,6 +15,9 @@
 
     <SettingsFlyout.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+        <Style TargetType="Button">
+            <Setter Property="Width" Value="170" />
+        </Style>
     </SettingsFlyout.Resources>
 
     <SettingsFlyout.DataContext>
@@ -24,9 +27,7 @@
     <StackPanel Width="266">
         <TextBox Header="Name" Text="{Binding Name, Mode=TwoWay}" LostFocus="NameTextBoxLostFocus" />
         <TextBox Header="Status message" Text="{Binding StatusMessage, Mode=TwoWay}" />
-
-        <!-- Status -->
-        <Grid Margin="0,3,0,0">
+        <Grid x:Name="StatusGrid" Margin="0,3,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -41,20 +42,18 @@
 
         <!-- TODO: Add option to change profile picture! -->
 
-        <TextBlock Text="Tox ID" Style="{StaticResource BodyTextBlockStyle}" />
+        <!-- Tox ID settings -->
+        <TextBlock Text="Tox ID" Style="{StaticResource BodyTextBlockStyle}" Margin="0,20,0,0" />
         <TextBlock x:Name="ToxIdTextBlock" TextWrapping="Wrap" Text="{Binding Id}"
-                   Style="{StaticResource BodyTextBlockStyle}" Margin="10,0,0,0" />
+                   Style="{StaticResource BodyTextBlockStyle}" Margin="10,0,0,5" />
+        <Button Content="Copy ID" Click="CopyButtonClick" />
+        <Button Content="Randomize nospam" Click="NospamButtonClick"
+                ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." />
 
-        <Grid Margin="0,5,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <Button Grid.Column="0" Content="Copy ID" Click="CopyButtonClick" HorizontalAlignment="Stretch" Margin="0,0,3,0" />
-            <Button Grid.Column="1" Content="Randomize nospam" Click="NospamButtonClick" HorizontalAlignment="Stretch" Margin="3,0,0,0" 
-                   ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." />
-        </Grid>
+        <!-- Profile management -->
+        <TextBlock Text="Profile management" Style="{StaticResource BodyTextBlockStyle}" Margin="0,20,0,5" />
+        <Button Content="Export" Click="ExportButtonClick" />
+        <Button Content="Switch" />
         
     </StackPanel>
 

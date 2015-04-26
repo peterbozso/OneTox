@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage.Pickers;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using SharpTox.Core;
@@ -37,6 +40,23 @@ namespace WinTox.View
         private void NospamButtonClick(object sender, RoutedEventArgs e)
         {
             _viewModel.RandomizeNospam();
+        }
+
+        private async void ExportButtonClick(object sender, RoutedEventArgs e)
+        {
+            var savePicker = new FileSavePicker();
+            savePicker.FileTypeChoices.Add("Tox save file", new List<string>() { ".tox" });
+            savePicker.SuggestedFileName = _viewModel.Name;
+            var file = await savePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                var successfulExport = await _viewModel.ExportProfile(file);
+                if (!successfulExport)
+                {
+                    var msgDialog = new MessageDialog("Unsuccesfull export: the file couldn't be saved.");
+                    msgDialog.ShowAsync();
+                }
+            }
         }
 
         private async void ProfileSettingsFlyoutLostFocus(object sender, RoutedEventArgs e)
