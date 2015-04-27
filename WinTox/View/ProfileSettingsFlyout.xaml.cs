@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -44,10 +46,7 @@ namespace WinTox.View
 
         private async void ExportButtonClick(object sender, RoutedEventArgs e)
         {
-            var savePicker = new FileSavePicker();
-            savePicker.FileTypeChoices.Add("Tox save file", new List<string> {".tox"});
-            savePicker.SuggestedFileName = _viewModel.Name;
-            var file = await savePicker.PickSaveFileAsync();
+            var file = await PickDestinationFile();
             if (file != null)
             {
                 var successfulExport = await _viewModel.ExportProfile(file, PasswordTextBox.Text);
@@ -60,6 +59,15 @@ namespace WinTox.View
 
             // Show the settings again when we return, in case the user want to do more than just exporting once.
             App.ShowProfileSettingsFlyout();
+        }
+
+        private async Task<StorageFile> PickDestinationFile()
+        {
+            var savePicker = new FileSavePicker();
+            savePicker.FileTypeChoices.Add("Tox save file", new List<string> {".tox"});
+            savePicker.SuggestedFileName = _viewModel.Name;
+            var file = await savePicker.PickSaveFileAsync();
+            return file;
         }
 
         private async void ProfileSettingsFlyoutLostFocus(object sender, RoutedEventArgs e)
