@@ -2,7 +2,6 @@
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Provider;
 using SharpTox.Core;
 
 namespace WinTox.ViewModel
@@ -56,9 +55,9 @@ namespace WinTox.ViewModel
             await App.ToxModel.SaveDataAsync();
         }
 
-        public async Task<bool> ExportProfile(StorageFile file)
+        public async Task<bool> ExportProfile(StorageFile file, string password)
         {
-            return await App.ToxModel.ExportProfile(file);
+            return await App.ToxModel.ExportProfile(file, password);
         }
 
         public void RandomizeNospam()

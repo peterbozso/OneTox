@@ -212,7 +212,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="SharpTox Portable, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="SharpTox Portable, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharpTox\SharpTox\bin\x86\Debug\SharpTox Portable.dll</HintPath>
     </Reference>

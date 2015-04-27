@@ -52,9 +52,19 @@
 
         <!-- Profile management -->
         <TextBlock Text="Profile management" Style="{StaticResource BodyTextBlockStyle}" Margin="0,20,0,5" />
-        <Button Content="Export" Click="ExportButtonClick" />
-        <Button Content="Switch" />
-        
+        <Button Content="Export profile">
+            <Button.Flyout>
+                <Flyout Placement="Left">
+                    <StackPanel>
+                        <TextBox x:Name="PasswordTextBox" Header="Password (optional)" Width="266"
+                                 ToolTipService.ToolTip="You can encrypt your saved profile with a password, preventing data theft. You'll also need it for importing." />
+                        <Button Margin="0,5,0,0" Content="Export" Click="ExportButtonClick" />
+                    </StackPanel>
+                </Flyout>
+            </Button.Flyout>
+        </Button>
+        <Button Content="Switch profile" />
+
     </StackPanel>
 
 </SettingsFlyout>

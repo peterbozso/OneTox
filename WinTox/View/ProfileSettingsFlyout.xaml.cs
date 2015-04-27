@@ -45,18 +45,21 @@ namespace WinTox.View
         private async void ExportButtonClick(object sender, RoutedEventArgs e)
         {
             var savePicker = new FileSavePicker();
-            savePicker.FileTypeChoices.Add("Tox save file", new List<string>() { ".tox" });
+            savePicker.FileTypeChoices.Add("Tox save file", new List<string> {".tox"});
             savePicker.SuggestedFileName = _viewModel.Name;
             var file = await savePicker.PickSaveFileAsync();
             if (file != null)
             {
-                var successfulExport = await _viewModel.ExportProfile(file);
+                var successfulExport = await _viewModel.ExportProfile(file, PasswordTextBox.Text);
                 if (!successfulExport)
                 {
                     var msgDialog = new MessageDialog("Unsuccesfull export: the file couldn't be saved.");
                     msgDialog.ShowAsync();
                 }
             }
+
+            // Show the settings again when we return, in case the user want to do more than just exporting once.
+            App.ShowProfileSettingsFlyout();
         }
 
         private async void ProfileSettingsFlyoutLostFocus(object sender, RoutedEventArgs e)

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Provider;
 using SharpTox.Core;
+using SharpTox.Encryption;
 
 namespace WinTox.Model
 {
@@ -215,20 +216,29 @@ namespace WinTox.Model
                 var newTox = new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(toxData));
                 SetCurrent(newTox);
             }
-        }       
-        
+        }
+
         /// <summary>
-        /// Exports the current profile to the selected file.
+        ///     Exports the current profile to the selected file.
         /// </summary>
         /// <param name="file">The selected file.</param>
+        /// <param name="password">Password (optional) to encrypt the profile with.</param>
         /// <returns>Return true on success, false otherwise.</returns>
-        public async Task<bool> ExportProfile(StorageFile file)
+        public async Task<bool> ExportProfile(StorageFile file, string password)
         {
             CachedFileManager.DeferUpdates(file);
             await FileIO.WriteTextAsync(file, string.Empty); // Clear the content of the file before writing to it.
-            await FileIO.WriteBytesAsync(file, _tox.GetData().Bytes);
+            await FileIO.WriteBytesAsync(file, GetData(password));
             var status = await CachedFileManager.CompleteUpdatesAsync(file);
             return status == FileUpdateStatus.Complete;
+        }
+
+        private byte[] GetData(string password)
+        {
+            if (password == String.Empty)
+                return _tox.GetData().Bytes;
+            var encryptionKey = new ToxEncryptionKey(password);
+            return _tox.GetData(encryptionKey).Bytes;
         }
 
         public int SendMessage(int friendNumber, string message, ToxMessageType type, out ToxErrorSendMessage error)
