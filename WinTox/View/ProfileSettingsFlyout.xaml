@@ -56,8 +56,10 @@
             <Button.Flyout>
                 <Flyout Placement="Left">
                     <StackPanel>
+                        <!-- Disabled until bug in DLL fixed. -->
                         <TextBox x:Name="PasswordTextBox" Header="Password (optional)" Width="266"
-                                 ToolTipService.ToolTip="You can encrypt your saved profile with a password, preventing data theft. You'll also need it for importing." />
+                                 ToolTipService.ToolTip="You can encrypt your saved profile with a password, preventing data theft. You'll also need it for importing."
+                                 IsEnabled="False" />
                         <Button Margin="0,5,0,0" Content="Export" Click="ExportButtonClick" />
                     </StackPanel>
                 </Flyout>
