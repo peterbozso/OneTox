@@ -16,6 +16,7 @@
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>WinTox_TemporaryKey.pfx</PackageCertificateKeyFile>
     <ExpressionBlendVersion>12.0.51020.0</ExpressionBlendVersion>
+    <PackageCertificateThumbprint>BA0938B0A787B03B596F7DCF53B6524E4E83E8A1</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -160,6 +161,7 @@
     <None Include="Common\ReadMe.txt" />
     <Content Include="Assets\default-profile-picture.png" />
     <Content Include="Assets\tox-logo.jpg" />
+    <None Include="WinTox_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.scale-100.png" />
