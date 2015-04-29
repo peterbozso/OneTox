@@ -8,7 +8,7 @@ namespace WinTox.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var dateTime = (DateTime) value;
-            return dateTime.Hour + ":" + dateTime.Minute;
+            return dateTime.ToString("HH:mm");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
