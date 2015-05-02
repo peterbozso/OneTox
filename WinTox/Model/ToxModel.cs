@@ -192,8 +192,8 @@ namespace WinTox.Model
             await _semaphore.WaitAsync();
             try
             {
-                using ( var stream = await ApplicationData.Current.RoamingFolder.OpenStreamForWriteAsync(
-                        _tox.Name + ".tox", CreationCollisionOption.ReplaceExisting))
+                using (var stream = await ApplicationData.Current.RoamingFolder.OpenStreamForWriteAsync(
+                                    _tox.Name + ".tox", CreationCollisionOption.ReplaceExisting))
                 {
                     var dataToWrite = _tox.GetData().Bytes;
                     await stream.WriteAsync(dataToWrite, 0, dataToWrite.Length);
@@ -215,7 +215,8 @@ namespace WinTox.Model
             try
             {
                 var currentUserName = ApplicationData.Current.RoamingSettings.Values["currentUserName"];
-                using (var stream = await ApplicationData.Current.RoamingFolder.OpenStreamForReadAsync(currentUserName + ".tox"))
+                using (var stream = await ApplicationData.Current.RoamingFolder.OpenStreamForReadAsync(
+                                    currentUserName + ".tox"))
                 {
                     var toxData = new byte[stream.Length];
                     await stream.ReadAsync(toxData, 0, toxData.Length);
