@@ -187,19 +187,22 @@ namespace WinTox.Model
             return _tox.GetFriendPublicKey(friendNumber);
         }
 
-        private const string _fileName = "ToxUserData.tox";
-
         public async Task SaveDataAsync()
         {
             await _semaphore.WaitAsync();
             try
             {
-                using (var stream = await ApplicationData.Current.LocalFolder.OpenStreamForWriteAsync(_fileName,
-                    CreationCollisionOption.ReplaceExisting))
+                using ( var stream = await ApplicationData.Current.RoamingFolder.OpenStreamForWriteAsync(
+                        _tox.Name + ".tox", CreationCollisionOption.ReplaceExisting))
                 {
                     var dataToWrite = _tox.GetData().Bytes;
                     await stream.WriteAsync(dataToWrite, 0, dataToWrite.Length);
                 }
+                ApplicationData.Current.RoamingSettings.Values["currentUserName"] = _tox.Name;
+            }
+            catch
+            {
+                // TODO: Exception handling!
             }
             finally
             {
@@ -209,12 +212,20 @@ namespace WinTox.Model
 
         public async Task RestoreDataAsync()
         {
-            using (var stream = await ApplicationData.Current.LocalFolder.OpenStreamForReadAsync(_fileName))
+            try
             {
-                var toxData = new byte[stream.Length];
-                await stream.ReadAsync(toxData, 0, toxData.Length);
-                var newTox = new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(toxData));
-                SetCurrent(newTox);
+                var currentUserName = ApplicationData.Current.RoamingSettings.Values["currentUserName"];
+                using (var stream = await ApplicationData.Current.RoamingFolder.OpenStreamForReadAsync(currentUserName + ".tox"))
+                {
+                    var toxData = new byte[stream.Length];
+                    await stream.ReadAsync(toxData, 0, toxData.Length);
+                    var newTox = new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(toxData));
+                    SetCurrent(newTox);
+                }
+            }
+            catch
+            {
+                // TODO: Exception handling!
             }
         }
 
