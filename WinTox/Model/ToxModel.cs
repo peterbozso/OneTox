@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Provider;
 using SharpTox.Core;
 using SharpTox.Encryption;
 
@@ -193,7 +192,7 @@ namespace WinTox.Model
             try
             {
                 using (var stream = await ApplicationData.Current.RoamingFolder.OpenStreamForWriteAsync(
-                                    _tox.Name + ".tox", CreationCollisionOption.ReplaceExisting))
+                    _tox.Name + ".tox", CreationCollisionOption.ReplaceExisting))
                 {
                     var dataToWrite = _tox.GetData().Bytes;
                     await stream.WriteAsync(dataToWrite, 0, dataToWrite.Length);
@@ -216,7 +215,7 @@ namespace WinTox.Model
             {
                 var currentUserName = ApplicationData.Current.RoamingSettings.Values["currentUserName"];
                 using (var stream = await ApplicationData.Current.RoamingFolder.OpenStreamForReadAsync(
-                                    currentUserName + ".tox"))
+                    currentUserName + ".tox"))
                 {
                     var toxData = new byte[stream.Length];
                     await stream.ReadAsync(toxData, 0, toxData.Length);
@@ -230,27 +229,14 @@ namespace WinTox.Model
             }
         }
 
-        /// <summary>
-        ///     Exports the current profile to the selected file.
-        /// </summary>
-        /// <param name="file">The selected file.</param>
-        /// <param name="password">Password (optional) to encrypt the profile with.</param>
-        /// <returns>Return true on success, false otherwise.</returns>
-        public async Task<bool> ExportProfile(StorageFile file, string password)
+        public ToxData GetData()
         {
-            CachedFileManager.DeferUpdates(file);
-            await FileIO.WriteTextAsync(file, string.Empty); // Clear the content of the file before writing to it.
-            await FileIO.WriteBytesAsync(file, GetData(password));
-            var status = await CachedFileManager.CompleteUpdatesAsync(file);
-            return status == FileUpdateStatus.Complete;
+            return _tox.GetData();
         }
 
-        private byte[] GetData(string password)
+        public ToxData GetData(ToxEncryptionKey key)
         {
-            if (password == String.Empty)
-                return _tox.GetData().Bytes;
-            var encryptionKey = new ToxEncryptionKey(password);
-            return _tox.GetData(encryptionKey).Bytes;
+            return _tox.GetData(key);
         }
 
         public int SendMessage(int friendNumber, string message, ToxMessageType type, out ToxErrorSendMessage error)
