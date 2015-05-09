@@ -74,5 +74,24 @@ namespace WinTox.View
         {
             await _viewModel.SaveDataAsync();
         }
+
+        private async void ImportButtonClick(object sender, RoutedEventArgs e)
+        {
+            var file = await PickSourceFile();
+            if (file != null)
+            {
+                await _viewModel.ImportProfile(file);
+            }
+
+            // Show the settings again when we return, in case the user want to do more than just exporting once.
+            App.ShowProfileSettingsFlyout();
+        }
+
+        private async Task<StorageFile> PickSourceFile()
+        {
+            var openPicker = new FileOpenPicker();
+            openPicker.FileTypeFilter.Add(".tox");
+            return await openPicker.PickSingleFileAsync();
+        }
     }
 }

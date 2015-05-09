@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -103,7 +104,7 @@ namespace WinTox.Model
             _tox.SetNospam(nospam);
         }
 
-        private void SetCurrent(ExtendedTox tox)
+        public void SetCurrent(ExtendedTox tox)
         {
             _tox = tox;
 
@@ -118,6 +119,17 @@ namespace WinTox.Model
 
             if (FriendListModified != null)
                 FriendListModified(-1, ExtendedTox.FriendListModificationType.Reset);
+
+            RaiseAllPropertiesChanged();
+        }
+
+        private void RaiseAllPropertiesChanged()
+        {
+            var properties = typeof (ToxModel).GetRuntimeProperties();
+            foreach (var property in properties)
+            {
+                RaisePropertyChanged(property.Name);
+            }
         }
 
         public void Start()

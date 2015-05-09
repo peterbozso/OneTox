@@ -65,6 +65,7 @@
                 </Flyout>
             </Button.Flyout>
         </Button>
+        <Button Content="Import profile" Click="ImportButtonClick" />
         <Button Content="Switch profile" />
 
     </StackPanel>

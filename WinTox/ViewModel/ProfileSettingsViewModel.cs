@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Provider;
 using SharpTox.Core;
 using SharpTox.Encryption;
+using WinTox.Model;
 
 namespace WinTox.ViewModel
 {
@@ -87,6 +89,12 @@ namespace WinTox.ViewModel
             rand.NextBytes(nospam);
             App.ToxModel.SetNospam(BitConverter.ToUInt32(nospam, 0));
             RaisePropertyChanged("Id");
+        }
+
+        public async Task ImportProfile(StorageFile file)
+        {
+            var data = (await FileIO.ReadBufferAsync(file)).ToArray();
+            App.ToxModel.SetCurrent(new ExtendedTox(new ToxOptions(), ToxData.FromBytes(data)));
         }
     }
 }
