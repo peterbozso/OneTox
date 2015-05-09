@@ -95,7 +95,7 @@ namespace WinTox.ViewModel
                 var msgGroup = new MessageGroupViewModel(sender);
                 msgGroup.Messages.Add(new MessageViewModel(message, DateTime.Now, messageType, sender));
                 MessageGroups.Add(msgGroup);
-                OnPropertyChanged("MessageGroups");
+                RaisePropertyChanged("MessageGroups");
             });
         }
 
@@ -117,7 +117,7 @@ namespace WinTox.ViewModel
                 // TODO: Implement and use simple equality operator instead.
             {
                 MessageGroups.Last().Messages.Add(new MessageViewModel(message, DateTime.Now, messageType, sender));
-                OnPropertyChanged("MessageGroups");
+                RaisePropertyChanged("MessageGroups");
                 return true;
             }
 

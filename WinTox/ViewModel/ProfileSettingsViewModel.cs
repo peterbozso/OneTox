@@ -25,7 +25,7 @@ namespace WinTox.ViewModel
                     App.ToxModel.Name == value)
                     return;
                 App.ToxModel.Name = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -38,7 +38,7 @@ namespace WinTox.ViewModel
                 if (lengthInBytes > ToxConstants.MaxStatusMessageLength)
                     return;
                 App.ToxModel.StatusMessage = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -48,7 +48,7 @@ namespace WinTox.ViewModel
             set
             {
                 App.ToxModel.Status = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -86,7 +86,7 @@ namespace WinTox.ViewModel
             var nospam = new byte[4];
             rand.NextBytes(nospam);
             App.ToxModel.SetNospam(BitConverter.ToUInt32(nospam, 0));
-            OnPropertyChanged("Id");
+            RaisePropertyChanged("Id");
         }
     }
 }

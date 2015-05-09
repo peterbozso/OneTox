@@ -7,7 +7,7 @@ namespace WinTox.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));

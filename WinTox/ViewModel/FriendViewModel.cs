@@ -58,7 +58,7 @@ namespace WinTox.ViewModel
             set
             {
                 _name = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -68,7 +68,7 @@ namespace WinTox.ViewModel
             set
             {
                 _statusMessage = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -78,7 +78,7 @@ namespace WinTox.ViewModel
             set
             {
                 _status = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -88,7 +88,7 @@ namespace WinTox.ViewModel
             set
             {
                 _IsConnected = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 

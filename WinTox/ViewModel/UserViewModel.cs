@@ -40,7 +40,7 @@ namespace WinTox.ViewModel
         private void ToxModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => { OnPropertyChanged(e.PropertyName); });
+                () => { RaisePropertyChanged(e.PropertyName); });
         }
     }
 }

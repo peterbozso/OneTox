@@ -60,7 +60,7 @@ namespace WinTox.Model
             set
             {
                 _tox.Name = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -70,7 +70,7 @@ namespace WinTox.Model
             set
             {
                 _tox.StatusMessage = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -80,7 +80,7 @@ namespace WinTox.Model
             set
             {
                 _tox.Status = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -244,7 +244,7 @@ namespace WinTox.Model
             return _tox.SendMessage(friendNumber, message, type, out error);
         }
 
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
@@ -288,7 +288,7 @@ namespace WinTox.Model
 
         private void ConnectionStatusChangedHandler(object sender, ToxEventArgs.ConnectionStatusEventArgs e)
         {
-            OnPropertyChanged("IsConnected");
+            RaisePropertyChanged("IsConnected");
 
             if (e.Status == ToxConnectionStatus.None)
                 BootstrapContinously();

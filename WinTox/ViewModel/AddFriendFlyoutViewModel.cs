@@ -17,7 +17,7 @@ namespace WinTox.ViewModel
             set
             {
                 _isFlyoutOpen = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
