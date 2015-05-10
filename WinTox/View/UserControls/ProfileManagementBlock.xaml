@@ -42,17 +42,15 @@
                 </Button.Flyout>
             </Button>
             
-            <Button Grid.Column="0" Grid.Row="1" Content="Import" HorizontalAlignment="Stretch"
+            <Button Grid.Column="1" Grid.Row="0" Content="Import" HorizontalAlignment="Stretch"
                     Click="ImportButtonClick" />
             
-            <Button Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Content="New"
-                    Command="{Binding CreateNewProfileCommand}" />
-            
-            <Button Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Content="Switch"
+            <Button Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Content="Switch"
                     Command="{Binding RefreshProfileListCommand}" x:Name="SwitchButton">
                 <Button.Flyout>
                     <Flyout helpers:FlyoutHelper.Parent="{Binding ElementName=SwitchButton}"
-                            helpers:FlyoutHelper.IsOpen="{Binding IsSwitchProfileFlyoutOpen, Mode=TwoWay}">
+                            helpers:FlyoutHelper.IsOpen="{Binding IsSwitchProfileFlyoutOpen, Mode=TwoWay}"
+                            Placement="Left">
                         <StackPanel>
                             <TextBlock Text="Select profile" Style="{StaticResource BodyTextBlockStyle}"
                                        Margin="0,0,0,10" Width="160" />
@@ -68,6 +66,9 @@
                     </Flyout>
                 </Button.Flyout>
             </Button>
+
+            <Button Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Content="New"
+                    Command="{Binding CreateNewProfileCommand}" />
         </Grid>
     </StackPanel>
 </UserControl>
