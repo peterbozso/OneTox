@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
@@ -15,9 +16,12 @@ namespace WinTox.ViewModel
 {
     internal class ProfileSettingsViewModel : ViewModelBase
     {
+        private bool _isSwitchProfileFlyoutOpen;
+
         public ProfileSettingsViewModel()
         {
             App.ToxModel.PropertyChanged += ToxModelPropertyChangedHandler;
+            ProfileFiles = new ObservableCollection<StorageFile>();
         }
 
         public ToxId Id
@@ -58,6 +62,18 @@ namespace WinTox.ViewModel
             set
             {
                 App.ToxModel.Status = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public ObservableCollection<StorageFile> ProfileFiles { get; set; }
+
+        public bool IsSwitchProfileFlyoutOpen
+        {
+            get { return _isSwitchProfileFlyoutOpen; }
+            set
+            {
+                _isSwitchProfileFlyoutOpen = value;
                 RaisePropertyChanged();
             }
         }
@@ -105,12 +121,18 @@ namespace WinTox.ViewModel
             RaisePropertyChanged("Id");
         }
 
-        public async Task ImportProfile(StorageFile file)
+        public async Task SetCurrentProfile(StorageFile file)
         {
             var data = (await FileIO.ReadBufferAsync(file)).ToArray();
             App.ToxModel.SetCurrent(new ExtendedTox(new ToxOptions(), ToxData.FromBytes(data)));
             await App.ToxModel.SaveDataAsync();
             App.ToxModel.Start();
+        }
+
+        public async Task SwitchProfile(StorageFile file)
+        {
+            await SetCurrentProfile(file);
+            IsSwitchProfileFlyoutOpen = false;
         }
 
         public async Task CreateNewProfile()
@@ -122,6 +144,17 @@ namespace WinTox.ViewModel
             };
             App.ToxModel.SetCurrent(tox);
             await App.ToxModel.SaveDataAsync();
+            App.ToxModel.Start();
+        }
+
+        public async Task RefreshProfileList()
+        {
+            var fileList = await ApplicationData.Current.RoamingFolder.GetFilesAsync();
+            ProfileFiles.Clear();
+            foreach (var file in fileList)
+            {
+                ProfileFiles.Add(file);
+            }
         }
     }
 }

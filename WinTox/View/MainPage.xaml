@@ -8,6 +8,7 @@
     xmlns:userControls="using:WinTox.View.UserControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="using:WinTox.Helpers"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -60,8 +61,8 @@
                     <viewModel:AddFriendFlyoutViewModel />
                 </AppBarButton.DataContext>
                 <AppBarButton.Flyout>
-                    <Flyout viewModel:AddFriendFlyoutHelpers.Parent="{Binding ElementName=AddFriendButton}"
-                            viewModel:AddFriendFlyoutHelpers.IsOpen="{Binding IsFlyoutOpen, Mode=TwoWay}">
+                    <Flyout helpers:FlyoutHelper.Parent="{Binding ElementName=AddFriendButton}"
+                            helpers:FlyoutHelper.IsOpen="{Binding IsFlyoutOpen, Mode=TwoWay}">
                         <StackPanel Width="400" x:Name="AddFriendFlyoutContent">
                             <TextBox x:Name="FriendId" Header="Your friend's ID" MaxLength="76" Height="80"
                                      TextWrapping="Wrap" />

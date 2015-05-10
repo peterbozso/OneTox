@@ -116,7 +116,7 @@
     <Compile Include="Model\ExtendedTox.cs" />
     <Compile Include="Model\ToxModel.cs" />
     <Compile Include="ViewModel\AddFriendFlyoutViewModel.cs" />
-    <Compile Include="ViewModel\AddFriendFlyoutHelpers.cs" />
+    <Compile Include="Helpers\FlyoutHelper.cs" />
     <Compile Include="ViewModel\FriendListViewModel.cs" />
     <Compile Include="ViewModel\FriendViewModel.cs" />
     <Compile Include="ViewModel\IToxUserViewModel.cs" />

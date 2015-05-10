@@ -3,9 +3,9 @@ using Windows.UI.Xaml.Controls;
 
 // From: https://marcominerva.wordpress.com/2013/07/30/using-windows-8-1-flyout-xaml-control-with-mvvm/
 
-namespace WinTox.ViewModel
+namespace WinTox.Helpers
 {
-    public class AddFriendFlyoutHelpers
+    public class FlyoutHelper
     {
         public static void SetIsOpen(DependencyObject d, bool value)
         {
@@ -58,10 +58,10 @@ namespace WinTox.ViewModel
 
         public static readonly DependencyProperty IsOpenProperty =
             DependencyProperty.RegisterAttached("IsOpen", typeof (bool),
-                typeof (AddFriendFlyoutHelpers), new PropertyMetadata(false, OnIsOpenPropertyChanged));
+                typeof (FlyoutHelper), new PropertyMetadata(false, OnIsOpenPropertyChanged));
 
         public static readonly DependencyProperty ParentProperty =
             DependencyProperty.RegisterAttached("Parent", typeof (Button),
-                typeof (AddFriendFlyoutHelpers), new PropertyMetadata(null, OnParentPropertyChanged));
+                typeof (FlyoutHelper), new PropertyMetadata(null, OnParentPropertyChanged));
     }
 }

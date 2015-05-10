@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:WinTox.Converters"
     xmlns:viewModel="using:WinTox.ViewModel"
+    xmlns:helpers="using:WinTox.Helpers"
     mc:Ignorable="d"
     IconSource="Assets/SmallLogo.png"
     Title="Profile settings"
@@ -76,7 +77,26 @@
             <Button Grid.Column="0" Grid.Row="1" Content="Import" HorizontalAlignment="Stretch"
                     Click="ImportButtonClick" />
             <Button Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Content="New" Click="NewButtonClick" />
-            <Button Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Content="Switch" />
+            <Button Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Content="Switch"
+                    Click="SwitchButtonClick" x:Name="SwitchButton">
+                <Button.Flyout>
+                    <Flyout helpers:FlyoutHelper.Parent="{Binding ElementName=SwitchButton}"
+                            helpers:FlyoutHelper.IsOpen="{Binding IsSwitchProfileFlyoutOpen, Mode=TwoWay}">
+                        <StackPanel>
+                            <TextBlock Text="Select profile:" Style="{StaticResource BodyTextBlockStyle}"
+                                       Margin="0,0,0,10" Width="160" />
+                            <ListView ItemsSource="{Binding ProfileFiles}" SelectionMode="None"
+                                      IsItemClickEnabled="True" ItemClick="ProfileNameListItemClick">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DisplayName}" />
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
         </Grid>
 
     </StackPanel>

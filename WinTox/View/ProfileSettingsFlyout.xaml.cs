@@ -80,7 +80,7 @@ namespace WinTox.View
             var file = await PickSourceFile();
             if (file != null)
             {
-                await _viewModel.ImportProfile(file);
+                await _viewModel.SetCurrentProfile(file);
             }
 
             // Show the settings again when we return, in case the user want to do more than just exporting once.
@@ -97,6 +97,16 @@ namespace WinTox.View
         private async void NewButtonClick(object sender, RoutedEventArgs e)
         {
             await _viewModel.CreateNewProfile();
+        }
+
+        private async void SwitchButtonClick(object sender, RoutedEventArgs e)
+        {
+            await _viewModel.RefreshProfileList();
+        }
+
+        private async void ProfileNameListItemClick(object sender, ItemClickEventArgs e)
+        {
+            await _viewModel.SwitchProfile(e.ClickedItem as StorageFile);
         }
     }
 }
