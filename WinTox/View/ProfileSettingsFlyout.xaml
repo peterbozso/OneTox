@@ -8,6 +8,7 @@
     xmlns:converters="using:WinTox.Converters"
     xmlns:viewModel="using:WinTox.ViewModel"
     xmlns:helpers="using:WinTox.Helpers"
+    xmlns:userControls="using:WinTox.View.UserControls"
     mc:Ignorable="d"
     IconSource="Assets/SmallLogo.png"
     Title="Profile settings"
@@ -48,56 +49,7 @@
         <Button Content="Randomize nospam" Click="NospamButtonClick" Width="170"
                 ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." />
 
-        <!-- Profile management -->
-        <TextBlock Text="Profile management" Style="{StaticResource BodyTextBlockStyle}" Margin="0,20,0,5" />
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-
-            <Button Grid.Column="0" Grid.Row="0" Content="Export" HorizontalAlignment="Stretch">
-                <Button.Flyout>
-                    <Flyout Placement="Left">
-                        <StackPanel>
-                            <!-- Disabled until bug in DLL fixed. -->
-                            <TextBox x:Name="PasswordTextBox" Header="Password (optional)" Width="266"
-                                     ToolTipService.ToolTip="You can encrypt your saved profile with a password, preventing data theft. You'll also need it for importing."
-                                     IsEnabled="False" />
-                            <Button Margin="0,5,0,0" Content="Export" Click="ExportButtonClick" />
-                        </StackPanel>
-                    </Flyout>
-                </Button.Flyout>
-            </Button>
-            <Button Grid.Column="0" Grid.Row="1" Content="Import" HorizontalAlignment="Stretch"
-                    Click="ImportButtonClick" />
-            <Button Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Content="New" Click="NewButtonClick" />
-            <Button Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Content="Switch"
-                    Click="SwitchButtonClick" x:Name="SwitchButton">
-                <Button.Flyout>
-                    <Flyout helpers:FlyoutHelper.Parent="{Binding ElementName=SwitchButton}"
-                            helpers:FlyoutHelper.IsOpen="{Binding IsSwitchProfileFlyoutOpen, Mode=TwoWay}">
-                        <StackPanel>
-                            <TextBlock Text="Select profile:" Style="{StaticResource BodyTextBlockStyle}"
-                                       Margin="0,0,0,10" Width="160" />
-                            <ListView ItemsSource="{Binding ProfileFiles}" SelectionMode="None"
-                                      IsItemClickEnabled="True" ItemClick="ProfileNameListItemClick">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding DisplayName}" />
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </StackPanel>
-                    </Flyout>
-                </Button.Flyout>
-            </Button>
-        </Grid>
+        <userControls:ProfileManagementBlock />
 
     </StackPanel>
 

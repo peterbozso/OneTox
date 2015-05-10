@@ -124,6 +124,7 @@
     <Compile Include="ViewModel\ConversationViewModel.cs" />
     <Compile Include="ViewModel\MessageGroupViewModel.cs" />
     <Compile Include="ViewModel\MessageViewModel.cs" />
+    <Compile Include="ViewModel\ProfileManagementViewModel.cs" />
     <Compile Include="ViewModel\ProfileSettingsViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
@@ -149,6 +150,9 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="View\UserControls\MessageBlock.xaml.cs">
       <DependentUpon>MessageBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\ProfileManagementBlock.xaml.cs">
+      <DependentUpon>ProfileManagementBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserControls\UserTile.xaml.cs">
       <DependentUpon>UserTile.xaml</DependentUpon>
@@ -211,6 +215,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="View\UserControls\MessageBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\ProfileManagementBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

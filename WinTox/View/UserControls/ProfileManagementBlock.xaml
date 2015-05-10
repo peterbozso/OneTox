@@ -1,0 +1,73 @@
+﻿<UserControl
+    x:Class="WinTox.View.UserControls.ProfileManagementBlock"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinTox.View.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="using:WinTox.Helpers"
+    xmlns:viewModel="using:WinTox.ViewModel"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <UserControl.DataContext>
+        <viewModel:ProfileManagementViewModel />
+    </UserControl.DataContext>
+
+    <StackPanel>
+        <TextBlock Text="Profile management" Style="{StaticResource BodyTextBlockStyle}" Margin="0,20,0,5" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Grid.Row="0" Content="Export" HorizontalAlignment="Stretch">
+                <Button.Flyout>
+                    <Flyout Placement="Left">
+                        <StackPanel>
+                            <!-- Disabled until bug in DLL is fixed. -->
+                            <TextBox x:Name="PasswordTextBox" Header="Password (optional)" Width="266"
+                                     ToolTipService.ToolTip="You can encrypt your saved profile with a password, preventing data theft. You'll also need it for importing."
+                                     IsEnabled="False" />
+                            <Button Margin="0,5,0,0" Content="Export" Click="ExportButtonClick" />
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+            
+            <Button Grid.Column="0" Grid.Row="1" Content="Import" HorizontalAlignment="Stretch"
+                    Click="ImportButtonClick" />
+            
+            <Button Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Content="New"
+                    Command="{Binding CreateNewProfileCommand}" />
+            
+            <Button Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Content="Switch"
+                    Command="{Binding RefreshProfileListCommand}" x:Name="SwitchButton">
+                <Button.Flyout>
+                    <Flyout helpers:FlyoutHelper.Parent="{Binding ElementName=SwitchButton}"
+                            helpers:FlyoutHelper.IsOpen="{Binding IsSwitchProfileFlyoutOpen, Mode=TwoWay}">
+                        <StackPanel>
+                            <TextBlock Text="Select profile" Style="{StaticResource BodyTextBlockStyle}"
+                                       Margin="0,0,0,10" Width="160" />
+                            <ListView ItemsSource="{Binding ProfileFiles}" SelectionMode="None"
+                                      IsItemClickEnabled="True" ItemClick="ProfileNameListItemClick">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DisplayName}" />
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+        </Grid>
+    </StackPanel>
+</UserControl>
