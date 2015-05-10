@@ -1,9 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.Provider;
+using Windows.UI.Core;
 using SharpTox.Core;
 using SharpTox.Encryption;
 using WinTox.Model;
@@ -12,6 +15,11 @@ namespace WinTox.ViewModel
 {
     internal class ProfileSettingsViewModel : ViewModelBase
     {
+        public ProfileSettingsViewModel()
+        {
+            App.ToxModel.PropertyChanged += ToxModelPropertyChangedHandler;
+        }
+
         public ToxId Id
         {
             get { return App.ToxModel.Id; }
@@ -52,6 +60,12 @@ namespace WinTox.ViewModel
                 App.ToxModel.Status = value;
                 RaisePropertyChanged();
             }
+        }
+
+        private void ToxModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () => { RaisePropertyChanged(e.PropertyName); });
         }
 
         public async Task SaveDataAsync()
@@ -97,6 +111,17 @@ namespace WinTox.ViewModel
             App.ToxModel.SetCurrent(new ExtendedTox(new ToxOptions(), ToxData.FromBytes(data)));
             await App.ToxModel.SaveDataAsync();
             App.ToxModel.Start();
+        }
+
+        public async Task CreateNewProfile()
+        {
+            var tox = new ExtendedTox(new ToxOptions(true, true))
+            {
+                Name = "User",
+                StatusMessage = "Using WinTox."
+            };
+            App.ToxModel.SetCurrent(tox);
+            await App.ToxModel.SaveDataAsync();
         }
     }
 }

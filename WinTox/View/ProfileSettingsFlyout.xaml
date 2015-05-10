@@ -75,7 +75,7 @@
             </Button>
             <Button Grid.Column="0" Grid.Row="1" Content="Import" HorizontalAlignment="Stretch"
                     Click="ImportButtonClick" />
-            <Button Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Content="New" />
+            <Button Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Content="New" Click="NewButtonClick" />
             <Button Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Content="Switch" />
         </Grid>
 

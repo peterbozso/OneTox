@@ -93,5 +93,10 @@ namespace WinTox.View
             openPicker.FileTypeFilter.Add(".tox");
             return await openPicker.PickSingleFileAsync();
         }
+
+        private async void NewButtonClick(object sender, RoutedEventArgs e)
+        {
+            await _viewModel.CreateNewProfile();
+        }
     }
 }
