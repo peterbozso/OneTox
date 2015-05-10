@@ -95,6 +95,7 @@ namespace WinTox.ViewModel
         {
             var data = (await FileIO.ReadBufferAsync(file)).ToArray();
             App.ToxModel.SetCurrent(new ExtendedTox(new ToxOptions(), ToxData.FromBytes(data)));
+            App.ToxModel.Start();
         }
     }
 }
