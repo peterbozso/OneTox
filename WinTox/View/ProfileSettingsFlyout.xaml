@@ -15,9 +15,6 @@
 
     <SettingsFlyout.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
-        <Style TargetType="Button">
-            <Setter Property="Width" Value="170" />
-        </Style>
     </SettingsFlyout.Resources>
 
     <SettingsFlyout.DataContext>
@@ -46,27 +43,41 @@
         <TextBlock Text="Tox ID" Style="{StaticResource BodyTextBlockStyle}" Margin="0,20,0,0" />
         <TextBlock x:Name="ToxIdTextBlock" TextWrapping="Wrap" Text="{Binding Id}"
                    Style="{StaticResource BodyTextBlockStyle}" Margin="10,0,0,5" />
-        <Button Content="Copy ID" Click="CopyButtonClick" />
-        <Button Content="Randomize nospam" Click="NospamButtonClick"
+        <Button Content="Copy ID" Click="CopyButtonClick" Width="170" />
+        <Button Content="Randomize nospam" Click="NospamButtonClick" Width="170"
                 ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." />
 
         <!-- Profile management -->
         <TextBlock Text="Profile management" Style="{StaticResource BodyTextBlockStyle}" Margin="0,20,0,5" />
-        <Button Content="Export profile">
-            <Button.Flyout>
-                <Flyout Placement="Left">
-                    <StackPanel>
-                        <!-- Disabled until bug in DLL fixed. -->
-                        <TextBox x:Name="PasswordTextBox" Header="Password (optional)" Width="266"
-                                 ToolTipService.ToolTip="You can encrypt your saved profile with a password, preventing data theft. You'll also need it for importing."
-                                 IsEnabled="False" />
-                        <Button Margin="0,5,0,0" Content="Export" Click="ExportButtonClick" />
-                    </StackPanel>
-                </Flyout>
-            </Button.Flyout>
-        </Button>
-        <Button Content="Import profile" Click="ImportButtonClick" />
-        <Button Content="Switch profile" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Grid.Row="0" Content="Export" HorizontalAlignment="Stretch">
+                <Button.Flyout>
+                    <Flyout Placement="Left">
+                        <StackPanel>
+                            <!-- Disabled until bug in DLL fixed. -->
+                            <TextBox x:Name="PasswordTextBox" Header="Password (optional)" Width="266"
+                                     ToolTipService.ToolTip="You can encrypt your saved profile with a password, preventing data theft. You'll also need it for importing."
+                                     IsEnabled="False" />
+                            <Button Margin="0,5,0,0" Content="Export" Click="ExportButtonClick" />
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+            <Button Grid.Column="0" Grid.Row="1" Content="Import" HorizontalAlignment="Stretch"
+                    Click="ImportButtonClick" />
+            <Button Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Content="New" />
+            <Button Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Content="Switch" />
+        </Grid>
 
     </StackPanel>
 
