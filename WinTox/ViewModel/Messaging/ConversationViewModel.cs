@@ -6,8 +6,9 @@ using System.Text;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using SharpTox.Core;
+using WinTox.ViewModel.Friends;
 
-namespace WinTox.ViewModel
+namespace WinTox.ViewModel.Messaging
 {
     public class ConversationViewModel : ViewModelBase
     {

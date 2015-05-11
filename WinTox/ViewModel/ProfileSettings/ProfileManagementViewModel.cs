@@ -9,7 +9,7 @@ using SharpTox.Encryption;
 using WinTox.Common;
 using WinTox.Model;
 
-namespace WinTox.ViewModel
+namespace WinTox.ViewModel.ProfileSettings
 {
     internal class ProfileManagementViewModel : ViewModelBase
     {

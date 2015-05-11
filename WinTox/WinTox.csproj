@@ -115,17 +115,17 @@
     <Compile Include="Converters\StatusToColorConverter.cs" />
     <Compile Include="Model\ExtendedTox.cs" />
     <Compile Include="Model\ToxModel.cs" />
-    <Compile Include="ViewModel\AddFriendFlyoutViewModel.cs" />
+    <Compile Include="ViewModel\Friends\AddFriendFlyoutViewModel.cs" />
     <Compile Include="Helpers\FlyoutHelper.cs" />
-    <Compile Include="ViewModel\FriendListViewModel.cs" />
-    <Compile Include="ViewModel\FriendViewModel.cs" />
+    <Compile Include="ViewModel\Friends\FriendListViewModel.cs" />
+    <Compile Include="ViewModel\Friends\FriendViewModel.cs" />
     <Compile Include="ViewModel\IToxUserViewModel.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
-    <Compile Include="ViewModel\ConversationViewModel.cs" />
-    <Compile Include="ViewModel\MessageGroupViewModel.cs" />
-    <Compile Include="ViewModel\MessageViewModel.cs" />
-    <Compile Include="ViewModel\ProfileManagementViewModel.cs" />
-    <Compile Include="ViewModel\ProfileSettingsViewModel.cs" />
+    <Compile Include="ViewModel\Messaging\ConversationViewModel.cs" />
+    <Compile Include="ViewModel\Messaging\MessageGroupViewModel.cs" />
+    <Compile Include="ViewModel\Messaging\MessageViewModel.cs" />
+    <Compile Include="ViewModel\ProfileSettings\ProfileManagementViewModel.cs" />
+    <Compile Include="ViewModel\ProfileSettings\ProfileSettingsViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\ChatPage.xaml.cs">
@@ -188,7 +188,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ChatPageDictionary.xaml">
+    <Page Include="View\ResourceDictionaries\ChatPageDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -209,7 +209,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\MainPageDictionary.xaml">
+    <Page Include="View\ResourceDictionaries\MainPageDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using SharpTox.Core;
 using WinTox.ViewModel;
+using WinTox.ViewModel.ProfileSettings;
 
 namespace WinTox.View
 {

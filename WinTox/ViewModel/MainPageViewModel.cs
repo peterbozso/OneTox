@@ -1,5 +1,6 @@
 ﻿using System;
 using SharpTox.Core;
+using WinTox.ViewModel.Friends;
 
 namespace WinTox.ViewModel
 {

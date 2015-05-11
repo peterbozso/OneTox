@@ -9,6 +9,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helpers="using:WinTox.Helpers"
+    xmlns:friends="using:WinTox.ViewModel.Friends"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -16,7 +17,7 @@
     </Page.DataContext>
 
     <Page.Resources>
-        <ResourceDictionary Source="MainPageDictionary.xaml" />
+        <ResourceDictionary Source="ResourceDictionaries/MainPageDictionary.xaml" />
     </Page.Resources>
 
     <!-- This grid acts as a root panel for the page. -->
@@ -58,7 +59,7 @@
             <!-- TODO: Maybe refactor it out later. -->
             <AppBarButton Label="add friend" Icon="AddFriend" x:Name="AddFriendButton">
                 <AppBarButton.DataContext>
-                    <viewModel:AddFriendFlyoutViewModel />
+                    <friends:AddFriendFlyoutViewModel />
                 </AppBarButton.DataContext>
                 <AppBarButton.Flyout>
                     <Flyout helpers:FlyoutHelper.Parent="{Binding ElementName=AddFriendButton}"

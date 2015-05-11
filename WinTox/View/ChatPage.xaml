@@ -10,7 +10,7 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <ResourceDictionary Source="ChatPageDictionary.xaml" />
+        <ResourceDictionary Source="ResourceDictionaries/ChatPageDictionary.xaml" />
     </Page.Resources>
 
     <Grid Background="{ThemeResource BackgroundColor}">

@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace WinTox.ViewModel
+namespace WinTox.ViewModel.Messaging
 {
     public class MessageGroupViewModel
     {

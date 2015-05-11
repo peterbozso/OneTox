@@ -6,7 +6,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using SharpTox.Core;
 
-namespace WinTox.ViewModel
+namespace WinTox.ViewModel.ProfileSettings
 {
     internal class ProfileSettingsViewModel : ViewModelBase
     {

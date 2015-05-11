@@ -1,7 +1,7 @@
 ﻿using System;
 using SharpTox.Core;
 
-namespace WinTox.ViewModel
+namespace WinTox.ViewModel.Messaging
 {
     public class MessageViewModel
     {

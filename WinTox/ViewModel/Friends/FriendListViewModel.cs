@@ -4,7 +4,7 @@ using Windows.UI.Core;
 using SharpTox.Core;
 using WinTox.Model;
 
-namespace WinTox.ViewModel
+namespace WinTox.ViewModel.Friends
 {
     public class FriendListViewModel
     {

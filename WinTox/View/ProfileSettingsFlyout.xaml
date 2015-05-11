@@ -9,6 +9,7 @@
     xmlns:viewModel="using:WinTox.ViewModel"
     xmlns:helpers="using:WinTox.Helpers"
     xmlns:userControls="using:WinTox.View.UserControls"
+    xmlns:profileSettings="using:WinTox.ViewModel.ProfileSettings"
     mc:Ignorable="d"
     IconSource="Assets/SmallLogo.png"
     Title="Profile settings"
@@ -20,7 +21,7 @@
     </SettingsFlyout.Resources>
 
     <SettingsFlyout.DataContext>
-        <viewModel:ProfileSettingsViewModel />
+        <profileSettings:ProfileSettingsViewModel />
     </SettingsFlyout.DataContext>
 
     <StackPanel Width="266">

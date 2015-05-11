@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Controls;
 using SharpTox.Core;
 using WinTox.Common;
 
-namespace WinTox.ViewModel
+namespace WinTox.ViewModel.Friends
 {
     public class AddFriendFlyoutViewModel : ViewModelBase
     {

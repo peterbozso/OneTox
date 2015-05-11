@@ -6,6 +6,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
 using WinTox.ViewModel;
+using WinTox.ViewModel.Friends;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 

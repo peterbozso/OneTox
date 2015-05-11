@@ -8,8 +8,6 @@ using SharpTox.Core;
 using WinTox.Common;
 using WinTox.ViewModel;
 
-// The Hub Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=321224
-
 namespace WinTox.View
 {
     /// <summary>

@@ -1,8 +1,9 @@
 ﻿using System;
 using SharpTox.Core;
 using WinTox.Common;
+using WinTox.ViewModel.Messaging;
 
-namespace WinTox.ViewModel
+namespace WinTox.ViewModel.Friends
 {
     public class FriendViewModel : ViewModelBase, IToxUserViewModel
     {
