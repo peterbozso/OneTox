@@ -86,7 +86,6 @@ namespace WinTox.ViewModel
         public async Task<bool> ExportProfile(StorageFile file, string password)
         {
             CachedFileManager.DeferUpdates(file);
-            await FileIO.WriteTextAsync(file, string.Empty); // Clear the content of the file before writing to it.
             await FileIO.WriteBytesAsync(file, GetData(password));
             var status = await CachedFileManager.CompleteUpdatesAsync(file);
             return status == FileUpdateStatus.Complete;

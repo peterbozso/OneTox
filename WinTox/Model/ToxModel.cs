@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -203,12 +203,9 @@ namespace WinTox.Model
             await _semaphore.WaitAsync();
             try
             {
-                using (var stream = await ApplicationData.Current.RoamingFolder.OpenStreamForWriteAsync(
-                    _tox.Name + ".tox", CreationCollisionOption.ReplaceExisting))
-                {
-                    var dataToWrite = _tox.GetData().Bytes;
-                    await stream.WriteAsync(dataToWrite, 0, dataToWrite.Length);
-                }
+                var file = await ApplicationData.Current.RoamingFolder.CreateFileAsync(
+                    _tox.Name + ".tox", CreationCollisionOption.ReplaceExisting);
+                FileIO.WriteBytesAsync(file, _tox.GetData().Bytes);
                 ApplicationData.Current.RoamingSettings.Values["currentUserName"] = _tox.Name;
             }
             catch
@@ -226,14 +223,9 @@ namespace WinTox.Model
             try
             {
                 var currentUserName = ApplicationData.Current.RoamingSettings.Values["currentUserName"];
-                using (var stream = await ApplicationData.Current.RoamingFolder.OpenStreamForReadAsync(
-                    currentUserName + ".tox"))
-                {
-                    var toxData = new byte[stream.Length];
-                    await stream.ReadAsync(toxData, 0, toxData.Length);
-                    var newTox = new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(toxData));
-                    SetCurrent(newTox);
-                }
+                var file = await ApplicationData.Current.RoamingFolder.GetFileAsync(currentUserName + ".tox");
+                var toxData = (await FileIO.ReadBufferAsync(file)).ToArray();
+                SetCurrent(new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(toxData)));
             }
             catch
             {
