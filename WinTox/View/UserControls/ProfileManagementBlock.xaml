@@ -42,10 +42,10 @@
                     </Flyout>
                 </Button.Flyout>
             </Button>
-            
+
             <Button Grid.Column="1" Grid.Row="0" Content="Import" HorizontalAlignment="Stretch"
                     Click="ImportButtonClick" />
-            
+
             <Button Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Content="Switch"
                     Command="{Binding RefreshProfileListCommand}" x:Name="SwitchButton">
                 <Button.Flyout>

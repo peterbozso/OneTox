@@ -6,7 +6,6 @@ using Windows.Storage.Pickers;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using WinTox.ViewModel;
 using WinTox.ViewModel.ProfileSettings;
 
 namespace WinTox.View.UserControls
