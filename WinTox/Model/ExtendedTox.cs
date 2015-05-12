@@ -1,20 +1,11 @@
-﻿using SharpTox.Core;
+﻿using System;
+using SharpTox.Core;
 using SharpTox.Encryption;
 
 namespace WinTox.Model
 {
     public class ExtendedTox : Tox
     {
-        public delegate void FriendListModifiedEventHandler(
-            int friendNumber, FriendListModificationType modificationType);
-
-        public enum FriendListModificationType
-        {
-            Add,
-            Remove,
-            Reset
-        }
-
         public ExtendedTox(ToxOptions options)
             : base(options)
         {
@@ -29,14 +20,14 @@ namespace WinTox.Model
         {
             var friendNumber = base.AddFriend(id, message, out error);
             if (error == ToxErrorFriendAdd.Ok)
-                FriendListModified(friendNumber, FriendListModificationType.Add);
+                FriendListChanged(friendNumber, FriendListChangedAction.Add);
             return friendNumber;
         }
 
         public new int AddFriend(ToxId id, string message)
         {
             var friendNumber = base.AddFriend(id, message);
-            FriendListModified(friendNumber, FriendListModificationType.Add);
+            FriendListChanged(friendNumber, FriendListChangedAction.Add);
             return friendNumber;
         }
 
@@ -44,14 +35,14 @@ namespace WinTox.Model
         {
             var friendNumber = base.AddFriendNoRequest(publicKey, out error);
             if (error == ToxErrorFriendAdd.Ok)
-                FriendListModified(friendNumber, FriendListModificationType.Add);
+                FriendListChanged(friendNumber, FriendListChangedAction.Add);
             return friendNumber;
         }
 
         public new int AddFriendNoRequest(ToxKey publicKey)
         {
             var friendNumber = base.AddFriendNoRequest(publicKey);
-            FriendListModified(friendNumber, FriendListModificationType.Add);
+            FriendListChanged(friendNumber, FriendListChangedAction.Add);
             return friendNumber;
         }
 
@@ -60,7 +51,7 @@ namespace WinTox.Model
             var success = base.DeleteFriend(friendNumber, out error);
             if (success)
             {
-                FriendListModified(friendNumber, FriendListModificationType.Remove);
+                FriendListChanged(friendNumber, FriendListChangedAction.Remove);
             }
             return success;
         }
@@ -70,18 +61,19 @@ namespace WinTox.Model
             var success = base.DeleteFriend(friendNumber);
             if (success)
             {
-                FriendListModified(friendNumber, FriendListModificationType.Remove);
+                FriendListChanged(friendNumber, FriendListChangedAction.Remove);
             }
             return success;
         }
 
-        public event FriendListModifiedEventHandler OnFriendListModified;
+        public event EventHandler<FriendListChangedEventArgs> OnFriendListChanged;
 
-        private void FriendListModified(int friendNumber, FriendListModificationType modificationType)
+        private void FriendListChanged(int friendNumber, FriendListChangedAction action)
         {
-            if (OnFriendListModified != null)
+            if (OnFriendListChanged != null)
             {
-                OnFriendListModified(friendNumber, modificationType);
+                OnFriendListChanged(this,
+                    new FriendListChangedEventArgs {FriendNumber = friendNumber, Action = action});
             }
         }
     }

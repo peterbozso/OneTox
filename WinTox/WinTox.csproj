@@ -114,6 +114,7 @@
     <Compile Include="Converters\SenderTypeToColorConverter.cs" />
     <Compile Include="Converters\StatusToColorConverter.cs" />
     <Compile Include="Model\ExtendedTox.cs" />
+    <Compile Include="Model\FriendListChangedEventArgs.cs" />
     <Compile Include="Model\ToxModel.cs" />
     <Compile Include="ViewModel\Friends\AddFriendFlyoutViewModel.cs" />
     <Compile Include="Helpers\FlyoutHelper.cs" />

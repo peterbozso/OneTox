@@ -112,19 +112,16 @@ namespace WinTox.Model
             }
 
             _tox = tox;
-
             RegisterHandlers();
 
-            if (FriendListModified != null)
-                FriendListModified(-1, ExtendedTox.FriendListModificationType.Reset);
-
             RaiseAllPropertiesChanged();
+            RaiseFriendListReseted();
         }
 
         private void RegisterHandlers()
         {
+            _tox.OnFriendListChanged += FriendListChangedHandler;
             _tox.OnConnectionStatusChanged += ConnectionStatusChangedHandler;
-            _tox.OnFriendListModified += FriendListModifiedHandler;
             _tox.OnFriendRequestReceived += FriendRequestReceivedHandler;
             _tox.OnFriendNameChanged += FriendNameChangedHandler;
             _tox.OnFriendStatusMessageChanged += FriendStatusMessageChangedHandler;
@@ -264,13 +261,20 @@ namespace WinTox.Model
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private void RaiseFriendListReseted()
+        {
+            if (FriendListChanged != null)
+                FriendListChanged(this,
+                    new FriendListChangedEventArgs {FriendNumber = -1, Action = FriendListChangedAction.Reset});
+        }
+
         #endregion
 
         #region Events
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public event ExtendedTox.FriendListModifiedEventHandler FriendListModified;
+        public event EventHandler<FriendListChangedEventArgs> FriendListChanged;
 
         public event EventHandler<ToxEventArgs.FriendRequestEventArgs> FriendRequestReceived;
 
@@ -287,6 +291,14 @@ namespace WinTox.Model
         #endregion
 
         #region Event handlers
+
+        private async void FriendListChangedHandler(object sender, FriendListChangedEventArgs e)
+        {
+            await SaveDataAsync();
+
+            if (FriendListChanged != null)
+                FriendListChanged(sender, e);
+        }
 
         private void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
         {
@@ -306,15 +318,6 @@ namespace WinTox.Model
 
             if (e.Status == ToxConnectionStatus.None)
                 BootstrapContinously();
-        }
-
-        private async void FriendListModifiedHandler(int friendNumber,
-            ExtendedTox.FriendListModificationType modificationType)
-        {
-            await SaveDataAsync();
-
-            if (FriendListModified != null)
-                FriendListModified(friendNumber, modificationType);
         }
 
         private void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)

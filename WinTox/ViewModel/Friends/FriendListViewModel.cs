@@ -25,7 +25,7 @@ namespace WinTox.ViewModel.Friends
             App.ToxModel.FriendStatusMessageChanged += FriendStatusMessageChangedHandler;
             App.ToxModel.FriendStatusChanged += FriendStatusChangedHandler;
             App.ToxModel.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
-            App.ToxModel.FriendListModified += FriendListModifiedHandler;
+            App.ToxModel.FriendListChanged += FriendListChangedHandler;
             App.ToxModel.FriendMessageReceived += FriendMessageReceivedHandler;
         }
 
@@ -53,22 +53,22 @@ namespace WinTox.ViewModel.Friends
                 () => { FindFriend(e.FriendNumber).IsConnected = e.Status != ToxConnectionStatus.None; });
         }
 
-        private void FriendListModifiedHandler(int friendNumber, ExtendedTox.FriendListModificationType modificationType)
+        private void FriendListChangedHandler(object sender, FriendListChangedEventArgs e)
         {
             _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {
-                    switch (modificationType)
+                    switch (e.Action)
                     {
-                        case ExtendedTox.FriendListModificationType.Add:
-                            Friends.Add(new FriendViewModel(friendNumber));
+                        case FriendListChangedAction.Add:
+                            Friends.Add(new FriendViewModel(e.FriendNumber));
                             return;
 
-                        case ExtendedTox.FriendListModificationType.Remove:
-                            Friends.Remove(FindFriend(friendNumber));
+                        case FriendListChangedAction.Remove:
+                            Friends.Remove(FindFriend(e.FriendNumber));
                             return;
 
-                        case ExtendedTox.FriendListModificationType.Reset:
+                        case FriendListChangedAction.Reset:
                             Friends.Clear();
                             foreach (var friendN in App.ToxModel.Friends)
                             {
