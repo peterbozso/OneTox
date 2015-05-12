@@ -113,6 +113,16 @@ namespace WinTox.Model
 
             _tox = tox;
 
+            RegisterHandlers();
+
+            if (FriendListModified != null)
+                FriendListModified(-1, ExtendedTox.FriendListModificationType.Reset);
+
+            RaiseAllPropertiesChanged();
+        }
+
+        private void RegisterHandlers()
+        {
             _tox.OnConnectionStatusChanged += ConnectionStatusChangedHandler;
             _tox.OnFriendListModified += FriendListModifiedHandler;
             _tox.OnFriendRequestReceived += FriendRequestReceivedHandler;
@@ -121,11 +131,6 @@ namespace WinTox.Model
             _tox.OnFriendStatusChanged += FriendStatusChangedHandler;
             _tox.OnFriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
             _tox.OnFriendMessageReceived += FriendMessageReceivedHandler;
-
-            if (FriendListModified != null)
-                FriendListModified(-1, ExtendedTox.FriendListModificationType.Reset);
-
-            RaiseAllPropertiesChanged();
         }
 
         private void RaiseAllPropertiesChanged()
