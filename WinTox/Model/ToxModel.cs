@@ -106,6 +106,11 @@ namespace WinTox.Model
 
         public void SetCurrent(ExtendedTox tox)
         {
+            if (_tox != null)
+            {
+                _tox.Stop();
+            }
+
             _tox = tox;
 
             _tox.OnConnectionStatusChanged += ConnectionStatusChangedHandler;
