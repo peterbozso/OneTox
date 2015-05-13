@@ -297,19 +297,19 @@ namespace WinTox.Model
             await SaveDataAsync();
 
             if (FriendListChanged != null)
-                FriendListChanged(sender, e);
+                FriendListChanged(this, e);
         }
 
         private void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
         {
             if (FriendConnectionStatusChanged != null)
-                FriendConnectionStatusChanged(sender, e);
+                FriendConnectionStatusChanged(this, e);
         }
 
         private void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
         {
             if (FriendMessageReceived != null)
-                FriendMessageReceived(sender, e);
+                FriendMessageReceived(this, e);
         }
 
         private void ConnectionStatusChangedHandler(object sender, ToxEventArgs.ConnectionStatusEventArgs e)
@@ -323,25 +323,25 @@ namespace WinTox.Model
         private void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
         {
             if (FriendRequestReceived != null)
-                FriendRequestReceived(sender, e);
+                FriendRequestReceived(this, e);
         }
 
         private void FriendNameChangedHandler(object sender, ToxEventArgs.NameChangeEventArgs e)
         {
             if (FriendNameChanged != null)
-                FriendNameChanged(sender, e);
+                FriendNameChanged(this, e);
         }
 
         private void FriendStatusMessageChangedHandler(object sender, ToxEventArgs.StatusMessageEventArgs e)
         {
             if (FriendStatusMessageChanged != null)
-                FriendStatusMessageChanged(sender, e);
+                FriendStatusMessageChanged(this, e);
         }
 
         private void FriendStatusChangedHandler(object sender, ToxEventArgs.StatusEventArgs e)
         {
             if (FriendStatusChanged != null)
-                FriendStatusChanged(sender, e);
+                FriendStatusChanged(this, e);
         }
 
         #endregion
