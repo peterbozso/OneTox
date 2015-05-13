@@ -108,7 +108,7 @@ namespace WinTox.Model
         {
             if (_tox != null)
             {
-                _tox.Stop();
+                _tox.Dispose();
             }
 
             _tox = tox;
