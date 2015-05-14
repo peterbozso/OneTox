@@ -12,7 +12,7 @@
 
     <UserControl.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
-        <converters:IsConnectedToVisibilityConverter x:Key="IsConnectedToVisibilityConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:IsConnectedToOpacityConverter x:Key="IsConnectedToOpacityConverter" />
     </UserControl.Resources>
 
@@ -25,7 +25,7 @@
             <Image Opacity="{Binding IsConnected, Converter={StaticResource IsConnectedToOpacityConverter}}"
                    Source="/Assets/default-profile-picture.png" Width="250" Height="250" Stretch="UniformToFill"
                    HorizontalAlignment="Left" />
-            <Ellipse Visibility="{Binding IsConnected, Converter={StaticResource IsConnectedToVisibilityConverter}}"
+            <Ellipse Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibilityConverter}}"
                      Width="15" Height="15" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,10"
                      Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}" />
         </Grid>

@@ -54,6 +54,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <!-- List of messages -->
@@ -71,8 +72,15 @@
                 </ListView.ItemTemplate>
             </ListView>
 
+            <!-- Friend typing indicator -->
+            <Grid Grid.Row="1" Background="{StaticResource ChatBackgroundColor}"
+                  Visibility="{Binding Conversation.IsFriendTyping, Converter={StaticResource BoolToVisibilityConverter}}">
+                <TextBlock Foreground="{StaticResource MainColor}" FontSize="20" Margin="10,2,0,2"
+                           Text="{Binding Name, Converter={StaticResource FriendNameToTypingStatusConverter}}" />
+            </Grid>
+
             <!-- Message input field -->
-            <Grid Grid.Row="1" Background="{StaticResource MainColor}">
+            <Grid Grid.Row="2" Background="{StaticResource MainColor}">
                 <TextBox x:Name="MessageInput" Margin="20" FontSize="20" MinHeight="40" MaxHeight="250" Height="Auto"
                          KeyDown="MessageInputKeyDown" TextWrapping="Wrap" />
             </Grid>

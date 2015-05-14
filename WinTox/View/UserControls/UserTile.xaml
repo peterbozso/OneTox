@@ -17,7 +17,7 @@
 
     <UserControl.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
-        <converters:IsConnectedToVisibilityConverter x:Key="IsConnectedToVisibilityConverter" />
+        <converters:BoolToVisibilityConverter x:Key="IsConnectedToVisibilityConverter" />
         <converters:IsConnectedToOpacityConverter x:Key="IsConnectedToOpacityConverter" />
     </UserControl.Resources>
 

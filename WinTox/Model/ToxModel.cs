@@ -128,6 +128,7 @@ namespace WinTox.Model
             _tox.OnFriendStatusChanged += FriendStatusChangedHandler;
             _tox.OnFriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
             _tox.OnFriendMessageReceived += FriendMessageReceivedHandler;
+            _tox.OnFriendTypingChanged += FriendTypingChangedHandler;
         }
 
         private void RaiseAllPropertiesChanged()
@@ -255,6 +256,11 @@ namespace WinTox.Model
             return _tox.SendMessage(friendNumber, message, type, out error);
         }
 
+        public void SetTypingStatus(int friendNumber, bool isTyping)
+        {
+            _tox.SetTypingStatus(friendNumber, isTyping);
+        }
+
         private void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
             if (PropertyChanged != null)
@@ -287,6 +293,8 @@ namespace WinTox.Model
         public event EventHandler<ToxEventArgs.FriendConnectionStatusEventArgs> FriendConnectionStatusChanged;
 
         public event EventHandler<ToxEventArgs.FriendMessageEventArgs> FriendMessageReceived;
+
+        public event EventHandler<ToxEventArgs.TypingStatusEventArgs> FriendTypingChanged;
 
         #endregion
 
@@ -342,6 +350,12 @@ namespace WinTox.Model
         {
             if (FriendStatusChanged != null)
                 FriendStatusChanged(this, e);
+        }
+
+        private void FriendTypingChangedHandler(object sender, ToxEventArgs.TypingStatusEventArgs e)
+        {
+            if (FriendTypingChanged != null)
+                FriendTypingChanged(this, e);
         }
 
         #endregion

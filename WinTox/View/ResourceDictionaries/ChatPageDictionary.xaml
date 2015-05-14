@@ -1,6 +1,10 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:WinTox.Converters">
+
+    <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    <converters:FriendNameToTypingStatusConverter x:Key="FriendNameToTypingStatusConverter" />
 
     <FontFamily x:Key="ContentControlThemeFontFamily">Segoe WP</FontFamily>
     <x:Double x:Key="ControlContentThemeFontSize">12</x:Double>

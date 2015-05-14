@@ -14,12 +14,23 @@ namespace WinTox.ViewModel.Messaging
     {
         private readonly FriendViewModel _friendViewModel;
         private readonly UserViewModel _userViewModel;
+        private bool _isFriendTyping;
 
         public ConversationViewModel(FriendViewModel friendViewModel)
         {
             _friendViewModel = friendViewModel;
             _userViewModel = new UserViewModel();
             MessageGroups = new ObservableCollection<MessageGroupViewModel>();
+        }
+
+        public bool IsFriendTyping
+        {
+            get { return _isFriendTyping; }
+            set
+            {
+                _isFriendTyping = value;
+                RaisePropertyChanged();
+            }
         }
 
         public ObservableCollection<MessageGroupViewModel> MessageGroups { get; set; }
@@ -123,6 +134,11 @@ namespace WinTox.ViewModel.Messaging
             }
 
             return false;
+        }
+
+        public void SetTypingStatus(bool isTyping)
+        {
+            App.ToxModel.SetTypingStatus(_friendViewModel.FriendNumber, isTyping);
         }
     }
 }

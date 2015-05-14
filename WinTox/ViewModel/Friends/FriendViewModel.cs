@@ -7,7 +7,7 @@ namespace WinTox.ViewModel.Friends
 {
     public class FriendViewModel : ViewModelBase, IToxUserViewModel
     {
-        private bool _IsConnected;
+        private bool _isConnected;
         private string _name;
         private RelayCommand _removeFriendCommand;
         private ToxUserStatus _status;
@@ -85,10 +85,10 @@ namespace WinTox.ViewModel.Friends
 
         public bool IsConnected
         {
-            get { return _IsConnected; }
+            get { return _isConnected; }
             set
             {
-                _IsConnected = value;
+                _isConnected = value;
                 RaisePropertyChanged();
             }
         }
@@ -96,6 +96,11 @@ namespace WinTox.ViewModel.Friends
         public void ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
         {
             Conversation.ReceiveMessage(e);
+        }
+
+        public void SetIsTyping(bool isTyping)
+        {
+            Conversation.IsFriendTyping = isTyping;
         }
     }
 }
