@@ -31,7 +31,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Image Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Source="/Assets/default-profile-picture.png" Width="70"
+        <Image Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Source="{Binding Avatar}" Width="70"
                Height="70" Stretch="UniformToFill" VerticalAlignment="Top"
                Opacity="{Binding IsConnected, Converter={StaticResource IsConnectedToOpacityConverter}}" />
         <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right">

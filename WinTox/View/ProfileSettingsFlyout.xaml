@@ -25,7 +25,8 @@
     </SettingsFlyout.DataContext>
 
     <StackPanel Width="266">
-        <TextBox Header="Name" Text="{Binding Name, Mode=TwoWay}" LostFocus="NameTextBoxLostFocus" />
+        <Image Width="266" Height="266" Source="{Binding Avatar}" Stretch="UniformToFill" Tapped="UserAvatarTapped" />
+        <TextBox Header="Name" Margin="0,20,0,0" Text="{Binding Name, Mode=TwoWay}" LostFocus="NameTextBoxLostFocus" />
         <TextBox Header="Status message" Text="{Binding StatusMessage, Mode=TwoWay}" />
         <Grid x:Name="StatusGrid" Margin="0,3,0,0">
             <Grid.ColumnDefinitions>
@@ -39,8 +40,6 @@
                      Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}"
                      HorizontalAlignment="Left" Margin="10,25,0,0" />
         </Grid>
-
-        <!-- TODO: Add option to change profile picture! -->
 
         <!-- Tox ID settings -->
         <TextBlock Text="Tox ID" Style="{StaticResource BodyTextBlockStyle}" Margin="0,20,0,0" />

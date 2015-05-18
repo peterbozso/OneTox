@@ -3,7 +3,9 @@ using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
+using Windows.Storage;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
 
 namespace WinTox.ViewModel.ProfileSettings
@@ -13,6 +15,7 @@ namespace WinTox.ViewModel.ProfileSettings
         public ProfileSettingsViewModel()
         {
             App.ToxModel.PropertyChanged += ToxModelPropertyChangedHandler;
+            App.AvatarManager.UserAvatarChanged += UserAvatarChangedHandler;
         }
 
         public ToxId Id
@@ -55,6 +58,33 @@ namespace WinTox.ViewModel.ProfileSettings
                 App.ToxModel.Status = value;
                 RaisePropertyChanged();
             }
+        }
+
+        public BitmapImage Avatar
+        {
+            get { return App.AvatarManager.UserAvatar; }
+        }
+
+        public async Task<string> LoadUserAvatar(StorageFile file)
+        {
+            try
+            {
+                await App.AvatarManager.LoadUserAvatar(file);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return "The picture is too big!";
+            }
+            catch
+            {
+                return "The picture is corrupted!";
+            }
+            return String.Empty;
+        }
+
+        private void UserAvatarChangedHandler(object sender, EventArgs e)
+        {
+            RaisePropertyChanged("Avatar");
         }
 
         private void ToxModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
