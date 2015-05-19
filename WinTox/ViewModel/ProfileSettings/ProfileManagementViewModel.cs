@@ -24,7 +24,7 @@ namespace WinTox.ViewModel.ProfileSettings
 
         public string Name
         {
-            get { return App.ToxModel.Name; }
+            get { return ToxModel.Instance.Name; }
         }
 
         public ObservableCollection<StorageFile> ProfileFiles { get; set; }
@@ -52,9 +52,9 @@ namespace WinTox.ViewModel.ProfileSettings
                                    Name = "User",
                                    StatusMessage = "Using WinTox."
                                };
-                               App.ToxModel.SetCurrent(tox);
-                               await App.ToxModel.SaveDataAsync();
-                               App.ToxModel.Start();
+                               ToxModel.Instance.SetCurrent(tox);
+                               await ToxModel.Instance.SaveDataAsync();
+                               ToxModel.Instance.Start();
                            }));
             }
         }
@@ -94,17 +94,17 @@ namespace WinTox.ViewModel.ProfileSettings
         private byte[] GetData(string password)
         {
             if (password == String.Empty)
-                return App.ToxModel.GetData().Bytes;
+                return ToxModel.Instance.GetData().Bytes;
             var encryptionKey = new ToxEncryptionKey(password);
-            return App.ToxModel.GetData(encryptionKey).Bytes;
+            return ToxModel.Instance.GetData(encryptionKey).Bytes;
         }
 
         public async Task SetCurrentProfile(StorageFile file)
         {
             var data = (await FileIO.ReadBufferAsync(file)).ToArray();
-            App.ToxModel.SetCurrent(new ExtendedTox(new ToxOptions(), ToxData.FromBytes(data)));
-            await App.ToxModel.SaveDataAsync();
-            App.ToxModel.Start();
+            ToxModel.Instance.SetCurrent(new ExtendedTox(new ToxOptions(), ToxData.FromBytes(data)));
+            await ToxModel.Instance.SaveDataAsync();
+            ToxModel.Instance.Start();
         }
 
         public async Task SwitchProfile(StorageFile file)

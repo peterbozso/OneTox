@@ -4,6 +4,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
+using WinTox.Model;
 
 namespace WinTox.ViewModel
 {
@@ -11,38 +12,38 @@ namespace WinTox.ViewModel
     {
         public UserViewModel()
         {
-            App.ToxModel.PropertyChanged += ToxModelPropertyChangedHandler;
-            App.AvatarManager.UserAvatarChanged += UserAvatarChangedHandler;
+            ToxModel.Instance.PropertyChanged += ToxModelPropertyChangedHandler;
+            AvatarManager.Instance.UserAvatarChanged += UserAvatarChangedHandler;
         }
 
         public ToxId Id
         {
-            get { return App.ToxModel.Id; }
+            get { return ToxModel.Instance.Id; }
         }
 
         public BitmapImage Avatar
         {
-            get { return App.AvatarManager.UserAvatar; }
+            get { return AvatarManager.Instance.UserAvatar; }
         }
 
         public string Name
         {
-            get { return App.ToxModel.Name; }
+            get { return ToxModel.Instance.Name; }
         }
 
         public string StatusMessage
         {
-            get { return App.ToxModel.StatusMessage; }
+            get { return ToxModel.Instance.StatusMessage; }
         }
 
         public ToxUserStatus Status
         {
-            get { return App.ToxModel.Status; }
+            get { return ToxModel.Instance.Status; }
         }
 
         public bool IsConnected
         {
-            get { return App.ToxModel.IsConnected; }
+            get { return ToxModel.Instance.IsConnected; }
         }
 
         private void UserAvatarChangedHandler(object sender, EventArgs e)

@@ -11,6 +11,9 @@ using SharpTox.Encryption;
 
 namespace WinTox.Model
 {
+    /// <summary>
+    ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
+    /// </summary>
     public class ToxModel
     {
         private static readonly ToxNode[] _nodes =
@@ -33,10 +36,11 @@ namespace WinTox.Model
                 new ToxKey(ToxKeyType.Public, "8CD087E31C67568103E8C2A28653337E90E6B8EDA0D765D57C6B5172B4F1F04C"))
         };
 
+        private static ToxModel _instance;
         private readonly SemaphoreSlim _semaphore;
         private ExtendedTox _tox;
 
-        public ToxModel()
+        private ToxModel()
         {
             var tox = new ExtendedTox(new ToxOptions(true, true))
             {
@@ -49,6 +53,11 @@ namespace WinTox.Model
         }
 
         #region Properties
+
+        public static ToxModel Instance
+        {
+            get { return _instance ?? (_instance = new ToxModel()); }
+        }
 
         public int[] Friends
         {
@@ -104,6 +113,11 @@ namespace WinTox.Model
             _tox.SetNospam(nospam);
         }
 
+        /// <summary>
+        ///     Replaces the current underlying EntededTox instance with a new one.
+        ///     It's used for profile switching.
+        /// </summary>
+        /// <param name="tox">The new ExtendedTox instance.</param>
         public void SetCurrent(ExtendedTox tox)
         {
             if (_tox != null)

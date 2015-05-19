@@ -7,6 +7,7 @@ using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
+using WinTox.Model;
 
 namespace WinTox.ViewModel.ProfileSettings
 {
@@ -14,62 +15,62 @@ namespace WinTox.ViewModel.ProfileSettings
     {
         public ProfileSettingsViewModel()
         {
-            App.ToxModel.PropertyChanged += ToxModelPropertyChangedHandler;
-            App.AvatarManager.UserAvatarChanged += UserAvatarChangedHandler;
+            ToxModel.Instance.PropertyChanged += ToxModelPropertyChangedHandler;
+            AvatarManager.Instance.UserAvatarChanged += UserAvatarChangedHandler;
         }
 
         public ToxId Id
         {
-            get { return App.ToxModel.Id; }
+            get { return ToxModel.Instance.Id; }
         }
 
         public string Name
         {
-            get { return App.ToxModel.Name; }
+            get { return ToxModel.Instance.Name; }
             set
             {
                 var lengthInBytes = Encoding.Unicode.GetBytes(value).Length;
                 if (value == String.Empty || lengthInBytes > ToxConstants.MaxNameLength ||
-                    App.ToxModel.Name == value)
+                    ToxModel.Instance.Name == value)
                     return;
-                App.ToxModel.Name = value;
+                ToxModel.Instance.Name = value;
                 RaisePropertyChanged();
             }
         }
 
         public string StatusMessage
         {
-            get { return App.ToxModel.StatusMessage; }
+            get { return ToxModel.Instance.StatusMessage; }
             set
             {
                 var lengthInBytes = Encoding.Unicode.GetBytes(value).Length;
                 if (lengthInBytes > ToxConstants.MaxStatusMessageLength)
                     return;
-                App.ToxModel.StatusMessage = value;
+                ToxModel.Instance.StatusMessage = value;
                 RaisePropertyChanged();
             }
         }
 
         public ToxUserStatus Status
         {
-            get { return App.ToxModel.Status; }
+            get { return ToxModel.Instance.Status; }
             set
             {
-                App.ToxModel.Status = value;
+                ToxModel.Instance.Status = value;
                 RaisePropertyChanged();
             }
         }
 
         public BitmapImage Avatar
         {
-            get { return App.AvatarManager.UserAvatar; }
+            get { return AvatarManager.Instance.UserAvatar; }
         }
 
         public async Task<string> LoadUserAvatar(StorageFile file)
         {
             try
             {
-                await App.AvatarManager.LoadUserAvatar(file);
+                await AvatarManager.Instance.LoadUserAvatar(file);
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -95,7 +96,7 @@ namespace WinTox.ViewModel.ProfileSettings
 
         public async Task SaveDataAsync()
         {
-            await App.ToxModel.SaveDataAsync();
+            await ToxModel.Instance.SaveDataAsync();
         }
 
         public void RandomizeNospam()
@@ -103,7 +104,7 @@ namespace WinTox.ViewModel.ProfileSettings
             var rand = new Random();
             var nospam = new byte[4];
             rand.NextBytes(nospam);
-            App.ToxModel.SetNospam(BitConverter.ToUInt32(nospam, 0));
+            ToxModel.Instance.SetNospam(BitConverter.ToUInt32(nospam, 0));
             RaisePropertyChanged("Id");
         }
     }

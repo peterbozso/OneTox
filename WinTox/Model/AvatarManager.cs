@@ -6,16 +6,25 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace WinTox.Model
 {
+    /// <summary>
+    ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
+    /// </summary>
     public class AvatarManager
     {
         private const int KMaxPictureSize = 1 << 16;
+        private static AvatarManager _instance;
         // See: https://github.com/irungentoo/Tox_Client_Guidelines/blob/master/Important/Avatars.md
 
         private BitmapImage _userAvatar;
 
-        public AvatarManager()
+        private AvatarManager()
         {
             UserAvatar = new BitmapImage(new Uri("ms-appx:///Assets/default-profile-picture.png"));
+        }
+
+        public static AvatarManager Instance
+        {
+            get { return _instance ?? (_instance = new AvatarManager()); }
         }
 
         public BitmapImage UserAvatar

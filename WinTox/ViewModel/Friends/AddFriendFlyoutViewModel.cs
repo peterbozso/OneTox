@@ -3,6 +3,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using SharpTox.Core;
 using WinTox.Common;
+using WinTox.Model;
 
 namespace WinTox.ViewModel.Friends
 {
@@ -47,7 +48,7 @@ namespace WinTox.ViewModel.Friends
                                    invitationMessage = "Hello! I'd like to add you to my friends list.";
 
                                ToxErrorFriendAdd error;
-                               App.ToxModel.AddFriend(new ToxId(friendId), invitationMessage, out error);
+                               ToxModel.Instance.AddFriend(new ToxId(friendId), invitationMessage, out error);
                                // TODO: Handle errors!!!
 
                                friendIdTextBox.Text = String.Empty;

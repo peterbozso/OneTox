@@ -6,6 +6,7 @@ using System.Text;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using SharpTox.Core;
+using WinTox.Model;
 using WinTox.ViewModel.Friends;
 
 namespace WinTox.ViewModel.Messaging
@@ -49,7 +50,7 @@ namespace WinTox.ViewModel.Messaging
             foreach (var chunk in messageChunks)
             {
                 ToxErrorSendMessage error;
-                App.ToxModel.SendMessage(_friendViewModel.FriendNumber, chunk, messageType, out error);
+                ToxModel.Instance.SendMessage(_friendViewModel.FriendNumber, chunk, messageType, out error);
 
                 // TODO: Error handling!
 
@@ -138,7 +139,7 @@ namespace WinTox.ViewModel.Messaging
 
         public void SetTypingStatus(bool isTyping)
         {
-            App.ToxModel.SetTypingStatus(_friendViewModel.FriendNumber, isTyping);
+            ToxModel.Instance.SetTypingStatus(_friendViewModel.FriendNumber, isTyping);
         }
     }
 }

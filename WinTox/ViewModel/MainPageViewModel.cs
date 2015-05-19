@@ -1,5 +1,6 @@
 ﻿using System;
 using SharpTox.Core;
+using WinTox.Model;
 using WinTox.ViewModel.Friends;
 
 namespace WinTox.ViewModel
@@ -16,7 +17,7 @@ namespace WinTox.ViewModel
         public MainPageViewModel()
         {
             FriendList = new FriendListViewModel();
-            App.ToxModel.FriendRequestReceived += FriendRequestReceivedHandler;
+            ToxModel.Instance.FriendRequestReceived += FriendRequestReceivedHandler;
         }
 
         public FriendListViewModel FriendList { get; set; }
@@ -27,7 +28,7 @@ namespace WinTox.ViewModel
             {
                 case FriendRequestAnswer.Accept:
                     ToxErrorFriendAdd error;
-                    App.ToxModel.AddFriendNoRequest(e.PublicKey, out error);
+                    ToxModel.Instance.AddFriendNoRequest(e.PublicKey, out error);
                     // TODO: Handle error!
                     return;
 

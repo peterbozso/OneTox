@@ -21,9 +21,6 @@ namespace WinTox
     /// </summary>
     sealed partial class App : Application
     {
-        public static ToxModel ToxModel;
-        public static AvatarManager AvatarManager;
-
         /// <summary>
         ///     Initializes the singleton Application object.  This is the first line of authored code
         ///     executed, and as such is the logical equivalent of main() or WinMain().
@@ -33,8 +30,6 @@ namespace WinTox
             InitializeComponent();
             Suspending += OnSuspending;
             Resuming += OnResuming;
-            ToxModel = new ToxModel();
-            AvatarManager = new AvatarManager();
         }
 
         /// <summary>
@@ -69,7 +64,7 @@ namespace WinTox
 
                 await HandlePreviousExecutionState(e.PreviousExecutionState);
 
-                ToxModel.Start();
+                ToxModel.Instance.Start();
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
@@ -94,7 +89,7 @@ namespace WinTox
                 var successfulRestoration = true;
                 try
                 {
-                    await ToxModel.RestoreDataAsync();
+                    await ToxModel.Instance.RestoreDataAsync();
                 }
                 catch
                 {
@@ -102,9 +97,9 @@ namespace WinTox
                 }
                 // If the restoration was unsuccessful, it means that we are starting up the app the
                 // very firs time or something went wrong restoring data.
-                // So we save the current Tox instance (set in App's constructor) as the default one.
+                // So we save the current Tox instance (newly created, not loaded) as the default one.
                 if (!successfulRestoration)
-                    await ToxModel.SaveDataAsync();
+                    await ToxModel.Instance.SaveDataAsync();
 
                 if (previousExecutionState != ApplicationExecutionState.NotRunning)
                     // We only have to restore session state in the other two cases.
@@ -144,15 +139,15 @@ namespace WinTox
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             await SuspensionManager.SaveAsync();
-            await ToxModel.SaveDataAsync();
+            await ToxModel.Instance.SaveDataAsync();
             deferral.Complete();
         }
 
         private async void OnResuming(object sender, object e)
         {
             await SuspensionManager.RestoreAsync();
-            await ToxModel.RestoreDataAsync();
-            ToxModel.Start();
+            await ToxModel.Instance.RestoreDataAsync();
+            ToxModel.Instance.Start();
         }
 
         #region Profile settings flyout setup

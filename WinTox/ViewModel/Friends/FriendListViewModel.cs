@@ -16,18 +16,18 @@ namespace WinTox.ViewModel.Friends
         public FriendListViewModel()
         {
             Friends = new ObservableCollection<FriendViewModel>();
-            foreach (var friendNumber in App.ToxModel.Friends)
+            foreach (var friendNumber in ToxModel.Instance.Friends)
             {
                 Friends.Add(new FriendViewModel(friendNumber));
             }
 
-            App.ToxModel.FriendNameChanged += FriendNameChangedHandler;
-            App.ToxModel.FriendStatusMessageChanged += FriendStatusMessageChangedHandler;
-            App.ToxModel.FriendStatusChanged += FriendStatusChangedHandler;
-            App.ToxModel.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
-            App.ToxModel.FriendListChanged += FriendListChangedHandler;
-            App.ToxModel.FriendMessageReceived += FriendMessageReceivedHandler;
-            App.ToxModel.FriendTypingChanged += FriendTypingChangedHandler;
+            ToxModel.Instance.FriendNameChanged += FriendNameChangedHandler;
+            ToxModel.Instance.FriendStatusMessageChanged += FriendStatusMessageChangedHandler;
+            ToxModel.Instance.FriendStatusChanged += FriendStatusChangedHandler;
+            ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
+            ToxModel.Instance.FriendListChanged += FriendListChangedHandler;
+            ToxModel.Instance.FriendMessageReceived += FriendMessageReceivedHandler;
+            ToxModel.Instance.FriendTypingChanged += FriendTypingChangedHandler;
         }
 
         public ObservableCollection<FriendViewModel> Friends { get; set; }
@@ -71,7 +71,7 @@ namespace WinTox.ViewModel.Friends
 
                         case FriendListChangedAction.Reset:
                             Friends.Clear();
-                            foreach (var friendN in App.ToxModel.Friends)
+                            foreach (var friendN in ToxModel.Instance.Friends)
                             {
                                 Friends.Add(new FriendViewModel(friendN));
                             }
