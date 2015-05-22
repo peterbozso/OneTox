@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
 using WinTox.Common;
 using WinTox.Model;
@@ -52,6 +53,11 @@ namespace WinTox.ViewModel.Friends
                                // TODO: Handle errors!!!
                            }));
             }
+        }
+
+        public BitmapImage Avatar
+        {
+            get { return new BitmapImage(new Uri("ms-appx:///Assets/default-profile-picture.png")); }
         }
 
         public string Name
