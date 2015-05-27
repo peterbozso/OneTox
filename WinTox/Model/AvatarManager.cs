@@ -40,7 +40,20 @@ namespace WinTox.Model
 
         public event EventHandler UserAvatarChanged;
 
-        public async Task LoadUserAvatar(StorageFile file)
+        public async Task ChangeUserAvatar(StorageFile file)
+        {
+            await SetUserAvatar(file);
+            var copy = await file.CopyAsync(ApplicationData.Current.RoamingFolder);
+            copy.RenameAsync(ToxModel.Instance.Id.PublicKey + ".png", NameCollisionOption.ReplaceExisting);
+        }
+
+        public async Task LoadUserAvatar()
+        {
+            await SetUserAvatar(
+                await ApplicationData.Current.RoamingFolder.GetFileAsync(ToxModel.Instance.Id.PublicKey + ".png"));
+        }
+
+        private async Task SetUserAvatar(StorageFile file)
         {
             using (var stream = await file.OpenAsync(FileAccessMode.Read))
             {

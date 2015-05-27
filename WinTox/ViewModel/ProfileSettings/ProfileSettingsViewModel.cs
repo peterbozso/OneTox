@@ -70,7 +70,7 @@ namespace WinTox.ViewModel.ProfileSettings
         {
             try
             {
-                await AvatarManager.Instance.LoadUserAvatar(file);
+                await AvatarManager.Instance.ChangeUserAvatar(file);
             }
             catch (ArgumentOutOfRangeException)
             {
