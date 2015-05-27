@@ -11,10 +11,10 @@ namespace WinTox.Model
     /// </summary>
     public class AvatarManager
     {
+        // See: https://github.com/irungentoo/Tox_Client_Guidelines/blob/master/Important/Avatars.md
         private const int KMaxPictureSize = 1 << 16;
         private static AvatarManager _instance;
-        // See: https://github.com/irungentoo/Tox_Client_Guidelines/blob/master/Important/Avatars.md
-
+        private StorageFolder _avatarsFolder;
         private BitmapImage _userAvatar;
 
         private AvatarManager()
@@ -43,14 +43,20 @@ namespace WinTox.Model
         public async Task ChangeUserAvatar(StorageFile file)
         {
             await SetUserAvatar(file);
-            var copy = await file.CopyAsync(ApplicationData.Current.RoamingFolder);
+            var copy = await file.CopyAsync(_avatarsFolder);
             copy.RenameAsync(ToxModel.Instance.Id.PublicKey + ".png", NameCollisionOption.ReplaceExisting);
         }
 
+        // We presume that this is called before any other function that use _avatarsFolder.
         public async Task LoadUserAvatar()
         {
-            await SetUserAvatar(
-                await ApplicationData.Current.RoamingFolder.GetFileAsync(ToxModel.Instance.Id.PublicKey + ".png"));
+            _avatarsFolder =
+                await ApplicationData.Current.RoamingFolder.CreateFolderAsync(
+                    "avatars", CreationCollisionOption.OpenIfExists);
+
+            var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
+            if (file != null)
+                await SetUserAvatar(file as StorageFile);
         }
 
         private async Task SetUserAvatar(StorageFile file)
