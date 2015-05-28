@@ -277,7 +277,7 @@ namespace WinTox.Model
             _tox.SetTypingStatus(friendNumber, isTyping);
         }
 
-        public ToxFileInfo FileSend(int friendNumber, ToxFileKind kind, long fileSize, string fileName, out ToxErrorFileSend error)
+        public ToxFileInfo FileSend(int friendNumber, ToxFileKind kind, long fileSize, byte[] fileName, out ToxErrorFileSend error)
         {
             return _tox.FileSend(friendNumber, kind, fileSize, fileName, out error);
         }

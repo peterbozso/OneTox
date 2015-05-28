@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using Windows.Storage;
-using Windows.Storage.Streams;
-using SharpTox.Core;
 using System.Threading.Tasks;
+using Windows.Storage;
+using SharpTox.Core;
 
 namespace WinTox.Model
 {
@@ -14,51 +14,81 @@ namespace WinTox.Model
     public class FileTransferManager
     {
         private static FileTransferManager _instance;
-
-        private readonly Dictionary<ToxFileInfo, IRandomAccessStream> _filesBeingSent; 
+        private readonly Dictionary<ToxFileInfo, Stream> _activeTransfers;
 
         private FileTransferManager()
         {
-            _filesBeingSent = new Dictionary<ToxFileInfo, IRandomAccessStream>();
+            _activeTransfers = new Dictionary<ToxFileInfo, Stream>();
             ToxModel.Instance.FileControlReceived += FileControlReceivedHandler;
             ToxModel.Instance.FileChunkRequested += FileChunkRequestedHandler;
+        }
+
+        public static FileTransferManager Instance
+        {
+            get { return _instance ?? (_instance = new FileTransferManager()); }
         }
 
         private void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
         {
             if (e.Control == ToxFileControl.Cancel)
             {
-                foreach (var file in _filesBeingSent.Where(file => file.Key.Number == e.FileNumber))
-                {
-                    _filesBeingSent.Remove(file.Key);
-                }
+                RemoveActiveTransfer(e.FileNumber);
             }
             // TODO: Add handling for other types of Control!
         }
 
-        private void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
+        private async void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
         {
-            throw new NotImplementedException();
+            if (e.Length == 0) // File transfer is complete
+            {
+                RemoveActiveTransfer(e.FileNumber);
+                return;
+            }
+
+            var currentTransferStream = _activeTransfers[FindFileInfo(e.FileNumber)];
+            lock (currentTransferStream)
+            {
+                if (e.Position != currentTransferStream.Position)
+                    currentTransferStream.Seek(e.Position, SeekOrigin.Begin);
+            }
+            var chunk = new byte[e.Length];
+            await currentTransferStream.ReadAsync(chunk, 0, e.Length);
+            ToxErrorFileSendChunk error;
+            ToxModel.Instance.FileSendChunk(e.FriendNumber, e.FileNumber, e.Position, chunk, out error);
+            // TODO: Error handling!
         }
 
-        public async Task Send(int friendNumber, ToxFileKind kind,  StorageFile file)
+        private void RemoveActiveTransfer(int fileNumber)
         {
-            var stream = await file.OpenReadAsync();
+            _activeTransfers.Remove(FindFileInfo(fileNumber));
+        }
+
+        private ToxFileInfo FindFileInfo(int fileNumber)
+        {
+            foreach (var transfer in _activeTransfers.Where(transfer => transfer.Key.Number == fileNumber))
+            {
+                return transfer.Key;
+            }
+            throw new ArgumentException();
+        }
+
+        public async Task Send(int friendNumber, ToxFileKind kind, StorageFile file)
+        {
+            var stream = (await file.OpenReadAsync()).AsStreamForRead();
             ToxErrorFileSend error;
-            var fileInfo = ToxModel.Instance.FileSend(friendNumber, kind, (long) stream.Size, file.Name, out error);
+            var fileInfo = ToxModel.Instance.FileSend(friendNumber, kind, stream.Length, GenerateFileName(stream),
+                out error);
             if (error == ToxErrorFileSend.Ok)
             {
-                _filesBeingSent.Add(fileInfo, stream);
-            }
-            else
-            {
-                // TODO: Handle error!
+                _activeTransfers.Add(fileInfo, stream);
             }
         }
 
-        public static FileTransferManager Instance
+        private byte[] GenerateFileName(Stream stream)
         {
-            get { return _instance ?? (_instance = new FileTransferManager()); }
+            var buffer = new byte[stream.Length];
+            stream.Read(buffer, 0, (int) stream.Length);
+            return ToxTools.Hash(buffer);
         }
     }
 }
