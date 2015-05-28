@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using SharpTox.Core;
@@ -25,7 +26,14 @@ namespace WinTox.Model
 
         private void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
         {
-            throw new NotImplementedException();
+            if (e.Control == ToxFileControl.Cancel)
+            {
+                foreach (var file in _filesBeingSent.Where(file => file.Key.Number == e.FileNumber))
+                {
+                    _filesBeingSent.Remove(file.Key);
+                }
+            }
+            // TODO: Add handling for other types of Control!
         }
 
         private void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
