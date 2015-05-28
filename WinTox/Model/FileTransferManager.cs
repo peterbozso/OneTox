@@ -76,15 +76,15 @@ namespace WinTox.Model
         {
             var stream = (await file.OpenReadAsync()).AsStreamForRead();
             ToxErrorFileSend error;
-            var fileInfo = ToxModel.Instance.FileSend(friendNumber, kind, stream.Length, GenerateFileName(stream),
-                out error);
+            var fileInfo = ToxModel.Instance.FileSend(friendNumber, kind, stream.Length, file.Name,
+                GenerateFileHash(stream), out error);
             if (error == ToxErrorFileSend.Ok)
             {
                 _activeTransfers.Add(fileInfo, stream);
             }
         }
 
-        private byte[] GenerateFileName(Stream stream)
+        private byte[] GenerateFileHash(Stream stream)
         {
             var buffer = new byte[stream.Length];
             stream.Read(buffer, 0, (int) stream.Length);
