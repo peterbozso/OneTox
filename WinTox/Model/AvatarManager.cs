@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
+using SharpTox.Core;
 
 namespace WinTox.Model
 {
@@ -45,6 +46,7 @@ namespace WinTox.Model
             await SetUserAvatar(file);
             var copy = await file.CopyAsync(_avatarsFolder);
             await copy.RenameAsync(ToxModel.Instance.Id.PublicKey + ".png", NameCollisionOption.ReplaceExisting);
+            await BroadcastUserAvatar(copy);
         }
 
         // We presume that this is called before any other function that use _avatarsFolder.
@@ -66,6 +68,14 @@ namespace WinTox.Model
                 if (stream.AsStream().Length > KMaxPictureSize)
                     throw new ArgumentOutOfRangeException();
                 UserAvatar.SetSource(stream);
+            }
+        }
+
+        private async Task BroadcastUserAvatar(StorageFile file)
+        {
+            foreach (var friend in ToxModel.Instance.Friends)
+            {
+                await FileTransferManager.Instance.Send(friend, ToxFileKind.Avatar, file);
             }
         }
     }
