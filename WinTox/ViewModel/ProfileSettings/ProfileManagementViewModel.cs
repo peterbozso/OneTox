@@ -102,7 +102,7 @@ namespace WinTox.ViewModel.ProfileSettings
         public async Task SetCurrentProfile(StorageFile file)
         {
             var data = (await FileIO.ReadBufferAsync(file)).ToArray();
-            ToxModel.Instance.SetCurrent(new ExtendedTox(new ToxOptions(), ToxData.FromBytes(data)));
+            ToxModel.Instance.SetCurrent(new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(data)));
             await ToxModel.Instance.SaveDataAsync();
             ToxModel.Instance.Start();
         }
