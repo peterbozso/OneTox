@@ -37,7 +37,7 @@ namespace WinTox.Model
             // TODO: Add handling for other types of Control!
         }
 
-        private async void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
+        private void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
         {
             if (e.Length == 0) // File transfer is complete
             {
@@ -52,7 +52,7 @@ namespace WinTox.Model
                     currentTransferStream.Seek(e.Position, SeekOrigin.Begin);
             }
             var chunk = new byte[e.Length];
-            await currentTransferStream.ReadAsync(chunk, 0, e.Length);
+            currentTransferStream.Read(chunk, 0, e.Length);
             ToxErrorFileSendChunk error;
             ToxModel.Instance.FileSendChunk(e.FriendNumber, e.FileNumber, e.Position, chunk, out error);
             // TODO: Error handling!
