@@ -143,6 +143,8 @@ namespace WinTox.Model
             _tox.OnFriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
             _tox.OnFriendMessageReceived += FriendMessageReceivedHandler;
             _tox.OnFriendTypingChanged += FriendTypingChangedHandler;
+            _tox.OnFileControlReceived += FileControlReceivedHandler;
+            _tox.OnFileChunkRequested += FileChunkRequestedHandler;
         }
 
         private void RaiseAllPropertiesChanged()
@@ -275,6 +277,16 @@ namespace WinTox.Model
             _tox.SetTypingStatus(friendNumber, isTyping);
         }
 
+        public ToxFileInfo FileSend(int friendNumber, ToxFileKind kind, long fileSize, string fileName, out ToxErrorFileSend error)
+        {
+            return _tox.FileSend(friendNumber, kind, fileSize, fileName, out error);
+        }
+
+        public bool FileSendChunk(int friendNumber, int fileNumber, long position, byte[] data, out ToxErrorFileSendChunk error)
+        {
+            return _tox.FileSendChunk(friendNumber, fileNumber, position, data, out error);
+        }
+
         private void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
             if (PropertyChanged != null)
@@ -309,6 +321,10 @@ namespace WinTox.Model
         public event EventHandler<ToxEventArgs.FriendMessageEventArgs> FriendMessageReceived;
 
         public event EventHandler<ToxEventArgs.TypingStatusEventArgs> FriendTypingChanged;
+
+        public event EventHandler<ToxEventArgs.FileControlEventArgs> FileControlReceived;
+
+        public event EventHandler<ToxEventArgs.FileRequestChunkEventArgs> FileChunkRequested;
 
         #endregion
 
@@ -370,6 +386,18 @@ namespace WinTox.Model
         {
             if (FriendTypingChanged != null)
                 FriendTypingChanged(this, e);
+        }
+
+        private void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
+        {
+            if (FileControlReceived != null)
+                FileControlReceived(this, e);
+        }
+
+        void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
+        {
+            if (FileChunkRequested != null)
+                FileChunkRequested(this, e);
         }
 
         #endregion
