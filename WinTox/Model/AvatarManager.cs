@@ -44,7 +44,7 @@ namespace WinTox.Model
         {
             await SetUserAvatar(file);
             var copy = await file.CopyAsync(_avatarsFolder);
-            copy.RenameAsync(ToxModel.Instance.Id.PublicKey + ".png", NameCollisionOption.ReplaceExisting);
+            await copy.RenameAsync(ToxModel.Instance.Id.PublicKey + ".png", NameCollisionOption.ReplaceExisting);
         }
 
         // We presume that this is called before any other function that use _avatarsFolder.
