@@ -229,7 +229,7 @@ namespace WinTox.Model
             {
                 var file = await ApplicationData.Current.RoamingFolder.CreateFileAsync(
                     _tox.Name + ".tox", CreationCollisionOption.ReplaceExisting);
-                FileIO.WriteBytesAsync(file, _tox.GetData().Bytes);
+                await FileIO.WriteBytesAsync(file, _tox.GetData().Bytes);
                 ApplicationData.Current.RoamingSettings.Values["currentUserName"] = _tox.Name;
             }
             catch
