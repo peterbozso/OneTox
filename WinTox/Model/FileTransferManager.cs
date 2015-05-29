@@ -60,24 +60,14 @@ namespace WinTox.Model
 
         private void RemoveActiveTransfer(int fileNumber)
         {
-            try
-            {
-                _activeTransfers.Remove(FindFileInfo(fileNumber));
-            }
-            catch
-            {
-                // No problem if we can't remove a transfer that doesn't exist.
-                // For example when a friend cancels a no-avatar transfer (we doesn't add these to _activeTransfers).
-            }
+            var fileInfo = FindFileInfo(fileNumber);
+            if (fileInfo != null)
+                _activeTransfers.Remove(fileInfo);
         }
 
         private ToxFileInfo FindFileInfo(int fileNumber)
         {
-            foreach (var transfer in _activeTransfers.Where(transfer => transfer.Key.Number == fileNumber))
-            {
-                return transfer.Key;
-            }
-            throw new ArgumentException();
+            return _activeTransfers.Where(transfer => transfer.Key.Number == fileNumber).Select(transfer => transfer.Key).FirstOrDefault();
         }
 
         public async Task SendFile(int friendNumber, ToxFileKind kind, StorageFile file)
