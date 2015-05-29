@@ -70,11 +70,11 @@ namespace WinTox.Model
             return _activeTransfers.Where(transfer => transfer.Key.Number == fileNumber).Select(transfer => transfer.Key).FirstOrDefault();
         }
 
-        public async Task SendFile(int friendNumber, ToxFileKind kind, StorageFile file)
+        public async Task SendAvatar(int friendNumber, StorageFile file)
         {
             var stream = (await file.OpenReadAsync()).AsStreamForRead();
             ToxErrorFileSend error;
-            var fileInfo = ToxModel.Instance.FileSend(friendNumber, kind, stream.Length, file.Name,
+            var fileInfo = ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, stream.Length, file.Name,
                 GenerateFileHash(stream), out error);
             if (error == ToxErrorFileSend.Ok)
             {

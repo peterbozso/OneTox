@@ -59,7 +59,7 @@ namespace WinTox.Model
             await SetUserAvatar(file);
             var copy = await file.CopyAsync(_avatarsFolder);
             await copy.RenameAsync(ToxModel.Instance.Id.PublicKey + ".png", NameCollisionOption.ReplaceExisting);
-            await BroadcastUserAvatarSet(copy);
+            await BroadcastUserAvatarOnSet(copy);
         }
 
         // We presume that this is called before any other function that use _avatarsFolder.
@@ -85,11 +85,11 @@ namespace WinTox.Model
             }
         }
 
-        private async Task BroadcastUserAvatarSet(StorageFile file)
+        private async Task BroadcastUserAvatarOnSet(StorageFile file)
         {
             foreach (var friend in ToxModel.Instance.Friends)
             {
-                await FileTransferManager.Instance.SendFile(friend, ToxFileKind.Avatar, file);
+                await FileTransferManager.Instance.SendAvatar(friend, file);
             }
         }
 
@@ -101,7 +101,7 @@ namespace WinTox.Model
                 var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
                 if (file != null)
                 {
-                    await FileTransferManager.Instance.SendFile(e.FriendNumber, ToxFileKind.Avatar, (StorageFile) file);
+                    await FileTransferManager.Instance.SendAvatar(e.FriendNumber, (StorageFile) file);
                 }
                 else // We have no saved avatar for the user: we have no avatar set.
                 {
@@ -119,10 +119,10 @@ namespace WinTox.Model
             var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
             file.DeleteAsync();
             ResetUserAvatar();
-            BroadCastUserAvatarReset();
+            BroadCastUserAvatarOnReset();
         }
 
-        private void BroadCastUserAvatarReset()
+        private void BroadCastUserAvatarOnReset()
         {
             foreach (var friend in ToxModel.Instance.Friends)
             {
