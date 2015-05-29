@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
 
@@ -25,6 +28,7 @@ namespace WinTox.Model
         {
             ResetUserAvatar();
             ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
+            FriendAvatars = new Dictionary<int, BitmapImage>();
         }
 
         public static AvatarManager Instance
@@ -52,6 +56,7 @@ namespace WinTox.Model
             }
         }
 
+        public Dictionary<int, BitmapImage> FriendAvatars { get; private set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
         public async Task ChangeUserAvatar(StorageFile file)
@@ -139,9 +144,23 @@ namespace WinTox.Model
             IsUserAvatarSet = false;
         }
 
-        public void ReceiveFriendAvatar(Stream avatarStream)
+        public async void SetFriendAvatar(int friendNumber, MemoryStream avatarStream)
         {
-            // TODO: Store and display the avatar!
+            var file = await _avatarsFolder.CreateFileAsync(ToxModel.Instance.GetFriendPublicKey(friendNumber) + ".png",
+                CreationCollisionOption.ReplaceExisting);
+            await FileIO.WriteBytesAsync(file, avatarStream.ToArray());
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                using (var stream = await file.OpenAsync(FileAccessMode.Read))
+                {
+                    var friendAvatar = new BitmapImage();
+                    await friendAvatar.SetSourceAsync(stream);
+                    FriendAvatars[friendNumber] = friendAvatar;
+                    if (FriendAvatarChanged != null)
+                        FriendAvatarChanged(this, friendNumber);
+                }
+            });
         }
 
         private void RaisePropertyChanged([CallerMemberName] string propertyName = null)
@@ -149,5 +168,7 @@ namespace WinTox.Model
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public event EventHandler<int> FriendAvatarChanged;
     }
 }

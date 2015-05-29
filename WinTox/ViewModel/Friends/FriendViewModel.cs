@@ -35,6 +35,8 @@ namespace WinTox.ViewModel.Friends
 
             Status = ToxModel.Instance.GetFriendStatus(friendNumber);
             IsConnected = ToxModel.Instance.IsFriendOnline(friendNumber);
+
+            AvatarManager.Instance.FriendAvatarChanged += FriendAvatarChangedHandler;
         }
 
         public ConversationViewModel Conversation { get; private set; }
@@ -57,7 +59,12 @@ namespace WinTox.ViewModel.Friends
 
         public BitmapImage Avatar
         {
-            get { return new BitmapImage(new Uri("ms-appx:///Assets/default-profile-picture.png")); }
+            get
+            {
+                if (AvatarManager.Instance.FriendAvatars.ContainsKey(FriendNumber))
+                    return AvatarManager.Instance.FriendAvatars[FriendNumber];
+                return new BitmapImage(new Uri("ms-appx:///Assets/default-profile-picture.png"));
+            }
         }
 
         public string Name
@@ -98,6 +105,12 @@ namespace WinTox.ViewModel.Friends
                 _isConnected = value;
                 RaisePropertyChanged();
             }
+        }
+
+        private void FriendAvatarChangedHandler(object sender, int friendNumber)
+        {
+            if (friendNumber == FriendNumber)
+                RaisePropertyChanged("Avatar");
         }
 
         public void ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)

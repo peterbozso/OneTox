@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -113,7 +112,7 @@ namespace WinTox.Model
 
             ToxModel.Instance.FileControl(e.FriendNumber, e.FileNumber, ToxFileControl.Resume, out error);
             // TODO: Error handling!
-            var stream = new MemoryStream {Capacity = (int) e.FileSize};
+            var stream = new MemoryStream((int) e.FileSize);
             _activeTransfers.Add(e.FileNumber, new Tuple<Stream, ToxFileKind>(stream, e.FileKind));
         }
 
@@ -127,7 +126,7 @@ namespace WinTox.Model
                 switch (currentTransfer.Item2)
                 {
                     case ToxFileKind.Avatar:
-                        AvatarManager.Instance.ReceiveFriendAvatar(currentStream);
+                        AvatarManager.Instance.SetFriendAvatar(e.FriendNumber, currentStream as MemoryStream);
                         break;
                 }
                 _activeTransfers.Remove(e.FileNumber);
