@@ -34,7 +34,7 @@ namespace WinTox.Model
         {
             if (e.Control == ToxFileControl.Cancel)
             {
-                RemoveActiveTransfer(e.FileNumber);
+                _activeTransfers.Remove(e.FileNumber);
             }
             // TODO: Add handling for other types of Control!
         }
@@ -43,7 +43,7 @@ namespace WinTox.Model
         {
             if (e.Length == 0) // File transfer is complete
             {
-                RemoveActiveTransfer(e.FileNumber);
+                _activeTransfers.Remove(e.FileNumber);
                 return;
             }
 
@@ -58,11 +58,6 @@ namespace WinTox.Model
             ToxErrorFileSendChunk error;
             ToxModel.Instance.FileSendChunk(e.FriendNumber, e.FileNumber, e.Position, chunk, out error);
             // TODO: Error handling!
-        }
-
-        private void RemoveActiveTransfer(int fileNumber)
-        {
-            _activeTransfers.Remove(fileNumber);
         }
 
         public async Task SendAvatar(int friendNumber, StorageFile file)
