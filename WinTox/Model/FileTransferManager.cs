@@ -14,11 +14,11 @@ namespace WinTox.Model
     public class FileTransferManager
     {
         private static FileTransferManager _instance;
-        private readonly Dictionary<ToxFileInfo, Stream> _activeTransfers;
+        private readonly Dictionary<int, Stream> _activeTransfers;
 
         private FileTransferManager()
         {
-            _activeTransfers = new Dictionary<ToxFileInfo, Stream>();
+            _activeTransfers = new Dictionary<int, Stream>();
             ToxModel.Instance.FileControlReceived += FileControlReceivedHandler;
             ToxModel.Instance.FileChunkRequested += FileChunkRequestedHandler;
             ToxModel.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
@@ -47,7 +47,7 @@ namespace WinTox.Model
                 return;
             }
 
-            var currentTransferStream = _activeTransfers[FindFileInfo(e.FileNumber)];
+            var currentTransferStream = _activeTransfers[e.FileNumber];
             lock (currentTransferStream)
             {
                 if (e.Position != currentTransferStream.Position)
@@ -62,14 +62,7 @@ namespace WinTox.Model
 
         private void RemoveActiveTransfer(int fileNumber)
         {
-            var fileInfo = FindFileInfo(fileNumber);
-            if (fileInfo != null)
-                _activeTransfers.Remove(fileInfo);
-        }
-
-        private ToxFileInfo FindFileInfo(int fileNumber)
-        {
-            return _activeTransfers.Where(transfer => transfer.Key.Number == fileNumber).Select(transfer => transfer.Key).FirstOrDefault();
+            _activeTransfers.Remove(fileNumber);
         }
 
         public async Task SendAvatar(int friendNumber, StorageFile file)
@@ -80,7 +73,7 @@ namespace WinTox.Model
                 GenerateAvatarHash(stream), out error);
             if (error == ToxErrorFileSend.Ok)
             {
-                _activeTransfers.Add(fileInfo, stream);
+                _activeTransfers.Add(fileInfo.Number, stream);
             }
             // TODO: Error handling!
         }
