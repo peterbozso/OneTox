@@ -60,7 +60,15 @@ namespace WinTox.Model
 
         private void RemoveActiveTransfer(int fileNumber)
         {
-            _activeTransfers.Remove(FindFileInfo(fileNumber));
+            try
+            {
+                _activeTransfers.Remove(FindFileInfo(fileNumber));
+            }
+            catch
+            {
+                // No problem if we can't remove a transfer that doesn't exist.
+                // For example when a friend cancels a no-avatar transfer (we doesn't add these to _activeTransfers).
+            }
         }
 
         private ToxFileInfo FindFileInfo(int fileNumber)

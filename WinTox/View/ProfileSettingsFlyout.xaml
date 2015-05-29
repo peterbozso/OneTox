@@ -18,6 +18,7 @@
 
     <SettingsFlyout.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </SettingsFlyout.Resources>
 
     <SettingsFlyout.DataContext>
@@ -25,7 +26,13 @@
     </SettingsFlyout.DataContext>
 
     <StackPanel Width="266">
-        <Image Width="266" Height="266" Source="{Binding Avatar}" Stretch="UniformToFill" Tapped="UserAvatarTapped" />
+        <Grid>
+            <Image Width="266" Height="266" Source="{Binding Avatar}" Stretch="UniformToFill" Tapped="UserAvatarTapped" />
+            <Button HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="Segoe UI Symbol"
+                    Background="Transparent"
+                    Content="" Click="RemoveAvatarButtonClick"
+                    Visibility="{Binding IsAvatarSet, Converter={StaticResource BoolToVisibilityConverter}}" />
+        </Grid>
         <TextBox Header="Name" Margin="0,20,0,0" Text="{Binding Name, Mode=TwoWay}" LostFocus="NameTextBoxLostFocus" />
         <TextBox Header="Status message" Text="{Binding StatusMessage, Mode=TwoWay}" />
         <Grid x:Name="StatusGrid" Margin="0,3,0,0">

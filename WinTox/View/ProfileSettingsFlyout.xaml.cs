@@ -72,5 +72,10 @@ namespace WinTox.View
             openPicker.FileTypeFilter.Add(".png");
             return await openPicker.PickSingleFileAsync();
         }
+
+        private async void RemoveAvatarButtonClick(object sender, RoutedEventArgs e)
+        {
+            await _viewModel.RemoveAvatar();
+        }
     }
 }

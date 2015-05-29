@@ -16,7 +16,7 @@ namespace WinTox.ViewModel.ProfileSettings
         public ProfileSettingsViewModel()
         {
             ToxModel.Instance.PropertyChanged += ToxModelPropertyChangedHandler;
-            AvatarManager.Instance.UserAvatarChanged += UserAvatarChangedHandler;
+            AvatarManager.Instance.PropertyChanged += AvatarManagerPropertyChangedHandler;
         }
 
         public ToxId Id
@@ -66,6 +66,24 @@ namespace WinTox.ViewModel.ProfileSettings
             get { return AvatarManager.Instance.UserAvatar; }
         }
 
+        public bool IsAvatarSet
+        {
+            get { return AvatarManager.Instance.IsUserAvatarSet; }
+        }
+
+        private void AvatarManagerPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "UserAvatar":
+                    RaisePropertyChanged("Avatar");
+                    return;
+                case "IsUserAvatarSet":
+                    RaisePropertyChanged("IsAvatarSet");
+                    return;
+            }
+        }
+
         public async Task<string> LoadUserAvatar(StorageFile file)
         {
             try
@@ -81,11 +99,6 @@ namespace WinTox.ViewModel.ProfileSettings
                 return "The picture is corrupted!";
             }
             return String.Empty;
-        }
-
-        private void UserAvatarChangedHandler(object sender, EventArgs e)
-        {
-            RaisePropertyChanged("Avatar");
         }
 
         private void ToxModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
@@ -106,6 +119,11 @@ namespace WinTox.ViewModel.ProfileSettings
             rand.NextBytes(nospam);
             ToxModel.Instance.SetNospam(BitConverter.ToUInt32(nospam, 0));
             RaisePropertyChanged("Id");
+        }
+
+        public async Task RemoveAvatar()
+        {
+            await AvatarManager.Instance.RemoveUserAvatar();
         }
     }
 }
