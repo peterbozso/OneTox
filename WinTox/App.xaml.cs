@@ -66,7 +66,7 @@ namespace WinTox
 
                 ToxModel.Instance.Start();
 
-                await AvatarManager.Instance.LoadUserAvatar();
+                await AvatarManager.Instance.LoadAvatars();
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;

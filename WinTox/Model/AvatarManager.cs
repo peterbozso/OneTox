@@ -68,15 +68,38 @@ namespace WinTox.Model
         }
 
         // We presume that this is called before any other function that use _avatarsFolder.
-        public async Task LoadUserAvatar()
+        public async Task LoadAvatars()
         {
             _avatarsFolder =
                 await ApplicationData.Current.RoamingFolder.CreateFolderAsync(
                     "avatars", CreationCollisionOption.OpenIfExists);
 
+            await LoadUserAvatar();
+            await LoadFriendAvatars();
+        }
+
+        private async Task LoadUserAvatar()
+        {
             var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
             if (file != null)
                 await SetUserAvatar(file as StorageFile);
+        }
+
+        private async Task LoadFriendAvatars()
+        {
+            foreach (var friendNumber in ToxModel.Instance.Friends)
+            {
+                var publicKey = ToxModel.Instance.GetFriendPublicKey(friendNumber);
+                var file = await _avatarsFolder.GetFileAsync(publicKey + ".png");
+                using (var stream = await file.OpenAsync(FileAccessMode.Read))
+                {
+                    var friendAvatar = new BitmapImage();
+                    await friendAvatar.SetSourceAsync(stream);
+                    FriendAvatars[friendNumber] = friendAvatar;
+                    if (FriendAvatarChanged != null)
+                        FriendAvatarChanged(this, friendNumber);
+                }
+            }
         }
 
         private async Task SetUserAvatar(StorageFile file)
