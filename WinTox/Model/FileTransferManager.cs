@@ -21,6 +21,8 @@ namespace WinTox.Model
             _activeTransfers = new Dictionary<ToxFileInfo, Stream>();
             ToxModel.Instance.FileControlReceived += FileControlReceivedHandler;
             ToxModel.Instance.FileChunkRequested += FileChunkRequestedHandler;
+            ToxModel.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
+            ToxModel.Instance.FileChunkReceived += FileChunkReceivedHandler;
         }
 
         public static FileTransferManager Instance
@@ -75,7 +77,7 @@ namespace WinTox.Model
             var stream = (await file.OpenReadAsync()).AsStreamForRead();
             ToxErrorFileSend error;
             var fileInfo = ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, stream.Length, file.Name,
-                GenerateFileHash(stream), out error);
+                GenerateAvatarHash(stream), out error);
             if (error == ToxErrorFileSend.Ok)
             {
                 _activeTransfers.Add(fileInfo, stream);
@@ -86,16 +88,26 @@ namespace WinTox.Model
         public void SendNullAvatar(int friendNumber)
         {
             ToxErrorFileSend error;
-            ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, 0, "", GenerateFileHash(new MemoryStream()),
+            ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, 0, "", GenerateAvatarHash(new MemoryStream()),
                 out error);
             // TODO: Error handling!
         }
 
-        private byte[] GenerateFileHash(Stream stream)
+        private byte[] GenerateAvatarHash(Stream stream)
         {
             var buffer = new byte[stream.Length];
             stream.Read(buffer, 0, (int) stream.Length);
             return ToxTools.Hash(buffer);
+        }
+
+        private void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void FileChunkReceivedHandler(object sender, ToxEventArgs.FileChunkEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }
