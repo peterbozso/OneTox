@@ -21,6 +21,7 @@ namespace WinTox.Model
         private AvatarManager()
         {
             UserAvatar = new BitmapImage(new Uri("ms-appx:///Assets/default-profile-picture.png"));
+            ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
         }
 
         public static AvatarManager Instance
@@ -76,6 +77,19 @@ namespace WinTox.Model
             foreach (var friend in ToxModel.Instance.Friends)
             {
                 await FileTransferManager.Instance.Send(friend, ToxFileKind.Avatar, file);
+            }
+        }
+
+        private async void FriendConnectionStatusChangedHandler(object sender,
+            ToxEventArgs.FriendConnectionStatusEventArgs e)
+        {
+            if (e.Status != ToxConnectionStatus.None)
+            {
+                var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
+                if (file != null)
+                {
+                    await FileTransferManager.Instance.Send(e.FriendNumber, ToxFileKind.Avatar, (StorageFile) file);
+                }
             }
         }
     }
