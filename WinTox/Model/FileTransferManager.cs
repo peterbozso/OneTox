@@ -72,7 +72,7 @@ namespace WinTox.Model
             throw new ArgumentException();
         }
 
-        public async Task Send(int friendNumber, ToxFileKind kind, StorageFile file)
+        public async Task SendFile(int friendNumber, ToxFileKind kind, StorageFile file)
         {
             var stream = (await file.OpenReadAsync()).AsStreamForRead();
             ToxErrorFileSend error;
@@ -82,6 +82,15 @@ namespace WinTox.Model
             {
                 _activeTransfers.Add(fileInfo, stream);
             }
+            // TODO: Error handling!
+        }
+
+        public void SendNullAvatar(int friendNumber)
+        {
+            ToxErrorFileSend error;
+            ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, 0, "", GenerateFileHash(new MemoryStream()),
+                out error);
+            // TODO: Error handling!
         }
 
         private byte[] GenerateFileHash(Stream stream)

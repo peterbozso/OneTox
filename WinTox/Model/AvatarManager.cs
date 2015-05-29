@@ -76,7 +76,7 @@ namespace WinTox.Model
         {
             foreach (var friend in ToxModel.Instance.Friends)
             {
-                await FileTransferManager.Instance.Send(friend, ToxFileKind.Avatar, file);
+                await FileTransferManager.Instance.SendFile(friend, ToxFileKind.Avatar, file);
             }
         }
 
@@ -88,7 +88,11 @@ namespace WinTox.Model
                 var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
                 if (file != null)
                 {
-                    await FileTransferManager.Instance.Send(e.FriendNumber, ToxFileKind.Avatar, (StorageFile) file);
+                    await FileTransferManager.Instance.SendFile(e.FriendNumber, ToxFileKind.Avatar, (StorageFile) file);
+                }
+                else // We have no saved avatar for the user: we have no avatar set.
+                {
+                    FileTransferManager.Instance.SendNullAvatar(e.FriendNumber);
                 }
             }
         }
