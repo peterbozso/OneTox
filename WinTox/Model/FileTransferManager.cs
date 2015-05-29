@@ -100,14 +100,11 @@ namespace WinTox.Model
 
         private void HandleAvatarReception(ToxEventArgs.FileSendRequestEventArgs e)
         {
-            Debug.WriteLine("Reception starts : name: {0}, size: {1}, number: {2}", e.FileName, e.FileSize, e.FileNumber);
             ToxErrorFileControl error;
             if (e.FileKind == ToxFileKind.Avatar && e.FileSize == 0) // It means the avatar of the friend is removed.
             {
                 // So we cancel the transfer:
                 ToxModel.Instance.FileControl(e.FriendNumber, e.FileNumber, ToxFileControl.Cancel, out error);
-                Debug.WriteLine("Reception cancelled due to existing avatar : name: {0}, size: {1}, number: {2}",
-                    e.FileName, e.FileSize, e.FileNumber);
                 // TODO: Error handling!
                 // TODO: Actually remove avatar of the friend!
             }
