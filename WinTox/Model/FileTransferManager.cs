@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SharpTox.Core;
@@ -14,11 +14,11 @@ namespace WinTox.Model
     public class FileTransferManager
     {
         private static FileTransferManager _instance;
-        private readonly Dictionary<int, Stream> _activeTransfers;
+        private readonly Dictionary<int, Tuple<Stream, ToxFileKind>> _activeTransfers;
 
         private FileTransferManager()
         {
-            _activeTransfers = new Dictionary<int, Stream>();
+            _activeTransfers = new Dictionary<int, Tuple<Stream, ToxFileKind>>();
             ToxModel.Instance.FileControlReceived += FileControlReceivedHandler;
             ToxModel.Instance.FileChunkRequested += FileChunkRequestedHandler;
             ToxModel.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
@@ -47,7 +47,7 @@ namespace WinTox.Model
                 return;
             }
 
-            var currentTransferStream = _activeTransfers[e.FileNumber];
+            var currentTransferStream = _activeTransfers[e.FileNumber].Item1;
             lock (currentTransferStream)
             {
                 if (e.Position != currentTransferStream.Position)
@@ -65,10 +65,10 @@ namespace WinTox.Model
             var stream = (await file.OpenReadAsync()).AsStreamForRead();
             ToxErrorFileSend error;
             var fileInfo = ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, stream.Length, file.Name,
-                GenerateAvatarHash(stream), out error);
+                GetAvatarHash(stream), out error);
             if (error == ToxErrorFileSend.Ok)
             {
-                _activeTransfers.Add(fileInfo.Number, stream);
+                _activeTransfers.Add(fileInfo.Number, new Tuple<Stream, ToxFileKind>(stream, ToxFileKind.Avatar));
             }
             // TODO: Error handling!
         }
@@ -76,12 +76,12 @@ namespace WinTox.Model
         public void SendNullAvatar(int friendNumber)
         {
             ToxErrorFileSend error;
-            ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, 0, "", GenerateAvatarHash(new MemoryStream()),
+            ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, 0, "", GetAvatarHash(new MemoryStream()),
                 out error);
             // TODO: Error handling!
         }
 
-        private byte[] GenerateAvatarHash(Stream stream)
+        private byte[] GetAvatarHash(Stream stream)
         {
             var buffer = new byte[stream.Length];
             stream.Read(buffer, 0, (int) stream.Length);
@@ -90,12 +90,56 @@ namespace WinTox.Model
 
         private void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
         {
-            throw new NotImplementedException();
+            switch (e.FileKind)
+            {
+                case ToxFileKind.Avatar:
+                    HandleAvatarReception(e);
+                    return;
+            }
+        }
+
+        private void HandleAvatarReception(ToxEventArgs.FileSendRequestEventArgs e)
+        {
+            Debug.WriteLine("Reception starts : name: {0}, size: {1}, number: {2}", e.FileName, e.FileSize, e.FileNumber);
+            ToxErrorFileControl error;
+            if (e.FileKind == ToxFileKind.Avatar && e.FileSize == 0) // It means the avatar of the friend is removed.
+            {
+                // So we cancel the transfer:
+                ToxModel.Instance.FileControl(e.FriendNumber, e.FileNumber, ToxFileControl.Cancel, out error);
+                Debug.WriteLine("Reception cancelled due to existing avatar : name: {0}, size: {1}, number: {2}",
+                    e.FileName, e.FileSize, e.FileNumber);
+                // TODO: Error handling!
+                // TODO: Actually remove avatar of the friend!
+            }
+
+            // TODO: Check the hash to see if we already have that avatar!
+
+            ToxModel.Instance.FileControl(e.FriendNumber, e.FileNumber, ToxFileControl.Resume, out error);
+            // TODO: Error handling!
+            var stream = new MemoryStream {Capacity = (int) e.FileSize};
+            _activeTransfers.Add(e.FileNumber, new Tuple<Stream, ToxFileKind>(stream, e.FileKind));
         }
 
         private void FileChunkReceivedHandler(object sender, ToxEventArgs.FileChunkEventArgs e)
         {
-            throw new NotImplementedException();
+            var currentTransfer = _activeTransfers[e.FileNumber];
+            var currentStream = currentTransfer.Item1;
+
+            if (e.Data == null) // The transfer is finished.
+            {
+                switch (currentTransfer.Item2)
+                {
+                    case ToxFileKind.Avatar:
+                        AvatarManager.Instance.ReceiveFriendAvatar(currentStream);
+                        break;
+                }
+                _activeTransfers.Remove(e.FileNumber);
+                return;
+            }
+
+            if (currentStream.Position != e.Position)
+                currentStream.Seek(e.Position, SeekOrigin.Begin);
+            currentStream.Write(e.Data, 0, e.Data.Length);
         }
     }
 }

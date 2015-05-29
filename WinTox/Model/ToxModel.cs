@@ -279,6 +279,11 @@ namespace WinTox.Model
             _tox.SetTypingStatus(friendNumber, isTyping);
         }
 
+        public bool FileControl(int friendNumber, int fileNumber, ToxFileControl control, out ToxErrorFileControl error)
+        {
+            return _tox.FileControl(friendNumber, fileNumber, control, out error);
+        }
+
         public ToxFileInfo FileSend(int friendNumber, ToxFileKind kind, long fileSize, string fileName, byte[] fileId, out ToxErrorFileSend error)
         {
             return _tox.FileSend(friendNumber, kind, fileSize, fileName, fileId, out error);
@@ -287,6 +292,11 @@ namespace WinTox.Model
         public bool FileSendChunk(int friendNumber, int fileNumber, long position, byte[] data, out ToxErrorFileSendChunk error)
         {
             return _tox.FileSendChunk(friendNumber, fileNumber, position, data, out error);
+        }
+
+        public byte[] FileGetId(int friendNumber, int fileNumber, out ToxErrorFileGet error)
+        {
+            return _tox.FileGetId(friendNumber, fileNumber, out error);
         }
 
         private void RaisePropertyChanged([CallerMemberName] string propertyName = null)

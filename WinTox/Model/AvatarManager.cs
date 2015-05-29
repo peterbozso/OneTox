@@ -139,6 +139,11 @@ namespace WinTox.Model
             IsUserAvatarSet = false;
         }
 
+        public void ReceiveFriendAvatar(Stream avatarStream)
+        {
+            // TODO: Store and display the avatar!
+        }
+
         private void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
             if (PropertyChanged != null)
