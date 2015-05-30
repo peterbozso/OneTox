@@ -79,11 +79,8 @@ namespace WinTox.Model
             }
 
             var currentTransferStream = _activeTransfers[transferId].Stream;
-            lock (currentTransferStream)
-            {
-                if (e.Position != currentTransferStream.Position)
-                    currentTransferStream.Seek(e.Position, SeekOrigin.Begin);
-            }
+            if (e.Position != currentTransferStream.Position)
+                currentTransferStream.Seek(e.Position, SeekOrigin.Begin);
             var chunk = new byte[e.Length];
             currentTransferStream.Read(chunk, 0, e.Length);
             ToxErrorFileSendChunk error;
