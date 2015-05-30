@@ -16,7 +16,8 @@ namespace WinTox.ViewModel.ProfileSettings
         public ProfileSettingsViewModel()
         {
             ToxModel.Instance.PropertyChanged += ToxModelPropertyChangedHandler;
-            AvatarManager.Instance.PropertyChanged += AvatarManagerPropertyChangedHandler;
+            AvatarManager.Instance.UserAvatarChanged += UserAvatarChangedHandler;
+            AvatarManager.Instance.IsUserAvatarSetChanged += IsUserAvatarSetChangedHandler;
         }
 
         public ToxId Id
@@ -71,17 +72,14 @@ namespace WinTox.ViewModel.ProfileSettings
             get { return AvatarManager.Instance.IsUserAvatarSet; }
         }
 
-        private void AvatarManagerPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        private void IsUserAvatarSetChangedHandler(object sender, EventArgs e)
         {
-            switch (e.PropertyName)
-            {
-                case "UserAvatar":
-                    RaisePropertyChanged("Avatar");
-                    return;
-                case "IsUserAvatarSet":
-                    RaisePropertyChanged("IsAvatarSet");
-                    return;
-            }
+            RaisePropertyChanged("IsAvatarSet");
+        }
+
+        private void UserAvatarChangedHandler(object sender, EventArgs e)
+        {
+            RaisePropertyChanged("Avatar");
         }
 
         public async Task<string> LoadUserAvatar(StorageFile file)

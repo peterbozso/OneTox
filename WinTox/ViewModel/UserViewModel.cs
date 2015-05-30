@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
@@ -12,7 +13,7 @@ namespace WinTox.ViewModel
         public UserViewModel()
         {
             ToxModel.Instance.PropertyChanged += ToxModelPropertyChangedHandler;
-            AvatarManager.Instance.PropertyChanged += AvatarManagerPropertyChangedHandler;
+            AvatarManager.Instance.UserAvatarChanged += UserAvatarChangedHandler;
         }
 
         public ToxId Id
@@ -45,10 +46,9 @@ namespace WinTox.ViewModel
             get { return ToxModel.Instance.IsConnected; }
         }
 
-        private void AvatarManagerPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        private void UserAvatarChangedHandler(object sender, EventArgs eventArgs)
         {
-            if (e.PropertyName == "UserAvatar")
-                RaisePropertyChanged("Avatar");
+            RaisePropertyChanged("Avatar");
         }
 
         private void ToxModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)

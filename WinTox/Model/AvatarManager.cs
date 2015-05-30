@@ -15,7 +15,7 @@ namespace WinTox.Model
     /// <summary>
     ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
     /// </summary>
-    public class AvatarManager : INotifyPropertyChanged
+    public class AvatarManager
     {
         // See: https://github.com/irungentoo/Tox_Client_Guidelines/blob/master/Important/Avatars.md
         private const int KMaxPictureSize = 1 << 16;
@@ -42,7 +42,8 @@ namespace WinTox.Model
             private set
             {
                 _isUserAvatarSet = value;
-                RaisePropertyChanged();
+                if (IsUserAvatarSetChanged != null)
+                    IsUserAvatarSetChanged(this, new EventArgs());
             }
         }
 
@@ -52,12 +53,12 @@ namespace WinTox.Model
             private set
             {
                 _userAvatar = value;
-                RaisePropertyChanged();
+                if (UserAvatarChanged != null)
+                    UserAvatarChanged(this, new EventArgs());
             }
         }
 
         public Dictionary<int, BitmapImage> FriendAvatars { get; private set; }
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public async Task ChangeUserAvatar(StorageFile file)
         {
@@ -186,12 +187,8 @@ namespace WinTox.Model
             });
         }
 
-        private void RaisePropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         public event EventHandler<int> FriendAvatarChanged;
+        public event EventHandler UserAvatarChanged;
+        public event EventHandler IsUserAvatarSetChanged;
     }
 }
