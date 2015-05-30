@@ -25,22 +25,37 @@ namespace WinTox.Model
             public int FileNumber { get; private set; }
             public int FriendNumber { get; private set; }
 
+            public bool Equals(TransferId other)
+            {
+                return (FileNumber == other.FileNumber) && (FriendNumber == other.FriendNumber);
+            }
+
             public override int GetHashCode()
             {
                 var fileId = ToxModel.Instance.FileGetId(FriendNumber, FileNumber);
                 return fileId.Aggregate(0, (current, val) => current + val);
             }
-
-            public bool Equals(TransferId other)
-            {
-                return (this.FileNumber == other.FileNumber) && (this.FriendNumber == other.FriendNumber);
-            }
         }
 
         private class TransferData
         {
+            public TransferData(ToxFileKind kind, Stream stream, long dataSizeInBytes)
+            {
+                Kind = kind;
+                Stream = stream;
+                _dataSizeInBytes = dataSizeInBytes;
+                TransferredBytes = 0;
+            }
+
+            private readonly long _dataSizeInBytes;
             public ToxFileKind Kind { get; set; }
             public Stream Stream { get; set; }
+            public long TransferredBytes { get; set; }
+
+            public bool IsTransferFinished()
+            {
+                return TransferredBytes == _dataSizeInBytes;
+            }
         }
 
         private static FileTransferManager _instance;
@@ -64,8 +79,14 @@ namespace WinTox.Model
         {
             if (e.Control == ToxFileControl.Cancel)
             {
-                _activeTransfers.Remove(new TransferId(e.FileNumber, e.FriendNumber));
-                Debug.WriteLine("File transfer removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}", e.FriendNumber, e.FileNumber, _activeTransfers.Count);
+                var transferId = new TransferId(e.FileNumber, e.FriendNumber);
+                if (_activeTransfers.ContainsKey(transferId))
+                {
+                    _activeTransfers.Remove(transferId);
+                    Debug.WriteLine(
+                        "File transfer removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                        e.FriendNumber, e.FileNumber, _activeTransfers.Count);
+                }
             }
             // TODO: Add handling for other types of Control!
         }
@@ -73,12 +94,8 @@ namespace WinTox.Model
         private void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
         {
             var transferId = new TransferId(e.FileNumber, e.FriendNumber);
-            if (e.Length == 0) // File transfer is complete
-            {
-                _activeTransfers.Remove(transferId);
-                Debug.WriteLine("File transfer removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}", e.FriendNumber, e.FileNumber, _activeTransfers.Count);
+            if (!_activeTransfers.ContainsKey(transferId))
                 return;
-            }
 
             var currentTransferStream = _activeTransfers[transferId].Stream;
             if (e.Position != currentTransferStream.Position)
@@ -87,6 +104,17 @@ namespace WinTox.Model
             currentTransferStream.Read(chunk, 0, e.Length);
             ToxErrorFileSendChunk error;
             ToxModel.Instance.FileSendChunk(e.FriendNumber, e.FileNumber, e.Position, chunk, out error);
+            if (error == ToxErrorFileSendChunk.Ok)
+            {
+                _activeTransfers[transferId].TransferredBytes += e.Length;
+                if (_activeTransfers[transferId].IsTransferFinished())
+                {
+                    _activeTransfers.Remove(transferId);
+                    Debug.WriteLine(
+                        "File transfer removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                        e.FriendNumber, e.FileNumber, _activeTransfers.Count);
+                }
+            }
             // TODO: Error handling!
         }
 
@@ -98,8 +126,11 @@ namespace WinTox.Model
                 GetAvatarHash(stream), out error);
             if (error == ToxErrorFileSend.Ok)
             {
-                _activeTransfers.Add(new TransferId(fileInfo.Number, friendNumber), new TransferData{ Kind = ToxFileKind.Avatar, Stream = stream });
-                Debug.WriteLine("File upload added! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}", friendNumber, fileInfo.Number, _activeTransfers.Count);
+                _activeTransfers.Add(new TransferId(fileInfo.Number, friendNumber),
+                    new TransferData(ToxFileKind.Avatar, stream, stream.Length));
+                Debug.WriteLine(
+                    "File upload added! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                    friendNumber, fileInfo.Number, _activeTransfers.Count);
             }
             // TODO: Error handling!
         }
@@ -148,18 +179,26 @@ namespace WinTox.Model
             if (error == ToxErrorFileControl.Ok)
             {
                 _activeTransfers.Add(new TransferId(e.FileNumber, e.FriendNumber),
-                    new TransferData {Kind = e.FileKind, Stream = stream});
-                Debug.WriteLine("File download added! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}", e.FriendNumber, e.FileNumber, _activeTransfers.Count);
+                    new TransferData(ToxFileKind.Avatar, stream, e.FileSize));
+                Debug.WriteLine(
+                    "File download added! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                    e.FriendNumber, e.FileNumber, _activeTransfers.Count);
             }
         }
 
         private void FileChunkReceivedHandler(object sender, ToxEventArgs.FileChunkEventArgs e)
         {
             var transferId = new TransferId(e.FileNumber, e.FriendNumber);
+            if (!_activeTransfers.ContainsKey(transferId))
+                return;
             var currentTransfer = _activeTransfers[transferId];
             var currentStream = currentTransfer.Stream;
 
-            if (e.Data == null) // The transfer is finished.
+            if (currentStream.Position != e.Position)
+                currentStream.Seek(e.Position, SeekOrigin.Begin);
+            currentStream.Write(e.Data, 0, e.Data.Length);
+            currentTransfer.TransferredBytes += e.Data.Length;
+            if (currentTransfer.IsTransferFinished())
             {
                 switch (currentTransfer.Kind)
                 {
@@ -168,13 +207,11 @@ namespace WinTox.Model
                         break;
                 }
                 _activeTransfers.Remove(transferId);
-                Debug.WriteLine("File transfer removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}", e.FriendNumber, e.FileNumber, _activeTransfers.Count);
+                Debug.WriteLine(
+                    "File transfer removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                    e.FriendNumber, e.FileNumber, _activeTransfers.Count);
                 return;
             }
-
-            if (currentStream.Position != e.Position)
-                currentStream.Seek(e.Position, SeekOrigin.Begin);
-            currentStream.Write(e.Data, 0, e.Data.Length);
         }
     }
 }
