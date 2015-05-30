@@ -91,7 +91,9 @@ namespace WinTox.Model
             foreach (var friendNumber in ToxModel.Instance.Friends)
             {
                 var publicKey = ToxModel.Instance.GetFriendPublicKey(friendNumber);
-                var file = await _avatarsFolder.GetFileAsync(publicKey + ".png");
+                var file = await _avatarsFolder.TryGetItemAsync(publicKey + ".png") as StorageFile;
+                if (file == null)
+                    continue;
                 using (var stream = await file.OpenAsync(FileAccessMode.Read))
                 {
                     var friendAvatar = new BitmapImage();
