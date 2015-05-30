@@ -142,7 +142,8 @@ namespace WinTox.Model
             ToxModel.Instance.FileControl(e.FriendNumber, e.FileNumber, ToxFileControl.Resume, out error);
             // TODO: Error handling!
             var stream = new MemoryStream((int) e.FileSize);
-            _activeTransfers.Add(new TransferId(e.FileNumber, e.FriendNumber), new TransferData{ Kind = e.FileKind, Stream = stream });
+            if (error == ToxErrorFileControl.Ok)
+                _activeTransfers.Add(new TransferId(e.FileNumber, e.FriendNumber), new TransferData{ Kind = e.FileKind, Stream = stream });
         }
 
         private void FileChunkReceivedHandler(object sender, ToxEventArgs.FileChunkEventArgs e)
