@@ -12,12 +12,18 @@ namespace WinTox.Model
     /// </summary>
     public class FileTransferManager
     {
+        private class TransferData
+        {
+            public ToxFileKind Kind { get; set; }
+            public Stream Stream { get; set; }
+        }
+
         private static FileTransferManager _instance;
-        private readonly Dictionary<int, Tuple<Stream, ToxFileKind>> _activeTransfers;
+        private readonly Dictionary<int, TransferData> _activeTransfers;
 
         private FileTransferManager()
         {
-            _activeTransfers = new Dictionary<int, Tuple<Stream, ToxFileKind>>();
+            _activeTransfers = new Dictionary<int, TransferData>();
             ToxModel.Instance.FileControlReceived += FileControlReceivedHandler;
             ToxModel.Instance.FileChunkRequested += FileChunkRequestedHandler;
             ToxModel.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
@@ -46,7 +52,7 @@ namespace WinTox.Model
                 return;
             }
 
-            var currentTransferStream = _activeTransfers[e.FileNumber].Item1;
+            var currentTransferStream = _activeTransfers[e.FileNumber].Stream;
             lock (currentTransferStream)
             {
                 if (e.Position != currentTransferStream.Position)
@@ -67,7 +73,7 @@ namespace WinTox.Model
                 GetAvatarHash(stream), out error);
             if (error == ToxErrorFileSend.Ok)
             {
-                _activeTransfers.Add(fileInfo.Number, new Tuple<Stream, ToxFileKind>(stream, ToxFileKind.Avatar));
+                _activeTransfers.Add(fileInfo.Number, new TransferData{ Kind = ToxFileKind.Avatar, Stream = stream });
             }
             // TODO: Error handling!
         }
@@ -113,17 +119,17 @@ namespace WinTox.Model
             ToxModel.Instance.FileControl(e.FriendNumber, e.FileNumber, ToxFileControl.Resume, out error);
             // TODO: Error handling!
             var stream = new MemoryStream((int) e.FileSize);
-            _activeTransfers.Add(e.FileNumber, new Tuple<Stream, ToxFileKind>(stream, e.FileKind));
+            _activeTransfers.Add(e.FileNumber, new TransferData{ Kind = e.FileKind, Stream = stream });
         }
 
         private void FileChunkReceivedHandler(object sender, ToxEventArgs.FileChunkEventArgs e)
         {
             var currentTransfer = _activeTransfers[e.FileNumber];
-            var currentStream = currentTransfer.Item1;
+            var currentStream = currentTransfer.Stream;
 
             if (e.Data == null) // The transfer is finished.
             {
-                switch (currentTransfer.Item2)
+                switch (currentTransfer.Kind)
                 {
                     case ToxFileKind.Avatar:
                         AvatarManager.Instance.SetFriendAvatar(e.FriendNumber, currentStream as MemoryStream);
