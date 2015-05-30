@@ -294,9 +294,9 @@ namespace WinTox.Model
             return _tox.FileSendChunk(friendNumber, fileNumber, position, data, out error);
         }
 
-        public byte[] FileGetId(int friendNumber, int fileNumber, out ToxErrorFileGet error)
+        public byte[] FileGetId(int friendNumber, int fileNumber)
         {
-            return _tox.FileGetId(friendNumber, fileNumber, out error);
+            return _tox.FileGetId(friendNumber, fileNumber);
         }
 
         private void RaisePropertyChanged([CallerMemberName] string propertyName = null)
