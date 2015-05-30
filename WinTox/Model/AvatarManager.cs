@@ -127,7 +127,7 @@ namespace WinTox.Model
         private async void FriendConnectionStatusChangedHandler(object sender,
             ToxEventArgs.FriendConnectionStatusEventArgs e)
         {
-            if (e.Status != ToxConnectionStatus.None)
+            if (ToxModel.Instance.IsFriendOnline(e.FriendNumber))
             {
                 var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
                 if (file != null)
