@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
@@ -31,6 +29,83 @@ namespace WinTox.Model
             ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
             FriendAvatars = new Dictionary<int, BitmapImage>();
         }
+
+        #region Event handlers
+
+        private async void FriendConnectionStatusChangedHandler(object sender,
+            ToxEventArgs.FriendConnectionStatusEventArgs e)
+        {
+            if (ToxModel.Instance.IsFriendOnline(e.FriendNumber))
+            {
+                Debug.WriteLine("Friend just came online: {0}, status: {1}, name: {2}", e.FriendNumber, e.Status,
+                    ToxModel.Instance.GetFriendName(e.FriendNumber));
+
+                var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
+                if (file != null)
+                {
+                    await FileTransferManager.Instance.SendAvatar(e.FriendNumber, (StorageFile) file);
+                }
+                else // We have no saved avatar for the user: we have no avatar set.
+                {
+                    FileTransferManager.Instance.SendNullAvatar(e.FriendNumber);
+                }
+            }
+            else
+            {
+                Debug.WriteLine("Friend just went offline: {0}", e.FriendNumber);
+            }
+        }
+
+        #endregion
+
+        #region Events
+
+        public event EventHandler<int> FriendAvatarChanged;
+        public event EventHandler UserAvatarChanged;
+        public event EventHandler IsUserAvatarSetChanged;
+
+        #endregion
+
+        #region Friend avatar management
+
+        public async void ChangeFriendAvatar(int friendNumber, MemoryStream avatarStream)
+        {
+            var file = await SaveFriendAvatar(friendNumber, avatarStream);
+            await SetFriendAvatar(friendNumber, file);
+        }
+
+        /// <summary>
+        ///     Saves the friend's avatar.
+        /// </summary>
+        /// <param name="friendNumber">Friend number of the friend we are saving the avatar for.</param>
+        /// <param name="avatarStream">The stream that contains the avatar's data.</param>
+        /// <returns>The file where the avatar was saved.</returns>
+        private async Task<StorageFile> SaveFriendAvatar(int friendNumber, MemoryStream avatarStream)
+        {
+            var file = await _avatarsFolder.CreateFileAsync(ToxModel.Instance.GetFriendPublicKey(friendNumber) + ".png",
+                CreationCollisionOption.ReplaceExisting);
+            await FileIO.WriteBytesAsync(file, avatarStream.ToArray());
+            return file;
+        }
+
+        private async Task SetFriendAvatar(int friendNumber, StorageFile file)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                using (var stream = await file.OpenAsync(FileAccessMode.Read))
+                {
+                    var friendAvatar = new BitmapImage();
+                    await friendAvatar.SetSourceAsync(stream);
+                    FriendAvatars[friendNumber] = friendAvatar;
+                    if (FriendAvatarChanged != null)
+                        FriendAvatarChanged(this, friendNumber);
+                }
+            });
+        }
+
+        #endregion
+
+        #region Properties
 
         public static AvatarManager Instance
         {
@@ -61,13 +136,9 @@ namespace WinTox.Model
 
         public Dictionary<int, BitmapImage> FriendAvatars { get; private set; }
 
-        public async Task ChangeUserAvatar(StorageFile file)
-        {
-            await SetUserAvatar(file);
-            var copy = await file.CopyAsync(_avatarsFolder);
-            await copy.RenameAsync(ToxModel.Instance.Id.PublicKey + ".png", NameCollisionOption.ReplaceExisting);
-            await BroadcastUserAvatarOnSet(copy);
-        }
+        #endregion
+
+        #region Loading avatars
 
         // We presume that this is called before any other function that use _avatarsFolder.
         public async Task LoadAvatars()
@@ -77,17 +148,17 @@ namespace WinTox.Model
                     "avatars", CreationCollisionOption.OpenIfExists);
 
             await LoadUserAvatar();
-            await LoadFriendAvatars();
+            await LoadFriendsAvatars();
         }
 
         private async Task LoadUserAvatar()
         {
-            var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
+            var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png") as StorageFile;
             if (file != null)
-                await SetUserAvatar(file as StorageFile);
+                await SetUserAvatar(file);
         }
 
-        private async Task LoadFriendAvatars()
+        private async Task LoadFriendsAvatars()
         {
             foreach (var friendNumber in ToxModel.Instance.Friends)
             {
@@ -95,26 +166,43 @@ namespace WinTox.Model
                 var file = await _avatarsFolder.TryGetItemAsync(publicKey + ".png") as StorageFile;
                 if (file == null)
                     continue;
-                using (var stream = await file.OpenAsync(FileAccessMode.Read))
-                {
-                    var friendAvatar = new BitmapImage();
-                    await friendAvatar.SetSourceAsync(stream);
-                    FriendAvatars[friendNumber] = friendAvatar;
-                    if (FriendAvatarChanged != null)
-                        FriendAvatarChanged(this, friendNumber);
-                }
+                await SetFriendAvatar(friendNumber, file);
             }
+        }
+
+        #endregion
+
+        #region User avatar management
+
+        public async Task ChangeUserAvatar(StorageFile file)
+        {
+            await SetUserAvatar(file);
+            var copy = await CopyUserAvatarFile(file);
+            await BroadcastUserAvatarOnSet(copy);
         }
 
         private async Task SetUserAvatar(StorageFile file)
         {
             using (var stream = await file.OpenAsync(FileAccessMode.Read))
             {
+                // TODO: Allow bigger avatars and implement resizing.
                 if (stream.AsStream().Length > KMaxPictureSize)
                     throw new ArgumentOutOfRangeException();
                 UserAvatar.SetSource(stream);
                 IsUserAvatarSet = true;
             }
+        }
+
+        /// <summary>
+        ///     Copies the user's avatar's file to it's place (avatars subfolder).
+        /// </summary>
+        /// <param name="file">The user's avatar's file.</param>
+        /// <returns>The copy of the file.</returns>
+        private async Task<StorageFile> CopyUserAvatarFile(StorageFile file)
+        {
+            var copy = await file.CopyAsync(_avatarsFolder);
+            await copy.RenameAsync(ToxModel.Instance.Id.PublicKey + ".png", NameCollisionOption.ReplaceExisting);
+            return copy;
         }
 
         private async Task BroadcastUserAvatarOnSet(StorageFile file)
@@ -125,48 +213,15 @@ namespace WinTox.Model
             }
         }
 
-        private async void FriendConnectionStatusChangedHandler(object sender,
-            ToxEventArgs.FriendConnectionStatusEventArgs e)
-        {
-            if (ToxModel.Instance.IsFriendOnline(e.FriendNumber))
-            {
-                Debug.WriteLine("Friend just came online: {0}, status: {1}, name: {2}", e.FriendNumber, e.Status,
-                    ToxModel.Instance.GetFriendName(e.FriendNumber));
-
-                var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
-                if (file != null)
-                {
-                    await FileTransferManager.Instance.SendAvatar(e.FriendNumber, (StorageFile) file);
-                }
-                else // We have no saved avatar for the user: we have no avatar set.
-                {
-                    FileTransferManager.Instance.SendNullAvatar(e.FriendNumber);
-                }
-            }
-            else
-            {
-                Debug.WriteLine("Friend just went offline: {0}", e.FriendNumber);
-            }
-        }
-
         /// <summary>
         ///     Removes the current avatar of the user from both the app and the file system.
         /// </summary>
         /// <returns></returns>
         public async Task RemoveUserAvatar()
         {
-            var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
-            file.DeleteAsync();
             ResetUserAvatar();
+            await DeleteUserAvatarFile();
             BroadCastUserAvatarOnReset();
-        }
-
-        private void BroadCastUserAvatarOnReset()
-        {
-            foreach (var friend in ToxModel.Instance.Friends)
-            {
-                FileTransferManager.Instance.SendNullAvatar(friend);
-            }
         }
 
         /// <summary>
@@ -178,27 +233,20 @@ namespace WinTox.Model
             IsUserAvatarSet = false;
         }
 
-        public async void SetFriendAvatar(int friendNumber, MemoryStream avatarStream)
+        private async Task DeleteUserAvatarFile()
         {
-            var file = await _avatarsFolder.CreateFileAsync(ToxModel.Instance.GetFriendPublicKey(friendNumber) + ".png",
-                CreationCollisionOption.ReplaceExisting);
-            await FileIO.WriteBytesAsync(file, avatarStream.ToArray());
-
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                using (var stream = await file.OpenAsync(FileAccessMode.Read))
-                {
-                    var friendAvatar = new BitmapImage();
-                    await friendAvatar.SetSourceAsync(stream);
-                    FriendAvatars[friendNumber] = friendAvatar;
-                    if (FriendAvatarChanged != null)
-                        FriendAvatarChanged(this, friendNumber);
-                }
-            });
+            var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
+            file.DeleteAsync();
         }
 
-        public event EventHandler<int> FriendAvatarChanged;
-        public event EventHandler UserAvatarChanged;
-        public event EventHandler IsUserAvatarSetChanged;
+        private void BroadCastUserAvatarOnReset()
+        {
+            foreach (var friend in ToxModel.Instance.Friends)
+            {
+                FileTransferManager.Instance.SendNullAvatar(friend);
+            }
+        }
+
+        #endregion
     }
 }

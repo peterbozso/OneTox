@@ -203,7 +203,7 @@ namespace WinTox.Model
                 switch (currentTransfer.Kind)
                 {
                     case ToxFileKind.Avatar:
-                        AvatarManager.Instance.SetFriendAvatar(e.FriendNumber, currentStream as MemoryStream);
+                        AvatarManager.Instance.ChangeFriendAvatar(e.FriendNumber, currentStream as MemoryStream);
                         break;
                 }
                 _activeTransfers.Remove(transferId);
