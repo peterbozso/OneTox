@@ -84,7 +84,7 @@ namespace WinTox.Model
                 {
                     _activeTransfers.Remove(transferId);
                     Debug.WriteLine(
-                        "File transfer removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                        "File transfer CANCELLED! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
                         e.FriendNumber, e.FileNumber, _activeTransfers.Count);
                 }
             }
@@ -111,7 +111,7 @@ namespace WinTox.Model
                 {
                     _activeTransfers.Remove(transferId);
                     Debug.WriteLine(
-                        "File transfer removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                        "File upload removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
                         e.FriendNumber, e.FileNumber, _activeTransfers.Count);
                 }
             }
@@ -208,7 +208,7 @@ namespace WinTox.Model
                 }
                 _activeTransfers.Remove(transferId);
                 Debug.WriteLine(
-                    "File transfer removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                    "File download removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
                     e.FriendNumber, e.FileNumber, _activeTransfers.Count);
                 return;
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -129,6 +130,9 @@ namespace WinTox.Model
         {
             if (ToxModel.Instance.IsFriendOnline(e.FriendNumber))
             {
+                Debug.WriteLine("Friend just came online: {0}, status: {1}, name: {2}", e.FriendNumber, e.Status,
+                    ToxModel.Instance.GetFriendName(e.FriendNumber));
+
                 var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
                 if (file != null)
                 {
@@ -138,6 +142,10 @@ namespace WinTox.Model
                 {
                     FileTransferManager.Instance.SendNullAvatar(e.FriendNumber);
                 }
+            }
+            else
+            {
+                Debug.WriteLine("Friend just went offline: {0}", e.FriendNumber);
             }
         }
 
