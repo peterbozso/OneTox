@@ -284,12 +284,14 @@ namespace WinTox.Model
             return _tox.FileControl(friendNumber, fileNumber, control, out error);
         }
 
-        public ToxFileInfo FileSend(int friendNumber, ToxFileKind kind, long fileSize, string fileName, byte[] fileId, out ToxErrorFileSend error)
+        public ToxFileInfo FileSend(int friendNumber, ToxFileKind kind, long fileSize, string fileName, byte[] fileId,
+            out ToxErrorFileSend error)
         {
             return _tox.FileSend(friendNumber, kind, fileSize, fileName, fileId, out error);
         }
 
-        public bool FileSendChunk(int friendNumber, int fileNumber, long position, byte[] data, out ToxErrorFileSendChunk error)
+        public bool FileSendChunk(int friendNumber, int fileNumber, long position, byte[] data,
+            out ToxErrorFileSendChunk error)
         {
             return _tox.FileSendChunk(friendNumber, fileNumber, position, data, out error);
         }
@@ -410,19 +412,19 @@ namespace WinTox.Model
                 FileControlReceived(this, e);
         }
 
-        void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
+        private void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
         {
             if (FileChunkRequested != null)
                 FileChunkRequested(this, e);
         }
 
-        void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
+        private void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
         {
             if (FileSendRequestReceived != null)
                 FileSendRequestReceived(this, e);
         }
 
-        void FileChunkReceivedHandler(object sender, ToxEventArgs.FileChunkEventArgs e)
+        private void FileChunkReceivedHandler(object sender, ToxEventArgs.FileChunkEventArgs e)
         {
             if (FileChunkReceived != null)
                 FileChunkReceived(this, e);
