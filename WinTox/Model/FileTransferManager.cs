@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SharpTox.Core;
@@ -31,6 +32,13 @@ namespace WinTox.Model
             get { return _instance ?? (_instance = new FileTransferManager()); }
         }
 
+        #region Common
+
+        private bool IsTransferFinished(TransferId transferId)
+        {
+            return !_activeTransfers.ContainsKey(transferId);
+        }
+
         private void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
         {
             switch (e.Control)
@@ -41,17 +49,35 @@ namespace WinTox.Model
                     {
                         _activeTransfers.Remove(transferId);
                         Debug.WriteLine(
-                            "File transfer CANCELLED! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                            "File transfer CANCELLED by friend! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
                             e.FriendNumber, e.FileNumber, _activeTransfers.Count);
                     }
                     return;
             }
         }
 
-        private bool IsTransferFinished(TransferId transferId)
+        private void SendCancelControl(int friendNumber, int fileNumber)
         {
-            return !_activeTransfers.ContainsKey(transferId);
+            ToxErrorFileControl error;
+            ToxModel.Instance.FileControl(friendNumber, fileNumber, ToxFileControl.Cancel, out error);
+            // TODO: Error handling!
         }
+
+        /// <summary>
+        ///     Send a ToxFileControl.Resume to the selected friend for the given transfer.
+        /// </summary>
+        /// <param name="friendNumber">The friend's friend number.</param>
+        /// <param name="fileNumber">The file number associated with the tranfer.</param>
+        /// <returns>True on success, false otherwise.</returns>
+        private bool SendResumeControl(int friendNumber, int fileNumber)
+        {
+            ToxErrorFileControl error;
+            ToxModel.Instance.FileControl(friendNumber, fileNumber, ToxFileControl.Resume, out error);
+            // TODO: Error handling!
+            return (error == ToxErrorFileControl.Ok);
+        }
+
+        #endregion
 
         #region Sending
 
@@ -128,34 +154,33 @@ namespace WinTox.Model
 
         #region Receiving
 
-        private void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
+        private async void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
         {
             switch (e.FileKind)
             {
                 case ToxFileKind.Avatar:
-                    ReceiveAvatar(e);
+                    await ReceiveAvatar(e);
                     return;
             }
         }
 
-        private void ReceiveAvatar(ToxEventArgs.FileSendRequestEventArgs e)
+        private async Task ReceiveAvatar(ToxEventArgs.FileSendRequestEventArgs e)
         {
-            ToxErrorFileControl error;
-
             if (e.FileKind == ToxFileKind.Avatar && e.FileSize == 0) // It means the avatar of the friend is removed.
             {
-                // So we cancel the transfer:
-                ToxModel.Instance.FileControl(e.FriendNumber, e.FileNumber, ToxFileControl.Cancel, out error);
-                // TODO: Error handling!
-                // TODO: Actually remove avatar of the friend!
+                SendCancelControl(e.FriendNumber, e.FileNumber);
+                await AvatarManager.Instance.RemoveFriendAvatar(e.FriendNumber);
+                return;
             }
 
-            // TODO: Check the hash to see if we already have that avatar!
+            if (await AlreadyHaveAvatar(e.FriendNumber, e.FileNumber))
+            {
+                SendCancelControl(e.FriendNumber, e.FileNumber);
+                return;
+            }
 
-            ToxModel.Instance.FileControl(e.FriendNumber, e.FileNumber, ToxFileControl.Resume, out error);
-            // TODO: Error handling!
-
-            if (error == ToxErrorFileControl.Ok)
+            var resumeSent = SendResumeControl(e.FriendNumber, e.FileNumber);
+            if (resumeSent)
             {
                 var stream = new MemoryStream((int) e.FileSize);
                 _activeTransfers.Add(new TransferId(e.FileNumber, e.FriendNumber),
@@ -164,6 +189,15 @@ namespace WinTox.Model
                     "File download added! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
                     e.FriendNumber, e.FileNumber, _activeTransfers.Count);
             }
+        }
+
+        private async Task<bool> AlreadyHaveAvatar(int friendNumber, int fileNumber)
+        {
+            var fileId = ToxModel.Instance.FileGetId(friendNumber, fileNumber);
+            var friendAvatarFile = await AvatarManager.Instance.GetFriendAvatarFile(friendNumber);
+            var stream = (await friendAvatarFile.OpenReadAsync()).AsStreamForRead();
+            var avatarHash = GetAvatarHash(stream);
+            return fileId.SequenceEqual(avatarHash);
         }
 
         private void FileChunkReceivedHandler(object sender, ToxEventArgs.FileChunkEventArgs e)

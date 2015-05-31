@@ -58,6 +58,39 @@ namespace WinTox.Model
 
         #endregion
 
+        #region Properties
+
+        public static AvatarManager Instance
+        {
+            get { return _instance ?? (_instance = new AvatarManager()); }
+        }
+
+        public bool IsUserAvatarSet
+        {
+            get { return _isUserAvatarSet; }
+            private set
+            {
+                _isUserAvatarSet = value;
+                if (IsUserAvatarSetChanged != null)
+                    IsUserAvatarSetChanged(this, new EventArgs());
+            }
+        }
+
+        public BitmapImage UserAvatar
+        {
+            get { return _userAvatar; }
+            private set
+            {
+                _userAvatar = value;
+                if (UserAvatarChanged != null)
+                    UserAvatarChanged(this, new EventArgs());
+            }
+        }
+
+        public Dictionary<int, BitmapImage> FriendAvatars { get; private set; }
+
+        #endregion
+
         #region Events
 
         public event EventHandler<int> FriendAvatarChanged;
@@ -67,6 +100,25 @@ namespace WinTox.Model
         #endregion
 
         #region Friend avatar management
+
+        public async Task<StorageFile> GetFriendAvatarFile(int friendNumber)
+        {
+            return await _avatarsFolder.GetFileAsync(ToxModel.Instance.GetFriendPublicKey(friendNumber) + ".png");
+        }
+
+        public async Task RemoveFriendAvatar(int friendNumber)
+        {
+            FriendAvatars.Remove(friendNumber);
+            if (FriendAvatarChanged != null)
+                FriendAvatarChanged(this, friendNumber);
+            await DeleteFriendAvatarFile(friendNumber);
+        }
+
+        private async Task DeleteFriendAvatarFile(int friendNumber)
+        {
+            var file = await GetFriendAvatarFile(friendNumber);
+            await file.DeleteAsync();
+        }
 
         public async void ChangeFriendAvatar(int friendNumber, MemoryStream avatarStream)
         {
@@ -102,39 +154,6 @@ namespace WinTox.Model
                 }
             });
         }
-
-        #endregion
-
-        #region Properties
-
-        public static AvatarManager Instance
-        {
-            get { return _instance ?? (_instance = new AvatarManager()); }
-        }
-
-        public bool IsUserAvatarSet
-        {
-            get { return _isUserAvatarSet; }
-            private set
-            {
-                _isUserAvatarSet = value;
-                if (IsUserAvatarSetChanged != null)
-                    IsUserAvatarSetChanged(this, new EventArgs());
-            }
-        }
-
-        public BitmapImage UserAvatar
-        {
-            get { return _userAvatar; }
-            private set
-            {
-                _userAvatar = value;
-                if (UserAvatarChanged != null)
-                    UserAvatarChanged(this, new EventArgs());
-            }
-        }
-
-        public Dictionary<int, BitmapImage> FriendAvatars { get; private set; }
 
         #endregion
 
