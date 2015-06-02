@@ -22,7 +22,6 @@
           RightTapped="MainGridRightTapped" Tapped="MainGridTapped">
         <Image Opacity="{Binding IsConnected, Converter={StaticResource IsConnectedToOpacityConverter}}"
                Source="{Binding Avatar}" Stretch="UniformToFill" />
-        <!-- TODO: Replace it with an image with proper resolution and implement binding when user picture loading works! -->
         <Rectangle Height="26" Fill="#7F000000" VerticalAlignment="Bottom" />
         <TextBlock VerticalAlignment="Bottom" Margin="6,0,0,0" FontSize="20" FontWeight="Medium" Text="{Binding Name}" />
     </Grid>

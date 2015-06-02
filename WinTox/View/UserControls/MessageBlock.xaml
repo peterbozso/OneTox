@@ -27,7 +27,6 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!-- TODO: Replace image with data binding! -->
             <Image Grid.RowSpan="2" Source="{Binding Sender.Avatar}" MaxHeight="55" MaxWidth="55"
                    Stretch="UniformToFill"
                    VerticalAlignment="Top" />
