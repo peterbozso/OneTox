@@ -43,11 +43,11 @@ namespace WinTox.Model
                 var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
                 if (file != null)
                 {
-                    await FileTransferManager.Instance.SendAvatar(e.FriendNumber, (StorageFile) file);
+                    await AvatarTransferManager.Instance.SendAvatar(e.FriendNumber, (StorageFile) file);
                 }
                 else // We have no saved avatar for the user: we have no avatar set.
                 {
-                    FileTransferManager.Instance.SendNullAvatar(e.FriendNumber);
+                    AvatarTransferManager.Instance.SendNullAvatar(e.FriendNumber);
                 }
             }
             else
@@ -228,7 +228,7 @@ namespace WinTox.Model
         {
             foreach (var friend in ToxModel.Instance.Friends)
             {
-                await FileTransferManager.Instance.SendAvatar(friend, file);
+                await AvatarTransferManager.Instance.SendAvatar(friend, file);
             }
         }
 
@@ -262,7 +262,7 @@ namespace WinTox.Model
         {
             foreach (var friend in ToxModel.Instance.Friends)
             {
-                FileTransferManager.Instance.SendNullAvatar(friend);
+                AvatarTransferManager.Instance.SendNullAvatar(friend);
             }
         }
 

@@ -2,41 +2,32 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.Storage;
 using SharpTox.Core;
 
 namespace WinTox.Model
 {
     /// <summary>
-    ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
+    ///     Abstract base class for TransferManager classes.
     /// </summary>
-    public class FileTransferManager
+    public abstract class DataTransferManager
     {
-        private static FileTransferManager _instance;
-        private readonly Dictionary<TransferId, TransferData> _activeTransfers;
+        protected readonly Dictionary<TransferId, TransferData> ActiveTransfers;
 
-        private FileTransferManager()
+        protected DataTransferManager()
         {
-            _activeTransfers = new Dictionary<TransferId, TransferData>();
+            ActiveTransfers = new Dictionary<TransferId, TransferData>();
 
             ToxModel.Instance.FileControlReceived += FileControlReceivedHandler;
-            ToxModel.Instance.FileChunkReceived += FileChunkReceivedHandler;
-            ToxModel.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
             ToxModel.Instance.FileChunkRequested += FileChunkRequestedHandler;
-        }
-
-        public static FileTransferManager Instance
-        {
-            get { return _instance ?? (_instance = new FileTransferManager()); }
+            ToxModel.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
+            ToxModel.Instance.FileChunkReceived += FileChunkReceivedHandler;
         }
 
         #region Common
 
         private bool IsTransferFinished(TransferId transferId)
         {
-            return !_activeTransfers.ContainsKey(transferId);
+            return !ActiveTransfers.ContainsKey(transferId);
         }
 
         private void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
@@ -45,18 +36,18 @@ namespace WinTox.Model
             {
                 case ToxFileControl.Cancel:
                     var transferId = new TransferId(e.FileNumber, e.FriendNumber);
-                    if (_activeTransfers.ContainsKey(transferId))
+                    if (ActiveTransfers.ContainsKey(transferId))
                     {
-                        _activeTransfers.Remove(transferId);
+                        ActiveTransfers.Remove(transferId);
                         Debug.WriteLine(
                             "File transfer CANCELLED by friend! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
-                            e.FriendNumber, e.FileNumber, _activeTransfers.Count);
+                            e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
                     }
                     return;
             }
         }
 
-        private void SendCancelControl(int friendNumber, int fileNumber)
+        protected void SendCancelControl(int friendNumber, int fileNumber)
         {
             ToxErrorFileControl error;
             ToxModel.Instance.FileControl(friendNumber, fileNumber, ToxFileControl.Cancel, out error);
@@ -69,7 +60,7 @@ namespace WinTox.Model
         /// <param name="friendNumber">The friend's friend number.</param>
         /// <param name="fileNumber">The file number associated with the tranfer.</param>
         /// <returns>True on success, false otherwise.</returns>
-        private bool SendResumeControl(int friendNumber, int fileNumber)
+        protected bool SendResumeControl(int friendNumber, int fileNumber)
         {
             ToxErrorFileControl error;
             ToxModel.Instance.FileControl(friendNumber, fileNumber, ToxFileControl.Resume, out error);
@@ -81,47 +72,13 @@ namespace WinTox.Model
 
         #region Sending
 
-        public async Task SendAvatar(int friendNumber, StorageFile file)
-        {
-            var stream = (await file.OpenReadAsync()).AsStreamForRead();
-
-            ToxErrorFileSend error;
-            var fileInfo = ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, stream.Length, file.Name,
-                GetAvatarHash(stream), out error);
-
-            if (error == ToxErrorFileSend.Ok)
-            {
-                _activeTransfers.Add(new TransferId(fileInfo.Number, friendNumber),
-                    new TransferData(ToxFileKind.Avatar, stream, stream.Length));
-                Debug.WriteLine(
-                    "File upload added! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
-                    friendNumber, fileInfo.Number, _activeTransfers.Count);
-            }
-            // TODO: Error handling!
-        }
-
-        public void SendNullAvatar(int friendNumber)
-        {
-            ToxErrorFileSend error;
-            ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, 0, "", GetAvatarHash(new MemoryStream()),
-                out error);
-            // TODO: Error handling!
-        }
-
-        private byte[] GetAvatarHash(Stream stream)
-        {
-            var buffer = new byte[stream.Length];
-            stream.Read(buffer, 0, (int) stream.Length);
-            return ToxTools.Hash(buffer);
-        }
-
         private void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
         {
             var transferId = new TransferId(e.FileNumber, e.FriendNumber);
             if (IsTransferFinished(transferId))
                 return;
 
-            var currentTransfer = _activeTransfers[transferId];
+            var currentTransfer = ActiveTransfers[transferId];
 
             var chunk = GetNextChunk(e, currentTransfer);
             ToxErrorFileSendChunk error;
@@ -131,10 +88,11 @@ namespace WinTox.Model
                 currentTransfer.IncreaseProgress(e.Length);
                 if (currentTransfer.IsFinished())
                 {
-                    _activeTransfers.Remove(transferId);
+                    ActiveTransfers.Remove(transferId);
+
                     Debug.WriteLine(
                         "File upload removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
-                        e.FriendNumber, e.FileNumber, _activeTransfers.Count);
+                        e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
                 }
             }
             // TODO: Error handling!
@@ -154,51 +112,7 @@ namespace WinTox.Model
 
         #region Receiving
 
-        private async void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
-        {
-            switch (e.FileKind)
-            {
-                case ToxFileKind.Avatar:
-                    await ReceiveAvatar(e);
-                    return;
-            }
-        }
-
-        private async Task ReceiveAvatar(ToxEventArgs.FileSendRequestEventArgs e)
-        {
-            if (e.FileKind == ToxFileKind.Avatar && e.FileSize == 0) // It means the avatar of the friend is removed.
-            {
-                SendCancelControl(e.FriendNumber, e.FileNumber);
-                await AvatarManager.Instance.RemoveFriendAvatar(e.FriendNumber);
-                return;
-            }
-
-            if (await AlreadyHaveAvatar(e.FriendNumber, e.FileNumber))
-            {
-                SendCancelControl(e.FriendNumber, e.FileNumber);
-                return;
-            }
-
-            var resumeSent = SendResumeControl(e.FriendNumber, e.FileNumber);
-            if (resumeSent)
-            {
-                var stream = new MemoryStream((int) e.FileSize);
-                _activeTransfers.Add(new TransferId(e.FileNumber, e.FriendNumber),
-                    new TransferData(ToxFileKind.Avatar, stream, e.FileSize));
-                Debug.WriteLine(
-                    "File download added! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
-                    e.FriendNumber, e.FileNumber, _activeTransfers.Count);
-            }
-        }
-
-        private async Task<bool> AlreadyHaveAvatar(int friendNumber, int fileNumber)
-        {
-            var fileId = ToxModel.Instance.FileGetId(friendNumber, fileNumber);
-            var friendAvatarFile = await AvatarManager.Instance.GetFriendAvatarFile(friendNumber);
-            var stream = (await friendAvatarFile.OpenReadAsync()).AsStreamForRead();
-            var avatarHash = GetAvatarHash(stream);
-            return fileId.SequenceEqual(avatarHash);
-        }
+        protected abstract void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e);
 
         private void FileChunkReceivedHandler(object sender, ToxEventArgs.FileChunkEventArgs e)
         {
@@ -206,7 +120,7 @@ namespace WinTox.Model
             if (IsTransferFinished(transferId))
                 return;
 
-            var currentTransfer = _activeTransfers[transferId];
+            var currentTransfer = ActiveTransfers[transferId];
 
             var currentStream = currentTransfer.Stream;
             PutNextChunk(e, currentStream);
@@ -214,17 +128,7 @@ namespace WinTox.Model
             currentTransfer.IncreaseProgress(e.Data.Length);
             if (currentTransfer.IsFinished())
             {
-                switch (currentTransfer.Kind)
-                {
-                    case ToxFileKind.Avatar:
-                        AvatarManager.Instance.ChangeFriendAvatar(e.FriendNumber, currentStream as MemoryStream);
-                        break;
-                }
-
-                _activeTransfers.Remove(transferId);
-                Debug.WriteLine(
-                    "File download removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
-                    e.FriendNumber, e.FileNumber, _activeTransfers.Count);
+                HandleFinishedDownload(transferId, e);
             }
         }
 
@@ -235,11 +139,13 @@ namespace WinTox.Model
             currentStream.Write(e.Data, 0, e.Data.Length);
         }
 
+        protected abstract void HandleFinishedDownload(TransferId transferId, ToxEventArgs.FileChunkEventArgs e);
+
         #endregion
 
         #region Helper classes
 
-        private class TransferId : IEquatable<TransferId>
+        protected class TransferId : IEquatable<TransferId>
         {
             public TransferId(int fileNumber, int friendNumber)
             {
@@ -261,7 +167,7 @@ namespace WinTox.Model
             }
         }
 
-        private class TransferData
+        protected class TransferData
         {
             private readonly long _dataSizeInBytes;
             private long _transferredBytes;
