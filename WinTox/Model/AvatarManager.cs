@@ -273,7 +273,7 @@ namespace WinTox.Model
         private async Task SendUserAvatar(int friendNumber, StorageFile file)
         {
             var stream = (await file.OpenReadAsync()).AsStreamForRead();
-            await AvatarTransferManager.Instance.SendAvatar(friendNumber, stream, file.Name);
+            AvatarTransferManager.Instance.SendAvatar(friendNumber, stream, file.Name);
         }
 
         #endregion
