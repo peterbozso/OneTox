@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
@@ -98,7 +99,9 @@ namespace WinTox.Model
 
         private async Task<StorageFile> GetFriendAvatarFile(int friendNumber)
         {
-            return await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.GetFriendPublicKey(friendNumber) + ".png") as StorageFile;
+            return
+                await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.GetFriendPublicKey(friendNumber) + ".png") as
+                    StorageFile;
         }
 
         public async void ChangeFriendAvatar(int friendNumber, MemoryStream avatarStream)
@@ -128,12 +131,30 @@ namespace WinTox.Model
                 using (var stream = await file.OpenAsync(FileAccessMode.Read))
                 {
                     var friendAvatar = new BitmapImage();
-                    await friendAvatar.SetSourceAsync(stream);
+                    var successFulSetSource = await TrySetAvatarSource(friendAvatar, stream, friendNumber);
+                    if (!successFulSetSource)
+                    {
+                        await DeleteFriendAvatarFile(friendNumber);
+                        return;
+                    }
                     FriendAvatars[friendNumber] = friendAvatar;
                     if (FriendAvatarChanged != null)
                         FriendAvatarChanged(this, friendNumber);
                 }
             });
+        }
+
+        private async Task<bool> TrySetAvatarSource(BitmapImage bitmap, IRandomAccessStream stream, int friendNumber)
+        {
+            try
+            {
+                await bitmap.SetSourceAsync(stream);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
         #endregion
