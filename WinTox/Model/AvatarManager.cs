@@ -76,6 +76,8 @@ namespace WinTox.Model
         public async Task<Stream> GetFriendAvatarStream(int friendNumber)
         {
             var friendAvatarFile = await GetFriendAvatarFile(friendNumber);
+            if (friendAvatarFile == null)
+                return null;
             return (await friendAvatarFile.OpenReadAsync()).AsStreamForRead();
         }
 
@@ -89,13 +91,14 @@ namespace WinTox.Model
 
         private async Task DeleteFriendAvatarFile(int friendNumber)
         {
-            var file = await GetFriendAvatarFile(friendNumber);
-            await file.DeleteAsync();
+            var friendAvatarFile = await GetFriendAvatarFile(friendNumber);
+            if (friendAvatarFile != null)
+                await friendAvatarFile.DeleteAsync();
         }
 
         private async Task<StorageFile> GetFriendAvatarFile(int friendNumber)
         {
-            return await _avatarsFolder.GetFileAsync(ToxModel.Instance.GetFriendPublicKey(friendNumber) + ".png");
+            return await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.GetFriendPublicKey(friendNumber) + ".png") as StorageFile;
         }
 
         public async void ChangeFriendAvatar(int friendNumber, MemoryStream avatarStream)
