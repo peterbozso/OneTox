@@ -20,7 +20,7 @@ namespace WinTox.Model
 
         #region Sending
 
-        public async Task SendAvatar(int friendNumber, Stream stream, string fileName)
+        public void SendAvatar(int friendNumber, Stream stream, string fileName)
         {
             bool successfulFileSend;
             var fileInfo = ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, stream.Length, fileName,
