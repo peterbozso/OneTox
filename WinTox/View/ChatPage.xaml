@@ -23,42 +23,54 @@
             <ColumnDefinition Width="450" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+        
+        <!-- Friend info and back button, list of recent messages, file send button -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <!-- Back button and friend info -->
-        <Grid Grid.Column="0" Grid.Row="0" Height="500" VerticalAlignment="Top">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+            <!-- Back button and friend info -->
+            <Grid Grid.Row="0" Height="500" VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <!-- Back button -->
-            <Button Margin="40,60,0,0"
-                    Command="{Binding NavigationHelper.GoBackCommand, ElementName=PageRoot}"
-                    Style="{StaticResource NavigationBackButtonNormalStyle}"
-                    VerticalAlignment="Top"
-                    AutomationProperties.Name="Back"
-                    AutomationProperties.AutomationId="BackButton"
-                    AutomationProperties.ItemType="Navigation Button" />
+                <!-- Back button -->
+                <Button Grid.Row="0" 
+                        Margin="40,60,0,0"
+                        Command="{Binding NavigationHelper.GoBackCommand, ElementName=PageRoot}"
+                        Style="{StaticResource NavigationBackButtonNormalStyle}"
+                        VerticalAlignment="Top"
+                        AutomationProperties.Name="Back"
+                        AutomationProperties.AutomationId="BackButton"
+                        AutomationProperties.ItemType="Navigation Button" />
 
-            <userControls:FriendInfo Grid.Column="1" Margin="0,60,0,0" />
+                <userControls:FriendInfo Grid.Column="1" Margin="0,60,0,0" />
+            </Grid>
+
+            <!--  TODO: List of recent chats comes here! -->
+
+            <Button Grid.Row="2" HorizontalAlignment="Center" Content="" Margin="0,0,0,20" FontFamily="Segoe UI Symbol" FontSize="30"/>
         </Grid>
 
-        <!-- Grid.Column="0" Grid.Row="1" ... TODO: List of recent chats comes here! -->
-
-        <!-- List of messages and message input field -->
-        <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
+        <!-- Current file transfer, list of messages and message input field -->
+        <Grid Grid.Column="1" Grid.RowSpan="2">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
+            <!-- Current file transfer -->
+            <userControls:FileTransferBlock Grid.Row="0"/>
+
             <!-- List of messages -->
-            <ListView x:Name="MessagesListView" Grid.Row="0" Background="{StaticResource ChatBackgroundColor}"
+            <ListView Grid.Row="1" x:Name="MessagesListView" Background="{StaticResource ChatBackgroundColor}"
                       ItemsSource="{Binding Conversation.MessageGroups}" SelectionMode="None"
                       HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <ListView.ItemContainerStyle>
@@ -73,14 +85,14 @@
             </ListView>
 
             <!-- Friend typing indicator -->
-            <Grid Grid.Row="1" Background="{StaticResource ChatBackgroundColor}"
+            <Grid Grid.Row="2" Background="{StaticResource ChatBackgroundColor}"
                   Visibility="{Binding Conversation.IsFriendTyping, Converter={StaticResource BoolToVisibilityConverter}}">
                 <TextBlock Foreground="{StaticResource MainColor}" FontSize="20" Margin="10,2,0,2"
                            Text="{Binding Name, Converter={StaticResource FriendNameToTypingStatusConverter}}" />
             </Grid>
 
             <!-- Message input field -->
-            <Grid Grid.Row="2" Background="{StaticResource MainColor}">
+            <Grid Grid.Row="3" Background="{StaticResource MainColor}">
                 <TextBox x:Name="MessageInput" Margin="20" FontSize="20" MinHeight="40" MaxHeight="250" Height="Auto"
                          KeyDown="MessageInputKeyDown" TextWrapping="Wrap" IsEnabled="{Binding IsConnected}" />
             </Grid>
