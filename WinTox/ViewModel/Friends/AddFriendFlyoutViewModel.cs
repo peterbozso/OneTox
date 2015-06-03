@@ -47,13 +47,14 @@ namespace WinTox.ViewModel.Friends
                                if (invitationMessage == String.Empty)
                                    invitationMessage = "Hello! I'd like to add you to my friends list.";
 
-                               ToxErrorFriendAdd error;
-                               ToxModel.Instance.AddFriend(new ToxId(friendId), invitationMessage, out error);
-                               // TODO: Handle errors!!!
-
-                               friendIdTextBox.Text = String.Empty;
-                               invitationMessageTextBox.Text = String.Empty;
-                               IsFlyoutOpen = false;
+                               bool successFulAdd;
+                               ToxModel.Instance.AddFriend(new ToxId(friendId), invitationMessage, out successFulAdd);
+                               if (successFulAdd)
+                               {
+                                   friendIdTextBox.Text = String.Empty;
+                                   invitationMessageTextBox.Text = String.Empty;
+                                   IsFlyoutOpen = false;
+                               }
                            }));
             }
         }

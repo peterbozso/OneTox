@@ -49,12 +49,9 @@ namespace WinTox.ViewModel.Messaging
             var messageChunks = SplitMessage(message);
             foreach (var chunk in messageChunks)
             {
-                ToxErrorSendMessage error;
-                ToxModel.Instance.SendMessage(_friendViewModel.FriendNumber, chunk, messageType, out error);
-
-                // TODO: Error handling!
-
-                if (error == ToxErrorSendMessage.Ok)
+                bool successfulSend;
+                ToxModel.Instance.SendMessage(_friendViewModel.FriendNumber, chunk, messageType, out successfulSend);
+                if (successfulSend)
                     StoreMessage(chunk, _userViewModel, messageType);
             }
         }

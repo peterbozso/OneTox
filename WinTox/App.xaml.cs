@@ -3,14 +3,18 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
 using Windows.Globalization;
 using Windows.UI.ApplicationSettings;
+using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
 using WinTox.Model;
 using WinTox.View;
+using WinTox.ViewModel;
 
 // The Hub App template is documented at http://go.microsoft.com/fwlink/?LinkId=321221
 
@@ -64,9 +68,7 @@ namespace WinTox
 
                 await HandlePreviousExecutionState(e.PreviousExecutionState);
 
-                ToxModel.Instance.Start();
-
-                await AvatarManager.Instance.LoadAvatars();
+                await InitializeSingletons();
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
@@ -80,6 +82,22 @@ namespace WinTox
             }
             // Ensure the current window is active
             Window.Current.Activate();
+        }
+
+        private async Task InitializeSingletons()
+        {
+            ToxModel.Instance.Start();
+            await AvatarManager.Instance.LoadAvatars();
+            ToxErrorViewModel.Instance.ToxErrorOccured += ToxErrorOccuredHandler;
+        }
+
+        private void ToxErrorOccuredHandler(object sender, string errorMessage)
+        {
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                var msgDialog = new MessageDialog(errorMessage, "Error occured");
+                await msgDialog.ShowAsync();
+            });
         }
 
         private async Task HandlePreviousExecutionState(ApplicationExecutionState previousExecutionState)

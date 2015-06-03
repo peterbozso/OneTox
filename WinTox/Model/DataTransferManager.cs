@@ -49,9 +49,7 @@ namespace WinTox.Model
 
         protected void SendCancelControl(int friendNumber, int fileNumber)
         {
-            ToxErrorFileControl error;
-            ToxModel.Instance.FileControl(friendNumber, fileNumber, ToxFileControl.Cancel, out error);
-            // TODO: Error handling!
+            ToxModel.Instance.FileControl(friendNumber, fileNumber, ToxFileControl.Cancel);
         }
 
         /// <summary>
@@ -62,10 +60,7 @@ namespace WinTox.Model
         /// <returns>True on success, false otherwise.</returns>
         protected bool SendResumeControl(int friendNumber, int fileNumber)
         {
-            ToxErrorFileControl error;
-            ToxModel.Instance.FileControl(friendNumber, fileNumber, ToxFileControl.Resume, out error);
-            // TODO: Error handling!
-            return (error == ToxErrorFileControl.Ok);
+            return ToxModel.Instance.FileControl(friendNumber, fileNumber, ToxFileControl.Resume);
         }
 
         #endregion
@@ -81,9 +76,9 @@ namespace WinTox.Model
             var currentTransfer = ActiveTransfers[transferId];
 
             var chunk = GetNextChunk(e, currentTransfer);
-            ToxErrorFileSendChunk error;
-            ToxModel.Instance.FileSendChunk(e.FriendNumber, e.FileNumber, e.Position, chunk, out error);
-            if (error == ToxErrorFileSendChunk.Ok)
+            bool successfulChunkSend;
+            ToxModel.Instance.FileSendChunk(e.FriendNumber, e.FileNumber, e.Position, chunk, out successfulChunkSend);
+            if (successfulChunkSend)
             {
                 currentTransfer.IncreaseProgress(e.Length);
                 if (currentTransfer.IsFinished())
@@ -95,7 +90,6 @@ namespace WinTox.Model
                         e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
                 }
             }
-            // TODO: Error handling!
         }
 
         private byte[] GetNextChunk(ToxEventArgs.FileRequestChunkEventArgs e, TransferData currentTransfer)

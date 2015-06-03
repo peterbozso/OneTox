@@ -26,11 +26,11 @@ namespace WinTox.Model
         {
             var stream = (await file.OpenReadAsync()).AsStreamForRead();
 
-            ToxErrorFileSend error;
+            bool successfulFileSend;
             var fileInfo = ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, stream.Length, file.Name,
-                GetAvatarHash(stream), out error);
+                GetAvatarHash(stream), out successfulFileSend);
 
-            if (error == ToxErrorFileSend.Ok)
+            if (successfulFileSend)
             {
                 ActiveTransfers.Add(new TransferId(fileInfo.Number, friendNumber),
                     new TransferData(ToxFileKind.Avatar, stream, stream.Length));
@@ -38,15 +38,13 @@ namespace WinTox.Model
                     "Avatar upload added! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
                     friendNumber, fileInfo.Number, ActiveTransfers.Count);
             }
-            // TODO: Error handling!
         }
 
         public void SendNullAvatar(int friendNumber)
         {
-            ToxErrorFileSend error;
+            bool successfulFileSend;
             ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, 0, "", GetAvatarHash(new MemoryStream()),
-                out error);
-            // TODO: Error handling!
+                out successfulFileSend);
         }
 
         private byte[] GetAvatarHash(Stream stream)

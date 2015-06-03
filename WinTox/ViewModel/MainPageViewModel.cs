@@ -27,9 +27,7 @@ namespace WinTox.ViewModel
             switch (answer)
             {
                 case FriendRequestAnswer.Accept:
-                    ToxErrorFriendAdd error;
-                    ToxModel.Instance.AddFriendNoRequest(e.PublicKey, out error);
-                    // TODO: Handle error!
+                    ToxModel.Instance.AddFriendNoRequest(e.PublicKey);
                     return;
 
                 case FriendRequestAnswer.Decline:

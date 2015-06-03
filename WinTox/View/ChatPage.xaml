@@ -82,7 +82,7 @@
             <!-- Message input field -->
             <Grid Grid.Row="2" Background="{StaticResource MainColor}">
                 <TextBox x:Name="MessageInput" Margin="20" FontSize="20" MinHeight="40" MaxHeight="250" Height="Auto"
-                         KeyDown="MessageInputKeyDown" TextWrapping="Wrap" />
+                         KeyDown="MessageInputKeyDown" TextWrapping="Wrap" IsEnabled="{Binding IsConnected}" />
             </Grid>
         </Grid>
     </Grid>

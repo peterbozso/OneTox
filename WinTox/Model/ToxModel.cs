@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using SharpTox.Core;
 using SharpTox.Encryption;
+using WinTox.ViewModel;
 
 namespace WinTox.Model
 {
@@ -184,19 +185,29 @@ namespace WinTox.Model
             }
         }
 
-        public int AddFriend(ToxId id, string message, out ToxErrorFriendAdd error)
+        public int AddFriend(ToxId id, string message, out bool success)
         {
-            return _tox.AddFriend(id, message, out error);
+            ToxErrorFriendAdd error;
+            var retVal = _tox.AddFriend(id, message, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            success = error == ToxErrorFriendAdd.Ok;
+            return retVal;
         }
 
-        public int AddFriendNoRequest(ToxKey publicKey, out ToxErrorFriendAdd error)
+        public int AddFriendNoRequest(ToxKey publicKey)
         {
-            return _tox.AddFriendNoRequest(publicKey, out error);
+            ToxErrorFriendAdd error;
+            var retVal = _tox.AddFriendNoRequest(publicKey, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
         }
 
-        public bool DeleteFriend(int friendNumber, out ToxErrorFriendDelete error)
+        public bool DeleteFriend(int friendNumber)
         {
-            return _tox.DeleteFriend(friendNumber, out error);
+            ToxErrorFriendDelete error;
+            var retVal = _tox.DeleteFriend(friendNumber, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
         }
 
         public string GetFriendName(int friendNumber)
@@ -269,9 +280,13 @@ namespace WinTox.Model
             return _tox.GetData(key);
         }
 
-        public int SendMessage(int friendNumber, string message, ToxMessageType type, out ToxErrorSendMessage error)
+        public int SendMessage(int friendNumber, string message, ToxMessageType type, out bool success)
         {
-            return _tox.SendMessage(friendNumber, message, type, out error);
+            ToxErrorSendMessage error;
+            var retVal = _tox.SendMessage(friendNumber, message, type, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            success = error == ToxErrorSendMessage.Ok;
+            return retVal;
         }
 
         public void SetTypingStatus(int friendNumber, bool isTyping)
@@ -279,21 +294,32 @@ namespace WinTox.Model
             _tox.SetTypingStatus(friendNumber, isTyping);
         }
 
-        public bool FileControl(int friendNumber, int fileNumber, ToxFileControl control, out ToxErrorFileControl error)
+        public bool FileControl(int friendNumber, int fileNumber, ToxFileControl control)
         {
-            return _tox.FileControl(friendNumber, fileNumber, control, out error);
+            ToxErrorFileControl error;
+            var retVal = _tox.FileControl(friendNumber, fileNumber, control, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
         }
 
         public ToxFileInfo FileSend(int friendNumber, ToxFileKind kind, long fileSize, string fileName, byte[] fileId,
-            out ToxErrorFileSend error)
+            out bool success)
         {
-            return _tox.FileSend(friendNumber, kind, fileSize, fileName, fileId, out error);
+            ToxErrorFileSend error;
+            var retVal = _tox.FileSend(friendNumber, kind, fileSize, fileName, fileId, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            success = error == ToxErrorFileSend.Ok;
+            return retVal;
         }
 
         public bool FileSendChunk(int friendNumber, int fileNumber, long position, byte[] data,
-            out ToxErrorFileSendChunk error)
+            out bool success)
         {
-            return _tox.FileSendChunk(friendNumber, fileNumber, position, data, out error);
+            ToxErrorFileSendChunk error;
+            var retVal = _tox.FileSendChunk(friendNumber, fileNumber, position, data, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            success = error == ToxErrorFileSendChunk.Ok;
+            return retVal;
         }
 
         public byte[] FileGetId(int friendNumber, int fileNumber)

@@ -48,12 +48,7 @@ namespace WinTox.ViewModel.Friends
             {
                 return _removeFriendCommand
                        ?? (_removeFriendCommand = new RelayCommand(
-                           (object parameter) =>
-                           {
-                               ToxErrorFriendDelete error;
-                               ToxModel.Instance.DeleteFriend(FriendNumber, out error);
-                               // TODO: Handle errors!!!
-                           }));
+                           (object parameter) => { ToxModel.Instance.DeleteFriend(FriendNumber); }));
             }
         }
 
