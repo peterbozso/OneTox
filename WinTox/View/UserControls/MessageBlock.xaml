@@ -31,7 +31,7 @@
                    Stretch="UniformToFill"
                    VerticalAlignment="Top" />
 
-            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="Name" Foreground="{StaticResource MainColor}"
+            <TextBlock Grid.Row="0" Grid.Column="1" Foreground="{StaticResource MainColor}"
                        Margin="10,-3,0,0"
                        FontSize="20" Text="{Binding Sender.Name}" TextWrapping="Wrap" VerticalAlignment="Top" />
 
