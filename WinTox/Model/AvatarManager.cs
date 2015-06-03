@@ -84,10 +84,12 @@ namespace WinTox.Model
 
         public async Task RemoveFriendAvatar(int friendNumber)
         {
-            FriendAvatars.Remove(friendNumber);
-            if (FriendAvatarChanged != null)
-                FriendAvatarChanged(this, friendNumber);
-            await DeleteFriendAvatarFile(friendNumber);
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                FriendAvatars.Remove(friendNumber);
+                RaiseFriendAvatarChanged(friendNumber);
+                await DeleteFriendAvatarFile(friendNumber);
+            });
         }
 
         private async Task DeleteFriendAvatarFile(int friendNumber)
@@ -138,8 +140,7 @@ namespace WinTox.Model
                         return;
                     }
                     FriendAvatars[friendNumber] = friendAvatar;
-                    if (FriendAvatarChanged != null)
-                        FriendAvatarChanged(this, friendNumber);
+                    RaiseFriendAvatarChanged(friendNumber);
                 }
             });
         }
@@ -155,6 +156,12 @@ namespace WinTox.Model
                 return false;
             }
             return true;
+        }
+
+        private void RaiseFriendAvatarChanged(int friendNumber)
+        {
+            if (FriendAvatarChanged != null)
+                FriendAvatarChanged(this, friendNumber);
         }
 
         #endregion
