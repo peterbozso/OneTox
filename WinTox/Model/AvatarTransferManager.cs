@@ -1,9 +1,7 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage;
 using SharpTox.Core;
 
 namespace WinTox.Model
@@ -22,12 +20,10 @@ namespace WinTox.Model
 
         #region Sending
 
-        public async Task SendAvatar(int friendNumber, StorageFile file)
+        public async Task SendAvatar(int friendNumber, Stream stream, string fileName)
         {
-            var stream = (await file.OpenReadAsync()).AsStreamForRead();
-
             bool successfulFileSend;
-            var fileInfo = ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, stream.Length, file.Name,
+            var fileInfo = ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, stream.Length, fileName,
                 GetAvatarHash(stream), out successfulFileSend);
 
             if (successfulFileSend)
@@ -98,8 +94,7 @@ namespace WinTox.Model
         private async Task<bool> AlreadyHaveAvatar(int friendNumber, int fileNumber)
         {
             var fileId = ToxModel.Instance.FileGetId(friendNumber, fileNumber);
-            var friendAvatarFile = await AvatarManager.Instance.GetFriendAvatarFile(friendNumber);
-            var stream = (await friendAvatarFile.OpenReadAsync()).AsStreamForRead();
+            var stream = await AvatarManager.Instance.GetFriendAvatarStream(friendNumber);
             var avatarHash = GetAvatarHash(stream);
             return fileId.SequenceEqual(avatarHash);
         }
