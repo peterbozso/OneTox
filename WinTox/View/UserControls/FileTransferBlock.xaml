@@ -5,9 +5,14 @@
     xmlns:local="using:WinTox.View.UserControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:WinTox.Converters"
     mc:Ignorable="d"
     d:DesignHeight="60"
     d:DesignWidth="700">
+
+    <UserControl.Resources>
+        <converters:TransferDirectionToIconConverter x:Key="TransferDirectionToIconConverter" />
+    </UserControl.Resources>
 
     <ItemsControl ItemsSource="{Binding Transfers}">
         <ItemsControl.ItemTemplate>
@@ -20,7 +25,8 @@
 
                     <!-- TODO: Change this icon to something that indicates the direction of the file transfer! (upload/download) -->
                     <TextBlock Grid.Column="0" FontFamily="Segoe UI Symbol" FontSize="30" Margin="20,0,0,0"
-                               VerticalAlignment="Center" Text="" />
+                               VerticalAlignment="Center"
+                               Text="{Binding Direction, Converter={StaticResource TransferDirectionToIconConverter}}" />
 
                     <Grid Grid.Column="1" Margin="20,0,30,0">
                         <Grid.RowDefinitions>
