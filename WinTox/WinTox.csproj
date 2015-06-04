@@ -144,8 +144,8 @@
     <Compile Include="View\ProfileSettingsFlyout.xaml.cs">
       <DependentUpon>ProfileSettingsFlyout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\FileTransferBlock.xaml.cs">
-      <DependentUpon>FileTransferBlock.xaml</DependentUpon>
+    <Compile Include="View\UserControls\FileTransfersBlock.xaml.cs">
+      <DependentUpon>FileTransfersBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserControls\FriendInfo.xaml.cs">
       <DependentUpon>FriendInfo.xaml</DependentUpon>
@@ -210,7 +210,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\UserControls\FileTransferBlock.xaml">
+    <Page Include="View\UserControls\FileTransfersBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

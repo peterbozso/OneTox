@@ -81,7 +81,7 @@
             </Grid.RowDefinitions>
 
             <!-- Current file transfer -->
-            <userControls:FileTransferBlock Grid.Row="0" DataContext="{Binding FileTransfers}" />
+            <userControls:FileTransfersBlock Grid.Row="0" DataContext="{Binding FileTransfers}" />
 
             <!-- List of messages -->
             <ListView Grid.Row="1" x:Name="MessagesListView" Background="{StaticResource ChatBackgroundColor}"

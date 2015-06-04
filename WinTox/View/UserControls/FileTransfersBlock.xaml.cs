@@ -4,9 +4,9 @@
 
 namespace WinTox.View.UserControls
 {
-    public sealed partial class FileTransferBlock : UserControl
+    public sealed partial class FileTransfersBlock : UserControl
     {
-        public FileTransferBlock()
+        public FileTransfersBlock()
         {
             InitializeComponent();
         }
