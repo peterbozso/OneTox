@@ -1,4 +1,6 @@
-﻿namespace WinTox.ViewModel.FileTransfer
+﻿using WinTox.Common;
+
+namespace WinTox.ViewModel.FileTransfer
 {
     public enum FileTransferDirection
     {
@@ -8,10 +10,14 @@
 
     public class FileTransferDataViewModel : ViewModelBase
     {
+        private readonly FileTransfersViewModel _fileTransfers;
         private double _progress;
+        private RelayCommand _removeTransferCommand;
 
-        public FileTransferDataViewModel(int fileNumber, string name, FileTransferDirection direction)
+        public FileTransferDataViewModel(FileTransfersViewModel fileTransfers, int fileNumber, string name,
+            FileTransferDirection direction)
         {
+            _fileTransfers = fileTransfers;
             FileNumber = fileNumber;
             Name = name;
             Direction = direction;
@@ -29,6 +35,15 @@
             {
                 _progress = value;
                 RaisePropertyChanged();
+            }
+        }
+
+        public RelayCommand CancelTransferCommand
+        {
+            get
+            {
+                return _removeTransferCommand ?? (_removeTransferCommand = new RelayCommand(
+                    () => { _fileTransfers.CancelTransfer(FileNumber); }));
             }
         }
     }

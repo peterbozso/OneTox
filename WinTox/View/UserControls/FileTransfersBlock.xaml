@@ -45,7 +45,7 @@
                     <Button Grid.Column="2" Width="90" Content="Pause" />
                     <!-- TODO: Replace hitbox with a circle! -->
                     <Button Grid.Column="3" FontFamily="Segoe UI Symbol" BorderThickness="0" Padding="0"
-                            Margin="10,0,20,0" Content="" />
+                            Margin="10,0,20,0" Content="" Command="{Binding CancelTransferCommand}" />
                 </Grid>
             </DataTemplate>
         </ItemsControl.ItemTemplate>

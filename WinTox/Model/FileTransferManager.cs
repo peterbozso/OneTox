@@ -35,6 +35,20 @@ namespace WinTox.Model
             });
         }
 
+        public void CancelTransfer(int friendNumber, int fileNumber)
+        {
+            SendCancelControl(friendNumber, fileNumber);
+
+            var transferId = new TransferId(fileNumber, friendNumber);
+            if (ActiveTransfers.ContainsKey(transferId))
+            {
+                ActiveTransfers.Remove(transferId);
+                Debug.WriteLine(
+                    "File transfer CANCELLED by user! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                    friendNumber, fileNumber, ActiveTransfers.Count);
+            }
+        }
+
         public event ProgressChangedDelegate ProgressChanged;
 
         #region Sending

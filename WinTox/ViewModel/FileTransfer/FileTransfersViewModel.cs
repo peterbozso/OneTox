@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using WinTox.Model;
@@ -22,14 +23,9 @@ namespace WinTox.ViewModel.FileTransfer
 
         private void ProgressChangedHandler(int fileNumber, double newProgress)
         {
-            foreach (var transfer in Transfers)
-            {
-                if (transfer.FileNumber == fileNumber)
-                {
-                    transfer.Progress = newProgress;
-                    return;
-                }
-            }
+            var transfer = FindTransferViewModel(fileNumber);
+            if (transfer != null)
+                transfer.Progress = newProgress;
         }
 
         public async Task SendFile(StorageFile file)
@@ -39,8 +35,20 @@ namespace WinTox.ViewModel.FileTransfer
             var successfulSend = FileTransferManager.Instance.SendFile(_friendNumber, stream, file.Name, out fileNumber);
             if (successfulSend)
             {
-                Transfers.Add(new FileTransferDataViewModel(fileNumber, file.Name, FileTransferDirection.Up));
+                Transfers.Add(new FileTransferDataViewModel(this, fileNumber, file.Name, FileTransferDirection.Up));
             }
+        }
+
+        public void CancelTransfer(int fileNumber)
+        {
+            FileTransferManager.Instance.CancelTransfer(_friendNumber, fileNumber);
+            var transfer = FindTransferViewModel(fileNumber);
+            Transfers.Remove(transfer);
+        }
+
+        private FileTransferDataViewModel FindTransferViewModel(int fileNumber)
+        {
+            return Transfers.FirstOrDefault(transfer => transfer.FileNumber == fileNumber);
         }
     }
 }
