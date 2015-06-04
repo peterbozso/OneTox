@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Threading;
 using Windows.System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
@@ -30,6 +31,8 @@ namespace WinTox.View
 
             _chatTimer = new Timer(state => _friendViewModel.Conversation.SetTypingStatus(false),
                 null, Timeout.Infinite, Timeout.Infinite);
+
+            SizeChanged += ChatPageSizeChanged;
         }
 
         /// <summary>
@@ -37,6 +40,11 @@ namespace WinTox.View
         ///     process lifetime management
         /// </summary>
         public NavigationHelper NavigationHelper { get; private set; }
+
+        private void ChatPageSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, e.NewSize.Width < 820 ? "MinimalLayout" : "DefaultLayout", true);
+        }
 
         /// <summary>
         ///     Populates the page with content passed during navigation. Any saved state is also

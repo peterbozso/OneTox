@@ -13,17 +13,34 @@
         <ResourceDictionary Source="ResourceDictionaries/ChatPageDictionary.xaml" />
     </Page.Resources>
 
+
     <Grid Background="{ThemeResource BackgroundColor}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="DefaultLayout">
+                    <!-- The default Visibility properties are set in the XAML that defines the objects. -->
+                </VisualState>
+                <VisualState x:Name="MinimalLayout">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FriendInfo"
+                                                       Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition />
             </TransitionCollection>
         </Grid.ChildrenTransitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="450" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        
+
         <!-- Friend info and back button, list of recent messages, file send button -->
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
@@ -34,14 +51,9 @@
 
             <!-- Back button and friend info -->
             <Grid Grid.Row="0" Height="500" VerticalAlignment="Top">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
 
                 <!-- Back button -->
-                <Button Grid.Row="0" 
-                        Margin="40,60,0,0"
+                <Button Margin="20,60,0,0"
                         Command="{Binding NavigationHelper.GoBackCommand, ElementName=PageRoot}"
                         Style="{StaticResource NavigationBackButtonNormalStyle}"
                         VerticalAlignment="Top"
@@ -49,12 +61,13 @@
                         AutomationProperties.AutomationId="BackButton"
                         AutomationProperties.ItemType="Navigation Button" />
 
-                <userControls:FriendInfo Grid.Column="1" Margin="0,60,0,0" />
+                <userControls:FriendInfo x:Name="FriendInfo" Margin="80,60,80,0" />
             </Grid>
 
             <!--  TODO: List of recent chats comes here! -->
 
-            <Button Grid.Row="2" HorizontalAlignment="Center" Content="" Margin="0,0,0,20" FontFamily="Segoe UI Symbol" FontSize="30"/>
+            <Button Grid.Row="2" HorizontalAlignment="Center" Content="" Margin="20,0,20,20"
+                    FontFamily="Segoe UI Symbol" FontSize="30" />
         </Grid>
 
         <!-- Current file transfer, list of messages and message input field -->
@@ -67,7 +80,7 @@
             </Grid.RowDefinitions>
 
             <!-- Current file transfer -->
-            <userControls:FileTransferBlock Grid.Row="0"/>
+            <userControls:FileTransferBlock Grid.Row="0" />
 
             <!-- List of messages -->
             <ListView Grid.Row="1" x:Name="MessagesListView" Background="{StaticResource ChatBackgroundColor}"
