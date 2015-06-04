@@ -123,7 +123,7 @@
     <Compile Include="Model\FileTransferManager.cs" />
     <Compile Include="Model\FriendListChangedEventArgs.cs" />
     <Compile Include="Model\ToxModel.cs" />
-    <Compile Include="ViewModel\FileTransfer\FileTransferDataViewModel.cs" />
+    <Compile Include="ViewModel\FileTransfer\OneFileTransferViewModel.cs" />
     <Compile Include="ViewModel\FileTransfer\FileTransfersViewModel.cs" />
     <Compile Include="ViewModel\Friends\AddFriendFlyoutViewModel.cs" />
     <Compile Include="Helpers\FlyoutHelper.cs" />

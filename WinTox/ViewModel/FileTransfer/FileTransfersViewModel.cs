@@ -15,11 +15,11 @@ namespace WinTox.ViewModel.FileTransfer
         public FileTransfersViewModel(int friendNumber)
         {
             _friendNumber = friendNumber;
-            Transfers = new ObservableCollection<FileTransferDataViewModel>();
+            Transfers = new ObservableCollection<OneFileTransferViewModel>();
             FileTransferManager.Instance.ProgressChanged += ProgressChangedHandler;
         }
 
-        public ObservableCollection<FileTransferDataViewModel> Transfers { get; private set; }
+        public ObservableCollection<OneFileTransferViewModel> Transfers { get; private set; }
 
         private void ProgressChangedHandler(int fileNumber, double newProgress)
         {
@@ -35,7 +35,7 @@ namespace WinTox.ViewModel.FileTransfer
             var successfulSend = FileTransferManager.Instance.SendFile(_friendNumber, stream, file.Name, out fileNumber);
             if (successfulSend)
             {
-                Transfers.Add(new FileTransferDataViewModel(this, fileNumber, file.Name, FileTransferDirection.Up));
+                Transfers.Add(new OneFileTransferViewModel(this, fileNumber, file.Name, FileTransferDirection.Up));
             }
         }
 
@@ -46,7 +46,7 @@ namespace WinTox.ViewModel.FileTransfer
             Transfers.Remove(transfer);
         }
 
-        private FileTransferDataViewModel FindTransferViewModel(int fileNumber)
+        private OneFileTransferViewModel FindTransferViewModel(int fileNumber)
         {
             return Transfers.FirstOrDefault(transfer => transfer.FileNumber == fileNumber);
         }

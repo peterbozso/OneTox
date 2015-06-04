@@ -8,13 +8,13 @@ namespace WinTox.ViewModel.FileTransfer
         Down
     }
 
-    public class FileTransferDataViewModel : ViewModelBase
+    public class OneFileTransferViewModel : ViewModelBase
     {
         private readonly FileTransfersViewModel _fileTransfers;
         private double _progress;
         private RelayCommand _removeTransferCommand;
 
-        public FileTransferDataViewModel(FileTransfersViewModel fileTransfers, int fileNumber, string name,
+        public OneFileTransferViewModel(FileTransfersViewModel fileTransfers, int fileNumber, string name,
             FileTransferDirection direction)
         {
             _fileTransfers = fileTransfers;
