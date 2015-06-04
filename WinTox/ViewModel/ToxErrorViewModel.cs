@@ -60,18 +60,23 @@ namespace WinTox.ViewModel
 
         public void RelayError(ToxErrorFileSendChunk error)
         {
+            /*
             if (error != ToxErrorFileSendChunk.Ok)
                 RaiseToxErrorOccured("An unexpected error occured when sending a file chunk: " + error);
+            */
         }
 
         public void RelayError(ToxErrorFileControl error)
         {
+            /*
             if (error != ToxErrorFileControl.Ok)
                 RaiseToxErrorOccured("An unexpected error occured when trying to control a file transfer: " + error);
+            */
         }
 
         public void RelayError(ToxErrorFileSend error)
         {
+            /*
             switch (error)
             {
                 case ToxErrorFileSend.NameTooLong:
@@ -85,6 +90,7 @@ namespace WinTox.ViewModel
                         RaiseToxErrorOccured("An unexpected error occured when trying to send a file: " + error);
                     return;
             }
+            */
         }
 
         private void RaiseToxErrorOccured(string errorMessage)
