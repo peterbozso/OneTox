@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Threading;
+using Windows.Storage.Pickers;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -102,6 +103,15 @@ namespace WinTox.View
             MessagesListView.SelectedIndex = selectedIndex;
             MessagesListView.UpdateLayout();
             MessagesListView.ScrollIntoView(MessagesListView.SelectedItem);
+        }
+
+        private async void SendFileButtonClick(object sender, RoutedEventArgs e)
+        {
+            var openPicker = new FileOpenPicker();
+            openPicker.FileTypeFilter.Add("*");
+            var file = await openPicker.PickSingleFileAsync();
+            if (file != null)
+                await _friendViewModel.FileTransfers.SendFile(file);
         }
 
         #region NavigationHelper registration

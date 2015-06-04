@@ -67,7 +67,8 @@
             <!--  TODO: List of recent chats comes here! -->
 
             <Button Grid.Row="2" HorizontalAlignment="Center" Content="" Margin="20,0,20,20"
-                    FontFamily="Segoe UI Symbol" FontSize="30" />
+                    FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
+                    IsEnabled="{Binding IsConnected}" />
         </Grid>
 
         <!-- Current file transfer, list of messages and message input field -->
@@ -80,7 +81,7 @@
             </Grid.RowDefinitions>
 
             <!-- Current file transfer -->
-            <userControls:FileTransferBlock Grid.Row="0" />
+            <userControls:FileTransferBlock Grid.Row="0" DataContext="{Binding FileTransfers}" />
 
             <!-- List of messages -->
             <ListView Grid.Row="1" x:Name="MessagesListView" Background="{StaticResource ChatBackgroundColor}"

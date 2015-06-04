@@ -25,6 +25,16 @@ namespace WinTox.Model
 
         #region Common
 
+        /// <summary>
+        /// </summary>
+        /// <param name="transferData"></param>
+        /// <param name="amount"></param>
+        /// <param name="fileNumber">Only for the descendant function in FileTransferManager.</param>
+        protected virtual void InCreaseTransferProgress(TransferData transferData, int amount, int fileNumber)
+        {
+            transferData.IncreaseProgress(amount);
+        }
+
         private bool IsTransferFinished(TransferId transferId)
         {
             return !ActiveTransfers.ContainsKey(transferId);
@@ -80,13 +90,13 @@ namespace WinTox.Model
             ToxModel.Instance.FileSendChunk(e.FriendNumber, e.FileNumber, e.Position, chunk, out successfulChunkSend);
             if (successfulChunkSend)
             {
-                currentTransfer.IncreaseProgress(e.Length);
+                InCreaseTransferProgress(currentTransfer, e.Length, transferId.FileNumber);
                 if (currentTransfer.IsFinished())
                 {
                     ActiveTransfers.Remove(transferId);
 
                     Debug.WriteLine(
-                        "File upload removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                        "Data upload removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
                         e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
                 }
             }
@@ -119,7 +129,7 @@ namespace WinTox.Model
             var currentStream = currentTransfer.Stream;
             PutNextChunk(e, currentStream);
 
-            currentTransfer.IncreaseProgress(e.Data.Length);
+            InCreaseTransferProgress(currentTransfer, e.Data.Length, transferId.FileNumber);
             if (currentTransfer.IsFinished())
             {
                 HandleFinishedDownload(transferId, e);
@@ -180,6 +190,12 @@ namespace WinTox.Model
             public void IncreaseProgress(long amount)
             {
                 _transferredBytes += amount;
+            }
+
+            public double GetProgress()
+            {
+                // TODO: Refactor these three functions! ˇ^
+                return ((double) _transferredBytes/_dataSizeInBytes)*100;
             }
 
             public bool IsFinished()

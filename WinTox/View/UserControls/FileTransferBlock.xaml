@@ -9,23 +9,32 @@
     d:DesignHeight="60"
     d:DesignWidth="700">
 
-    <Grid Background="{StaticResource MainColor}" Height="60">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+    <ItemsControl ItemsSource="{Binding Transfers}">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <Grid Background="{StaticResource MainColor}" Height="60">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-        <!-- TODO: Change this icon to something that indicates the direction of the file transfer! (upload/download) -->
-        <TextBlock Grid.Column="0" FontFamily="Segoe UI Symbol" FontSize="30" Margin="20,0,0,0" VerticalAlignment="Center" Text=""/>
+                    <!-- TODO: Change this icon to something that indicates the direction of the file transfer! (upload/download) -->
+                    <TextBlock Grid.Column="0" FontFamily="Segoe UI Symbol" FontSize="30" Margin="20,0,0,0"
+                               VerticalAlignment="Center" Text="" />
 
-        <Grid Grid.Column="1" Margin="20,0,30,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+                    <Grid Grid.Column="1" Margin="20,0,30,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
-            <ProgressBar Grid.Row="1" Foreground="{StaticResource MessageColor}" VerticalAlignment="Center" Margin="0,5,0,15"/>
-        </Grid>
-    </Grid>
+                        <TextBlock Grid.Row="0" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                   Text="{Binding Name}" />
+                        <ProgressBar Grid.Row="1" Foreground="{StaticResource MessageColor}" VerticalAlignment="Center"
+                                     Margin="0,5,0,15" Value="{Binding Progress}" />
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
 </UserControl>

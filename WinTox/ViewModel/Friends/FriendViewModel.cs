@@ -3,6 +3,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
 using WinTox.Common;
 using WinTox.Model;
+using WinTox.ViewModel.FileTransfer;
 using WinTox.ViewModel.Messaging;
 
 namespace WinTox.ViewModel.Friends
@@ -18,6 +19,7 @@ namespace WinTox.ViewModel.Friends
         public FriendViewModel(int friendNumber)
         {
             Conversation = new ConversationViewModel(this);
+            FileTransfers = new FileTransfersViewModel(FriendNumber);
 
             FriendNumber = friendNumber;
 
@@ -40,6 +42,7 @@ namespace WinTox.ViewModel.Friends
         }
 
         public ConversationViewModel Conversation { get; private set; }
+        public FileTransfersViewModel FileTransfers { get; private set; }
         public int FriendNumber { get; private set; }
 
         public RelayCommand RemoveFriendCommand

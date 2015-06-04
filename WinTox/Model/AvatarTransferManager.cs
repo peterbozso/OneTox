@@ -31,7 +31,7 @@ namespace WinTox.Model
                 ActiveTransfers.Add(new TransferId(fileInfo.Number, friendNumber),
                     new TransferData(ToxFileKind.Avatar, stream, stream.Length));
                 Debug.WriteLine(
-                    "Avatar upload added! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                    "Avatar upload added! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
                     friendNumber, fileInfo.Number, ActiveTransfers.Count);
             }
         }
@@ -86,7 +86,7 @@ namespace WinTox.Model
                     new TransferData(ToxFileKind.Avatar, stream, e.FileSize));
 
                 Debug.WriteLine(
-                    "Avatar download added! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                    "Avatar download added! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
                     e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
             }
         }
@@ -107,7 +107,7 @@ namespace WinTox.Model
             ActiveTransfers.Remove(transferId);
 
             Debug.WriteLine(
-                "Avatar download removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                "Avatar download removed! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
                 e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
         }
 
