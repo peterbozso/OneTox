@@ -39,7 +39,7 @@ namespace WinTox.ViewModel.FileTransfer
             var successfulSend = FileTransferManager.Instance.SendFile(_friendNumber, stream, file.Name, out fileNumber);
             if (successfulSend)
             {
-                Transfers.Add(new FileTransferDataViewModel(fileNumber, file.DisplayName, FileTransferDirection.Up));
+                Transfers.Add(new FileTransferDataViewModel(fileNumber, file.Name, FileTransferDirection.Up));
             }
         }
     }
