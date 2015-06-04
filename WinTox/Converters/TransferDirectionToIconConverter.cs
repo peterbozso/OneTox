@@ -1,11 +1,12 @@
-﻿using Windows.UI.Xaml.Data;
+﻿using System;
+using Windows.UI.Xaml.Data;
 using WinTox.ViewModel.FileTransfer;
 
 namespace WinTox.Converters
 {
-    class TransferDirectionToIconConverter : IValueConverter
+    internal class TransferDirectionToIconConverter : IValueConverter
     {
-        public object Convert(object value, System.Type targetType, object parameter, string language)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             var direction = (FileTransferDirection) value;
             switch (direction)
@@ -19,7 +20,7 @@ namespace WinTox.Converters
             }
         }
 
-        public object ConvertBack(object value, System.Type targetType, object parameter, string language)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             return null;
         }

@@ -31,7 +31,8 @@
             <Button HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="Segoe UI Symbol"
                     Background="Transparent"
                     Content="" Click="RemoveAvatarButtonClick"
-                    Visibility="{Binding IsAvatarSet, Converter={StaticResource BoolToVisibilityConverter}}" Padding="0" />
+                    Visibility="{Binding IsAvatarSet, Converter={StaticResource BoolToVisibilityConverter}}"
+                    Padding="0" />
         </Grid>
         <TextBox Header="Name" Margin="0,20,0,0" Text="{Binding Name, Mode=TwoWay}" LostFocus="NameTextBoxLostFocus" />
         <TextBox Header="Status message" Text="{Binding StatusMessage, Mode=TwoWay}" />
