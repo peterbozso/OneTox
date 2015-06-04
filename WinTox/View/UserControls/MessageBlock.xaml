@@ -49,11 +49,11 @@
                             <TextBlock x:Name="MessageText" Grid.Column="0"
                                        Foreground="{Binding MessageType, Converter={StaticResource MessageTypeToColorConverter}}"
                                        FontSize="20" Margin="10,0,0,0" TextWrapping="Wrap" Text="{Binding Message}" />
-                            <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="16" Margin="10,0,0,0"
+                            <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="16" Margin="10,5,0,0"
                                        Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"
                                        HorizontalAlignment="Left"
                                        Text="{Binding Timestamp, Converter={StaticResource DateTimeConverter}}"
-                                       VerticalAlignment="Center" />
+                                       VerticalAlignment="Top" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
