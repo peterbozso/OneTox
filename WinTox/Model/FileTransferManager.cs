@@ -27,14 +27,13 @@ namespace WinTox.Model
             get { return _instance ?? (_instance = new FileTransferManager()); }
         }
 
-        protected override async void InCreaseTransferProgress(TransferData transferData, int amount, int fileNumber,
-            int friendNumber)
+        protected override async void InCreaseTransferProgress(TransferId transferId, TransferData transferData, int amount)
         {
-            base.InCreaseTransferProgress(transferData, amount, fileNumber, friendNumber);
+            base.InCreaseTransferProgress(transferId, transferData, amount);
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 if (ProgressChanged != null)
-                    ProgressChanged(friendNumber, fileNumber, transferData.GetProgress());
+                    ProgressChanged(transferId.FriendNumber, transferId.FileNumber, transferData.GetProgress());
             });
         }
 
