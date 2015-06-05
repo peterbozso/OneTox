@@ -67,21 +67,19 @@ namespace WinTox.ViewModel.FileTransfer
             get
             {
                 return _cancelTransferByUserCommand ?? (_cancelTransferByUserCommand = new RelayCommand(
-                    () => { _fileTransfers.CancelTransfer(FileNumber); }));
+                    () => { _fileTransfers.CancelTransferByUser(FileNumber); }));
             }
         }
 
         public void CancelTransferByFriend()
         {
             State = FileTransferState.Cancelled;
-            FileNumber = -1;
             Progress = 100.0;
         }
 
         public void FinishTransfer()
         {
             State = FileTransferState.Finished;
-            FileNumber = -1;
             Progress = 100.0;
         }
     }

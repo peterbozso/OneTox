@@ -28,8 +28,8 @@ namespace WinTox.ViewModel.FileTransfer
             if (friendNumber != _friendNumber)
                 return;
 
-            var transfer = FindTransferViewModel(fileNumber);
-            if (transfer != null && transfer.IsNotPlaceholder)
+            var transfer = FindNotPlaceHolderTransferViewModel(fileNumber);
+            if (transfer != null)
             {
                 switch (fileControl)
                 {
@@ -45,8 +45,8 @@ namespace WinTox.ViewModel.FileTransfer
             if (friendNumber != _friendNumber)
                 return;
 
-            var transfer = FindTransferViewModel(fileNumber);
-            if (transfer != null && transfer.IsNotPlaceholder)
+            var transfer = FindNotPlaceHolderTransferViewModel(fileNumber);
+            if (transfer != null)
             {
                 if (newProgress.Equals(100.0))
                     transfer.FinishTransfer();
@@ -66,7 +66,7 @@ namespace WinTox.ViewModel.FileTransfer
             }
         }
 
-        public void CancelTransfer(int fileNumber)
+        public void CancelTransferByUser(int fileNumber)
         {
             FileTransferManager.Instance.CancelTransfer(_friendNumber, fileNumber);
             var transfer = FindTransferViewModel(fileNumber);
@@ -77,6 +77,12 @@ namespace WinTox.ViewModel.FileTransfer
         private OneFileTransferViewModel FindTransferViewModel(int fileNumber)
         {
             return Transfers.FirstOrDefault(transfer => transfer.FileNumber == fileNumber);
+        }
+
+        private OneFileTransferViewModel FindNotPlaceHolderTransferViewModel(int fileNumber)
+        {
+            return Transfers.FirstOrDefault(transfer => transfer.FileNumber == fileNumber && transfer.IsNotPlaceholder);
+            // There can be multiple transfers with the same file number, but there's always only one that's not a placeholder.
         }
     }
 }
