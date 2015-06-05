@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using SharpTox.Core;
 
@@ -42,20 +41,12 @@ namespace WinTox.Model
 
         private void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
         {
-            switch (e.Control)
-            {
-                case ToxFileControl.Cancel:
-                    var transferId = new TransferId(e.FileNumber, e.FriendNumber);
-                    if (ActiveTransfers.ContainsKey(transferId))
-                    {
-                        ActiveTransfers.Remove(transferId);
-                        Debug.WriteLine(
-                            "File transfer CANCELLED by friend! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
-                            e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
-                    }
-                    return;
-            }
+            var transferId = new TransferId(e.FileNumber, e.FriendNumber);
+            if (ActiveTransfers.ContainsKey(transferId))
+                HandleFileControl(e.Control, transferId);
         }
+
+        protected abstract void HandleFileControl(ToxFileControl fileControl, TransferId transferId);
 
         protected void SendCancelControl(int friendNumber, int fileNumber)
         {
@@ -93,11 +84,7 @@ namespace WinTox.Model
                 InCreaseTransferProgress(currentTransfer, e.Length, transferId.FileNumber);
                 if (currentTransfer.IsFinished())
                 {
-                    ActiveTransfers.Remove(transferId);
-
-                    Debug.WriteLine(
-                        "Data upload removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
-                        e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
+                    HandleFinishedUpload(transferId, e);
                 }
             }
         }
@@ -111,6 +98,8 @@ namespace WinTox.Model
             currentStream.Read(chunk, 0, e.Length);
             return chunk;
         }
+
+        protected abstract void HandleFinishedUpload(TransferId transferId, ToxEventArgs.FileRequestChunkEventArgs e);
 
         #endregion
 

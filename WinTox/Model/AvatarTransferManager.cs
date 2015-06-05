@@ -18,6 +18,19 @@ namespace WinTox.Model
             get { return _instance ?? (_instance = new AvatarTransferManager()); }
         }
 
+        protected override void HandleFileControl(ToxFileControl fileControl, TransferId transferId)
+        {
+            switch (fileControl)
+            {
+                case ToxFileControl.Cancel:
+                    ActiveTransfers.Remove(transferId);
+                    Debug.WriteLine(
+                        "Avatar transfer CANCELLED by friend! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                        transferId.FriendNumber, transferId.FileNumber, ActiveTransfers.Count);
+                    return;
+            }
+        }
+
         #region Sending
 
         public void SendAvatar(int friendNumber, Stream stream, string fileName)
@@ -48,6 +61,15 @@ namespace WinTox.Model
             var buffer = new byte[stream.Length];
             stream.Read(buffer, 0, (int) stream.Length);
             return ToxTools.Hash(buffer);
+        }
+
+        protected override void HandleFinishedUpload(TransferId transferId, ToxEventArgs.FileRequestChunkEventArgs e)
+        {
+            ActiveTransfers.Remove(transferId);
+
+            Debug.WriteLine(
+                "Avatar upload removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
         }
 
         #endregion

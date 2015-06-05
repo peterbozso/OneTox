@@ -44,12 +44,17 @@ namespace WinTox.Model
             {
                 ActiveTransfers.Remove(transferId);
                 Debug.WriteLine(
-                    "File transfer CANCELLED by user! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                    "File transfer CANCELLED (removed) by user! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
                     friendNumber, fileNumber, ActiveTransfers.Count);
             }
         }
 
         public event ProgressChangedDelegate ProgressChanged;
+
+        protected override void HandleFileControl(ToxFileControl fileControl, TransferId transferId)
+        {
+            Debug.WriteLine("STUB: FileTransferManager.HandleFileControl()");
+        }
 
         #region Sending
 
@@ -72,16 +77,29 @@ namespace WinTox.Model
             return successfulFileSend;
         }
 
+        protected override void HandleFinishedUpload(TransferId transferId, ToxEventArgs.FileRequestChunkEventArgs e)
+        {
+            ActiveTransfers.Remove(transferId);
+
+            Debug.WriteLine(
+                "File upload removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
+
+            // TODO: Tell the viewmodel about it!!!!!!!!!
+        }
+
         #endregion
 
         #region Receiving
 
         protected override void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
         {
+            Debug.WriteLine("STUB: FileTransferManager.FileSendRequestReceivedHandler()");
         }
 
         protected override void HandleFinishedDownload(TransferId transferId, ToxEventArgs.FileChunkEventArgs e)
         {
+            Debug.WriteLine("STUB: FileTransferManager.HandleFinishedDownload()");
         }
 
         #endregion
