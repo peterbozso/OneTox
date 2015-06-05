@@ -12,14 +12,12 @@ namespace WinTox.Model
     /// </summary>
     internal class FileTransferManager : DataTransferManager
     {
-        public delegate void FileControlReceivedDelegate(int friendNumber, int fileNumber, ToxFileControl fileControl);
-
-        public delegate void ProgressChangedDelegate(int friendNumber, int fileNumber, double newProgress);
-
         private static FileTransferManager _instance;
+        private readonly CoreDispatcher _dispatcher;
 
         private FileTransferManager()
         {
+            _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         }
 
         public static FileTransferManager Instance
@@ -27,15 +25,7 @@ namespace WinTox.Model
             get { return _instance ?? (_instance = new FileTransferManager()); }
         }
 
-        protected override async void InCreaseTransferProgress(TransferId transferId, TransferData transferData, int amount)
-        {
-            base.InCreaseTransferProgress(transferId, transferData, amount);
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                if (ProgressChanged != null)
-                    ProgressChanged(transferId.FriendNumber, transferId.FileNumber, transferData.GetProgress());
-            });
-        }
+        #region Common
 
         public void CancelTransfer(int friendNumber, int fileNumber)
         {
@@ -51,11 +41,21 @@ namespace WinTox.Model
             }
         }
 
-        public event ProgressChangedDelegate ProgressChanged;
+        protected override async void InCreaseTransferProgress(TransferId transferId, TransferData transferData,
+            int amount)
+        {
+            base.InCreaseTransferProgress(transferId, transferData, amount);
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (ProgressChanged != null)
+                    ProgressChanged(transferId.FriendNumber, transferId.FileNumber, transferData.GetProgress());
+            });
+        }
+
 
         protected override async void HandleFileControl(ToxFileControl fileControl, TransferId transferId)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (FileControlReceived != null)
                     FileControlReceived(transferId.FriendNumber, transferId.FileNumber, fileControl);
@@ -72,7 +72,18 @@ namespace WinTox.Model
             }
         }
 
+        #endregion
+
+        #region Events
+
+        public delegate void FileControlReceivedDelegate(int friendNumber, int fileNumber, ToxFileControl fileControl);
+
+        public delegate void ProgressChangedDelegate(int friendNumber, int fileNumber, double newProgress);
+
+        public event ProgressChangedDelegate ProgressChanged;
         public event FileControlReceivedDelegate FileControlReceived;
+
+        #endregion
 
         #region Sending
 

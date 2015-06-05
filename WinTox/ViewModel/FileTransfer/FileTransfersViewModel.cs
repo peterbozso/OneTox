@@ -29,14 +29,14 @@ namespace WinTox.ViewModel.FileTransfer
                 return;
 
             var transfer = FindNotPlaceHolderTransferViewModel(fileNumber);
-            if (transfer != null)
+            if (transfer == null)
+                return;
+
+            switch (fileControl)
             {
-                switch (fileControl)
-                {
-                    case ToxFileControl.Cancel:
-                        transfer.CancelTransferByFriend();
-                        return;
-                }
+                case ToxFileControl.Cancel:
+                    transfer.CancelTransferByFriend();
+                    return;
             }
         }
 
@@ -46,13 +46,13 @@ namespace WinTox.ViewModel.FileTransfer
                 return;
 
             var transfer = FindNotPlaceHolderTransferViewModel(fileNumber);
-            if (transfer != null)
-            {
-                if (newProgress.Equals(100.0))
-                    transfer.FinishTransfer();
-                else
-                    transfer.Progress = newProgress;
-            }
+            if (transfer == null)
+                return;
+
+            if (newProgress.Equals(100.0))
+                transfer.FinishTransfer();
+            else
+                transfer.Progress = newProgress;
         }
 
         public async Task SendFile(StorageFile file)

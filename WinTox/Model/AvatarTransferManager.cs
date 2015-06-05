@@ -18,6 +18,8 @@ namespace WinTox.Model
             get { return _instance ?? (_instance = new AvatarTransferManager()); }
         }
 
+        #region Common
+
         protected override void HandleFileControl(ToxFileControl fileControl, TransferId transferId)
         {
             switch (fileControl)
@@ -30,6 +32,8 @@ namespace WinTox.Model
                     return;
             }
         }
+
+        #endregion
 
         #region Sending
 
