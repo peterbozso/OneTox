@@ -19,7 +19,7 @@ namespace WinTox.ViewModel.Friends
         public FriendViewModel(int friendNumber)
         {
             Conversation = new ConversationViewModel(this);
-            FileTransfers = new FileTransfersViewModel(FriendNumber);
+            FileTransfers = new FileTransfersViewModel(friendNumber);
 
             FriendNumber = friendNumber;
 
