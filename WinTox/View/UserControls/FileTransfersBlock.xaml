@@ -13,6 +13,7 @@
     <UserControl.Resources>
         <converters:TransferStateToIconConverter x:Key="TransferStateToIconConverter" />
         <converters:IsNotPlaceholderToVisibilityConverter x:Key="IsNotPlaceholderToVisibilityConverter" />
+        <converters:TransferStateToColorConverter x:Key="TransferStateToColorConverter" />
     </UserControl.Resources>
 
     <ItemsControl ItemsSource="{Binding Transfers}">
@@ -40,7 +41,9 @@
 
                         <TextBlock Grid.Row="0" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                                    Text="{Binding Name}" />
-                        <ProgressBar Grid.Row="1" Foreground="{StaticResource MessageColor}" VerticalAlignment="Center"
+                        <ProgressBar Grid.Row="1"
+                                     Foreground="{Binding State, Converter={StaticResource TransferStateToColorConverter}}"
+                                     VerticalAlignment="Center"
                                      Margin="0,5,0,15" Value="{Binding Progress}" />
                     </Grid>
 

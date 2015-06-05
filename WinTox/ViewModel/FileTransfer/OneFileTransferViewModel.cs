@@ -59,12 +59,6 @@ namespace WinTox.ViewModel.FileTransfer
             {
                 _progress = value;
                 RaisePropertyChanged();
-
-                if (_progress.Equals(100.0))
-                {
-                    State = FileTransferState.Finished;
-                    FileNumber = -1;
-                }
             }
         }
 
@@ -81,7 +75,14 @@ namespace WinTox.ViewModel.FileTransfer
         {
             State = FileTransferState.Cancelled;
             FileNumber = -1;
-            Progress = 0.0;
+            Progress = 100.0;
+        }
+
+        public void FinishTransfer()
+        {
+            State = FileTransferState.Finished;
+            FileNumber = -1;
+            Progress = 100.0;
         }
     }
 }

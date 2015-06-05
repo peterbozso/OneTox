@@ -47,7 +47,12 @@ namespace WinTox.ViewModel.FileTransfer
 
             var transfer = FindTransferViewModel(fileNumber);
             if (transfer != null && transfer.IsNotPlaceholder)
-                transfer.Progress = newProgress;
+            {
+                if (newProgress.Equals(100.0))
+                    transfer.FinishTransfer();
+                else
+                    transfer.Progress = newProgress;
+            }
         }
 
         public async Task SendFile(StorageFile file)
