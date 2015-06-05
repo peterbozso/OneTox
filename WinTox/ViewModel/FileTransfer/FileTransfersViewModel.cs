@@ -24,7 +24,7 @@ namespace WinTox.ViewModel.FileTransfer
         private void ProgressChangedHandler(int fileNumber, double newProgress)
         {
             var transfer = FindTransferViewModel(fileNumber);
-            if (transfer != null)
+            if (transfer != null && transfer.IsActive)
                 transfer.Progress = newProgress;
         }
 
@@ -35,7 +35,7 @@ namespace WinTox.ViewModel.FileTransfer
             var successfulSend = FileTransferManager.Instance.SendFile(_friendNumber, stream, file.Name, out fileNumber);
             if (successfulSend)
             {
-                Transfers.Add(new OneFileTransferViewModel(this, fileNumber, file.Name, FileTransferDirection.Up));
+                Transfers.Add(new OneFileTransferViewModel(this, fileNumber, file.Name, FileTransferState.Uploading));
             }
         }
 

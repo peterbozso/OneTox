@@ -27,9 +27,9 @@ namespace WinTox.Model
 
         protected override async void InCreaseTransferProgress(TransferData transferData, int amount, int fileNumber)
         {
+            base.InCreaseTransferProgress(transferData, amount, fileNumber);
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                base.InCreaseTransferProgress(transferData, amount, fileNumber);
                 if (ProgressChanged != null)
                     ProgressChanged(fileNumber, transferData.GetProgress());
             });
@@ -84,8 +84,6 @@ namespace WinTox.Model
             Debug.WriteLine(
                 "File upload removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
                 e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
-
-            // TODO: Tell the viewmodel about it!!!!!!!!!
         }
 
         #endregion

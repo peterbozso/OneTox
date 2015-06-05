@@ -4,17 +4,19 @@ using WinTox.ViewModel.FileTransfer;
 
 namespace WinTox.Converters
 {
-    internal class TransferDirectionToIconConverter : IValueConverter
+    internal class TransferStateToIconConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var direction = (FileTransferDirection) value;
+            var direction = (FileTransferState) value;
             switch (direction)
             {
-                case FileTransferDirection.Down:
+                case FileTransferState.Downloading:
                     return "";
-                case FileTransferDirection.Up:
+                case FileTransferState.Uploading:
                     return "";
+                case FileTransferState.Finished:
+                    return "";
                 default:
                     return null;
             }
