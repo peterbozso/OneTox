@@ -16,7 +16,9 @@ namespace WinTox.Converters
                 case FileTransferState.Uploading:
                     return "";
                 case FileTransferState.Finished:
-                    return "";
+                    return "";
+                case FileTransferState.Cancelled:
+                    return "";
                 default:
                     return null;
             }
