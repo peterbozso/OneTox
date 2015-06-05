@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SharpTox.Core;
 using WinTox.Model;
 
 namespace WinTox.ViewModel.FileTransfer
@@ -17,14 +18,35 @@ namespace WinTox.ViewModel.FileTransfer
             _friendNumber = friendNumber;
             Transfers = new ObservableCollection<OneFileTransferViewModel>();
             FileTransferManager.Instance.ProgressChanged += ProgressChangedHandler;
+            FileTransferManager.Instance.FileControlReceived += FileControlReceivedHandler;
         }
 
         public ObservableCollection<OneFileTransferViewModel> Transfers { get; private set; }
 
-        private void ProgressChangedHandler(int fileNumber, double newProgress)
+        private void FileControlReceivedHandler(int friendNumber, int fileNumber, ToxFileControl fileControl)
         {
+            if (friendNumber != _friendNumber)
+                return;
+
             var transfer = FindTransferViewModel(fileNumber);
-            if (transfer != null && transfer.IsActive)
+            if (transfer != null && transfer.IsNotPlaceholder)
+            {
+                switch (fileControl)
+                {
+                    case ToxFileControl.Cancel:
+                        transfer.CancelTransferByFriend();
+                        return;
+                }
+            }
+        }
+
+        private void ProgressChangedHandler(int friendNumber, int fileNumber, double newProgress)
+        {
+            if (friendNumber != _friendNumber)
+                return;
+
+            var transfer = FindTransferViewModel(fileNumber);
+            if (transfer != null && transfer.IsNotPlaceholder)
                 transfer.Progress = newProgress;
         }
 
@@ -43,7 +65,8 @@ namespace WinTox.ViewModel.FileTransfer
         {
             FileTransferManager.Instance.CancelTransfer(_friendNumber, fileNumber);
             var transfer = FindTransferViewModel(fileNumber);
-            Transfers.Remove(transfer);
+            if (transfer != null)
+                Transfers.Remove(transfer);
         }
 
         private OneFileTransferViewModel FindTransferViewModel(int fileNumber)

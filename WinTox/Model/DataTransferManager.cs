@@ -29,7 +29,8 @@ namespace WinTox.Model
         /// <param name="transferData"></param>
         /// <param name="amount"></param>
         /// <param name="fileNumber">Only for the descendant function in FileTransferManager.</param>
-        protected virtual void InCreaseTransferProgress(TransferData transferData, int amount, int fileNumber)
+        protected virtual void InCreaseTransferProgress(TransferData transferData, int amount, int fileNumber,
+            int friendNumber)
         {
             transferData.IncreaseProgress(amount);
         }
@@ -81,7 +82,7 @@ namespace WinTox.Model
             ToxModel.Instance.FileSendChunk(e.FriendNumber, e.FileNumber, e.Position, chunk, out successfulChunkSend);
             if (successfulChunkSend)
             {
-                InCreaseTransferProgress(currentTransfer, e.Length, transferId.FileNumber);
+                InCreaseTransferProgress(currentTransfer, e.Length, transferId.FileNumber, transferId.FriendNumber);
                 if (currentTransfer.IsFinished())
                 {
                     HandleFinishedUpload(transferId, e);
@@ -118,7 +119,7 @@ namespace WinTox.Model
             var currentStream = currentTransfer.Stream;
             PutNextChunk(e, currentStream);
 
-            InCreaseTransferProgress(currentTransfer, e.Data.Length, transferId.FileNumber);
+            InCreaseTransferProgress(currentTransfer, e.Data.Length, transferId.FileNumber, transferId.FriendNumber);
             if (currentTransfer.IsFinished())
             {
                 HandleFinishedDownload(transferId, e);

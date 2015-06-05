@@ -12,7 +12,9 @@ namespace WinTox.Model
     /// </summary>
     internal class FileTransferManager : DataTransferManager
     {
-        public delegate void ProgressChangedDelegate(int fileNumber, double newProgress);
+        public delegate void FileControlReceivedDelegate(int friendNumber, int fileNumber, ToxFileControl fileControl);
+
+        public delegate void ProgressChangedDelegate(int friendNumber, int fileNumber, double newProgress);
 
         private static FileTransferManager _instance;
 
@@ -25,13 +27,14 @@ namespace WinTox.Model
             get { return _instance ?? (_instance = new FileTransferManager()); }
         }
 
-        protected override async void InCreaseTransferProgress(TransferData transferData, int amount, int fileNumber)
+        protected override async void InCreaseTransferProgress(TransferData transferData, int amount, int fileNumber,
+            int friendNumber)
         {
-            base.InCreaseTransferProgress(transferData, amount, fileNumber);
+            base.InCreaseTransferProgress(transferData, amount, fileNumber, friendNumber);
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 if (ProgressChanged != null)
-                    ProgressChanged(fileNumber, transferData.GetProgress());
+                    ProgressChanged(friendNumber, fileNumber, transferData.GetProgress());
             });
         }
 
@@ -51,10 +54,26 @@ namespace WinTox.Model
 
         public event ProgressChangedDelegate ProgressChanged;
 
-        protected override void HandleFileControl(ToxFileControl fileControl, TransferId transferId)
+        protected override async void HandleFileControl(ToxFileControl fileControl, TransferId transferId)
         {
-            Debug.WriteLine("STUB: FileTransferManager.HandleFileControl()");
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (FileControlReceived != null)
+                    FileControlReceived(transferId.FriendNumber, transferId.FileNumber, fileControl);
+            });
+
+            switch (fileControl)
+            {
+                case ToxFileControl.Cancel:
+                    ActiveTransfers.Remove(transferId);
+                    Debug.WriteLine(
+                        "File transfer CANCELLED by friend! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                        transferId.FriendNumber, transferId.FileNumber, ActiveTransfers.Count);
+                    return;
+            }
         }
+
+        public event FileControlReceivedDelegate FileControlReceived;
 
         #region Sending
 

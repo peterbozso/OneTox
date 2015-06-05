@@ -12,7 +12,7 @@
 
     <UserControl.Resources>
         <converters:TransferStateToIconConverter x:Key="TransferStateToIconConverter" />
-        <converters:TransferProgressToVisibilityConverter x:Key="TransferProgressToVisibilityConverter" />
+        <converters:IsNotPlaceholderToVisibilityConverter x:Key="IsNotPlaceholderToVisibilityConverter" />
     </UserControl.Resources>
 
     <ItemsControl ItemsSource="{Binding Transfers}">
@@ -45,11 +45,11 @@
                     </Grid>
 
                     <Button Grid.Column="2" Width="90" Content="Pause"
-                            Visibility="{Binding Progress, Converter={StaticResource TransferProgressToVisibilityConverter}}"
+                            Visibility="{Binding IsNotPlaceholder, Converter={StaticResource IsNotPlaceholderToVisibilityConverter}}"
                             Margin="0,0,20,0" />
                     <!-- TODO: Replace hitbox with a circle! -->
                     <Button Grid.Column="3" FontFamily="Segoe UI Symbol" BorderThickness="0" Padding="0"
-                            Margin="0,0,20,0" Content="" Command="{Binding CancelTransferCommand}" />
+                            Margin="0,0,20,0" Content="" Command="{Binding CancelTransferByUserCommand}" />
                 </Grid>
             </DataTemplate>
         </ItemsControl.ItemTemplate>

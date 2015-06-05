@@ -13,9 +13,10 @@ namespace WinTox.ViewModel.FileTransfer
     public class OneFileTransferViewModel : ViewModelBase
     {
         private readonly FileTransfersViewModel _fileTransfers;
+        private RelayCommand _cancelTransferByUserCommand;
+        private bool _isNotPlaceholder;
         private double _progress;
         private FileTransferState _state;
-        private RelayCommand _removeTransferCommand;
 
         public OneFileTransferViewModel(FileTransfersViewModel fileTransfers, int fileNumber, string name,
             FileTransferState state)
@@ -37,12 +38,18 @@ namespace WinTox.ViewModel.FileTransfer
             {
                 _state = value;
                 RaisePropertyChanged();
+                IsNotPlaceholder = _state != FileTransferState.Finished && _state != FileTransferState.Cancelled;
             }
         }
 
-        public bool IsActive
+        public bool IsNotPlaceholder
         {
-            get { return State == FileTransferState.Downloading || State == FileTransferState.Uploading; }
+            get { return _isNotPlaceholder; }
+            set
+            {
+                _isNotPlaceholder = value;
+                RaisePropertyChanged();
+            }
         }
 
         public double Progress
@@ -61,13 +68,20 @@ namespace WinTox.ViewModel.FileTransfer
             }
         }
 
-        public RelayCommand CancelTransferCommand
+        public RelayCommand CancelTransferByUserCommand
         {
             get
             {
-                return _removeTransferCommand ?? (_removeTransferCommand = new RelayCommand(
+                return _cancelTransferByUserCommand ?? (_cancelTransferByUserCommand = new RelayCommand(
                     () => { _fileTransfers.CancelTransfer(FileNumber); }));
             }
+        }
+
+        public void CancelTransferByFriend()
+        {
+            State = FileTransferState.Cancelled;
+            FileNumber = -1;
+            Progress = 0.0;
         }
     }
 }
