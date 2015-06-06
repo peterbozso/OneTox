@@ -33,9 +33,9 @@ namespace WinTox.View
         /// </summary>
         public NavigationHelper NavigationHelper { get; private set; }
 
-        private void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
+        private async void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
         {
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 var message = "From: " + e.PublicKey + "\n" + "Message: " + e.Message;
                 var msgDialog = new MessageDialog(message, "Friend request received");
@@ -60,7 +60,7 @@ namespace WinTox.View
         ///     a dictionary of state preserved by this page during an earlier
         ///     session.  The state will be null the first time a page is visited.
         /// </param>
-        private async void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
         }
 

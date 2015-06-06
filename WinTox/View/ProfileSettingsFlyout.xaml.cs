@@ -58,7 +58,7 @@ namespace WinTox.View
                 if (errorMessage != String.Empty)
                 {
                     var msgDialog = new MessageDialog(errorMessage, "Unsuccesfull loading");
-                    msgDialog.ShowAsync();
+                    await msgDialog.ShowAsync();
                 }
             }
 

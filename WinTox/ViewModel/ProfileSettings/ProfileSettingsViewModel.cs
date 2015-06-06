@@ -99,9 +99,9 @@ namespace WinTox.ViewModel.ProfileSettings
             return String.Empty;
         }
 
-        private void ToxModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        private async void ToxModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () => { RaisePropertyChanged(e.PropertyName); });
         }
 

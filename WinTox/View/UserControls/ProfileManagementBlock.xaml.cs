@@ -30,7 +30,7 @@ namespace WinTox.View.UserControls
                 if (!successfulExport)
                 {
                     var msgDialog = new MessageDialog("Unsuccesfull export: the file couldn't be saved.");
-                    msgDialog.ShowAsync();
+                    await msgDialog.ShowAsync();
                 }
             }
 

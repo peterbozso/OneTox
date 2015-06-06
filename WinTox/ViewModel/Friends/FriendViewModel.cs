@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
 using WinTox.Common;
@@ -111,9 +112,9 @@ namespace WinTox.ViewModel.Friends
                 RaisePropertyChanged("Avatar");
         }
 
-        public void ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
+        public async Task ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
         {
-            Conversation.ReceiveMessage(e);
+            await Conversation.ReceiveMessage(e);
         }
 
         public void SetIsTyping(bool isTyping)

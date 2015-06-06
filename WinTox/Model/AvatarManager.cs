@@ -265,7 +265,7 @@ namespace WinTox.Model
         private async Task DeleteUserAvatarFile()
         {
             var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
-            file.DeleteAsync();
+            await file.DeleteAsync();
         }
 
         private void BroadCastUserAvatarOnReset()

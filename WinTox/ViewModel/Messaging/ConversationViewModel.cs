@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using SharpTox.Core;
@@ -36,12 +37,12 @@ namespace WinTox.ViewModel.Messaging
 
         public ObservableCollection<MessageGroupViewModel> MessageGroups { get; set; }
 
-        public void ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
+        public async Task ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
         {
-            StoreMessage(e.Message, _friendViewModel, e.MessageType);
+            await StoreMessage(e.Message, _friendViewModel, e.MessageType);
         }
 
-        public void SendMessage(string message)
+        public async Task SendMessage(string message)
         {
             var messageType = DecideMessageType(message);
             message = TrimMessage(message, messageType);
@@ -52,7 +53,7 @@ namespace WinTox.ViewModel.Messaging
                 bool successfulSend;
                 ToxModel.Instance.SendMessage(_friendViewModel.FriendNumber, chunk, messageType, out successfulSend);
                 if (successfulSend)
-                    StoreMessage(chunk, _userViewModel, messageType);
+                    await StoreMessage(chunk, _userViewModel, messageType);
             }
         }
 
@@ -94,10 +95,10 @@ namespace WinTox.ViewModel.Messaging
             return messageChunks;
         }
 
-        private void StoreMessage(string message, IToxUserViewModel sender,
+        private async Task StoreMessage(string message, IToxUserViewModel sender,
             ToxMessageType messageType)
         {
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (AppendToLastGroup(message, messageType, sender))
                     return;

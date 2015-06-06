@@ -91,9 +91,9 @@ namespace WinTox
             ToxErrorViewModel.Instance.ToxErrorOccured += ToxErrorOccuredHandler;
         }
 
-        private void ToxErrorOccuredHandler(object sender, string errorMessage)
+        private async void ToxErrorOccuredHandler(object sender, string errorMessage)
         {
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 var msgDialog = new MessageDialog(errorMessage, "Error occured");
                 await msgDialog.ShowAsync();

@@ -78,14 +78,14 @@ namespace WinTox.View
         {
         }
 
-        private void MessageInputKeyDown(object sender, KeyRoutedEventArgs e)
+        private async void MessageInputKeyDown(object sender, KeyRoutedEventArgs e)
         {
             _chatTimer.Change(500, -1);
             _friendViewModel.Conversation.SetTypingStatus(true);
 
             if (e.Key == VirtualKey.Enter)
             {
-                _friendViewModel.Conversation.SendMessage(MessageInput.Text);
+                await _friendViewModel.Conversation.SendMessage(MessageInput.Text);
                 MessageInput.Text = String.Empty;
                 e.Handled = true;
             }
