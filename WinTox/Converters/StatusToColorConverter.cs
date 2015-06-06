@@ -1,5 +1,6 @@
 ﻿using System;
 using Windows.UI;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using SharpTox.Core;
@@ -14,13 +15,13 @@ namespace WinTox.Converters
             switch (status)
             {
                 case ToxUserStatus.None:
-                    return new SolidColorBrush(Colors.LawnGreen);
+                    return Application.Current.Resources["StatusGreen"];
 
                 case ToxUserStatus.Busy:
-                    return new SolidColorBrush(Colors.Red);
+                    return Application.Current.Resources["StatusRed"];
 
                 case ToxUserStatus.Away:
-                    return new SolidColorBrush(Colors.Yellow);
+                    return Application.Current.Resources["StatusYellow"];
             }
             return null;
         }

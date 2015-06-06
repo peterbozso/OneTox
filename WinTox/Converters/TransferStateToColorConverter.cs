@@ -18,9 +18,9 @@ namespace WinTox.Converters
                 case FileTransferState.Downloading:
                     return Application.Current.Resources["MessageColor"];
                 case FileTransferState.Finished:
-                    return new SolidColorBrush(Colors.LawnGreen);
+                    return Application.Current.Resources["StatusGreen"];
                 case FileTransferState.Cancelled:
-                    return new SolidColorBrush(Colors.Red);
+                    return Application.Current.Resources["StatusRed"];
                 default:
                     return null;
             }
