@@ -128,14 +128,22 @@ namespace WinTox.ViewModel.FileTransfer
 
         public void PauseTransferByFriend()
         {
+            if (State != FileTransferState.Uploading && State != FileTransferState.Downloading)
+                return;
+
             _beforePause = State;
             State = FileTransferState.PausedByFriend;
         }
 
         public void ResumeTransferByFriend()
         {
+            if (Phase == FileTransferPhase.BeforeUpload || Phase == FileTransferPhase.BeforeDownload)
+                Phase = FileTransferPhase.DuringTransfer;
+
+            if (State != FileTransferState.PausedByFriend)
+                return;
+
             State = _beforePause;
-            Phase = FileTransferPhase.DuringTransfer;
         }
 
         public void CancelTransferByFriend()
