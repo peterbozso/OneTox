@@ -12,8 +12,9 @@
 
     <UserControl.Resources>
         <converters:TransferStateToIconConverter x:Key="TransferStateToIconConverter" />
-        <converters:IsNotPlaceholderToVisibilityConverter x:Key="IsNotPlaceholderToVisibilityConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:TransferStateToColorConverter x:Key="TransferStateToColorConverter" />
+        <converters:TransferStateToButtonTextConverter x:Key="TransferStateToButtonTextConverter" />
     </UserControl.Resources>
 
     <ItemsControl ItemsSource="{Binding Transfers}">
@@ -47,9 +48,10 @@
                                      Margin="0,5,0,15" Value="{Binding Progress}" />
                     </Grid>
 
-                    <Button Grid.Column="2" Width="90" Content="Pause"
-                            Visibility="{Binding IsNotPlaceholder, Converter={StaticResource IsNotPlaceholderToVisibilityConverter}}"
-                            Margin="0,0,20,0" />
+                    <Button Grid.Column="2" Width="90"
+                            Content="{Binding State, Converter={StaticResource TransferStateToButtonTextConverter}}"
+                            Visibility="{Binding IsNotPlaceholder, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Command="{Binding PauseResumeTransferByUserCommand}" Margin="0,0,20,0" />
                     <!-- TODO: Replace hitbox with a circle! -->
                     <Button Grid.Column="3" FontFamily="Segoe UI Symbol" BorderThickness="0" Padding="0"
                             Margin="0,0,20,0" Content="" Command="{Binding CancelTransferByUserCommand}" />

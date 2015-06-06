@@ -6,6 +6,7 @@ namespace WinTox.ViewModel.FileTransfer
     {
         Uploading,
         Downloading,
+        Paused,
         Finished,
         Cancelled
     }
@@ -13,8 +14,10 @@ namespace WinTox.ViewModel.FileTransfer
     public class OneFileTransferViewModel : ViewModelBase
     {
         private readonly FileTransfersViewModel _fileTransfers;
+        private FileTransferState _beforePause; // TODO: Maybe refactor it out later!
         private RelayCommand _cancelTransferByUserCommand;
         private bool _isNotPlaceholder;
+        private RelayCommand _pauseResumeTransferByUserCommand;
         private double _progress;
         private FileTransferState _state;
 
@@ -68,6 +71,28 @@ namespace WinTox.ViewModel.FileTransfer
             {
                 return _cancelTransferByUserCommand ?? (_cancelTransferByUserCommand = new RelayCommand(
                     () => { _fileTransfers.CancelTransferByUser(FileNumber); }));
+            }
+        }
+
+        public RelayCommand PauseResumeTransferByUserCommand
+        {
+            get
+            {
+                return _pauseResumeTransferByUserCommand ?? (_pauseResumeTransferByUserCommand = new RelayCommand(
+                    () =>
+                    {
+                        if (State == FileTransferState.Downloading || State == FileTransferState.Uploading)
+                        {
+                            _beforePause = State;
+                            State = FileTransferState.Paused;
+                            _fileTransfers.PauseTransferByUser(FileNumber);
+                        }
+                        else if (State == FileTransferState.Paused)
+                        {
+                            State = _beforePause;
+                            _fileTransfers.ResumeTransferByUser(FileNumber);
+                        }
+                    }));
             }
         }
 

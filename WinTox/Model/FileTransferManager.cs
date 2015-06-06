@@ -41,6 +41,16 @@ namespace WinTox.Model
             }
         }
 
+        public void PauseTransfer(int friendNumber, int fileNumber)
+        {
+            ToxModel.Instance.FileControl(friendNumber, fileNumber, ToxFileControl.Pause);
+        }
+
+        public void ResumeTransfer(int friendNumber, int fileNumber)
+        {
+            SendResumeControl(friendNumber, fileNumber);
+        }
+
         protected override async void InCreaseTransferProgress(TransferId transferId, TransferData transferData,
             int amount)
         {

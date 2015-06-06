@@ -74,6 +74,16 @@ namespace WinTox.ViewModel.FileTransfer
                 Transfers.Remove(transfer);
         }
 
+        public void PauseTransferByUser(int fileNumber)
+        {
+            FileTransferManager.Instance.PauseTransfer(_friendNumber, fileNumber);
+        }
+
+        public void ResumeTransferByUser(int fileNumber)
+        {
+            FileTransferManager.Instance.ResumeTransfer(_friendNumber, fileNumber);
+        }
+
         private OneFileTransferViewModel FindTransferViewModel(int fileNumber)
         {
             return Transfers.FirstOrDefault(transfer => transfer.FileNumber == fileNumber);

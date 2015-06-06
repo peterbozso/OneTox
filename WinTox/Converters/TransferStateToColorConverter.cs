@@ -19,6 +19,8 @@ namespace WinTox.Converters
                     return Application.Current.Resources["StatusGreen"];
                 case FileTransferState.Cancelled:
                     return Application.Current.Resources["StatusRed"];
+                case FileTransferState.Paused:
+                    return Application.Current.Resources["StatusYellow"];
                 default:
                     return null;
             }
