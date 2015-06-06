@@ -12,6 +12,14 @@ namespace WinTox.ViewModel.FileTransfer
         Cancelled
     }
 
+    public enum FileTransferPhase
+    {
+        BeforeUpload,
+        BeforeDownload,
+        DuringTransfer,
+        AfterTransfer
+    }
+
     public class OneFileTransferViewModel : ViewModelBase
     {
         private readonly FileTransfersViewModel _fileTransfers;
@@ -19,6 +27,7 @@ namespace WinTox.ViewModel.FileTransfer
         private RelayCommand _cancelTransferByUserCommand;
         private bool _isNotPlaceholder;
         private RelayCommand _pauseResumeTransferByUserCommand;
+        private FileTransferPhase _phase;
         private double _progress;
         private FileTransferState _state;
 
@@ -30,6 +39,16 @@ namespace WinTox.ViewModel.FileTransfer
             Name = name;
             State = state;
             Progress = 0;
+
+            switch (state)
+            {
+                case FileTransferState.Uploading:
+                    Phase = FileTransferPhase.BeforeUpload;
+                    break;
+                case FileTransferState.Downloading:
+                    Phase = FileTransferPhase.BeforeDownload;
+                    break;
+            }
         }
 
         public int FileNumber { get; private set; }
@@ -52,6 +71,16 @@ namespace WinTox.ViewModel.FileTransfer
             set
             {
                 _isNotPlaceholder = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public FileTransferPhase Phase
+        {
+            get { return _phase; }
+            private set
+            {
+                _phase = value;
                 RaisePropertyChanged();
             }
         }
@@ -106,18 +135,21 @@ namespace WinTox.ViewModel.FileTransfer
         public void ResumeTransferByFriend()
         {
             State = _beforePause;
+            Phase = FileTransferPhase.DuringTransfer;
         }
 
         public void CancelTransferByFriend()
         {
             State = FileTransferState.Cancelled;
             Progress = 100.0;
+            Phase = FileTransferPhase.AfterTransfer;
         }
 
         public void FinishTransfer()
         {
             State = FileTransferState.Finished;
             Progress = 100.0;
+            Phase = FileTransferPhase.AfterTransfer;
         }
     }
 }

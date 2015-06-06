@@ -108,6 +108,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\DateTimeConverter.cs" />
+    <Compile Include="Converters\TransferPhaseToStringConverter.cs" />
     <Compile Include="Converters\FriendNameToTypingStatusConverter.cs" />
     <Compile Include="Converters\IsConnectedToOpacityConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
@@ -146,6 +147,9 @@
     </Compile>
     <Compile Include="View\ProfileSettingsFlyout.xaml.cs">
       <DependentUpon>ProfileSettingsFlyout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\FileTransferRibbon.xaml.cs">
+      <DependentUpon>FileTransferRibbon.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserControls\FileTransfersBlock.xaml.cs">
       <DependentUpon>FileTransfersBlock.xaml</DependentUpon>
@@ -213,6 +217,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\UserControls\FileTransferRibbon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\UserControls\FileTransfersBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -252,6 +260,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\SharpTox Portable.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

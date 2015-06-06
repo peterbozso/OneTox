@@ -10,54 +10,10 @@
     d:DesignHeight="60"
     d:DesignWidth="800">
 
-    <UserControl.Resources>
-        <converters:TransferStateToIconConverter x:Key="TransferStateToIconConverter" />
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <converters:TransferStateToColorConverter x:Key="TransferStateToColorConverter" />
-        <converters:TransferStateToButtonTextConverter x:Key="TransferStateToButtonTextConverter" />
-        <converters:TransferStateToEnabledConverter x:Key="TransferStateToEnabledConverter" />
-    </UserControl.Resources>
-
     <ItemsControl ItemsSource="{Binding Transfers}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <Grid Background="{StaticResource MainColor}" Height="60">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="80" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <!-- TODO: Change this icon to something that indicates the direction of the file transfer! (upload/download) -->
-                    <TextBlock Grid.Column="0" FontFamily="Segoe UI Symbol" FontSize="30"
-                               VerticalAlignment="Center"
-                               Text="{Binding State, Converter={StaticResource TransferStateToIconConverter}}"
-                               HorizontalAlignment="Center" />
-
-                    <Grid Grid.Column="1" Margin="0,0,20,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
-                        <TextBlock Grid.Row="0" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                                   Text="{Binding Name}" />
-                        <ProgressBar Grid.Row="1"
-                                     Foreground="{Binding State, Converter={StaticResource TransferStateToColorConverter}}"
-                                     VerticalAlignment="Center"
-                                     Margin="0,5,0,15" Value="{Binding Progress}" />
-                    </Grid>
-
-                    <Button Grid.Column="2" MinWidth="90"
-                            Content="{Binding State, Converter={StaticResource TransferStateToButtonTextConverter}}"
-                            Visibility="{Binding IsNotPlaceholder, Converter={StaticResource BoolToVisibilityConverter}}"
-                            Command="{Binding PauseResumeTransferByUserCommand}" Margin="0,0,20,0"
-                            IsEnabled="{Binding State, Converter={StaticResource TransferStateToEnabledConverter}}" />
-                    <!-- TODO: Replace hitbox with a circle! -->
-                    <Button Grid.Column="3" FontFamily="Segoe UI Symbol" BorderThickness="0" Padding="0"
-                            Margin="0,0,20,0" Content="" Command="{Binding CancelTransferByUserCommand}" />
-                </Grid>
+                <local:FileTransferRibbon />
             </DataTemplate>
         </ItemsControl.ItemTemplate>
     </ItemsControl>
