@@ -6,7 +6,8 @@ namespace WinTox.ViewModel.FileTransfer
     {
         Uploading,
         Downloading,
-        Paused,
+        PausedByUser,
+        PausedByFriend,
         Finished,
         Cancelled
     }
@@ -84,16 +85,27 @@ namespace WinTox.ViewModel.FileTransfer
                         if (State == FileTransferState.Downloading || State == FileTransferState.Uploading)
                         {
                             _beforePause = State;
-                            State = FileTransferState.Paused;
+                            State = FileTransferState.PausedByUser;
                             _fileTransfers.PauseTransferByUser(FileNumber);
                         }
-                        else if (State == FileTransferState.Paused)
+                        else if (State == FileTransferState.PausedByUser)
                         {
                             State = _beforePause;
                             _fileTransfers.ResumeTransferByUser(FileNumber);
                         }
                     }));
             }
+        }
+
+        public void PauseTransferByFriend()
+        {
+            _beforePause = State;
+            State = FileTransferState.PausedByFriend;
+        }
+
+        public void ResumeTransferByFriend()
+        {
+            State = _beforePause;
         }
 
         public void CancelTransferByFriend()

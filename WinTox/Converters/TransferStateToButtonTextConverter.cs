@@ -11,8 +11,10 @@ namespace WinTox.Converters
             var state = (FileTransferState) value;
             if (state == FileTransferState.Downloading || state == FileTransferState.Uploading)
                 return "Pause";
-            if (state == FileTransferState.Paused)
+            if (state == FileTransferState.PausedByUser)
                 return "Resume";
+            if (state == FileTransferState.PausedByFriend)
+                return "Paused by friend";
             return null; // The button should be hidden in the other two states.
         }
 

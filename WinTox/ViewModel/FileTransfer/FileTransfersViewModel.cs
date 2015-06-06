@@ -37,6 +37,12 @@ namespace WinTox.ViewModel.FileTransfer
                 case ToxFileControl.Cancel:
                     transfer.CancelTransferByFriend();
                     return;
+                case ToxFileControl.Pause:
+                    transfer.PauseTransferByFriend();
+                    return;
+                case ToxFileControl.Resume:
+                    transfer.ResumeTransferByFriend();
+                    return;
             }
         }
 
