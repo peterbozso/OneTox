@@ -16,15 +16,6 @@ namespace WinTox.ViewModel.FileTransfer
 
     public class OneFileTransferViewModel : ViewModelBase
     {
-        private readonly FileTransfersViewModel _fileTransfers;
-        private RelayCommand _cancelTransferByUserCommand;
-        private bool _isNotPlaceholder;
-        private FileTransferState _lastState;
-        private RelayCommand _pauseTransferByUserCommand;
-        private double _progress;
-        private RelayCommand _rasumeTransferByUserCommand;
-        private FileTransferState _state;
-
         public OneFileTransferViewModel(FileTransfersViewModel fileTransfers, int fileNumber, string name,
             FileTransferState state)
         {
@@ -46,7 +37,23 @@ namespace WinTox.ViewModel.FileTransfer
             }
         }
 
+        #region Fields
+
+        private readonly FileTransfersViewModel _fileTransfers;
+        private RelayCommand _cancelTransferByUserCommand;
+        private bool _isNotPlaceholder;
+        private FileTransferState _lastState;
+        private RelayCommand _pauseTransferByUserCommand;
+        private double _progress;
+        private RelayCommand _rasumeTransferByUserCommand;
+        private FileTransferState _state;
+
+        #endregion
+
+        #region Properties
+
         public int FileNumber { get; private set; }
+
         public string Name { get; private set; }
 
         public FileTransferState State
@@ -80,14 +87,9 @@ namespace WinTox.ViewModel.FileTransfer
             }
         }
 
-        public RelayCommand CancelTransferByUserCommand
-        {
-            get
-            {
-                return _cancelTransferByUserCommand ?? (_cancelTransferByUserCommand = new RelayCommand(
-                    () => { _fileTransfers.CancelTransferByUser(FileNumber); }));
-            }
-        }
+        #endregion
+
+        #region Actions coming from the View
 
         public RelayCommand PauseTransferByUserCommand
         {
@@ -121,6 +123,19 @@ namespace WinTox.ViewModel.FileTransfer
                     }));
             }
         }
+
+        public RelayCommand CancelTransferByUserCommand
+        {
+            get
+            {
+                return _cancelTransferByUserCommand ?? (_cancelTransferByUserCommand = new RelayCommand(
+                    () => { _fileTransfers.CancelTransferByUser(FileNumber); }));
+            }
+        }
+
+        #endregion
+
+        #region Actions coming from the Model
 
         public void PauseTransferByFriend()
         {
@@ -160,5 +175,7 @@ namespace WinTox.ViewModel.FileTransfer
             State = FileTransferState.Finished;
             Progress = 100.0;
         }
+
+        #endregion
     }
 }
