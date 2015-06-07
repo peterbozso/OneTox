@@ -98,7 +98,7 @@ namespace WinTox.ViewModel.FileTransfer
 
         public async Task AcceptTransferByUser(StorageFile saveFile)
         {
-            State = FileTransferState.Uploading;
+            State = FileTransferState.Downloading;
             var saveStream = (await saveFile.OpenAsync(FileAccessMode.ReadWrite)).AsStream();
             _fileTransfers.AcceptTransferByUser(FileNumber, saveStream);
         }
