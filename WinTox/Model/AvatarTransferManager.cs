@@ -102,7 +102,7 @@ namespace WinTox.Model
             var resumeSent = SendResumeControl(e.FriendNumber, e.FileNumber);
             if (resumeSent)
             {
-                var stream = new MemoryStream((int)e.FileSize);
+                var stream = new MemoryStream((int) e.FileSize);
                 ActiveTransfers.Add(new TransferId(e.FileNumber, e.FriendNumber),
                     new TransferData(ToxFileKind.Avatar, stream, e.FileSize));
 

@@ -191,6 +191,12 @@ namespace WinTox.Model
             {
                 return _transferredBytes == _dataSizeInBytes;
             }
+
+            public void ReplaceStream(Stream newStream)
+            {
+                newStream.SetLength(_dataSizeInBytes);
+                Stream = newStream;
+            }
         }
 
         #endregion

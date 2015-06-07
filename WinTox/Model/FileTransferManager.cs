@@ -129,14 +129,50 @@ namespace WinTox.Model
 
         #region Receiving
 
-        protected override void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
+        public event EventHandler<ToxEventArgs.FileSendRequestEventArgs> FileSendRequestReceived;
+
+        public void ReceiveFile(int friendNumber, int fileNumber, Stream saveStream)
         {
-            Debug.WriteLine("STUB: FileTransferManager.FileSendRequestReceivedHandler()");
+            var transferId = new TransferId(fileNumber, friendNumber);
+
+            // Replace the dummy stream set it FileSendRequestReceivedHandler():
+            ActiveTransfers[transferId].ReplaceStream(saveStream);
+
+            SendResumeControl(friendNumber, fileNumber);
+            Debug.WriteLine(
+                "File download confirmed by user! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
+                friendNumber, fileNumber, ActiveTransfers.Count);
+        }
+
+        protected override async void FileSendRequestReceivedHandler(object sender,
+            ToxEventArgs.FileSendRequestEventArgs e)
+        {
+            if (e.FileKind != ToxFileKind.Data)
+                return;
+
+            // We add a transfer with a dummy stream here what we will change to an actual file stream in ReceiveFile()
+            // when the user accepts the request and choose a file.
+            ActiveTransfers.Add(new TransferId(e.FileNumber, e.FriendNumber),
+                new TransferData(ToxFileKind.Data, new MemoryStream(), e.FileSize));
+
+            Debug.WriteLine(
+                "Dummy file download added! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
+                e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
+
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (FileSendRequestReceived != null)
+                    FileSendRequestReceived(this, e);
+            });
         }
 
         protected override void HandleFinishedDownload(TransferId transferId, ToxEventArgs.FileChunkEventArgs e)
         {
-            Debug.WriteLine("STUB: FileTransferManager.HandleFinishedDownload()");
+            ActiveTransfers.Remove(transferId);
+
+            Debug.WriteLine(
+                "File download removed! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
+                e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
         }
 
         #endregion

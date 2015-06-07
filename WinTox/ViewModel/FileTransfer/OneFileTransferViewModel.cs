@@ -1,4 +1,8 @@
-﻿using WinTox.Common;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using Windows.Storage;
+using WinTox.Common;
 
 namespace WinTox.ViewModel.FileTransfer
 {
@@ -40,12 +44,13 @@ namespace WinTox.ViewModel.FileTransfer
         #region Fields
 
         private readonly FileTransfersViewModel _fileTransfers;
-        private RelayCommand _cancelTransferByUserCommand;
         private bool _isNotPlaceholder;
+        private double _progress;
         private FileTransferState _lastState;
         private RelayCommand _pauseTransferByUserCommand;
-        private double _progress;
-        private RelayCommand _rasumeTransferByUserCommand;
+        private RelayCommand _resumeTransferByUserCommand;
+        private RelayCommand _cancelTransferByUserCommand;
+
         private FileTransferState _state;
 
         #endregion
@@ -91,6 +96,13 @@ namespace WinTox.ViewModel.FileTransfer
 
         #region Actions coming from the View
 
+        public async Task AcceptTransferByUser(StorageFile saveFile)
+        {
+            State = FileTransferState.Uploading;
+            var saveStream = (await saveFile.OpenAsync(FileAccessMode.ReadWrite)).AsStream();
+            _fileTransfers.AcceptTransferByUser(FileNumber, saveStream);
+        }
+
         public RelayCommand PauseTransferByUserCommand
         {
             get
@@ -112,7 +124,7 @@ namespace WinTox.ViewModel.FileTransfer
         {
             get
             {
-                return _rasumeTransferByUserCommand ?? (_rasumeTransferByUserCommand = new RelayCommand(
+                return _resumeTransferByUserCommand ?? (_resumeTransferByUserCommand = new RelayCommand(
                     () =>
                     {
                         if (State == FileTransferState.PausedByUser)
@@ -129,7 +141,7 @@ namespace WinTox.ViewModel.FileTransfer
             get
             {
                 return _cancelTransferByUserCommand ?? (_cancelTransferByUserCommand = new RelayCommand(
-                    () => { _fileTransfers.CancelTransferByUser(FileNumber); }));
+                    () => { _fileTransfers.CancelTransferByUser(this); }));
             }
         }
 

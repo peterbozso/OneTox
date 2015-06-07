@@ -19,9 +19,20 @@ namespace WinTox.ViewModel.FileTransfer
             Transfers = new ObservableCollection<OneFileTransferViewModel>();
             FileTransferManager.Instance.ProgressChanged += ProgressChangedHandler;
             FileTransferManager.Instance.FileControlReceived += FileControlReceivedHandler;
+            FileTransferManager.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
         }
 
         public ObservableCollection<OneFileTransferViewModel> Transfers { get; private set; }
+
+        #region Helper search methods
+
+        private OneFileTransferViewModel FindNotPlaceHolderTransferViewModel(int fileNumber)
+        {
+            return Transfers.FirstOrDefault(transfer => transfer.FileNumber == fileNumber && transfer.IsNotPlaceholder);
+            // There can be multiple transfers with the same file number, but there's always only one that's not a placeholder.
+        }
+
+        #endregion
 
         #region Actions coming from the View
 
@@ -36,12 +47,15 @@ namespace WinTox.ViewModel.FileTransfer
             }
         }
 
-        public void CancelTransferByUser(int fileNumber)
+        public void AcceptTransferByUser(int fileNumber, Stream saveStream)
         {
-            FileTransferManager.Instance.CancelTransfer(_friendNumber, fileNumber);
-            var transfer = FindTransferViewModel(fileNumber);
-            if (transfer != null)
-                Transfers.Remove(transfer);
+            FileTransferManager.Instance.ReceiveFile(_friendNumber, fileNumber, saveStream);
+        }
+
+        public void CancelTransferByUser(OneFileTransferViewModel transferViewModel)
+        {
+            FileTransferManager.Instance.CancelTransfer(_friendNumber, transferViewModel.FileNumber);
+            Transfers.Remove(transferViewModel);
         }
 
         public void PauseTransferByUser(int fileNumber)
@@ -96,19 +110,12 @@ namespace WinTox.ViewModel.FileTransfer
                 transfer.Progress = newProgress;
         }
 
-        #endregion
-
-        #region Helper search methods
-
-        private OneFileTransferViewModel FindTransferViewModel(int fileNumber)
+        private void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
         {
-            return Transfers.FirstOrDefault(transfer => transfer.FileNumber == fileNumber);
-        }
+            if (e.FriendNumber != _friendNumber)
+                return;
 
-        private OneFileTransferViewModel FindNotPlaceHolderTransferViewModel(int fileNumber)
-        {
-            return Transfers.FirstOrDefault(transfer => transfer.FileNumber == fileNumber && transfer.IsNotPlaceholder);
-            // There can be multiple transfers with the same file number, but there's always only one that's not a placeholder.
+            Transfers.Add(new OneFileTransferViewModel(this, e.FileNumber, e.FileName, FileTransferState.Downloading));
         }
 
         #endregion

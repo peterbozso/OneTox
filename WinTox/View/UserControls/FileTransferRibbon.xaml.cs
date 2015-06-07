@@ -1,4 +1,7 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using WinTox.ViewModel.FileTransfer;
 
@@ -15,11 +18,22 @@ namespace WinTox.View.UserControls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            var transfer = (OneFileTransferViewModel) DataContext;
-            if (transfer.State == FileTransferState.BeforeUpload)
-                VisualStateManager.GoToState(this, "BeforeUpload", true);
-            else if (transfer.State == FileTransferState.BeforeDownload)
-                VisualStateManager.GoToState(this, "BeforeDownload", true);
+            var transferViewModel = (OneFileTransferViewModel) DataContext;
+            VisualStateManager.GoToState(this, transferViewModel.State.ToString(), true);
+        }
+
+        private async void AcceptButtonClick(object sender, RoutedEventArgs e)
+        {
+            var folderPicker = new FolderPicker();
+            folderPicker.FileTypeFilter.Add("*");
+            var saveFolder = await folderPicker.PickSingleFolderAsync();
+            if (saveFolder == null)
+                return;
+
+            var transferViewModel = (OneFileTransferViewModel) DataContext;
+            var saveFile =
+                await saveFolder.CreateFileAsync(transferViewModel.Name, CreationCollisionOption.GenerateUniqueName);
+            await transferViewModel.AcceptTransferByUser(saveFile);
         }
     }
 }
