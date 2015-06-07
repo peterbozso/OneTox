@@ -14,7 +14,7 @@ namespace WinTox.Converters
             if (state == FileTransferState.PausedByUser)
                 return "Resume";
             if (state == FileTransferState.PausedByFriend)
-                return "Paused by friend";
+                return "Paused";
             return null; // The button should be hidden in the other two states.
         }
 

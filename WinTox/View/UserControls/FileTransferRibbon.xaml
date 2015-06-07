@@ -9,7 +9,8 @@
     x:Class="WinTox.View.UserControls.FileTransferRibbon"
     mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400" Loaded="UserControl_Loaded">
+    d:DesignWidth="400"
+	Loaded="UserControl_Loaded">
 
     <UserControl.Resources>
         <converters:TransferStateToIconConverter x:Key="TransferStateToIconConverter" />
@@ -32,13 +33,12 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="DeclineButton">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="textBlock">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Visibility>Collapsed</Visibility>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -56,17 +56,16 @@
                                                        Storyboard.TargetName="CancelButton">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
+                            		<Visibility>Visible</Visibility>
+                            	</DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
-                                                       Storyboard.TargetName="DeclineButton">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>0,0,10,0</Thickness>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="textBlock">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Visibility>Collapsed</Visibility>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -88,13 +87,12 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="DeclineButton">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="textBlock">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Visibility>Collapsed</Visibility>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -116,14 +114,21 @@
                 				</DiscreteObjectKeyFrame.Value>
                 			</DiscreteObjectKeyFrame>
                 		</ObjectAnimationUsingKeyFrames>
-                		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                			Storyboard.TargetName="DeclineButton">
+                		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.HorizontalAlignment)" Storyboard.TargetName="textBlock">
                 			<DiscreteObjectKeyFrame KeyTime="0">
                 				<DiscreteObjectKeyFrame.Value>
-                					<Visibility>Collapsed</Visibility>
+                					<HorizontalAlignment>Center</HorizontalAlignment>
                 				</DiscreteObjectKeyFrame.Value>
                 			</DiscreteObjectKeyFrame>
                 		</ObjectAnimationUsingKeyFrames>
+                		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.VerticalAlignment)" Storyboard.TargetName="textBlock">
+                			<DiscreteObjectKeyFrame KeyTime="0">
+                				<DiscreteObjectKeyFrame.Value>
+                					<VerticalAlignment>Bottom</VerticalAlignment>
+                				</DiscreteObjectKeyFrame.Value>
+                			</DiscreteObjectKeyFrame>
+                		</ObjectAnimationUsingKeyFrames>
+                		<DoubleAnimation Duration="0" To="16" Storyboard.TargetProperty="(TextBlock.FontSize)" Storyboard.TargetName="textBlock" d:IsOptimized="True"/>
                 	</Storyboard>
                 </VisualState>
             </VisualStateGroup>
@@ -162,17 +167,24 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                       Text="{Binding Name}" />
+			<Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+
+				<TextBlock Grid.Column="0" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+						   Text="{Binding Name}" />
+				<TextBlock x:Name="textBlock" Grid.Column="1" Text="Waiting for friend to accept the file" />
+			</Grid>
             <ProgressBar Grid.Row="1"
                          Foreground="{Binding State, Converter={StaticResource TransferStateToColorConverter}}"
                          VerticalAlignment="Center"
                          Margin="0,5,0,15" Value="{Binding Progress}" />
         </Grid>
 
-        <Button x:Name="AcceptButton" Grid.Column="2">Accept</Button>
-        <Button x:Name="DeclineButton" Grid.Column="3">Decline</Button>
-        <Button x:Name="PauseResumeButton" Grid.Column="2" MinWidth="90"
+        <Button x:Name="AcceptButton" Grid.Column="2" Width="90" Margin="0,0,20,0">Accept</Button>
+        <Button x:Name="PauseResumeButton" Grid.Column="2" Width="90"
                 Content="{Binding State, Converter={StaticResource TransferStateToButtonTextConverter}}"
                 Command="{Binding PauseResumeTransferByUserCommand}" Margin="0,0,20,0"
                 IsEnabled="{Binding State, Converter={StaticResource TransferStateToEnabledConverter}}" />
