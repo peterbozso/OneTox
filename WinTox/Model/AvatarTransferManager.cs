@@ -83,15 +83,10 @@ namespace WinTox.Model
         protected override async void FileSendRequestReceivedHandler(object sender,
             ToxEventArgs.FileSendRequestEventArgs e)
         {
-            if (e.FileKind == ToxFileKind.Avatar)
-            {
-                await ReceiveAvatar(e);
-            }
-        }
+            if (e.FileKind != ToxFileKind.Avatar)
+                return;
 
-        private async Task ReceiveAvatar(ToxEventArgs.FileSendRequestEventArgs e)
-        {
-            if (e.FileKind == ToxFileKind.Avatar && e.FileSize == 0) // It means the avatar of the friend is removed.
+            if (e.FileSize == 0) // It means the avatar of the friend is removed.
             {
                 SendCancelControl(e.FriendNumber, e.FileNumber);
                 await AvatarManager.Instance.RemoveFriendAvatar(e.FriendNumber);
@@ -107,7 +102,7 @@ namespace WinTox.Model
             var resumeSent = SendResumeControl(e.FriendNumber, e.FileNumber);
             if (resumeSent)
             {
-                var stream = new MemoryStream((int) e.FileSize);
+                var stream = new MemoryStream((int)e.FileSize);
                 ActiveTransfers.Add(new TransferId(e.FileNumber, e.FriendNumber),
                     new TransferData(ToxFileKind.Avatar, stream, e.FileSize));
 
