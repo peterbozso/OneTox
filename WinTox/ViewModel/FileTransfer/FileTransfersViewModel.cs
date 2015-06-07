@@ -23,6 +23,41 @@ namespace WinTox.ViewModel.FileTransfer
 
         public ObservableCollection<OneFileTransferViewModel> Transfers { get; private set; }
 
+        #region Actions coming from the View
+
+        public async Task SendFile(StorageFile file)
+        {
+            var stream = (await file.OpenReadAsync()).AsStreamForRead();
+            int fileNumber;
+            var successfulSend = FileTransferManager.Instance.SendFile(_friendNumber, stream, file.Name, out fileNumber);
+            if (successfulSend)
+            {
+                Transfers.Add(new OneFileTransferViewModel(this, fileNumber, file.Name, FileTransferState.Uploading));
+            }
+        }
+
+        public void CancelTransferByUser(int fileNumber)
+        {
+            FileTransferManager.Instance.CancelTransfer(_friendNumber, fileNumber);
+            var transfer = FindTransferViewModel(fileNumber);
+            if (transfer != null)
+                Transfers.Remove(transfer);
+        }
+
+        public void PauseTransferByUser(int fileNumber)
+        {
+            FileTransferManager.Instance.PauseTransfer(_friendNumber, fileNumber);
+        }
+
+        public void ResumeTransferByUser(int fileNumber)
+        {
+            FileTransferManager.Instance.ResumeTransfer(_friendNumber, fileNumber);
+        }
+
+        #endregion
+
+        #region Actions coming from the Model
+
         private void FileControlReceivedHandler(int friendNumber, int fileNumber, ToxFileControl fileControl)
         {
             if (friendNumber != _friendNumber)
@@ -61,34 +96,9 @@ namespace WinTox.ViewModel.FileTransfer
                 transfer.Progress = newProgress;
         }
 
-        public async Task SendFile(StorageFile file)
-        {
-            var stream = (await file.OpenReadAsync()).AsStreamForRead();
-            int fileNumber;
-            var successfulSend = FileTransferManager.Instance.SendFile(_friendNumber, stream, file.Name, out fileNumber);
-            if (successfulSend)
-            {
-                Transfers.Add(new OneFileTransferViewModel(this, fileNumber, file.Name, FileTransferState.Uploading));
-            }
-        }
+        #endregion
 
-        public void CancelTransferByUser(int fileNumber)
-        {
-            FileTransferManager.Instance.CancelTransfer(_friendNumber, fileNumber);
-            var transfer = FindTransferViewModel(fileNumber);
-            if (transfer != null)
-                Transfers.Remove(transfer);
-        }
-
-        public void PauseTransferByUser(int fileNumber)
-        {
-            FileTransferManager.Instance.PauseTransfer(_friendNumber, fileNumber);
-        }
-
-        public void ResumeTransferByUser(int fileNumber)
-        {
-            FileTransferManager.Instance.ResumeTransfer(_friendNumber, fileNumber);
-        }
+        #region Helper search methods
 
         private OneFileTransferViewModel FindTransferViewModel(int fileNumber)
         {
@@ -100,5 +110,7 @@ namespace WinTox.ViewModel.FileTransfer
             return Transfers.FirstOrDefault(transfer => transfer.FileNumber == fileNumber && transfer.IsNotPlaceholder);
             // There can be multiple transfers with the same file number, but there's always only one that's not a placeholder.
         }
+
+        #endregion
     }
 }
