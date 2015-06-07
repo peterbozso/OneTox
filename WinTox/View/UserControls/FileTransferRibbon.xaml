@@ -9,7 +9,7 @@
     x:Class="WinTox.View.UserControls.FileTransferRibbon"
     mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400"
+    d:DesignWidth="600"
 	Loaded="UserControl_Loaded">
 
     <UserControl.Resources>
@@ -23,114 +23,256 @@
     <Grid Background="{StaticResource MainColor}" Height="60">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
-                <VisualState x:Name="DuringTransfer">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="AcceptButton">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="textBlock">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<Visibility>Collapsed</Visibility>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-                <VisualState x:Name="BeforeDownload">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="PauseResumeButton">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="CancelButton">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                            		<Visibility>Visible</Visibility>
-                            	</DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="textBlock">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<Visibility>Collapsed</Visibility>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-                <VisualState x:Name="AfterTransfer">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="PauseResumeButton">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="AcceptButton">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="textBlock">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<Visibility>Collapsed</Visibility>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-                <VisualState x:Name="BeforeUpload">
-                	<Storyboard>
-                		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                			Storyboard.TargetName="PauseResumeButton">
-                			<DiscreteObjectKeyFrame KeyTime="0">
-                				<DiscreteObjectKeyFrame.Value>
-                					<Visibility>Collapsed</Visibility>
-                				</DiscreteObjectKeyFrame.Value>
-                			</DiscreteObjectKeyFrame>
-                		</ObjectAnimationUsingKeyFrames>
-                		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                			Storyboard.TargetName="AcceptButton">
-                			<DiscreteObjectKeyFrame KeyTime="0">
-                				<DiscreteObjectKeyFrame.Value>
-                					<Visibility>Collapsed</Visibility>
-                				</DiscreteObjectKeyFrame.Value>
-                			</DiscreteObjectKeyFrame>
-                		</ObjectAnimationUsingKeyFrames>
-                		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.HorizontalAlignment)" Storyboard.TargetName="textBlock">
-                			<DiscreteObjectKeyFrame KeyTime="0">
-                				<DiscreteObjectKeyFrame.Value>
-                					<HorizontalAlignment>Center</HorizontalAlignment>
-                				</DiscreteObjectKeyFrame.Value>
-                			</DiscreteObjectKeyFrame>
-                		</ObjectAnimationUsingKeyFrames>
-                		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.VerticalAlignment)" Storyboard.TargetName="textBlock">
-                			<DiscreteObjectKeyFrame KeyTime="0">
-                				<DiscreteObjectKeyFrame.Value>
-                					<VerticalAlignment>Bottom</VerticalAlignment>
-                				</DiscreteObjectKeyFrame.Value>
-                			</DiscreteObjectKeyFrame>
-                		</ObjectAnimationUsingKeyFrames>
-                		<DoubleAnimation Duration="0" To="16" Storyboard.TargetProperty="(TextBlock.FontSize)" Storyboard.TargetName="textBlock" d:IsOptimized="True"/>
-                	</Storyboard>
-                </VisualState>
+            	<VisualState x:Name="BeforeUpload">
+            		<Storyboard>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="AcceptButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PauseButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ResumeButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PausedByFriendButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            		</Storyboard>
+            	</VisualState>
+            	<VisualState x:Name="BeforeDownload">
+            		<Storyboard>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PauseButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ResumeButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="WaitingHintTextBlock">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PausedByFriendButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            		</Storyboard>
+            	</VisualState>
+            	<VisualState x:Name="DuringTransfer">
+            		<Storyboard>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="AcceptButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ResumeButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="WaitingHintTextBlock">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PausedByFriendButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            		</Storyboard>
+            	</VisualState>
+            	<VisualState x:Name="PausedByUser">
+            		<Storyboard>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="AcceptButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PauseButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="WaitingHintTextBlock">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PausedByFriendButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.Foreground)" Storyboard.TargetName="TransferProgressBar">
+            				<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource StatusYellow}"/>
+            			</ObjectAnimationUsingKeyFrames>
+            		</Storyboard>
+            	</VisualState>
+				<VisualState x:Name="PausedByFriend">
+            		<Storyboard>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="AcceptButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PauseButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ResumeButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="WaitingHintTextBlock">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.Foreground)" Storyboard.TargetName="TransferProgressBar">
+            				<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource StatusYellow}"/>
+            			</ObjectAnimationUsingKeyFrames>
+            		</Storyboard>
+            	</VisualState>
+            	<VisualState x:Name="Finished">
+            		<Storyboard>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="AcceptButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PauseButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ResumeButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="WaitingHintTextBlock">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PausedByFriendButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.Foreground)" Storyboard.TargetName="TransferProgressBar">
+            				<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource StatusGreen}"/>
+            			</ObjectAnimationUsingKeyFrames>
+            		</Storyboard>
+            	</VisualState>
+            	<VisualState x:Name="CancelledByFriend">
+            		<Storyboard>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="WaitingHintTextBlock">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="AcceptButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PauseButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ResumeButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PausedByFriendButton">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.Foreground)" Storyboard.TargetName="TransferProgressBar">
+            				<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource StatusRed}"/>
+            			</ObjectAnimationUsingKeyFrames>
+            		</Storyboard>
+            	</VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <Grid.ColumnDefinitions>
@@ -156,7 +298,7 @@
         </Interactivity:Interaction.Behaviors>
 
         <!-- TODO: Change this icon to something that indicates the direction of the file transfer! (upload/download) -->
-        <TextBlock Grid.Column="0" FontFamily="Segoe UI Symbol" FontSize="30"
+        <TextBlock x:Name="IconTextBlock" Grid.Column="0" FontFamily="Segoe UI Symbol" FontSize="30"
                    VerticalAlignment="Center"
                    Text="{Binding State, Converter={StaticResource TransferStateToIconConverter}}"
                    HorizontalAlignment="Center" />
@@ -173,21 +315,21 @@
 					<ColumnDefinition Width="Auto"/>
 				</Grid.ColumnDefinitions>
 
-				<TextBlock Grid.Column="0" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+				<TextBlock x:Name="TransferNameTextBlock" Grid.Column="0" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom"
 						   Text="{Binding Name}" />
-				<TextBlock x:Name="textBlock" Grid.Column="1" Text="Waiting for friend to accept the file" />
+				<TextBlock x:Name="WaitingHintTextBlock" Grid.Column="1" Text="Waiting for friend to accept the file" VerticalAlignment="Bottom" FontSize="16" />
 			</Grid>
-            <ProgressBar Grid.Row="1"
-                         Foreground="{Binding State, Converter={StaticResource TransferStateToColorConverter}}"
+            <ProgressBar x:Name="TransferProgressBar" Grid.Row="1"
+                         Foreground="{ThemeResource MessageColor}"
                          VerticalAlignment="Center"
                          Margin="0,5,0,15" Value="{Binding Progress}" />
         </Grid>
 
-        <Button x:Name="AcceptButton" Grid.Column="2" Width="90" Margin="0,0,20,0">Accept</Button>
-        <Button x:Name="PauseResumeButton" Grid.Column="2" Width="90"
-                Content="{Binding State, Converter={StaticResource TransferStateToButtonTextConverter}}"
-                Command="{Binding PauseResumeTransferByUserCommand}" Margin="0,0,20,0"
-                IsEnabled="{Binding State, Converter={StaticResource TransferStateToEnabledConverter}}" />
+        <Button x:Name="AcceptButton" Grid.Column="2" Width="90" Margin="0,0,20,0" Content="Accept"/>
+        <Button x:Name="PauseButton" Grid.Column="2" Width="90" Margin="0,0,20,0" Content="Pause"/>
+        <Button x:Name="ResumeButton" Grid.Column="2" Width="90" Margin="0,0,20,0" Content="Resume"/>
+		<Button x:Name="PausedByFriendButton" Grid.Column="2" Width="90" Margin="0,0,20,0" Content="Paused" IsEnabled="False"/>
+        
         <!-- TODO: Replace hitbox with a circle! -->
         <Button x:Name="CancelButton" Grid.Column="3" FontFamily="Segoe UI Symbol" BorderThickness="0" Padding="0"
                 Margin="0,0,20,0" Content="&#xE0C7;" Command="{Binding CancelTransferByUserCommand}" />
