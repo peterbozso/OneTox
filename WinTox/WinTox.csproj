@@ -115,7 +115,6 @@
     <Compile Include="Converters\MessageTypeToColorConverter.cs" />
     <Compile Include="Converters\SenderTypeToColorConverter.cs" />
     <Compile Include="Converters\StatusToColorConverter.cs" />
-    <Compile Include="Converters\TransferStateToIconConverter.cs" />
     <Compile Include="Model\AvatarManager.cs" />
     <Compile Include="Model\DataTransferManager.cs" />
     <Compile Include="Model\ExtendedTox.cs" />

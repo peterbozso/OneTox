@@ -13,7 +13,6 @@
 	Loaded="UserControl_Loaded">
 
     <UserControl.Resources>
-        <converters:TransferStateToIconConverter x:Key="TransferStateToIconConverter" />
         <converters:TransferStateToStringConverter x:Key="TransferStateToStringConverter"/>
     </UserControl.Resources>
 
@@ -50,6 +49,9 @@
             					</DiscreteObjectKeyFrame.Value>
             				</DiscreteObjectKeyFrame>
             			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(TextBlock.Text)" Storyboard.TargetName="IconTextBlock">
+            				<DiscreteObjectKeyFrame KeyTime="0" Value="&#xE110;"/>
+            			</ObjectAnimationUsingKeyFrames>
             		</Storyboard>
             	</VisualState>
             	<VisualState x:Name="BeforeDownload">
@@ -81,6 +83,9 @@
             						<Visibility>Collapsed</Visibility>
             					</DiscreteObjectKeyFrame.Value>
             				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(TextBlock.Text)" Storyboard.TargetName="IconTextBlock">
+            				<DiscreteObjectKeyFrame KeyTime="0" Value="&#xE1FD;"/>
             			</ObjectAnimationUsingKeyFrames>
             		</Storyboard>
             	</VisualState>
@@ -114,6 +119,9 @@
             					</DiscreteObjectKeyFrame.Value>
             				</DiscreteObjectKeyFrame>
             			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(TextBlock.Text)" Storyboard.TargetName="IconTextBlock">
+            				<DiscreteObjectKeyFrame KeyTime="0" Value="&#xE110;"/>
+            			</ObjectAnimationUsingKeyFrames>
             		</Storyboard>
             	</VisualState>
             	<VisualState x:Name="Downloading">
@@ -145,6 +153,9 @@
 									<Visibility>Collapsed</Visibility>
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(TextBlock.Text)" Storyboard.TargetName="IconTextBlock">
+							<DiscreteObjectKeyFrame KeyTime="0" Value="&#xE1FD;"/>
 						</ObjectAnimationUsingKeyFrames>
 					</Storyboard>
 				</VisualState>
@@ -181,6 +192,9 @@
             			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.Foreground)" Storyboard.TargetName="TransferProgressBar">
             				<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource StatusYellow}"/>
             			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(TextBlock.Text)" Storyboard.TargetName="IconTextBlock">
+            				<DiscreteObjectKeyFrame KeyTime="0" Value="&#xE103;"/>
+            			</ObjectAnimationUsingKeyFrames>
             		</Storyboard>
             	</VisualState>
 				<VisualState x:Name="PausedByFriend">
@@ -215,6 +229,9 @@
             			</ObjectAnimationUsingKeyFrames>
             			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.Foreground)" Storyboard.TargetName="TransferProgressBar">
             				<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource StatusYellow}"/>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(TextBlock.Text)" Storyboard.TargetName="IconTextBlock">
+            				<DiscreteObjectKeyFrame KeyTime="0" Value="&#xE103;"/>
             			</ObjectAnimationUsingKeyFrames>
             		</Storyboard>
             	</VisualState>
@@ -258,6 +275,9 @@
             			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.Foreground)" Storyboard.TargetName="TransferProgressBar">
             				<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource StatusGreen}"/>
             			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(TextBlock.Text)" Storyboard.TargetName="IconTextBlock">
+            				<DiscreteObjectKeyFrame KeyTime="0" Value="&#xE10B;"/>
+            			</ObjectAnimationUsingKeyFrames>
             		</Storyboard>
             	</VisualState>
             	<VisualState x:Name="Cancelled">
@@ -299,6 +319,9 @@
             			</ObjectAnimationUsingKeyFrames>
             			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.Foreground)" Storyboard.TargetName="TransferProgressBar">
             				<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource StatusRed}"/>
+            			</ObjectAnimationUsingKeyFrames>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(TextBlock.Text)" Storyboard.TargetName="IconTextBlock">
+            				<DiscreteObjectKeyFrame KeyTime="0" Value="&#xE10A;"/>
             			</ObjectAnimationUsingKeyFrames>
             		</Storyboard>
             	</VisualState>
@@ -342,7 +365,6 @@
         <!-- TODO: Change this icon to something that indicates the direction of the file transfer! (upload/download) -->
         <TextBlock x:Name="IconTextBlock" Grid.Column="0" FontFamily="Segoe UI Symbol" FontSize="30"
                    VerticalAlignment="Center"
-                   Text="{Binding State, Converter={StaticResource TransferStateToIconConverter}}"
                    HorizontalAlignment="Center" />
 
         <Grid Grid.Column="1" Margin="0,0,20,0">
