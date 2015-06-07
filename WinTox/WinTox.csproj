@@ -108,7 +108,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\DateTimeConverter.cs" />
-    <Compile Include="Converters\TransferPhaseToStringConverter.cs" />
+    <Compile Include="Converters\TransferStateToStringConverter.cs" />
     <Compile Include="Converters\FriendNameToTypingStatusConverter.cs" />
     <Compile Include="Converters\IsConnectedToOpacityConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />

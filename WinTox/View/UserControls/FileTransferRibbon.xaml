@@ -14,10 +14,7 @@
 
     <UserControl.Resources>
         <converters:TransferStateToIconConverter x:Key="TransferStateToIconConverter" />
-        <converters:TransferStateToColorConverter x:Key="TransferStateToColorConverter" />
-        <converters:TransferStateToButtonTextConverter x:Key="TransferStateToButtonTextConverter" />
-        <converters:TransferStateToEnabledConverter x:Key="TransferStateToEnabledConverter" />
-        <converters:TransferPhaseToStringConverter x:Key="TransferPhaseToStringConverter"/>
+        <converters:TransferStateToStringConverter x:Key="TransferStateToStringConverter"/>
     </UserControl.Resources>
 
     <Grid Background="{StaticResource MainColor}" Height="60">
@@ -87,8 +84,15 @@
             			</ObjectAnimationUsingKeyFrames>
             		</Storyboard>
             	</VisualState>
-            	<VisualState x:Name="DuringTransfer">
+				<VisualState x:Name="Uploading">
             		<Storyboard>
+            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="WaitingHintTextBlock">
+            				<DiscreteObjectKeyFrame KeyTime="0">
+            					<DiscreteObjectKeyFrame.Value>
+            						<Visibility>Collapsed</Visibility>
+            					</DiscreteObjectKeyFrame.Value>
+            				</DiscreteObjectKeyFrame>
+            			</ObjectAnimationUsingKeyFrames>
             			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="AcceptButton">
             				<DiscreteObjectKeyFrame KeyTime="0">
             					<DiscreteObjectKeyFrame.Value>
@@ -97,13 +101,6 @@
             				</DiscreteObjectKeyFrame>
             			</ObjectAnimationUsingKeyFrames>
             			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ResumeButton">
-            				<DiscreteObjectKeyFrame KeyTime="0">
-            					<DiscreteObjectKeyFrame.Value>
-            						<Visibility>Collapsed</Visibility>
-            					</DiscreteObjectKeyFrame.Value>
-            				</DiscreteObjectKeyFrame>
-            			</ObjectAnimationUsingKeyFrames>
-            			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="WaitingHintTextBlock">
             				<DiscreteObjectKeyFrame KeyTime="0">
             					<DiscreteObjectKeyFrame.Value>
             						<Visibility>Collapsed</Visibility>
@@ -119,6 +116,38 @@
             			</ObjectAnimationUsingKeyFrames>
             		</Storyboard>
             	</VisualState>
+            	<VisualState x:Name="Downloading">
+					<Storyboard>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="WaitingHintTextBlock">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Collapsed</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="AcceptButton">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Collapsed</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ResumeButton">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Collapsed</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PausedByFriendButton">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Collapsed</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
             	<VisualState x:Name="PausedByUser">
             		<Storyboard>
             			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="AcceptButton">
@@ -231,7 +260,7 @@
             			</ObjectAnimationUsingKeyFrames>
             		</Storyboard>
             	</VisualState>
-            	<VisualState x:Name="CancelledByFriend">
+            	<VisualState x:Name="Cancelled">
             		<Storyboard>
             			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="WaitingHintTextBlock">
             				<DiscreteObjectKeyFrame KeyTime="0">
@@ -275,6 +304,7 @@
             	</VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80" />
             <ColumnDefinition Width="*" />
@@ -283,17 +313,29 @@
         </Grid.ColumnDefinitions>
 
         <Interactivity:Interaction.Behaviors>
-            <Core:DataTriggerBehavior Binding="{Binding Phase, Converter={StaticResource TransferPhaseToStringConverter}}" Value="BeforeUpload">
+            <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="BeforeUpload">
                 <Core:GoToStateAction StateName="BeforeUpload" />
             </Core:DataTriggerBehavior>
-            <Core:DataTriggerBehavior Binding="{Binding Phase, Converter={StaticResource TransferPhaseToStringConverter}}" Value="BeforeDownload">
+            <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="BeforeDownload">
                 <Core:GoToStateAction StateName="BeforeDownload" />
             </Core:DataTriggerBehavior>
-            <Core:DataTriggerBehavior Binding="{Binding Phase, Converter={StaticResource TransferPhaseToStringConverter}}" Value="DuringTransfer">
-                <Core:GoToStateAction StateName="DuringTransfer" />
+            <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="Uploading">
+                <Core:GoToStateAction StateName="Uploading" />
             </Core:DataTriggerBehavior>
-            <Core:DataTriggerBehavior Binding="{Binding Phase, Converter={StaticResource TransferPhaseToStringConverter}}" Value="AfterTransfer">
-                <Core:GoToStateAction StateName="AfterTransfer" />
+            <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="Downloading">
+                <Core:GoToStateAction StateName="Downloading" />
+            </Core:DataTriggerBehavior>
+            <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="PausedByUser">
+                <Core:GoToStateAction StateName="PausedByUser" />
+            </Core:DataTriggerBehavior>
+            <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="PausedByFriend">
+                <Core:GoToStateAction StateName="PausedByFriend" />
+            </Core:DataTriggerBehavior>
+            <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="Finished">
+                <Core:GoToStateAction StateName="Finished" />
+            </Core:DataTriggerBehavior>
+            <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="Cancelled">
+                <Core:GoToStateAction StateName="Cancelled" />
             </Core:DataTriggerBehavior>
         </Interactivity:Interaction.Behaviors>
 
@@ -326,8 +368,8 @@
         </Grid>
 
         <Button x:Name="AcceptButton" Grid.Column="2" Width="90" Margin="0,0,20,0" Content="Accept"/>
-        <Button x:Name="PauseButton" Grid.Column="2" Width="90" Margin="0,0,20,0" Content="Pause"/>
-        <Button x:Name="ResumeButton" Grid.Column="2" Width="90" Margin="0,0,20,0" Content="Resume"/>
+        <Button x:Name="PauseButton" Grid.Column="2" Width="90" Margin="0,0,20,0" Content="Pause" Command="{Binding PauseTransferByUserCommand}"/>
+        <Button x:Name="ResumeButton" Grid.Column="2" Width="90" Margin="0,0,20,0" Content="Resume" Command="{Binding ResumeTransferByUserCommand}"/>
 		<Button x:Name="PausedByFriendButton" Grid.Column="2" Width="90" Margin="0,0,20,0" Content="Paused" IsEnabled="False"/>
         
         <!-- TODO: Replace hitbox with a circle! -->

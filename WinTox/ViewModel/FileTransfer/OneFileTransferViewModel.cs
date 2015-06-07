@@ -4,6 +4,8 @@ namespace WinTox.ViewModel.FileTransfer
 {
     public enum FileTransferState
     {
+        BeforeUpload,
+        BeforeDownload,
         Uploading,
         Downloading,
         PausedByUser,
@@ -12,23 +14,15 @@ namespace WinTox.ViewModel.FileTransfer
         Cancelled
     }
 
-    public enum FileTransferPhase
-    {
-        BeforeUpload,
-        BeforeDownload,
-        DuringTransfer,
-        AfterTransfer
-    }
-
     public class OneFileTransferViewModel : ViewModelBase
     {
         private readonly FileTransfersViewModel _fileTransfers;
-        private FileTransferState _beforePause; // TODO: Maybe refactor it out later!
         private RelayCommand _cancelTransferByUserCommand;
         private bool _isNotPlaceholder;
-        private RelayCommand _pauseResumeTransferByUserCommand;
-        private FileTransferPhase _phase;
+        private FileTransferState _lastState;
+        private RelayCommand _pauseTransferByUserCommand;
         private double _progress;
+        private RelayCommand _rasumeTransferByUserCommand;
         private FileTransferState _state;
 
         public OneFileTransferViewModel(FileTransfersViewModel fileTransfers, int fileNumber, string name,
@@ -40,13 +34,14 @@ namespace WinTox.ViewModel.FileTransfer
             State = state;
             Progress = 0;
 
+            _lastState = state;
             switch (state)
             {
                 case FileTransferState.Uploading:
-                    Phase = FileTransferPhase.BeforeUpload;
+                    State = FileTransferState.BeforeUpload;
                     break;
                 case FileTransferState.Downloading:
-                    Phase = FileTransferPhase.BeforeDownload;
+                    State = FileTransferState.BeforeDownload;
                     break;
             }
         }
@@ -75,16 +70,6 @@ namespace WinTox.ViewModel.FileTransfer
             }
         }
 
-        public FileTransferPhase Phase
-        {
-            get { return _phase; }
-            private set
-            {
-                _phase = value;
-                RaisePropertyChanged();
-            }
-        }
-
         public double Progress
         {
             get { return _progress; }
@@ -104,22 +89,33 @@ namespace WinTox.ViewModel.FileTransfer
             }
         }
 
-        public RelayCommand PauseResumeTransferByUserCommand
+        public RelayCommand PauseTransferByUserCommand
         {
             get
             {
-                return _pauseResumeTransferByUserCommand ?? (_pauseResumeTransferByUserCommand = new RelayCommand(
+                return _pauseTransferByUserCommand ?? (_pauseTransferByUserCommand = new RelayCommand(
                     () =>
                     {
                         if (State == FileTransferState.Downloading || State == FileTransferState.Uploading)
                         {
-                            _beforePause = State;
+                            _lastState = State;
                             State = FileTransferState.PausedByUser;
                             _fileTransfers.PauseTransferByUser(FileNumber);
                         }
-                        else if (State == FileTransferState.PausedByUser)
+                    }));
+            }
+        }
+
+        public RelayCommand ResumeTransferByUserCommand
+        {
+            get
+            {
+                return _rasumeTransferByUserCommand ?? (_rasumeTransferByUserCommand = new RelayCommand(
+                    () =>
+                    {
+                        if (State == FileTransferState.PausedByUser)
                         {
-                            State = _beforePause;
+                            State = _lastState;
                             _fileTransfers.ResumeTransferByUser(FileNumber);
                         }
                     }));
@@ -131,33 +127,38 @@ namespace WinTox.ViewModel.FileTransfer
             if (State != FileTransferState.Uploading && State != FileTransferState.Downloading)
                 return;
 
-            _beforePause = State;
+            _lastState = State;
             State = FileTransferState.PausedByFriend;
         }
 
         public void ResumeTransferByFriend()
         {
-            if (Phase == FileTransferPhase.BeforeUpload || Phase == FileTransferPhase.BeforeDownload)
-                Phase = FileTransferPhase.DuringTransfer;
+            switch (State)
+            {
+                case FileTransferState.BeforeUpload:
+                    State = FileTransferState.Uploading;
+                    break;
+                case FileTransferState.BeforeDownload:
+                    State = FileTransferState.Downloading;
+                    break;
+            }
 
             if (State != FileTransferState.PausedByFriend)
                 return;
 
-            State = _beforePause;
+            State = _lastState;
         }
 
         public void CancelTransferByFriend()
         {
             State = FileTransferState.Cancelled;
             Progress = 100.0;
-            Phase = FileTransferPhase.AfterTransfer;
         }
 
         public void FinishTransfer()
         {
             State = FileTransferState.Finished;
             Progress = 100.0;
-            Phase = FileTransferPhase.AfterTransfer;
         }
     }
 }
