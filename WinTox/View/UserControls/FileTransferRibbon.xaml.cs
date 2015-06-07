@@ -13,7 +13,7 @@ namespace WinTox.View.UserControls
             InitializeComponent();
         }
 
-        private void UserControl_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             var transfer = (OneFileTransferViewModel) DataContext;
             if (transfer.State == FileTransferState.BeforeUpload)
