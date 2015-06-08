@@ -55,7 +55,7 @@ namespace WinTox.Model
             int amount)
         {
             base.InCreaseTransferProgress(transferId, transferData, amount);
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
                 if (ProgressChanged != null)
                     ProgressChanged(transferId.FriendNumber, transferId.FileNumber, transferData.Progress);
