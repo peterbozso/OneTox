@@ -106,7 +106,7 @@ namespace WinTox.Model
             if (successfulFileSend)
             {
                 ActiveTransfers.Add(new TransferId(fileInfo.Number, friendNumber),
-                    new TransferData(ToxFileKind.Avatar, stream, stream.Length));
+                    new TransferData(stream, stream.Length));
                 Debug.WriteLine(
                     "File upload added! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
                     friendNumber, fileInfo.Number, ActiveTransfers.Count);
@@ -153,7 +153,7 @@ namespace WinTox.Model
             // We add a transfer with a dummy stream here what we will change to an actual file stream in ReceiveFile()
             // when the user accepts the request and choose a file.
             ActiveTransfers.Add(new TransferId(e.FileNumber, e.FriendNumber),
-                new TransferData(ToxFileKind.Data, new MemoryStream(), e.FileSize));
+                new TransferData(new MemoryStream(), e.FileSize));
 
             Debug.WriteLine(
                 "Dummy file download added! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",

@@ -46,7 +46,7 @@ namespace WinTox.Model
             if (successfulFileSend)
             {
                 ActiveTransfers.Add(new TransferId(fileInfo.Number, friendNumber),
-                    new TransferData(ToxFileKind.Avatar, stream, stream.Length));
+                    new TransferData(stream, stream.Length));
                 Debug.WriteLine(
                     "Avatar upload added! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
                     friendNumber, fileInfo.Number, ActiveTransfers.Count);
@@ -104,7 +104,7 @@ namespace WinTox.Model
             {
                 var stream = new MemoryStream((int) e.FileSize);
                 ActiveTransfers.Add(new TransferId(e.FileNumber, e.FriendNumber),
-                    new TransferData(ToxFileKind.Avatar, stream, e.FileSize));
+                    new TransferData(stream, e.FileSize));
 
                 Debug.WriteLine(
                     "Avatar download added! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",

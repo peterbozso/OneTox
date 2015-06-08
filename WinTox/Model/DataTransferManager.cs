@@ -165,15 +165,13 @@ namespace WinTox.Model
             private readonly long _dataSizeInBytes;
             private long _transferredBytes;
 
-            public TransferData(ToxFileKind kind, Stream stream, long dataSizeInBytes)
+            public TransferData(Stream stream, long dataSizeInBytes)
             {
                 _transferredBytes = 0;
                 _dataSizeInBytes = dataSizeInBytes;
-                Kind = kind;
                 Stream = stream;
             }
 
-            public ToxFileKind Kind { get; private set; }
             public Stream Stream { get; private set; }
 
             public void IncreaseProgress(long amount)
