@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
 using SharpTox.Core;
 
 namespace WinTox.Model
@@ -14,11 +12,9 @@ namespace WinTox.Model
     internal class FileTransferManager : DataTransferManager
     {
         private static FileTransferManager _instance;
-        private readonly CoreDispatcher _dispatcher;
 
         private FileTransferManager()
         {
-            _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         }
 
         public static FileTransferManager Instance
@@ -52,13 +48,10 @@ namespace WinTox.Model
             SendResumeControl(friendNumber, fileNumber);
         }
 
-        protected override async void HandleFileControl(ToxFileControl fileControl, TransferId transferId)
+        protected override void HandleFileControl(ToxFileControl fileControl, TransferId transferId)
         {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                if (FileControlReceived != null)
-                    FileControlReceived(transferId.FriendNumber, transferId.FileNumber, fileControl);
-            });
+            if (FileControlReceived != null)
+                FileControlReceived(transferId.FriendNumber, transferId.FileNumber, fileControl);
 
             switch (fileControl)
             {
@@ -164,11 +157,8 @@ namespace WinTox.Model
                 "Dummy file download added! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
                 e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
 
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                if (FileSendRequestReceived != null)
-                    FileSendRequestReceived(this, e);
-            });
+            if (FileSendRequestReceived != null)
+                FileSendRequestReceived(this, e);
         }
 
         protected override void HandleFinishedDownload(TransferId transferId, ToxEventArgs.FileChunkEventArgs e)

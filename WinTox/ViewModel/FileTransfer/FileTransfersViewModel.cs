@@ -14,6 +14,7 @@ namespace WinTox.ViewModel.FileTransfer
 {
     public class FileTransfersViewModel
     {
+        private readonly CoreDispatcher _dispatcher;
         private readonly int _friendNumber;
         private DispatcherTimer _progressDispatcherTimer;
 
@@ -25,6 +26,7 @@ namespace WinTox.ViewModel.FileTransfer
             FileTransferManager.Instance.TransferFinished += TransferFinishedHandler;
             FileTransferManager.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
             SetupProgressDispatcherTimer();
+            _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         }
 
         public ObservableCollection<OneFileTransferViewModel> Transfers { get; private set; }
@@ -105,18 +107,20 @@ namespace WinTox.ViewModel.FileTransfer
             if (transfer == null)
                 return;
 
-            switch (fileControl)
-            {
-                case ToxFileControl.Cancel:
-                    transfer.CancelTransferByFriend();
-                    return;
-                case ToxFileControl.Pause:
-                    transfer.PauseTransferByFriend();
-                    return;
-                case ToxFileControl.Resume:
-                    transfer.ResumeTransferByFriend();
-                    return;
-            }
+            _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { 
+                switch (fileControl)
+                {
+                    case ToxFileControl.Cancel:
+                        transfer.CancelTransferByFriend();
+                        return;
+                    case ToxFileControl.Pause:
+                        transfer.PauseTransferByFriend();
+                        return;
+                    case ToxFileControl.Resume:
+                        transfer.ResumeTransferByFriend();
+                        return;
+                }
+            });
         }
 
         private async void TransferFinishedHandler(int friendNumber, int fileNumber)
@@ -128,17 +132,17 @@ namespace WinTox.ViewModel.FileTransfer
             if (transfer == null)
                 return;
 
-            await
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    () => { transfer.FinishTransfer(); });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { transfer.FinishTransfer(); });
         }
 
-        private void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
+        private async void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
         {
             if (e.FriendNumber != _friendNumber)
                 return;
 
-            Transfers.Add(new OneFileTransferViewModel(this, e.FileNumber, e.FileName, FileTransferState.Downloading));
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                Transfers.Add(new OneFileTransferViewModel(this, e.FileNumber, e.FileName, FileTransferState.Downloading));
+            });
         }
 
         #endregion
