@@ -174,15 +174,17 @@ namespace WinTox.Model
 
             public Stream Stream { get; private set; }
 
+            public double Progress
+            {
+                get
+                {
+                    return ((double)_transferredBytes / _dataSizeInBytes) * 100;
+                }
+            }
+
             public void IncreaseProgress(long amount)
             {
                 _transferredBytes += amount;
-            }
-
-            public double GetProgress()
-            {
-                // TODO: Refactor these three functions! ˇ^
-                return ((double) _transferredBytes/_dataSizeInBytes)*100;
             }
 
             public bool IsFinished()

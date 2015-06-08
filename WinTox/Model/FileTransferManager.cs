@@ -58,7 +58,7 @@ namespace WinTox.Model
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (ProgressChanged != null)
-                    ProgressChanged(transferId.FriendNumber, transferId.FileNumber, transferData.GetProgress());
+                    ProgressChanged(transferId.FriendNumber, transferId.FileNumber, transferData.Progress);
             });
         }
 
