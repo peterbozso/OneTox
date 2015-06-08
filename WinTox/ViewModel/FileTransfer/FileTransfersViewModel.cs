@@ -3,7 +3,10 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Storage;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
 using SharpTox.Core;
 using WinTox.Model;
 
@@ -12,17 +15,38 @@ namespace WinTox.ViewModel.FileTransfer
     public class FileTransfersViewModel
     {
         private readonly int _friendNumber;
+        private DispatcherTimer _progressDispatcherTimer;
 
         public FileTransfersViewModel(int friendNumber)
         {
             _friendNumber = friendNumber;
             Transfers = new ObservableCollection<OneFileTransferViewModel>();
-            FileTransferManager.Instance.ProgressChanged += ProgressChangedHandler;
             FileTransferManager.Instance.FileControlReceived += FileControlReceivedHandler;
+            FileTransferManager.Instance.TransferFinished += TransferFinishedHandler;
             FileTransferManager.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
+            SetupProgressDispatcherTimer();
         }
 
         public ObservableCollection<OneFileTransferViewModel> Transfers { get; private set; }
+
+        private void SetupProgressDispatcherTimer()
+        {
+            _progressDispatcherTimer = new DispatcherTimer();
+            _progressDispatcherTimer.Tick += (s, e) =>
+            {
+                var progresses = FileTransferManager.Instance.GetTrasnferProgressesOfFriend(_friendNumber);
+                foreach (var progress in progresses)
+                {
+                    var transfer = FindNotPlaceHolderTransferViewModel(progress.Key);
+                    if (transfer == null)
+                        continue;
+
+                    transfer.Progress = progress.Value;
+                }
+            };
+            _progressDispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
+            _progressDispatcherTimer.Start();
+        }
 
         #region Helper search methods
 
@@ -74,7 +98,7 @@ namespace WinTox.ViewModel.FileTransfer
 
         private void FileControlReceivedHandler(int friendNumber, int fileNumber, ToxFileControl fileControl)
         {
-            if (friendNumber != _friendNumber)
+            if (_friendNumber != friendNumber)
                 return;
 
             var transfer = FindNotPlaceHolderTransferViewModel(fileNumber);
@@ -95,19 +119,18 @@ namespace WinTox.ViewModel.FileTransfer
             }
         }
 
-        private void ProgressChangedHandler(int friendNumber, int fileNumber, double newProgress)
+        private async void TransferFinishedHandler(int friendNumber, int fileNumber)
         {
-            if (friendNumber != _friendNumber)
+            if (_friendNumber != friendNumber)
                 return;
 
             var transfer = FindNotPlaceHolderTransferViewModel(fileNumber);
             if (transfer == null)
                 return;
 
-            if (newProgress.Equals(100.0))
-                transfer.FinishTransfer();
-            else
-                transfer.Progress = newProgress;
+            await
+                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { transfer.FinishTransfer(); });
         }
 
         private void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)

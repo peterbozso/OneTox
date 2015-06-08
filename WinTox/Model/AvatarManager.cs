@@ -20,10 +20,10 @@ namespace WinTox.Model
         // See: https://github.com/irungentoo/Tox_Client_Guidelines/blob/master/Important/Avatars.md
         private const int KMaxPictureSize = 1 << 16;
         private static AvatarManager _instance;
+        private readonly CoreDispatcher _dispatcher;
         private StorageFolder _avatarsFolder;
         private bool _isUserAvatarSet;
         private BitmapImage _userAvatar;
-        private readonly CoreDispatcher _dispatcher;
 
         private AvatarManager()
         {

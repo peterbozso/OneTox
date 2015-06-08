@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Windows.ApplicationModel.Core;
@@ -51,18 +52,6 @@ namespace WinTox.Model
             SendResumeControl(friendNumber, fileNumber);
         }
 
-        protected override async void InCreaseTransferProgress(TransferId transferId, TransferData transferData,
-            int amount)
-        {
-            base.InCreaseTransferProgress(transferId, transferData, amount);
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-            {
-                if (ProgressChanged != null)
-                    ProgressChanged(transferId.FriendNumber, transferId.FileNumber, transferData.Progress);
-            });
-        }
-
-
         protected override async void HandleFileControl(ToxFileControl fileControl, TransferId transferId)
         {
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -82,16 +71,30 @@ namespace WinTox.Model
             }
         }
 
-        #endregion
+        public Dictionary<int, double> GetTrasnferProgressesOfFriend(int friendNumber)
+        {
+            var progressDict = new Dictionary<int, double>();
+            foreach (var transfer in ActiveTransfers)
+            {
+                if (transfer.Key.FriendNumber == friendNumber)
+                    progressDict.Add(transfer.Key.FileNumber, transfer.Value.Progress);
+            }
+            return progressDict;
+        }
 
-        #region Events
+        private void RaiseTransferFinished(int friendNumber, int fileNumber)
+        {
+            if (TransferFinished != null)
+                TransferFinished(friendNumber, fileNumber);
+        }
 
         public delegate void FileControlReceivedDelegate(int friendNumber, int fileNumber, ToxFileControl fileControl);
 
-        public delegate void ProgressChangedDelegate(int friendNumber, int fileNumber, double newProgress);
-
-        public event ProgressChangedDelegate ProgressChanged;
         public event FileControlReceivedDelegate FileControlReceived;
+
+        public delegate void TransferfinishedDelegate(int friendNumber, int fileNumber);
+
+        public event TransferfinishedDelegate TransferFinished;
 
         #endregion
 
@@ -123,6 +126,8 @@ namespace WinTox.Model
             Debug.WriteLine(
                 "File upload removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
                 e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
+
+            RaiseTransferFinished(e.FriendNumber, e.FileNumber);
         }
 
         #endregion
@@ -173,6 +178,8 @@ namespace WinTox.Model
             Debug.WriteLine(
                 "File download removed! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
                 e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
+
+            RaiseTransferFinished(e.FriendNumber, e.FileNumber);
         }
 
         #endregion
