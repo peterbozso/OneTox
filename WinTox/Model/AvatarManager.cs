@@ -23,12 +23,14 @@ namespace WinTox.Model
         private StorageFolder _avatarsFolder;
         private bool _isUserAvatarSet;
         private BitmapImage _userAvatar;
+        private readonly CoreDispatcher _dispatcher;
 
         private AvatarManager()
         {
             ResetUserAvatar();
             ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
             FriendAvatars = new Dictionary<int, BitmapImage>();
+            _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         }
 
         #region Properties
@@ -84,7 +86,7 @@ namespace WinTox.Model
 
         public async Task RemoveFriendAvatar(int friendNumber)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 FriendAvatars.Remove(friendNumber);
                 RaiseFriendAvatarChanged(friendNumber);
@@ -128,7 +130,7 @@ namespace WinTox.Model
 
         private async Task SetFriendAvatar(int friendNumber, StorageFile file)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 using (var stream = await file.OpenAsync(FileAccessMode.Read))
                 {
