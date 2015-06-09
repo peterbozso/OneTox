@@ -87,14 +87,15 @@ namespace WinTox.ViewModel.Messaging
         {
             var messageChunks = new List<string>();
 
-            var lengthInBytes = Encoding.Unicode.GetBytes(message).Length;
+            var lengthInBytes = Encoding.Unicode.GetByteCount(message);
             while (lengthInBytes > ToxConstants.MaxMessageLength)
             {
-                var lastSpaceIndex = message.LastIndexOf(" ", ToxConstants.MaxMessageLength, StringComparison.Ordinal);
+                // Division by 2: every character in unicode is 2 bytes long.
+                var lastSpaceIndex = message.LastIndexOf(" ", ToxConstants.MaxMessageLength/2, StringComparison.Ordinal);
                 var chunk = message.Substring(0, lastSpaceIndex);
                 messageChunks.Add(chunk);
                 message = message.Substring(lastSpaceIndex + 1);
-                lengthInBytes = Encoding.UTF8.GetBytes(message).Length;
+                lengthInBytes = Encoding.Unicode.GetBytes(message).Length;
             }
             messageChunks.Add(message);
 
