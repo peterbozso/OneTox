@@ -31,6 +31,18 @@ namespace WinTox.ViewModel.FileTransfer
 
         public ObservableCollection<OneFileTransferViewModel> Transfers { get; private set; }
 
+        #region Helper search methods
+
+        private OneFileTransferViewModel FindNotPlaceHolderTransferViewModel(int fileNumber)
+        {
+            return Transfers.FirstOrDefault(transfer => transfer.FileNumber == fileNumber && transfer.IsNotPlaceholder);
+            // There can be multiple transfers with the same file number, but there's always only one that's not a placeholder.
+        }
+
+        #endregion
+
+        #region Helper methods for DispatcherTimer
+
         private void SetupProgressDispatcherTimer()
         {
             _progressDispatcherTimer = new DispatcherTimer();
@@ -47,15 +59,29 @@ namespace WinTox.ViewModel.FileTransfer
                 }
             };
             _progressDispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
-            _progressDispatcherTimer.Start();
         }
 
-        #region Helper search methods
-
-        private OneFileTransferViewModel FindNotPlaceHolderTransferViewModel(int fileNumber)
+        private void StartTimerIfNeeded()
         {
-            return Transfers.FirstOrDefault(transfer => transfer.FileNumber == fileNumber && transfer.IsNotPlaceholder);
-            // There can be multiple transfers with the same file number, but there's always only one that's not a placeholder.
+            if (GetActiveTransfersCount() > 0)
+            {
+                _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { _progressDispatcherTimer.Start(); });
+            }
+        }
+
+        private void StopTimerIfNeeded()
+        {
+            if (GetActiveTransfersCount() == 0)
+            {
+                _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { _progressDispatcherTimer.Stop(); });
+            }
+        }
+
+        private int GetActiveTransfersCount()
+        {
+            return Transfers.Count(transfer => transfer.IsNotPlaceholder &&
+                                               transfer.State != FileTransferState.PausedByFriend &&
+                                               transfer.State != FileTransferState.PausedByUser);
         }
 
         #endregion
@@ -76,22 +102,26 @@ namespace WinTox.ViewModel.FileTransfer
         public void AcceptTransferByUser(int fileNumber, Stream saveStream)
         {
             FileTransferManager.Instance.ReceiveFile(_friendNumber, fileNumber, saveStream);
+            StartTimerIfNeeded();
         }
 
         public void CancelTransferByUser(OneFileTransferViewModel transferViewModel)
         {
             FileTransferManager.Instance.CancelTransfer(_friendNumber, transferViewModel.FileNumber);
             Transfers.Remove(transferViewModel);
+            StopTimerIfNeeded();
         }
 
         public void PauseTransferByUser(int fileNumber)
         {
             FileTransferManager.Instance.PauseTransfer(_friendNumber, fileNumber);
+            StopTimerIfNeeded();
         }
 
         public void ResumeTransferByUser(int fileNumber)
         {
             FileTransferManager.Instance.ResumeTransfer(_friendNumber, fileNumber);
+            StartTimerIfNeeded();
         }
 
         #endregion
@@ -107,17 +137,21 @@ namespace WinTox.ViewModel.FileTransfer
             if (transfer == null)
                 return;
 
-            _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { 
+            _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
                 switch (fileControl)
                 {
                     case ToxFileControl.Cancel:
                         transfer.CancelTransferByFriend();
+                        StopTimerIfNeeded();
                         return;
                     case ToxFileControl.Pause:
                         transfer.PauseTransferByFriend();
+                        StopTimerIfNeeded();
                         return;
                     case ToxFileControl.Resume:
                         transfer.ResumeTransferByFriend();
+                        StartTimerIfNeeded();
                         return;
                 }
             });
@@ -133,6 +167,8 @@ namespace WinTox.ViewModel.FileTransfer
                 return;
 
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { transfer.FinishTransfer(); });
+
+            StopTimerIfNeeded();
         }
 
         private async void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
@@ -140,9 +176,13 @@ namespace WinTox.ViewModel.FileTransfer
             if (e.FriendNumber != _friendNumber)
                 return;
 
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                Transfers.Add(new OneFileTransferViewModel(this, e.FileNumber, e.FileName, FileTransferState.Downloading));
-            });
+            await
+                _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () =>
+                    {
+                        Transfers.Add(new OneFileTransferViewModel(this, e.FileNumber, e.FileName,
+                            FileTransferState.Downloading));
+                    });
         }
 
         #endregion
