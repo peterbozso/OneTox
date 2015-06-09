@@ -179,6 +179,7 @@ namespace WinTox.ViewModel.Messaging
                     if (message.MessageId == e.Receipt)
                     {
                         await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { message.IsDelivered = true; });
+                        return;
                     }
                 }
             }
