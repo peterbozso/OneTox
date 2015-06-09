@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
+using Windows.Foundation;
 using Windows.Globalization;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.Core;
@@ -25,6 +26,8 @@ namespace WinTox
     /// </summary>
     sealed partial class App : Application
     {
+        private IAsyncOperation<IUICommand> _showErrorDialogCommand;
+
         /// <summary>
         ///     Initializes the singleton Application object.  This is the first line of authored code
         ///     executed, and as such is the logical equivalent of main() or WinMain().
@@ -93,10 +96,17 @@ namespace WinTox
 
         private async void ToxErrorOccuredHandler(object sender, string errorMessage)
         {
+            if (_showErrorDialogCommand != null)
+            {
+                return;
+            }
+
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 var msgDialog = new MessageDialog(errorMessage, "Error occured");
-                await msgDialog.ShowAsync();
+                _showErrorDialogCommand = msgDialog.ShowAsync();
+                await _showErrorDialogCommand;
+                _showErrorDialogCommand = null;
             });
         }
 
