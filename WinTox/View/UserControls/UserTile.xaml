@@ -18,7 +18,7 @@
     <UserControl.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
         <converters:BoolToVisibilityConverter x:Key="IsConnectedToVisibilityConverter" />
-        <converters:IsConnectedToOpacityConverter x:Key="IsConnectedToOpacityConverter" />
+        <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
     </UserControl.Resources>
 
     <Grid Background="{StaticResource BackgroundColor}" Tapped="UserTileTapped">
@@ -33,7 +33,7 @@
 
         <Image Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Source="{Binding Avatar}" Width="70"
                Height="70" Stretch="UniformToFill" VerticalAlignment="Top"
-               Opacity="{Binding IsConnected, Converter={StaticResource IsConnectedToOpacityConverter}}" />
+               Opacity="{Binding IsConnected, Converter={StaticResource BoolToOpacityConverter}}" />
         <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right">
             <Ellipse Width="10" Height="10" VerticalAlignment="Center"
                      Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}"

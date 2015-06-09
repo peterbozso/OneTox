@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <converters:IsConnectedToOpacityConverter x:Key="IsConnectedToOpacityConverter" />
+        <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
     </UserControl.Resources>
 
     <StackPanel Background="{StaticResource BackgroundColor}">
@@ -22,7 +22,7 @@
         <TextBlock VerticalAlignment="Bottom" Margin="0,0,0,10" FontSize="22" Foreground="{StaticResource TextColor}"
                    Text="{Binding StatusMessage}" />
         <Grid>
-            <Image Opacity="{Binding IsConnected, Converter={StaticResource IsConnectedToOpacityConverter}}"
+            <Image Opacity="{Binding IsConnected, Converter={StaticResource BoolToOpacityConverter}}"
                    Source="{Binding Avatar}" Width="250" Height="250" Stretch="UniformToFill"
                    HorizontalAlignment="Left" />
             <Ellipse Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibilityConverter}}"

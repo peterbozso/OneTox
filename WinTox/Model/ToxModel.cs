@@ -148,6 +148,7 @@ namespace WinTox.Model
             _tox.OnFileChunkRequested += FileChunkRequestedHandler;
             _tox.OnFileSendRequestReceived += FileSendRequestReceivedHandler;
             _tox.OnFileChunkReceived += FileChunkReceivedHandler;
+            _tox.OnReadReceiptReceived += ReadReceiptReceivedHandler;
         }
 
         private void RaiseAllPropertiesChanged()
@@ -370,6 +371,8 @@ namespace WinTox.Model
 
         public event EventHandler<ToxEventArgs.FileChunkEventArgs> FileChunkReceived;
 
+        public event EventHandler<ToxEventArgs.ReadReceiptEventArgs> ReadReceiptReceived;
+
         #endregion
 
         #region Event handlers
@@ -454,6 +457,12 @@ namespace WinTox.Model
         {
             if (FileChunkReceived != null)
                 FileChunkReceived(this, e);
+        }
+
+        private void ReadReceiptReceivedHandler(object sender, ToxEventArgs.ReadReceiptEventArgs e)
+        {
+            if (ReadReceiptReceived != null)
+                ReadReceiptReceived(this, e);
         }
 
         #endregion

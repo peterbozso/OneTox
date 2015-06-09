@@ -14,10 +14,10 @@ namespace WinTox.ViewModel.Messaging
 {
     public class ConversationViewModel : ViewModelBase
     {
+        private readonly CoreDispatcher _dispatcher;
         private readonly FriendViewModel _friendViewModel;
         private readonly UserViewModel _userViewModel;
         private bool _isFriendTyping;
-        private CoreDispatcher _dispatcher;
 
         public ConversationViewModel(FriendViewModel friendViewModel)
         {
@@ -27,6 +27,7 @@ namespace WinTox.ViewModel.Messaging
             _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
             ToxModel.Instance.FriendMessageReceived += FriendMessageReceivedHandler;
             ToxModel.Instance.FriendTypingChanged += FriendTypingChangedHandler;
+            ToxModel.Instance.ReadReceiptReceived += ReadReceiptReceivedHandler;
         }
 
         public bool IsFriendTyping
@@ -43,7 +44,8 @@ namespace WinTox.ViewModel.Messaging
 
         public async Task ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
         {
-            await StoreMessage(e.Message, _friendViewModel, e.MessageType);
+            // Here we make a very benign assumption that message_id stay being uint32_t in toxcore.
+            await StoreMessage(e.Message, _friendViewModel, e.MessageType, -1);
         }
 
         public async Task SendMessage(string message)
@@ -55,9 +57,9 @@ namespace WinTox.ViewModel.Messaging
             foreach (var chunk in messageChunks)
             {
                 bool successfulSend;
-                ToxModel.Instance.SendMessage(_friendViewModel.FriendNumber, chunk, messageType, out successfulSend);
-                if (successfulSend)
-                    await StoreMessage(chunk, _userViewModel, messageType);
+                var messageId = ToxModel.Instance.SendMessage(_friendViewModel.FriendNumber, chunk, messageType,
+                    out successfulSend);
+                await StoreMessage(chunk, _userViewModel, messageType, messageId);
             }
         }
 
@@ -100,15 +102,15 @@ namespace WinTox.ViewModel.Messaging
         }
 
         private async Task StoreMessage(string message, IToxUserViewModel sender,
-            ToxMessageType messageType)
+            ToxMessageType messageType, int messageId)
         {
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (AppendToLastGroup(message, messageType, sender))
+                if (AppendToLastGroup(message, messageType, sender, messageId))
                     return;
 
                 var msgGroup = new MessageGroupViewModel(sender);
-                msgGroup.Messages.Add(new MessageViewModel(message, DateTime.Now, messageType, sender));
+                msgGroup.Messages.Add(new MessageViewModel(message, DateTime.Now, messageType, sender, messageId));
                 MessageGroups.Add(msgGroup);
                 RaisePropertyChanged("MessageGroups");
             });
@@ -120,8 +122,10 @@ namespace WinTox.ViewModel.Messaging
         /// <param name="message">The message to append.</param>
         /// <param name="messageType">Type of the message.</param>
         /// <param name="sender">The sender of the message.</param>
+        /// <param name="messageId">The message ID of the message.</param>
         /// <returns>True on success, false otherwise.</returns>
-        private bool AppendToLastGroup(string message, ToxMessageType messageType, IToxUserViewModel sender)
+        private bool AppendToLastGroup(string message, ToxMessageType messageType, IToxUserViewModel sender,
+            int messageId)
         {
             if (MessageGroups.Count == 0 || MessageGroups.Last().Messages.Count == 0)
                 return false;
@@ -131,7 +135,8 @@ namespace WinTox.ViewModel.Messaging
             if (lastMessage.Sender.GetType() == sender.GetType())
                 // TODO: Implement and use simple equality operator instead.
             {
-                MessageGroups.Last().Messages.Add(new MessageViewModel(message, DateTime.Now, messageType, sender));
+                MessageGroups.Last()
+                    .Messages.Add(new MessageViewModel(message, DateTime.Now, messageType, sender, messageId));
                 RaisePropertyChanged("MessageGroups");
                 return true;
             }
@@ -149,10 +154,7 @@ namespace WinTox.ViewModel.Messaging
             if (e.FriendNumber != _friendViewModel.FriendNumber)
                 return;
 
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                IsFriendTyping = e.IsTyping;
-            });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { IsFriendTyping = e.IsTyping; });
         }
 
         private async void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
@@ -161,6 +163,25 @@ namespace WinTox.ViewModel.Messaging
                 return;
 
             await ReceiveMessage(e);
+        }
+
+        private async void ReadReceiptReceivedHandler(object sender, ToxEventArgs.ReadReceiptEventArgs e)
+        {
+            if (e.FriendNumber != _friendViewModel.FriendNumber)
+                return;
+
+            var groups = MessageGroups.ToArray();
+            foreach (var group in groups)
+            {
+                var messages = group.Messages.ToArray();
+                foreach (var message in messages)
+                {
+                    if (message.MessageId == e.Receipt)
+                    {
+                        await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { message.IsDelivered = true; });
+                    }
+                }
+            }
         }
     }
 }

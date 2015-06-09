@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
 using WinTox.Common;

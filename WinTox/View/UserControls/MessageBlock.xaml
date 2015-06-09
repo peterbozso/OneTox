@@ -14,6 +14,7 @@
         <converters:SenderTypeToColorConverter x:Key="SenderTypeToColorConverter" />
         <converters:MessageTypeToColorConverter x:Key="MessageTypeToColorConverter" />
         <converters:DateTimeConverter x:Key="DateTimeConverter" />
+        <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
     </UserControl.Resources>
 
     <Grid Background="{Binding Path=Sender, Converter={StaticResource SenderTypeToColorConverter}}">
@@ -40,7 +41,8 @@
                           HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="0,0,0,5">
+                        <Grid Margin="0,0,0,5"
+                              Opacity="{Binding IsDelivered, Converter={StaticResource BoolToOpacityConverter}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />

@@ -3,12 +3,12 @@ using Windows.UI.Xaml.Data;
 
 namespace WinTox.Converters
 {
-    public class IsConnectedToOpacityConverter : IValueConverter
+    public class BoolToOpacityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var IsConnected = (bool) value;
-            if (IsConnected)
+            var isTrue = (bool) value;
+            if (isTrue)
                 return 1;
             return 0.5;
         }

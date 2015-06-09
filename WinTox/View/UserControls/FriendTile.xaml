@@ -11,7 +11,7 @@
     d:DesignWidth="150">
 
     <UserControl.Resources>
-        <converters:IsConnectedToOpacityConverter x:Key="IsConnectedToOpacityConverter" />
+        <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
 
         <MenuFlyout x:Key="FriendTileFlyout">
             <MenuFlyoutItem Text="remove" Command="{Binding RemoveFriendCommand}" />
@@ -20,7 +20,7 @@
 
     <Grid Width="150" Height="150" FlyoutBase.AttachedFlyout="{StaticResource FriendTileFlyout}"
           RightTapped="MainGridRightTapped" Tapped="MainGridTapped">
-        <Image Opacity="{Binding IsConnected, Converter={StaticResource IsConnectedToOpacityConverter}}"
+        <Image Opacity="{Binding IsConnected, Converter={StaticResource BoolToOpacityConverter}}"
                Source="{Binding Avatar}" Stretch="UniformToFill" />
         <Rectangle Height="26" Fill="#7F000000" VerticalAlignment="Bottom" />
         <TextBlock VerticalAlignment="Bottom" Margin="6,0,0,0" FontSize="20" FontWeight="Medium" Text="{Binding Name}" />
