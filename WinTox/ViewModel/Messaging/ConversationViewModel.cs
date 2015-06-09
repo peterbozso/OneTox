@@ -17,12 +17,16 @@ namespace WinTox.ViewModel.Messaging
         private readonly FriendViewModel _friendViewModel;
         private readonly UserViewModel _userViewModel;
         private bool _isFriendTyping;
+        private CoreDispatcher _dispatcher;
 
         public ConversationViewModel(FriendViewModel friendViewModel)
         {
             _friendViewModel = friendViewModel;
             _userViewModel = new UserViewModel();
             MessageGroups = new ObservableCollection<MessageGroupViewModel>();
+            _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+            ToxModel.Instance.FriendMessageReceived += FriendMessageReceivedHandler;
+            ToxModel.Instance.FriendTypingChanged += FriendTypingChangedHandler;
         }
 
         public bool IsFriendTyping
@@ -98,7 +102,7 @@ namespace WinTox.ViewModel.Messaging
         private async Task StoreMessage(string message, IToxUserViewModel sender,
             ToxMessageType messageType)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (AppendToLastGroup(message, messageType, sender))
                     return;
@@ -138,6 +142,25 @@ namespace WinTox.ViewModel.Messaging
         public void SetTypingStatus(bool isTyping)
         {
             ToxModel.Instance.SetTypingStatus(_friendViewModel.FriendNumber, isTyping);
+        }
+
+        private async void FriendTypingChangedHandler(object sender, ToxEventArgs.TypingStatusEventArgs e)
+        {
+            if (e.FriendNumber != _friendViewModel.FriendNumber)
+                return;
+
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                IsFriendTyping = e.IsTyping;
+            });
+        }
+
+        private async void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
+        {
+            if (e.FriendNumber != _friendViewModel.FriendNumber)
+                return;
+
+            await ReceiveMessage(e);
         }
     }
 }

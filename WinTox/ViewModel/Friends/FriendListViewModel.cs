@@ -28,8 +28,6 @@ namespace WinTox.ViewModel.Friends
             ToxModel.Instance.FriendStatusChanged += FriendStatusChangedHandler;
             ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
             ToxModel.Instance.FriendListChanged += FriendListChangedHandler;
-            ToxModel.Instance.FriendMessageReceived += FriendMessageReceivedHandler;
-            ToxModel.Instance.FriendTypingChanged += FriendTypingChangedHandler;
         }
 
         public ObservableCollection<FriendViewModel> Friends { get; set; }
@@ -84,17 +82,6 @@ namespace WinTox.ViewModel.Friends
                             return;
                     }
                 });
-        }
-
-        private async void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
-        {
-            await FindFriend(e.FriendNumber).ReceiveMessage(e);
-        }
-
-        private async void FriendTypingChangedHandler(object sender, ToxEventArgs.TypingStatusEventArgs e)
-        {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => { FindFriend(e.FriendNumber).SetIsTyping(e.IsTyping); });
         }
 
         private FriendViewModel FindFriend(int friendNumber)

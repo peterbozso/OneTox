@@ -111,15 +111,5 @@ namespace WinTox.ViewModel.Friends
             if (friendNumber == FriendNumber)
                 RaisePropertyChanged("Avatar");
         }
-
-        public async Task ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
-        {
-            await Conversation.ReceiveMessage(e);
-        }
-
-        public void SetIsTyping(bool isTyping)
-        {
-            Conversation.IsFriendTyping = isTyping;
-        }
     }
 }
