@@ -23,7 +23,7 @@ namespace WinTox.ViewModel
 
         public void RelayError(ToxErrorSendMessage error)
         {
-            if (error != ToxErrorSendMessage.Ok)
+            if (error != ToxErrorSendMessage.Ok && error != ToxErrorSendMessage.FriendNotConnected)
                 RaiseToxErrorOccured("An unexpected error occured when sending your message to your friend: " + error);
         }
 

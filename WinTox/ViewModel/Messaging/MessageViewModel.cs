@@ -52,6 +52,6 @@ namespace WinTox.ViewModel.Messaging
             }
         }
 
-        public int Id { get; private set; }
+        public int Id { get; set; }
     }
 }

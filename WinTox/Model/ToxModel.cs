@@ -281,12 +281,11 @@ namespace WinTox.Model
             return _tox.GetData(key);
         }
 
-        public int SendMessage(int friendNumber, string message, ToxMessageType type, out bool success)
+        public int SendMessage(int friendNumber, string message, ToxMessageType type)
         {
             ToxErrorSendMessage error;
             var retVal = _tox.SendMessage(friendNumber, message, type, out error);
             ToxErrorViewModel.Instance.RelayError(error);
-            success = error == ToxErrorSendMessage.Ok;
             return retVal;
         }
 

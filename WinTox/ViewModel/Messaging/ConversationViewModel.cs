@@ -28,6 +28,7 @@ namespace WinTox.ViewModel.Messaging
             ToxModel.Instance.FriendMessageReceived += FriendMessageReceivedHandler;
             ToxModel.Instance.FriendTypingChanged += FriendTypingChangedHandler;
             ToxModel.Instance.ReadReceiptReceived += ReadReceiptReceivedHandler;
+            ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
         }
 
         public bool IsFriendTyping
@@ -56,9 +57,9 @@ namespace WinTox.ViewModel.Messaging
             var messageChunks = SplitMessage(message);
             foreach (var chunk in messageChunks)
             {
-                bool successfulSend;
-                var messageId = ToxModel.Instance.SendMessage(_friendViewModel.FriendNumber, chunk, messageType,
-                    out successfulSend);
+                var messageId = ToxModel.Instance.SendMessage(_friendViewModel.FriendNumber, chunk, messageType);
+                // We store the message with this ID in every case, no matter if the sending was unsuccessful. 
+                // If it was, we will resend the message later, and change it's message ID.
                 await StoreMessage(chunk, _userViewModel, messageType, messageId);
             }
         }
@@ -181,6 +182,31 @@ namespace WinTox.ViewModel.Messaging
                     {
                         await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { message.IsDelivered = true; });
                         return;
+                    }
+                }
+            }
+        }
+
+        private void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
+        {
+            if (e.FriendNumber != _friendViewModel.FriendNumber)
+                return;
+
+            if (ToxModel.Instance.IsFriendOnline(e.FriendNumber))
+            {
+                // Resend undelivered messages:
+                var groups = MessageGroups.ToArray();
+                foreach (var group in groups)
+                {
+                    var messages = group.Messages.ToArray();
+                    foreach (var message in messages)
+                    {
+                        if (!message.IsDelivered)
+                        {
+                            var messageId = ToxModel.Instance.SendMessage(_friendViewModel.FriendNumber, message.Text,
+                                message.MessageType);
+                            message.Id = messageId; // We have to update the message ID.
+                        }
                     }
                 }
             }
