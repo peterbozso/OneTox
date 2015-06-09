@@ -7,36 +7,36 @@ namespace WinTox.ViewModel.Messaging
     public class MessageViewModel : ViewModelBase
     {
         private bool _isDelivered;
-        private string _message;
+        private string _text;
 
-        public MessageViewModel(string message, DateTime timestamp, ToxMessageType messageType, IToxUserViewModel sender,
-            int messageId)
+        public MessageViewModel(string text, DateTime timestamp, ToxMessageType messageType, IToxUserViewModel sender,
+            int id)
         {
-            Message = message;
+            Text = text;
             Timestamp = timestamp;
             MessageType = messageType;
             Sender = sender;
             IsDelivered = sender is FriendViewModel;
-            MessageId = messageId;
+            Id = id;
         }
 
         public IToxUserViewModel Sender { get; private set; }
 
-        public string Message
+        public string Text
         {
             get
             {
                 switch (MessageType)
                 {
                     case ToxMessageType.Message:
-                        return _message;
+                        return _text;
 
                     case ToxMessageType.Action:
-                        return Sender.Name + " " + _message;
+                        return Sender.Name + " " + _text;
                 }
                 return null;
             }
-            private set { _message = value; }
+            private set { _text = value; }
         }
 
         public DateTime Timestamp { get; private set; }
@@ -52,6 +52,6 @@ namespace WinTox.ViewModel.Messaging
             }
         }
 
-        public int MessageId { get; private set; }
+        public int Id { get; private set; }
     }
 }

@@ -176,7 +176,7 @@ namespace WinTox.ViewModel.Messaging
                 var messages = group.Messages.ToArray();
                 foreach (var message in messages)
                 {
-                    if (message.MessageId == e.Receipt)
+                    if (message.Id == e.Receipt)
                     {
                         await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { message.IsDelivered = true; });
                         return;
