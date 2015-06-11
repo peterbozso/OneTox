@@ -7,10 +7,10 @@ namespace WinTox.ViewModel.Messaging
         public MessageGroupViewModel(IToxUserViewModel sender)
         {
             Sender = sender;
-            Messages = new ObservableCollection<MessageViewModel>();
+            Messages = new ObservableCollection<ToxMessageViewModelBase>();
         }
 
         public IToxUserViewModel Sender { get; private set; }
-        public ObservableCollection<MessageViewModel> Messages { get; private set; }
+        public ObservableCollection<ToxMessageViewModelBase> Messages { get; private set; }
     }
 }

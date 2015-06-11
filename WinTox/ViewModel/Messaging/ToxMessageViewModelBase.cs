@@ -1,26 +1,13 @@
 ﻿using System;
 using SharpTox.Core;
-using WinTox.ViewModel.Friends;
 
 namespace WinTox.ViewModel.Messaging
 {
-    public class MessageViewModel : ViewModelBase
+    public class ToxMessageViewModelBase : ViewModelBase
     {
         private bool _isDelivered;
         private string _text;
-
-        public MessageViewModel(string text, DateTime timestamp, ToxMessageType messageType, IToxUserViewModel sender,
-            int id)
-        {
-            Text = text;
-            Timestamp = timestamp;
-            MessageType = messageType;
-            Sender = sender;
-            IsDelivered = sender is FriendViewModel;
-            Id = id;
-        }
-
-        public IToxUserViewModel Sender { get; private set; }
+        public IToxUserViewModel Sender { get; protected set; }
 
         public string Text
         {
@@ -36,22 +23,20 @@ namespace WinTox.ViewModel.Messaging
                 }
                 return null;
             }
-            private set { _text = value; }
+            protected set { _text = value; }
         }
 
-        public DateTime Timestamp { get; private set; }
-        public ToxMessageType MessageType { get; private set; }
+        public DateTime Timestamp { get; protected set; }
+        public ToxMessageType MessageType { get; protected set; }
 
         public bool IsDelivered
         {
             get { return _isDelivered; }
-            set
+            protected set
             {
                 _isDelivered = value;
                 RaisePropertyChanged();
             }
         }
-
-        public int Id { get; set; }
     }
 }

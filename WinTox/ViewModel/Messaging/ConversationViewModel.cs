@@ -17,19 +17,15 @@ namespace WinTox.ViewModel.Messaging
     {
         private readonly CoreDispatcher _dispatcher;
         private readonly FriendViewModel _friendViewModel;
-        private readonly UserViewModel _userViewModel;
         private bool _isFriendTyping;
 
         public ConversationViewModel(FriendViewModel friendViewModel)
         {
             _friendViewModel = friendViewModel;
-            _userViewModel = new UserViewModel();
             MessageGroups = new ObservableCollection<MessageGroupViewModel>();
             _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
             ToxModel.Instance.FriendMessageReceived += FriendMessageReceivedHandler;
             ToxModel.Instance.FriendTypingChanged += FriendTypingChangedHandler;
-            ToxModel.Instance.ReadReceiptReceived += ReadReceiptReceivedHandler;
-            ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
         }
 
         public bool IsFriendTyping
@@ -47,7 +43,8 @@ namespace WinTox.ViewModel.Messaging
         public async Task ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
         {
             // Here we make a very benign assumption that message_id stay being uint32_t in toxcore.
-            await StoreMessage(e.Message, _friendViewModel, e.MessageType, -1);
+            await
+                StoreMessage(new ReceivedMessageViewModelBase(e.Message, DateTime.Now, e.MessageType, _friendViewModel));
         }
 
         public async Task SendMessage(string message)
@@ -60,20 +57,21 @@ namespace WinTox.ViewModel.Messaging
                 var messageId = ToxModel.Instance.SendMessage(_friendViewModel.FriendNumber, chunk, messageType);
                 // We store the message with this ID in every case, no matter if the sending was unsuccessful. 
                 // If it was, we will resend the message later, and change it's message ID.
-                await StoreMessage(chunk, _userViewModel, messageType, messageId);
+                await
+                    StoreMessage(new SentMessageViewModelBase(chunk, DateTime.Now, messageType, messageId,
+                        _friendViewModel));
             }
         }
 
-        private async Task StoreMessage(string message, IToxUserViewModel sender,
-            ToxMessageType messageType, int messageId)
+        private async Task StoreMessage(ToxMessageViewModelBase message)
         {
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (AppendToLastGroup(message, messageType, sender, messageId))
+                if (AppendToLastGroup(message))
                     return;
 
-                var msgGroup = new MessageGroupViewModel(sender);
-                msgGroup.Messages.Add(new MessageViewModel(message, DateTime.Now, messageType, sender, messageId));
+                var msgGroup = new MessageGroupViewModel(message.Sender);
+                msgGroup.Messages.Add(message);
                 MessageGroups.Add(msgGroup);
                 RaisePropertyChanged("MessageGroups");
             });
@@ -87,19 +85,18 @@ namespace WinTox.ViewModel.Messaging
         /// <param name="sender">The sender of the message.</param>
         /// <param name="messageId">The message ID of the message.</param>
         /// <returns>True on success, false otherwise.</returns>
-        private bool AppendToLastGroup(string message, ToxMessageType messageType, IToxUserViewModel sender,
-            int messageId)
+        private bool AppendToLastGroup(ToxMessageViewModelBase message)
         {
             if (MessageGroups.Count == 0 || MessageGroups.Last().Messages.Count == 0)
                 return false;
 
             var lastMessage = MessageGroups.Last().Messages.Last();
 
-            if (lastMessage.Sender.GetType() == sender.GetType())
+            if (lastMessage.Sender.GetType() == message.Sender.GetType())
                 // TODO: Implement and use simple equality operator instead.
             {
                 MessageGroups.Last()
-                    .Messages.Add(new MessageViewModel(message, DateTime.Now, messageType, sender, messageId));
+                    .Messages.Add(message);
                 RaisePropertyChanged("MessageGroups");
                 return true;
             }
@@ -126,51 +123,6 @@ namespace WinTox.ViewModel.Messaging
                 return;
 
             await ReceiveMessage(e);
-        }
-
-        private async void ReadReceiptReceivedHandler(object sender, ToxEventArgs.ReadReceiptEventArgs e)
-        {
-            if (e.FriendNumber != _friendViewModel.FriendNumber)
-                return;
-
-            var groups = MessageGroups.ToArray();
-            foreach (var group in groups)
-            {
-                var messages = group.Messages.ToArray();
-                foreach (var message in messages)
-                {
-                    if (message.Id == e.Receipt)
-                    {
-                        await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { message.IsDelivered = true; });
-                        return;
-                    }
-                }
-            }
-        }
-
-        private void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
-        {
-            if (e.FriendNumber != _friendViewModel.FriendNumber)
-                return;
-
-            if (ToxModel.Instance.IsFriendOnline(e.FriendNumber))
-            {
-                // Resend undelivered messages:
-                var groups = MessageGroups.ToArray();
-                foreach (var group in groups)
-                {
-                    var messages = group.Messages.ToArray();
-                    foreach (var message in messages)
-                    {
-                        if (!message.IsDelivered)
-                        {
-                            var messageId = ToxModel.Instance.SendMessage(_friendViewModel.FriendNumber, message.Text,
-                                message.MessageType);
-                            message.Id = messageId; // We have to update the message ID.
-                        }
-                    }
-                }
-            }
         }
 
         private static class MessageTools
