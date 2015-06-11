@@ -44,7 +44,7 @@ namespace WinTox.ViewModel.Messaging
         {
             // Here we make a very benign assumption that message_id stay being uint32_t in toxcore.
             await
-                StoreMessage(new ReceivedMessageViewModelBase(e.Message, DateTime.Now, e.MessageType, _friendViewModel));
+                StoreMessage(new ReceivedMessageViewModel(e.Message, DateTime.Now, e.MessageType, _friendViewModel));
         }
 
         public async Task SendMessage(string message)
@@ -58,7 +58,7 @@ namespace WinTox.ViewModel.Messaging
                 // We store the message with this ID in every case, no matter if the sending was unsuccessful. 
                 // If it was, we will resend the message later, and change it's message ID.
                 await
-                    StoreMessage(new SentMessageViewModelBase(chunk, DateTime.Now, messageType, messageId,
+                    StoreMessage(new SentMessageViewModel(chunk, DateTime.Now, messageType, messageId,
                         _friendViewModel));
             }
         }

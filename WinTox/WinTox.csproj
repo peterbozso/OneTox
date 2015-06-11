@@ -133,8 +133,8 @@
     <Compile Include="ViewModel\Messaging\ConversationViewModel.cs" />
     <Compile Include="ViewModel\Messaging\ToxMessageViewModelBase.cs" />
     <Compile Include="ViewModel\Messaging\MessageGroupViewModel.cs" />
-    <Compile Include="ViewModel\Messaging\ReceivedMessageViewModelBase.cs" />
-    <Compile Include="ViewModel\Messaging\SentMessageViewModelBase.cs" />
+    <Compile Include="ViewModel\Messaging\ReceivedMessageViewModel.cs" />
+    <Compile Include="ViewModel\Messaging\SentMessageViewModel.cs" />
     <Compile Include="ViewModel\ProfileSettings\ProfileManagementViewModel.cs" />
     <Compile Include="ViewModel\ProfileSettings\ProfileSettingsViewModel.cs" />
     <Compile Include="ViewModel\ToxErrorViewModel.cs" />

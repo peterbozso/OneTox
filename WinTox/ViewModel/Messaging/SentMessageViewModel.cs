@@ -8,14 +8,14 @@ using WinTox.ViewModel.Friends;
 
 namespace WinTox.ViewModel.Messaging
 {
-    public class SentMessageViewModelBase : ToxMessageViewModelBase
+    public class SentMessageViewModel : ToxMessageViewModelBase
     {
         private readonly CoreDispatcher _dispatcher;
         private readonly FriendViewModel _target;
         private Timer _resendTimer;
         private int _timerCallbackFired;
 
-        public SentMessageViewModelBase(string text, DateTime timestamp, ToxMessageType messageType, int id,
+        public SentMessageViewModel(string text, DateTime timestamp, ToxMessageType messageType, int id,
             FriendViewModel target)
         {
             Text = text;

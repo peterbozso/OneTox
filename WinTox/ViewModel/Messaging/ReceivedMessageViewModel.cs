@@ -4,9 +4,9 @@ using WinTox.ViewModel.Friends;
 
 namespace WinTox.ViewModel.Messaging
 {
-    public class ReceivedMessageViewModelBase : ToxMessageViewModelBase
+    public class ReceivedMessageViewModel : ToxMessageViewModelBase
     {
-        public ReceivedMessageViewModelBase(string text, DateTime timestamp, ToxMessageType messageType,
+        public ReceivedMessageViewModel(string text, DateTime timestamp, ToxMessageType messageType,
             FriendViewModel sender)
         {
             Text = text;
