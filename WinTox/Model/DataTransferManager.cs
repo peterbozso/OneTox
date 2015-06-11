@@ -32,6 +32,7 @@ namespace WinTox.Model
         private void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
         {
             var transferId = new TransferId(e.FileNumber, e.FriendNumber);
+
             if (ActiveTransfers.ContainsKey(transferId))
                 HandleFileControl(e.Control, transferId);
         }
@@ -61,6 +62,7 @@ namespace WinTox.Model
         private void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
         {
             var transferId = new TransferId(e.FileNumber, e.FriendNumber);
+
             if (IsTransferFinished(transferId))
                 return;
 
@@ -69,6 +71,7 @@ namespace WinTox.Model
             var chunk = GetNextChunk(e, currentTransfer);
             bool successfulChunkSend;
             ToxModel.Instance.FileSendChunk(e.FriendNumber, e.FileNumber, e.Position, chunk, out successfulChunkSend);
+
             if (successfulChunkSend)
             {
                 currentTransfer.IncreaseProgress(e.Length);
@@ -82,10 +85,13 @@ namespace WinTox.Model
         private byte[] GetNextChunk(ToxEventArgs.FileRequestChunkEventArgs e, TransferData currentTransfer)
         {
             var currentStream = currentTransfer.Stream;
+
             if (e.Position != currentStream.Position)
                 currentStream.Seek(e.Position, SeekOrigin.Begin);
+
             var chunk = new byte[e.Length];
             currentStream.Read(chunk, 0, e.Length);
+
             return chunk;
         }
 
@@ -100,12 +106,13 @@ namespace WinTox.Model
         private void FileChunkReceivedHandler(object sender, ToxEventArgs.FileChunkEventArgs e)
         {
             var transferId = new TransferId(e.FileNumber, e.FriendNumber);
+
             if (IsTransferFinished(transferId))
                 return;
 
             var currentTransfer = ActiveTransfers[transferId];
-
             var currentStream = currentTransfer.Stream;
+
             PutNextChunk(e, currentStream);
 
             currentTransfer.IncreaseProgress(e.Data.Length);
@@ -119,6 +126,7 @@ namespace WinTox.Model
         {
             if (currentStream.Position != e.Position)
                 currentStream.Seek(e.Position, SeekOrigin.Begin);
+
             currentStream.Write(e.Data, 0, e.Data.Length);
         }
 
