@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -88,19 +89,52 @@ namespace WinTox.ViewModel.Messaging
         {
             var messageChunks = new List<string>();
 
-            var lengthInBytes = Encoding.Unicode.GetByteCount(message);
+            var encoding = Encoding.UTF8;
+            var lengthInBytes = encoding.GetByteCount(message);
             while (lengthInBytes > ToxConstants.MaxMessageLength)
             {
-                // Division by 2: every character in unicode is 2 bytes long.
-                var lastSpaceIndex = message.LastIndexOf(" ", ToxConstants.MaxMessageLength/2, StringComparison.Ordinal);
-                var chunk = message.Substring(0, lastSpaceIndex);
+                var chunk = GetChunkOfMaxMessageLength(message);
                 messageChunks.Add(chunk);
-                message = message.Substring(lastSpaceIndex + 1);
-                lengthInBytes = Encoding.Unicode.GetBytes(message).Length;
+                message = message.Substring(chunk.Length);
+                lengthInBytes = encoding.GetByteCount(message);
             }
             messageChunks.Add(message);
 
             return messageChunks;
+        }
+
+        // Kudos: http://codereview.stackexchange.com/questions/55103/method-to-return-a-string-of-max-length-in-bytes-vs-characterss
+        private string GetChunkOfMaxMessageLength(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return string.Empty;
+            }
+
+            var encoding = Encoding.UTF8;
+            if (encoding.GetByteCount(input) <= ToxConstants.MaxMessageLength)
+            {
+                return input;
+            }
+
+            var sb = new StringBuilder();
+            var bytes = 0;
+            var enumerator = StringInfo.GetTextElementEnumerator(input);
+            while (enumerator.MoveNext())
+            {
+                var textElement = enumerator.GetTextElement();
+                bytes += encoding.GetByteCount(textElement);
+                if (bytes <= ToxConstants.MaxMessageLength)
+                {
+                    sb.Append(textElement);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return sb.ToString();
         }
 
         private async Task StoreMessage(string message, IToxUserViewModel sender,
