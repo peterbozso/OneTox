@@ -48,7 +48,7 @@ namespace WinTox.ViewModel.FileTransfer
             _progressDispatcherTimer = new DispatcherTimer();
             _progressDispatcherTimer.Tick += (s, e) =>
             {
-                var progresses = FileTransferManager.Instance.GetTrasnferProgressesOfFriend(_friendNumber);
+                var progresses = FileTransferManager.Instance.GetTransferProgressesOfFriend(_friendNumber);
                 foreach (var progress in progresses)
                 {
                     var transfer = FindNotPlaceHolderTransferViewModel(progress.Key);
