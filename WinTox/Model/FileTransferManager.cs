@@ -64,7 +64,7 @@ namespace WinTox.Model
             }
         }
 
-        public Dictionary<int, double> GetTrasnferProgressesOfFriend(int friendNumber)
+        public Dictionary<int, double> GetTransferProgressesOfFriend(int friendNumber)
         {
             var progressDict = new Dictionary<int, double>();
             foreach (var transfer in ActiveTransfers)
