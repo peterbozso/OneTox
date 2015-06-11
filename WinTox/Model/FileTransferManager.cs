@@ -97,7 +97,7 @@ namespace WinTox.Model
         {
             bool successfulFileSend;
             var fileInfo = ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Data, stream.Length, fileName,
-                new byte[ToxConstants.FileIdLength], out successfulFileSend);
+                out successfulFileSend);
 
             if (successfulFileSend)
             {

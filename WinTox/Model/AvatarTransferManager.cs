@@ -56,8 +56,7 @@ namespace WinTox.Model
         public void SendNullAvatar(int friendNumber)
         {
             bool successfulFileSend;
-            ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, 0, "", GetAvatarHash(new MemoryStream()),
-                out successfulFileSend);
+            ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, 0, "", out successfulFileSend);
         }
 
         private byte[] GetAvatarHash(Stream stream)

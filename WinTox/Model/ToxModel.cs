@@ -302,6 +302,16 @@ namespace WinTox.Model
             return retVal;
         }
 
+        public ToxFileInfo FileSend(int friendNumber, ToxFileKind kind, long fileSize, string fileName,
+            out bool success)
+        {
+            ToxErrorFileSend error;
+            var retVal = _tox.FileSend(friendNumber, kind, fileSize, fileName, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            success = error == ToxErrorFileSend.Ok;
+            return retVal;
+        }
+
         public ToxFileInfo FileSend(int friendNumber, ToxFileKind kind, long fileSize, string fileName, byte[] fileId,
             out bool success)
         {
