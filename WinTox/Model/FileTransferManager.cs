@@ -142,16 +142,16 @@ namespace WinTox.Model
                 friendNumber, fileNumber, ActiveTransfers.Count);
         }
 
-        protected override async void FileSendRequestReceivedHandler(object sender,
+        protected override void FileSendRequestReceivedHandler(object sender,
             ToxEventArgs.FileSendRequestEventArgs e)
         {
             if (e.FileKind != ToxFileKind.Data)
                 return;
 
-            // We add a transfer with a dummy stream here what we will change to an actual file stream in ReceiveFile()
-            // when the user accepts the request and choose a file.
+            // We add a transfer with a null value instead of an actual stream here. We will replace it with an actual file stream
+            // in ReceiveFile() when the user accepts the request and chooses a file.
             ActiveTransfers.Add(new TransferId(e.FileNumber, e.FriendNumber),
-                new TransferData(new MemoryStream(), e.FileSize));
+                new TransferData(null, e.FileSize));
 
             Debug.WriteLine(
                 "Dummy file download added! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
