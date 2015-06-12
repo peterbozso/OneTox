@@ -81,7 +81,7 @@ namespace WinTox.View
             _chatTimer.Change(500, -1);
             _friendViewModel.Conversation.SetTypingStatus(true);
 
-            if (e.Key == VirtualKey.Enter)
+            if (e.Key == VirtualKey.Enter && MessageInput.Text != String.Empty)
             {
                 // I don't even... 
                 // https://social.msdn.microsoft.com/Forums/windowsapps/en-US/734d6c7a-8da2-48c6-9b3d-fa868b4dfb1d/c-textbox-keydown-triggered-twice-in-metro-applications?forum=winappswithcsharp
