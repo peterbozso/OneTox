@@ -3,6 +3,7 @@ using System.Threading;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using SharpTox.Core;
+using WinTox.Common;
 using WinTox.Model;
 using WinTox.ViewModel.Friends;
 
@@ -12,6 +13,7 @@ namespace WinTox.ViewModel.Messaging
     {
         private readonly CoreDispatcher _dispatcher;
         private readonly FriendViewModel _target;
+        private RelayCommand _resendMessageCommand;
         private Timer _resendTimer;
         private int _timerCallbackFired;
 
@@ -23,6 +25,7 @@ namespace WinTox.ViewModel.Messaging
             MessageType = messageType;
             Sender = new UserViewModel();
             IsDelivered = false;
+            IsFailedToDeliver = false;
             Id = id;
             _target = target;
 
@@ -36,9 +39,21 @@ namespace WinTox.ViewModel.Messaging
 
         public int Id { get; private set; }
 
+        public RelayCommand ResendMessageCommand
+        {
+            get
+            {
+                return _resendMessageCommand ?? (_resendMessageCommand = new RelayCommand(() =>
+                {
+                    IsFailedToDeliver = false;
+                    SetupAndStartResendTimer();
+                }));
+            }
+        }
+
         /// <summary>
-        /// We automatically resend the message every 10 seconds for 3 times if we don't get a read receipt
-        /// for it in 10 seconds after we sent it for the first time.
+        ///     We automatically resend the message every 10 seconds for 3 times if we don't get a read receipt
+        ///     for it in 10 seconds after we sent it for the first time.
         /// </summary>
         private void SetupAndStartResendTimer()
         {
@@ -59,7 +74,10 @@ namespace WinTox.ViewModel.Messaging
 
                         _timerCallbackFired++;
                         if (_timerCallbackFired == 3) // Don't resend it automatically more than 3 times.
+                        {
                             _resendTimer.Dispose();
+                            IsFailedToDeliver = true;
+                        }
                     },
                     null, 10000, 10000);
             }

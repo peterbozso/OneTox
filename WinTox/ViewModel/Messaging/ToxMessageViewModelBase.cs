@@ -38,5 +38,7 @@ namespace WinTox.ViewModel.Messaging
                 RaisePropertyChanged();
             }
         }
+
+        public bool IsFailedToDeliver { get; protected set; }
     }
 }

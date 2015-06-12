@@ -15,6 +15,7 @@
         <converters:MessageTypeToColorConverter x:Key="MessageTypeToColorConverter" />
         <converters:DateTimeConverter x:Key="DateTimeConverter" />
         <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </UserControl.Resources>
 
     <Grid Background="{Binding Path=Sender, Converter={StaticResource SenderTypeToColorConverter}}">
@@ -41,21 +42,30 @@
                           HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="0,0,0,5"
-                              Opacity="{Binding IsDelivered, Converter={StaticResource BoolToOpacityConverter}}">
+                        <Grid Margin="0,0,0,5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <TextBlock x:Name="MessageText" Grid.Column="0"
                                        Foreground="{Binding MessageType, Converter={StaticResource MessageTypeToColorConverter}}"
-                                       FontSize="20" Margin="10,0,0,0" TextWrapping="Wrap" Text="{Binding Text}" />
-                            <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="16" Margin="10,5,0,0"
+                                       FontSize="20" Margin="10,0,0,0" TextWrapping="Wrap" Text="{Binding Text}"
+                                       Opacity="{Binding IsDelivered, Converter={StaticResource BoolToOpacityConverter}}" />
+
+                            <Button Grid.Column="1" Foreground="{ThemeResource BackgroundColor}" FontSize="16"
+                                    FontFamily="Segoe UI Symbol" Padding="0" BorderThickness="0"
+                                    VerticalAlignment="Top" Content=""
+                                    ToolTipService.ToolTip="Failed to send your message. Click here to resend it!"
+                                    Visibility="{Binding IsFailedToDeliver, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                            <TextBlock x:Name="Timestamp" Grid.Column="2" FontSize="16" Margin="10,5,0,0"
                                        Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"
                                        HorizontalAlignment="Left"
                                        Text="{Binding Timestamp, Converter={StaticResource DateTimeConverter}}"
-                                       VerticalAlignment="Top" />
+                                       VerticalAlignment="Top"
+                                       Opacity="{Binding IsDelivered, Converter={StaticResource BoolToOpacityConverter}}" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

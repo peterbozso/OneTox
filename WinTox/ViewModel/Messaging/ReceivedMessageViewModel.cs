@@ -14,6 +14,7 @@ namespace WinTox.ViewModel.Messaging
             MessageType = messageType;
             Sender = sender;
             IsDelivered = true;
+            IsFailedToDeliver = false;
         }
     }
 }
