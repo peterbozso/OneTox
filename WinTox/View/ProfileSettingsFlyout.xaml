@@ -26,15 +26,8 @@
     </SettingsFlyout.DataContext>
 
     <StackPanel Width="266">
-        <Grid>
-            <Image Width="266" Height="266" Source="{Binding Avatar}" Stretch="UniformToFill" Tapped="UserAvatarTapped" />
-            <Button HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="Segoe UI Symbol"
-                    Background="Transparent"
-                    Content="" Click="RemoveAvatarButtonClick"
-                    Visibility="{Binding IsAvatarSet, Converter={StaticResource BoolToVisibilityConverter}}"
-                    Padding="0" />
-        </Grid>
-        <TextBox Header="Name" Margin="0,20,0,0" Text="{Binding Name, Mode=TwoWay}" LostFocus="NameTextBoxLostFocus" />
+        <!-- Name, status message, status -->
+        <TextBox Header="Name" Text="{Binding Name, Mode=TwoWay}" LostFocus="NameTextBoxLostFocus" />
         <TextBox Header="Status message" Text="{Binding StatusMessage, Mode=TwoWay}" />
         <Grid x:Name="StatusGrid" Margin="0,3,0,0">
             <Grid.ColumnDefinitions>
@@ -49,7 +42,24 @@
                      HorizontalAlignment="Left" Margin="10,25,0,0" />
         </Grid>
 
-        <!-- Tox ID settings -->
+        <!-- User avatar -->
+        <TextBlock Text="Avatar" Style="{StaticResource BodyTextBlockStyle}" Margin="0,20,0,10" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Image Grid.Column="0" Width="150" Height="150" Source="{Binding Avatar}" Stretch="UniformToFill"
+                   Tapped="UserAvatarTapped" />
+            <Button Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe UI Symbol"
+                    Background="Transparent"
+                    Content="" Click="RemoveAvatarButtonClick"
+                    Visibility="{Binding IsAvatarSet, Converter={StaticResource BoolToVisibilityConverter}}"
+                    Padding="0" />
+        </Grid>
+
+        <!-- Tox ID -->
         <TextBlock Text="Tox ID" Style="{StaticResource BodyTextBlockStyle}" Margin="0,20,0,0" />
         <TextBlock x:Name="ToxIdTextBlock" TextWrapping="Wrap" Text="{Binding Id}"
                    Style="{StaticResource BodyTextBlockStyle}" Margin="10,0,0,5" />
@@ -57,6 +67,7 @@
         <Button Content="Randomize nospam" Click="NospamButtonClick" Width="170"
                 ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." />
 
+        <!-- Profile management -->
         <userControls:ProfileManagementBlock />
 
     </StackPanel>
