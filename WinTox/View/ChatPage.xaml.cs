@@ -97,10 +97,10 @@ namespace WinTox.View
         private void SetupViewModel(FriendViewModel friendViewModel)
         {
             DataContext = _friendViewModel = friendViewModel;
-            _friendViewModel.Conversation.PropertyChanged += ConversationUpdatedHandler;
+            _friendViewModel.Conversation.MessageAdded += MessageAddedHandler;
         }
 
-        private void ConversationUpdatedHandler(object sender, PropertyChangedEventArgs e)
+        private void MessageAddedHandler(object sender, EventArgs e)
         {
             var selectedIndex = MessagesListView.Items.Count - 1;
             MessagesListView.SelectedIndex = selectedIndex;

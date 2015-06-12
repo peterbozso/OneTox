@@ -73,7 +73,7 @@ namespace WinTox.ViewModel.Messaging
                 var msgGroup = new MessageGroupViewModel(message.Sender);
                 msgGroup.Messages.Add(message);
                 MessageGroups.Add(msgGroup);
-                RaisePropertyChanged("MessageGroups");
+                RaiseMessageAdded();
             });
         }
 
@@ -97,11 +97,19 @@ namespace WinTox.ViewModel.Messaging
             {
                 MessageGroups.Last()
                     .Messages.Add(message);
-                RaisePropertyChanged("MessageGroups");
+                RaiseMessageAdded();
                 return true;
             }
 
             return false;
+        }
+
+        public event EventHandler MessageAdded;
+
+        private void RaiseMessageAdded()
+        {
+            if (MessageAdded != null)
+                MessageAdded(this, new EventArgs());
         }
 
         public void SetTypingStatus(bool isTyping)
