@@ -13,8 +13,7 @@ namespace WinTox.ViewModel.Messaging
             Timestamp = timestamp;
             MessageType = messageType;
             Sender = sender;
-            IsDelivered = true;
-            IsFailedToDeliver = false;
+            State = MessageDeliveryState.Delivered;
         }
     }
 }

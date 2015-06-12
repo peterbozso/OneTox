@@ -3,9 +3,16 @@ using SharpTox.Core;
 
 namespace WinTox.ViewModel.Messaging
 {
+    public enum MessageDeliveryState
+    {
+        Delivered,
+        Pending,
+        Failed
+    }
+
     public class ToxMessageViewModelBase : ViewModelBase
     {
-        private bool _isDelivered;
+        private MessageDeliveryState _state;
         private string _text;
         public IToxUserViewModel Sender { get; protected set; }
 
@@ -29,16 +36,14 @@ namespace WinTox.ViewModel.Messaging
         public DateTime Timestamp { get; protected set; }
         public ToxMessageType MessageType { get; protected set; }
 
-        public bool IsDelivered
+        public MessageDeliveryState State
         {
-            get { return _isDelivered; }
+            get { return _state; }
             protected set
             {
-                _isDelivered = value;
+                _state = value;
                 RaisePropertyChanged();
             }
         }
-
-        public bool IsFailedToDeliver { get; protected set; }
     }
 }

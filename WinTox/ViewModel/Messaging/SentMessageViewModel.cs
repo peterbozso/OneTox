@@ -24,8 +24,7 @@ namespace WinTox.ViewModel.Messaging
             Timestamp = timestamp;
             MessageType = messageType;
             Sender = new UserViewModel();
-            IsDelivered = false;
-            IsFailedToDeliver = false;
+            State = MessageDeliveryState.Pending;
             Id = id;
             _target = target;
 
@@ -45,7 +44,7 @@ namespace WinTox.ViewModel.Messaging
             {
                 return _resendMessageCommand ?? (_resendMessageCommand = new RelayCommand(() =>
                 {
-                    IsFailedToDeliver = false;
+                    State = MessageDeliveryState.Pending;
                     SetupAndStartResendTimer();
                 }));
             }
@@ -64,7 +63,8 @@ namespace WinTox.ViewModel.Messaging
                 _resendTimer = new Timer(
                     state =>
                     {
-                        if (IsDelivered) // If it's delivered, then there's no need for resend.
+                        if (State == MessageDeliveryState.Delivered)
+                            // If it's delivered, then there's no need for resend.
                         {
                             _resendTimer.Dispose();
                             return;
@@ -76,7 +76,7 @@ namespace WinTox.ViewModel.Messaging
                         if (_timerCallbackFired == 3) // Don't resend it automatically more than 3 times.
                         {
                             _resendTimer.Dispose();
-                            IsFailedToDeliver = true;
+                            State = MessageDeliveryState.Failed;
                         }
                     },
                     null, 10000, 10000);
@@ -90,7 +90,9 @@ namespace WinTox.ViewModel.Messaging
 
             if (Id == e.Receipt)
             {
-                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { IsDelivered = true; });
+                await
+                    _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                        () => { State = MessageDeliveryState.Delivered; });
             }
         }
 
@@ -99,7 +101,7 @@ namespace WinTox.ViewModel.Messaging
             if (e.FriendNumber != _target.FriendNumber)
                 return;
 
-            if (!IsDelivered)
+            if (State == MessageDeliveryState.Pending)
                 ResendMessage();
         }
 
