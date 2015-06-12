@@ -5,12 +5,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:WinTox.Converters"
-    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="WinTox.View.UserControls.FileTransferRibbon"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="600"
-    Loaded="UserControl_Loaded">
+    Loaded="FileTransferRibbonLoaded">
 
     <UserControl.Resources>
         <converters:TransferStateToStringConverter x:Key="TransferStateToStringConverter" />
@@ -381,45 +382,45 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <Interactivity:Interaction.Behaviors>
-            <Core:DataTriggerBehavior
+        <interactivity:Interaction.Behaviors>
+            <core:DataTriggerBehavior
                 Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}"
                 Value="BeforeUpload">
-                <Core:GoToStateAction StateName="BeforeUpload" />
-            </Core:DataTriggerBehavior>
-            <Core:DataTriggerBehavior
+                <core:GoToStateAction StateName="BeforeUpload" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior
                 Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}"
                 Value="BeforeDownload">
-                <Core:GoToStateAction StateName="BeforeDownload" />
-            </Core:DataTriggerBehavior>
-            <Core:DataTriggerBehavior
+                <core:GoToStateAction StateName="BeforeDownload" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior
                 Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="Uploading">
-                <Core:GoToStateAction StateName="Uploading" />
-            </Core:DataTriggerBehavior>
-            <Core:DataTriggerBehavior
+                <core:GoToStateAction StateName="Uploading" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior
                 Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}"
                 Value="Downloading">
-                <Core:GoToStateAction StateName="Downloading" />
-            </Core:DataTriggerBehavior>
-            <Core:DataTriggerBehavior
+                <core:GoToStateAction StateName="Downloading" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior
                 Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}"
                 Value="PausedByUser">
-                <Core:GoToStateAction StateName="PausedByUser" />
-            </Core:DataTriggerBehavior>
-            <Core:DataTriggerBehavior
+                <core:GoToStateAction StateName="PausedByUser" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior
                 Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}"
                 Value="PausedByFriend">
-                <Core:GoToStateAction StateName="PausedByFriend" />
-            </Core:DataTriggerBehavior>
-            <Core:DataTriggerBehavior
+                <core:GoToStateAction StateName="PausedByFriend" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior
                 Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="Finished">
-                <Core:GoToStateAction StateName="Finished" />
-            </Core:DataTriggerBehavior>
-            <Core:DataTriggerBehavior
+                <core:GoToStateAction StateName="Finished" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior
                 Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="Cancelled">
-                <Core:GoToStateAction StateName="Cancelled" />
-            </Core:DataTriggerBehavior>
-        </Interactivity:Interaction.Behaviors>
+                <core:GoToStateAction StateName="Cancelled" />
+            </core:DataTriggerBehavior>
+        </interactivity:Interaction.Behaviors>
 
         <!-- TODO: Change this icon to something that indicates the direction of the file transfer! (upload/download) -->
         <TextBlock x:Name="IconTextBlock" Grid.Column="0" FontFamily="Segoe UI Symbol" FontSize="30"

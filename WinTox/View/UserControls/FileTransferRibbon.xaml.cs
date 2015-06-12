@@ -16,7 +16,7 @@ namespace WinTox.View.UserControls
             InitializeComponent();
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void FileTransferRibbonLoaded(object sender, RoutedEventArgs e)
         {
             var transferViewModel = (OneFileTransferViewModel) DataContext;
             VisualStateManager.GoToState(this, transferViewModel.State.ToString(), true);
