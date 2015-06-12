@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
@@ -18,7 +20,7 @@ namespace WinTox.Model
     public class AvatarManager
     {
         // See: https://github.com/irungentoo/Tox_Client_Guidelines/blob/master/Important/Avatars.md
-        private const int KMaxPictureSize = 1 << 16;
+        private const int KMaxPictureSizeInBytes = 1 << 16;
         private static AvatarManager _instance;
         private readonly CoreDispatcher _dispatcher;
         private StorageFolder _avatarsFolder;
@@ -206,17 +208,25 @@ namespace WinTox.Model
 
         public async Task ChangeUserAvatar(StorageFile file)
         {
-            await SetUserAvatar(file);
-            var copy = await CopyUserAvatarFile(file);
-            await BroadcastUserAvatarOnSet(copy);
+            StorageFile newFile;
+            if (await AvatarResizer.IsAvatarTooBig(file))
+            {
+                var avatarResizer = new AvatarResizer(_avatarsFolder, file);
+                newFile = await avatarResizer.SaveUserAvatarFile();
+            }
+            else
+            {
+                newFile = await SaveUserAvatarFile(file);
+            }
+            await SetUserAvatar(newFile);
+            await BroadcastUserAvatarOnSet(newFile);
         }
 
         private async Task SetUserAvatar(StorageFile file)
         {
             using (var stream = await file.OpenAsync(FileAccessMode.Read))
             {
-                // TODO: Allow bigger avatars and implement resizing.
-                if (stream.AsStream().Length > KMaxPictureSize)
+                if (stream.AsStream().Length > KMaxPictureSizeInBytes) // TODO: Remove this safety check later!
                     throw new ArgumentOutOfRangeException();
                 UserAvatar.SetSource(stream);
                 IsUserAvatarSet = true;
@@ -228,7 +238,7 @@ namespace WinTox.Model
         /// </summary>
         /// <param name="file">The user's avatar's file.</param>
         /// <returns>The copy of the file.</returns>
-        private async Task<StorageFile> CopyUserAvatarFile(StorageFile file)
+        private async Task<StorageFile> SaveUserAvatarFile(StorageFile file)
         {
             var copy = await file.CopyAsync(_avatarsFolder);
             await copy.RenameAsync(ToxModel.Instance.Id.PublicKey + ".png", NameCollisionOption.ReplaceExisting);
@@ -307,6 +317,97 @@ namespace WinTox.Model
         {
             var stream = (await file.OpenReadAsync()).AsStreamForRead();
             AvatarTransferManager.Instance.SendAvatar(friendNumber, stream, file.Name);
+        }
+
+        private class AvatarResizer
+        {
+            private readonly StorageFile _avatarFile;
+            private readonly StorageFolder _avatarsFolder;
+
+            public AvatarResizer(StorageFolder avatarsFolder, StorageFile avatarFile)
+            {
+                _avatarsFolder = avatarsFolder;
+                _avatarFile = avatarFile;
+            }
+
+            public async Task<StorageFile> SaveUserAvatarFile()
+            {
+                var avatar = await LoadAvatarToWriteableBitmap();
+                avatar = ResizeAvatar(avatar);
+                return await SaveUserAvatar(avatar);
+            }
+
+            public static async Task<bool> IsAvatarTooBig(StorageFile file)
+            {
+                using (var stream = await file.OpenAsync(FileAccessMode.Read))
+                {
+                    return (stream.AsStream().Length > KMaxPictureSizeInBytes);
+                }
+            }
+
+            private async Task<WriteableBitmap> LoadAvatarToWriteableBitmap()
+            {
+                using (var stream = await _avatarFile.OpenAsync(FileAccessMode.Read))
+                {
+                    var bmpImg = new BitmapImage();
+                    bmpImg.SetSource(stream);
+
+                    var writeableBitmap = new WriteableBitmap(bmpImg.PixelWidth, bmpImg.PixelHeight);
+                    stream.Seek(0);
+                    writeableBitmap.SetSource(stream);
+
+                    return writeableBitmap;
+                }
+            }
+
+            private WriteableBitmap ResizeAvatar(WriteableBitmap writeableBitmap)
+            {
+                var resized = CropIfNeeded(writeableBitmap);
+                return resized.Resize(150, 150, WriteableBitmapExtensions.Interpolation.Bilinear);
+            }
+
+            private WriteableBitmap CropIfNeeded(WriteableBitmap writeableBitmap)
+            {
+                var height = writeableBitmap.PixelHeight;
+                var width = writeableBitmap.PixelWidth;
+                var xCenter = width/2;
+                var yCenter = height/2;
+
+                if (width > height)
+                {
+                    return writeableBitmap.Crop(xCenter - height/2, 0, height, height);
+                }
+
+                if (width < height)
+                {
+                    return writeableBitmap.Crop(0, yCenter - width/2, width, width);
+                }
+
+                return writeableBitmap;
+            }
+
+            // Kudos: http://stackoverflow.com/questions/17140774/how-to-save-a-writeablebitmap-as-a-file
+            private async Task<StorageFile> SaveUserAvatar(WriteableBitmap avatar)
+            {
+                var file = await _avatarsFolder.CreateFileAsync(ToxModel.Instance.Id.PublicKey + ".png",
+                    CreationCollisionOption.ReplaceExisting);
+                using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+                {
+                    var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
+                    var pixelStream = avatar.PixelBuffer.AsStream();
+                    var pixels = new byte[pixelStream.Length];
+                    await pixelStream.ReadAsync(pixels, 0, pixels.Length);
+
+                    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
+                        (uint) avatar.PixelWidth,
+                        (uint) avatar.PixelHeight,
+                        96.0,
+                        96.0,
+                        pixels);
+                    await encoder.FlushAsync();
+                }
+                return file;
+            }
         }
 
         #endregion

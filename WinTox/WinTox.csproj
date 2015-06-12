@@ -187,6 +187,7 @@
     <None Include="Common\ReadMe.txt" />
     <Content Include="Assets\default-profile-picture.png" />
     <Content Include="Assets\tox-logo.jpg" />
+    <None Include="packages.config" />
     <None Include="WinTox_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -265,6 +266,9 @@
     <Reference Include="SharpTox Portable, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\SharpTox Portable.dll</HintPath>
+    </Reference>
+    <Reference Include="WriteableBitmapEx.WinRT">
+      <HintPath>..\packages\WriteableBitmapEx.1.5.0.0\lib\NetCore45\WriteableBitmapEx.WinRT.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

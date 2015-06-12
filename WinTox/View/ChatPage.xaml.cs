@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Threading;
 using Windows.Storage.Pickers;
 using Windows.System;
