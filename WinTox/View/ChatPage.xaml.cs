@@ -10,8 +10,6 @@ using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
 using WinTox.ViewModel.Friends;
 
-// The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
-
 namespace WinTox.View
 {
     /// <summary>
