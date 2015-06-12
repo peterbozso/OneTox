@@ -169,6 +169,9 @@
     <Compile Include="View\UserControls\MessageBlock.xaml.cs">
       <DependentUpon>MessageBlock.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\UserControls\MessageRibbon.xaml.cs">
+      <DependentUpon>MessageRibbon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\UserControls\ProfileManagementBlock.xaml.cs">
       <DependentUpon>ProfileManagementBlock.xaml</DependentUpon>
     </Compile>
@@ -241,6 +244,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="View\UserControls\MessageBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\MessageRibbon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
