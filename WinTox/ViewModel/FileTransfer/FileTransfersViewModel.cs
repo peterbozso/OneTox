@@ -14,7 +14,7 @@ namespace WinTox.ViewModel.FileTransfer
 {
     public class FileTransfersViewModel
     {
-        private readonly CoreDispatcher _dispatcher;
+        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly int _friendNumber;
         private DispatcherTimer _progressDispatcherTimer;
 
@@ -26,7 +26,6 @@ namespace WinTox.ViewModel.FileTransfer
             FileTransferManager.Instance.TransferFinished += TransferFinishedHandler;
             FileTransferManager.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
             SetupProgressDispatcherTimer();
-            _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         }
 
         public ObservableCollection<OneFileTransferViewModel> Transfers { get; private set; }

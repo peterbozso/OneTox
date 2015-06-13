@@ -12,7 +12,7 @@ namespace WinTox.ViewModel.Friends
 {
     public class FriendViewModel : ViewModelBase, IToxUserViewModel
     {
-        private readonly CoreDispatcher _dispatcher;
+        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private bool _isConnected;
         private string _name;
         private RelayCommand _removeFriendCommand;
@@ -47,8 +47,6 @@ namespace WinTox.ViewModel.Friends
             ToxModel.Instance.FriendStatusMessageChanged += FriendStatusMessageChangedHandler;
             ToxModel.Instance.FriendStatusChanged += FriendStatusChangedHandler;
             ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
-
-            _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         }
 
         public ConversationViewModel Conversation { get; private set; }

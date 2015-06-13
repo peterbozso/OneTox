@@ -11,7 +11,7 @@ namespace WinTox.ViewModel.Messaging
 {
     public class SentMessageViewModel : ToxMessageViewModelBase
     {
-        private readonly CoreDispatcher _dispatcher;
+        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly FriendViewModel _target;
         private RelayCommand _resendMessageCommand;
         private Timer _resendTimer;
@@ -27,8 +27,6 @@ namespace WinTox.ViewModel.Messaging
             State = MessageDeliveryState.Pending;
             Id = id;
             _target = target;
-
-            _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
 
             ToxModel.Instance.ReadReceiptReceived += ReadReceiptReceivedHandler;
             ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;

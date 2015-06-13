@@ -15,7 +15,7 @@ namespace WinTox.ViewModel.Messaging
 {
     public class ConversationViewModel : ViewModelBase
     {
-        private readonly CoreDispatcher _dispatcher;
+        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly FriendViewModel _friendViewModel;
         private bool _isFriendTyping;
 
@@ -23,7 +23,6 @@ namespace WinTox.ViewModel.Messaging
         {
             _friendViewModel = friendViewModel;
             MessageGroups = new ObservableCollection<MessageGroupViewModel>();
-            _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
             ToxModel.Instance.FriendMessageReceived += FriendMessageReceivedHandler;
             ToxModel.Instance.FriendTypingChanged += FriendTypingChangedHandler;
         }

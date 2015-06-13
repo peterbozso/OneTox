@@ -23,7 +23,7 @@ namespace WinTox.Model
         // See: https://github.com/irungentoo/Tox_Client_Guidelines/blob/master/Important/Avatars.md
         private const int KMaxPictureSizeInBytes = 1 << 16;
         private static AvatarManager _instance;
-        private readonly CoreDispatcher _dispatcher;
+        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private StorageFolder _avatarsFolder;
         private bool _isUserAvatarSet;
         private BitmapImage _userAvatar;
@@ -33,7 +33,6 @@ namespace WinTox.Model
             ResetUserAvatar();
             ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
             FriendAvatars = new Dictionary<int, BitmapImage>();
-            _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         }
 
         #region Properties
