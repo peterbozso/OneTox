@@ -1,4 +1,6 @@
 ﻿using System;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
 using WinTox.Common;
@@ -10,6 +12,7 @@ namespace WinTox.ViewModel.Friends
 {
     public class FriendViewModel : ViewModelBase, IToxUserViewModel
     {
+        private readonly CoreDispatcher _dispatcher;
         private bool _isConnected;
         private string _name;
         private RelayCommand _removeFriendCommand;
@@ -39,6 +42,13 @@ namespace WinTox.ViewModel.Friends
             IsConnected = ToxModel.Instance.IsFriendOnline(friendNumber);
 
             AvatarManager.Instance.FriendAvatarChanged += FriendAvatarChangedHandler;
+
+            ToxModel.Instance.FriendNameChanged += FriendNameChangedHandler;
+            ToxModel.Instance.FriendStatusMessageChanged += FriendStatusMessageChangedHandler;
+            ToxModel.Instance.FriendStatusChanged += FriendStatusChangedHandler;
+            ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
+
+            _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         }
 
         public ConversationViewModel Conversation { get; private set; }
@@ -51,7 +61,7 @@ namespace WinTox.ViewModel.Friends
             {
                 return _removeFriendCommand
                        ?? (_removeFriendCommand = new RelayCommand(
-                           (object parameter) => { ToxModel.Instance.DeleteFriend(FriendNumber); }));
+                           () => { ToxModel.Instance.DeleteFriend(FriendNumber); }));
             }
         }
 
@@ -68,7 +78,7 @@ namespace WinTox.ViewModel.Friends
         public string Name
         {
             get { return _name; }
-            set
+            private set
             {
                 _name = value;
                 RaisePropertyChanged();
@@ -78,7 +88,7 @@ namespace WinTox.ViewModel.Friends
         public string StatusMessage
         {
             get { return _statusMessage; }
-            set
+            private set
             {
                 _statusMessage = value;
                 RaisePropertyChanged();
@@ -88,7 +98,7 @@ namespace WinTox.ViewModel.Friends
         public ExtendedToxUserStatus Status
         {
             get { return _status; }
-            set
+            private set
             {
                 _status = value;
                 RaisePropertyChanged();
@@ -98,20 +108,14 @@ namespace WinTox.ViewModel.Friends
         public bool IsConnected
         {
             get { return _isConnected; }
-            set
+            private set
             {
                 _isConnected = value;
                 RaisePropertyChanged();
             }
         }
 
-        private void FriendAvatarChangedHandler(object sender, int friendNumber)
-        {
-            if (friendNumber == FriendNumber)
-                RaisePropertyChanged("Avatar");
-        }
-
-        public void SetFriendStatus(ToxUserStatus status)
+        private void SetFriendStatus(ToxUserStatus status)
         {
             if (ToxModel.Instance.IsFriendOnline(FriendNumber))
             {
@@ -122,5 +126,56 @@ namespace WinTox.ViewModel.Friends
                 Status = ExtendedToxUserStatus.Offline;
             }
         }
+
+        #region Event handlers
+
+        private void FriendAvatarChangedHandler(object sender, int friendNumber)
+        {
+            if (friendNumber == FriendNumber)
+                RaisePropertyChanged("Avatar");
+        }
+
+        private async void FriendNameChangedHandler(object sender, ToxEventArgs.NameChangeEventArgs e)
+        {
+            if (FriendNumber != e.FriendNumber)
+                return;
+
+            await
+                _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Name = e.Name; });
+        }
+
+        private async void FriendStatusMessageChangedHandler(object sender, ToxEventArgs.StatusMessageEventArgs e)
+        {
+            if (FriendNumber != e.FriendNumber)
+                return;
+
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () => { StatusMessage = e.StatusMessage; });
+        }
+
+        private async void FriendStatusChangedHandler(object sender, ToxEventArgs.StatusEventArgs e)
+        {
+            if (FriendNumber != e.FriendNumber)
+                return;
+
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () => { SetFriendStatus(e.Status); });
+        }
+
+        private async void FriendConnectionStatusChangedHandler(object sender,
+            ToxEventArgs.FriendConnectionStatusEventArgs e)
+        {
+            if (FriendNumber != e.FriendNumber)
+                return;
+
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    IsConnected = e.Status != ToxConnectionStatus.None;
+                    SetFriendStatus(ToxModel.Instance.GetFriendStatus(e.FriendNumber));
+                });
+        }
+
+        #endregion
     }
 }
