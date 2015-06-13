@@ -9,6 +9,7 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
 
@@ -363,7 +364,8 @@ namespace WinTox.Model
             private WriteableBitmap ResizeAvatar(WriteableBitmap writeableBitmap)
             {
                 var resized = CropIfNeeded(writeableBitmap);
-                return resized.Resize(150, 150, WriteableBitmapExtensions.Interpolation.Bilinear);
+                var size = Convert.ToInt32((double) Application.Current.Resources["DefaultAvatarSize"]);
+                return resized.Resize(size, size, WriteableBitmapExtensions.Interpolation.Bilinear);
             }
 
             private WriteableBitmap CropIfNeeded(WriteableBitmap writeableBitmap)

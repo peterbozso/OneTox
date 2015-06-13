@@ -50,7 +50,8 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Image Grid.Column="0" Width="150" Height="150" Source="{Binding Avatar}" Stretch="UniformToFill"
+            <Image Grid.Column="0" Width="{StaticResource DefaultAvatarSize}"
+                   Height="{StaticResource DefaultAvatarSize}" Source="{Binding Avatar}" Stretch="UniformToFill"
                    Tapped="UserAvatarTapped" />
             <Button Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe UI Symbol"
                     Background="Transparent"

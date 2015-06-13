@@ -23,7 +23,8 @@
                    Text="{Binding StatusMessage}" />
         <Grid>
             <Image Opacity="{Binding IsConnected, Converter={StaticResource BoolToOpacityConverter}}"
-                   Source="{Binding Avatar}" Width="150" Height="150" Stretch="UniformToFill"
+                   Source="{Binding Avatar}" Width="{StaticResource DefaultAvatarSize}"
+                   Height="{StaticResource DefaultAvatarSize}" Stretch="UniformToFill"
                    HorizontalAlignment="Left" />
             <Ellipse Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibilityConverter}}"
                      Width="15" Height="15" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,10"

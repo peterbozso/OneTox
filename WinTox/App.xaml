@@ -15,5 +15,8 @@
         <SolidColorBrush x:Key="StatusGreen" Color="#6BC260" />
         <SolidColorBrush x:Key="StatusRed" Color="#C84E4E" />
         <SolidColorBrush x:Key="StatusYellow" Color="#CEBF45" />
+
+        <x:Double x:Key="DefaultAvatarSize">150</x:Double>
+        <x:Double x:Key="SmallAvatarSize">70</x:Double>
     </Application.Resources>
 </Application>

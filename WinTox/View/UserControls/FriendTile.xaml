@@ -18,7 +18,8 @@
         </MenuFlyout>
     </UserControl.Resources>
 
-    <Grid Width="150" Height="150" FlyoutBase.AttachedFlyout="{StaticResource FriendTileFlyout}"
+    <Grid Width="{StaticResource DefaultAvatarSize}" Height="{StaticResource DefaultAvatarSize}"
+          FlyoutBase.AttachedFlyout="{StaticResource FriendTileFlyout}"
           RightTapped="MainGridRightTapped" Tapped="MainGridTapped">
         <Image Opacity="{Binding IsConnected, Converter={StaticResource BoolToOpacityConverter}}"
                Source="{Binding Avatar}" Stretch="UniformToFill" />
