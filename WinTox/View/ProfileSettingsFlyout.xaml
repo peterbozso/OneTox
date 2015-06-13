@@ -19,6 +19,7 @@
     <SettingsFlyout.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:UserStatusToStringConverter x:Key="UserStatusToStringConverter" />
     </SettingsFlyout.Resources>
 
     <SettingsFlyout.DataContext>
@@ -36,7 +37,16 @@
             </Grid.ColumnDefinitions>
 
             <ComboBox x:Name="StatusComboBox" Grid.Column="0" Header="Status"
-                      SelectedItem="{Binding Path=Status, Mode=TwoWay}" />
+                      SelectedItem="{Binding Status, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <TextBlock Text="{Binding Converter={StaticResource UserStatusToStringConverter}}"
+                                       FontSize="16" />
+                        </Grid>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
             <Ellipse Grid.Column="1" Width="10" Height="10" VerticalAlignment="Center"
                      Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}"
                      HorizontalAlignment="Left" Margin="10,25,0,0" />
