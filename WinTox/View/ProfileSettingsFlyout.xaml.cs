@@ -76,8 +76,8 @@ namespace WinTox.View
                 Format = BarcodeFormat.QR_CODE,
                 Options = new EncodingOptions
                 {
-                    Height = 300,
-                    Width = 300
+                    Height = 200,
+                    Width = 200
                 }
             };
             var qrCode = writer.Write(_viewModel.Id.ToString()).ToBitmap() as WriteableBitmap;
