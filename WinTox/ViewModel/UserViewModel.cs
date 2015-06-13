@@ -45,7 +45,7 @@ namespace WinTox.ViewModel
                     return (ExtendedToxUserStatus) ToxModel.Instance.Status;
                 }
 
-                return ExtendedToxUserStatus.Offile;
+                return ExtendedToxUserStatus.Offline;
             }
         }
 

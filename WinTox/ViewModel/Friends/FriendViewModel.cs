@@ -119,7 +119,7 @@ namespace WinTox.ViewModel.Friends
             }
             else
             {
-                Status = ExtendedToxUserStatus.Offile;
+                Status = ExtendedToxUserStatus.Offline;
             }
         }
     }

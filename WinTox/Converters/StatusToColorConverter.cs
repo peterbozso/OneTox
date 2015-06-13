@@ -18,7 +18,7 @@ namespace WinTox.Converters
                     return Application.Current.Resources["StatusRed"];
                 case ExtendedToxUserStatus.Away:
                     return Application.Current.Resources["StatusYellow"];
-                case ExtendedToxUserStatus.Offile:
+                case ExtendedToxUserStatus.Offline:
                     return Application.Current.Resources["StatusGrey"];
             }
             return null;

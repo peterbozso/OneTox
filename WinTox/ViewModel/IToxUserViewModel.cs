@@ -7,7 +7,7 @@ namespace WinTox.ViewModel
         Available = 0,
         Away = 1,
         Busy = 2,
-        Offile = 3
+        Offline = 3
     }
 
     public interface IToxUserViewModel
