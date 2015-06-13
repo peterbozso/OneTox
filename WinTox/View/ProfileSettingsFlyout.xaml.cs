@@ -40,11 +40,15 @@ namespace WinTox.View
 
         private void CopyButtonClick(object sender, RoutedEventArgs e)
         {
-            var dataPackage = new DataPackage {RequestedOperation = DataPackageOperation.Copy};
-            dataPackage.SetText(ToxIdTextBlock.Text);
-            Clipboard.SetContent(dataPackage);
-
+            CopyToxIdToClipboard();
             ShowCopyConfirm();
+        }
+
+        private void CopyToxIdToClipboard()
+        {
+            var dataPackage = new DataPackage {RequestedOperation = DataPackageOperation.Copy};
+            dataPackage.SetText(_viewModel.Id.ToString());
+            Clipboard.SetContent(dataPackage);
         }
 
         private void ShowCopyConfirm()

@@ -61,7 +61,7 @@
 
         <!-- Tox ID -->
         <TextBlock Text="Tox ID" Style="{StaticResource BodyTextBlockStyle}" Margin="0,20,0,0" />
-        <TextBlock x:Name="ToxIdTextBlock" TextWrapping="Wrap" Text="{Binding Id}"
+        <TextBlock TextWrapping="Wrap" Text="{Binding Id}"
                    Style="{StaticResource BodyTextBlockStyle}" Margin="10,0,0,5" />
         <Grid>
             <Grid.ColumnDefinitions>
