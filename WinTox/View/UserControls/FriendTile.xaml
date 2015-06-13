@@ -12,6 +12,7 @@
 
     <UserControl.Resources>
         <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
+        <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
 
         <MenuFlyout x:Key="FriendTileFlyout">
             <MenuFlyoutItem Text="remove" Command="{Binding RemoveFriendCommand}" />
@@ -25,5 +26,8 @@
                Source="{Binding Avatar}" Stretch="UniformToFill" />
         <Rectangle Height="26" Fill="#7F000000" VerticalAlignment="Bottom" />
         <TextBlock VerticalAlignment="Bottom" Margin="6,0,0,0" FontSize="20" FontWeight="Medium" Text="{Binding Name}" />
+        <Ellipse
+            Width="10" Height="10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,7,7"
+            Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}" />
     </Grid>
 </UserControl>
