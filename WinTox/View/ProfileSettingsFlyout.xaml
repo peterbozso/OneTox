@@ -63,7 +63,15 @@
         <TextBlock Text="Tox ID" Style="{StaticResource BodyTextBlockStyle}" Margin="0,20,0,0" />
         <TextBlock x:Name="ToxIdTextBlock" TextWrapping="Wrap" Text="{Binding Id}"
                    Style="{StaticResource BodyTextBlockStyle}" Margin="10,0,0,5" />
-        <Button Content="Copy ID to clipboard" Click="CopyButtonClick" Width="170" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="Copy ID to clipboard" Click="CopyButtonClick" Width="170" />
+            <TextBlock Grid.Column="1" x:Name="ClipboardCopyConfirm" Text="" FontFamily="Segoe UI Symbol"
+                       FontSize="16" VerticalAlignment="Center" Margin="5,0,0,0" Visibility="Collapsed" />
+        </Grid>
         <Button Content="Get QR code for ID" Click="QrCodeButtonClick" Width="170">
             <Button.Flyout>
                 <Flyout Placement="Left">

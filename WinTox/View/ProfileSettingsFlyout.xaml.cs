@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -19,6 +22,7 @@ namespace WinTox.View
     public sealed partial class ProfileSettingsFlyout : SettingsFlyout
     {
         private readonly ProfileSettingsViewModel _viewModel;
+        private Timer _copyClipboardTimer;
 
         public ProfileSettingsFlyout()
         {
@@ -39,6 +43,26 @@ namespace WinTox.View
             var dataPackage = new DataPackage {RequestedOperation = DataPackageOperation.Copy};
             dataPackage.SetText(ToxIdTextBlock.Text);
             Clipboard.SetContent(dataPackage);
+
+            ShowCopyConfirm();
+        }
+
+        private void ShowCopyConfirm()
+        {
+            ClipboardCopyConfirm.Visibility = Visibility.Visible;
+
+            if (_copyClipboardTimer == null)
+            {
+                _copyClipboardTimer =
+                    new Timer(
+                        state => CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                            () => { ClipboardCopyConfirm.Visibility = Visibility.Collapsed; }),
+                        null, 3000, Timeout.Infinite);
+            }
+            else
+            {
+                _copyClipboardTimer.Change(3000, Timeout.Infinite);
+            }
         }
 
         private void QrCodeButtonClick(object sender, RoutedEventArgs e)
