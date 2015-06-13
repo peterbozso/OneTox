@@ -36,9 +36,17 @@ namespace WinTox.ViewModel
             get { return ToxModel.Instance.StatusMessage; }
         }
 
-        public ToxUserStatus Status
+        public ExtendedToxUserStatus Status
         {
-            get { return ToxModel.Instance.Status; }
+            get
+            {
+                if (ToxModel.Instance.IsConnected)
+                {
+                    return (ExtendedToxUserStatus) ToxModel.Instance.Status;
+                }
+
+                return ExtendedToxUserStatus.Offile;
+            }
         }
 
         public bool IsConnected
@@ -54,7 +62,15 @@ namespace WinTox.ViewModel
         private async void ToxModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => { RaisePropertyChanged(e.PropertyName); });
+                () =>
+                {
+                    if (e.PropertyName == "IsConnected")
+                    {
+                        RaisePropertyChanged("Status");
+                    }
+
+                    RaisePropertyChanged(e.PropertyName);
+                });
         }
     }
 }

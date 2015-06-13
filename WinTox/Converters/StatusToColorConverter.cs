@@ -1,7 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
-using SharpTox.Core;
+using WinTox.ViewModel;
 
 namespace WinTox.Converters
 {
@@ -9,17 +9,17 @@ namespace WinTox.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var status = (ToxUserStatus) value;
+            var status = (ExtendedToxUserStatus) value;
             switch (status)
             {
-                case ToxUserStatus.None:
+                case ExtendedToxUserStatus.Available:
                     return Application.Current.Resources["StatusGreen"];
-
-                case ToxUserStatus.Busy:
+                case ExtendedToxUserStatus.Busy:
                     return Application.Current.Resources["StatusRed"];
-
-                case ToxUserStatus.Away:
+                case ExtendedToxUserStatus.Away:
                     return Application.Current.Resources["StatusYellow"];
+                case ExtendedToxUserStatus.Offile:
+                    return Application.Current.Resources["StatusGrey"];
             }
             return null;
         }

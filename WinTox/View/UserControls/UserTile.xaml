@@ -17,7 +17,6 @@
 
     <UserControl.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
-        <converters:BoolToVisibilityConverter x:Key="IsConnectedToVisibilityConverter" />
         <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
     </UserControl.Resources>
 
@@ -37,8 +36,7 @@
                Opacity="{Binding IsConnected, Converter={StaticResource BoolToOpacityConverter}}" />
         <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right">
             <Ellipse Width="10" Height="10" VerticalAlignment="Center"
-                     Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}"
-                     Visibility="{Binding IsConnected, Converter={StaticResource IsConnectedToVisibilityConverter}}" />
+                     Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}" />
             <TextBlock FontSize="24" Padding="10,10,10,0" FontWeight="Bold"
                        Foreground="{StaticResource MainColor}" Text="{Binding Name}" />
         </StackPanel>

@@ -13,7 +13,7 @@ namespace WinTox.ViewModel.Friends
         private bool _isConnected;
         private string _name;
         private RelayCommand _removeFriendCommand;
-        private ToxUserStatus _status;
+        private ExtendedToxUserStatus _status;
         private string _statusMessage;
 
         public FriendViewModel(int friendNumber)
@@ -35,7 +35,7 @@ namespace WinTox.ViewModel.Friends
                 StatusMessage = "Friend request sent.";
             }
 
-            Status = ToxModel.Instance.GetFriendStatus(friendNumber);
+            SetFriendStatus(ToxModel.Instance.GetFriendStatus(FriendNumber));
             IsConnected = ToxModel.Instance.IsFriendOnline(friendNumber);
 
             AvatarManager.Instance.FriendAvatarChanged += FriendAvatarChangedHandler;
@@ -85,7 +85,7 @@ namespace WinTox.ViewModel.Friends
             }
         }
 
-        public ToxUserStatus Status
+        public ExtendedToxUserStatus Status
         {
             get { return _status; }
             set
@@ -109,6 +109,18 @@ namespace WinTox.ViewModel.Friends
         {
             if (friendNumber == FriendNumber)
                 RaisePropertyChanged("Avatar");
+        }
+
+        public void SetFriendStatus(ToxUserStatus status)
+        {
+            if (ToxModel.Instance.IsFriendOnline(FriendNumber))
+            {
+                Status = (ExtendedToxUserStatus) status;
+            }
+            else
+            {
+                Status = ExtendedToxUserStatus.Offile;
+            }
         }
     }
 }

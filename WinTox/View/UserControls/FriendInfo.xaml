@@ -12,7 +12,6 @@
 
     <UserControl.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
     </UserControl.Resources>
 
@@ -26,9 +25,9 @@
                    Source="{Binding Avatar}" Width="{StaticResource DefaultAvatarSize}"
                    Height="{StaticResource DefaultAvatarSize}" Stretch="UniformToFill"
                    HorizontalAlignment="Left" />
-            <Ellipse Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibilityConverter}}"
-                     Width="15" Height="15" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,10"
-                     Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}" Stroke="White" />
+            <Ellipse
+                Width="15" Height="15" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,10"
+                Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}" Stroke="White" />
         </Grid>
     </StackPanel>
 </UserControl>

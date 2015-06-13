@@ -48,14 +48,19 @@ namespace WinTox.ViewModel.Friends
         {
             await
                 _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    () => { FindFriend(e.FriendNumber).Status = e.Status; });
+                    () => { FindFriend(e.FriendNumber).SetFriendStatus(e.Status); });
         }
 
         private async void FriendConnectionStatusChangedHandler(object sender,
             ToxEventArgs.FriendConnectionStatusEventArgs e)
         {
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => { FindFriend(e.FriendNumber).IsConnected = e.Status != ToxConnectionStatus.None; });
+                () =>
+                {
+                    var friend = FindFriend(e.FriendNumber);
+                    friend.IsConnected = e.Status != ToxConnectionStatus.None;
+                    friend.SetFriendStatus(ToxModel.Instance.GetFriendStatus(e.FriendNumber));
+                });
         }
 
         private async void FriendListChangedHandler(object sender, FriendListChangedEventArgs e)
