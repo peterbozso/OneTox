@@ -83,7 +83,7 @@
             <TextBlock Grid.Column="1" x:Name="ClipboardCopyConfirm" Text="" FontFamily="Segoe UI Symbol"
                        FontSize="16" VerticalAlignment="Center" Margin="5,0,0,0" Visibility="Collapsed" />
         </Grid>
-        <Button Content="Get QR code for ID" Click="QrCodeButtonClick" Width="170">
+        <Button Content="Show QR code for ID" Click="QrCodeButtonClick" Width="170">
             <Button.Flyout>
                 <Flyout Placement="Left">
                     <StackPanel>
