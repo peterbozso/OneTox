@@ -63,7 +63,16 @@
         <TextBlock Text="Tox ID" Style="{StaticResource BodyTextBlockStyle}" Margin="0,20,0,0" />
         <TextBlock x:Name="ToxIdTextBlock" TextWrapping="Wrap" Text="{Binding Id}"
                    Style="{StaticResource BodyTextBlockStyle}" Margin="10,0,0,5" />
-        <Button Content="Copy ID" Click="CopyButtonClick" Width="170" />
+        <Button Content="Copy ID to clipboard" Click="CopyButtonClick" Width="170" />
+        <Button Content="Get QR code for ID" Click="QrCodeButtonClick" Width="170">
+            <Button.Flyout>
+                <Flyout Placement="Left">
+                    <StackPanel>
+                        <Image x:Name="QrCodeImage" />
+                    </StackPanel>
+                </Flyout>
+            </Button.Flyout>
+        </Button>
         <Button Content="Randomize nospam" Click="NospamButtonClick" Width="170"
                 ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." />
 

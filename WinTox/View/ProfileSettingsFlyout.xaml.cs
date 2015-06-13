@@ -8,8 +8,11 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
 using WinTox.ViewModel.ProfileSettings;
+using ZXing;
+using ZXing.Common;
 
 namespace WinTox.View
 {
@@ -33,10 +36,24 @@ namespace WinTox.View
 
         private void CopyButtonClick(object sender, RoutedEventArgs e)
         {
-            var dataPackage = new DataPackage();
-            dataPackage.RequestedOperation = DataPackageOperation.Copy;
+            var dataPackage = new DataPackage {RequestedOperation = DataPackageOperation.Copy};
             dataPackage.SetText(ToxIdTextBlock.Text);
             Clipboard.SetContent(dataPackage);
+        }
+
+        private void QrCodeButtonClick(object sender, RoutedEventArgs e)
+        {
+            var writer = new BarcodeWriter
+            {
+                Format = BarcodeFormat.QR_CODE,
+                Options = new EncodingOptions
+                {
+                    Height = 300,
+                    Width = 300
+                }
+            };
+            var qrCode = writer.Write(_viewModel.Id.ToString()).ToBitmap() as WriteableBitmap;
+            QrCodeImage.Source = qrCode;
         }
 
         private void NospamButtonClick(object sender, RoutedEventArgs e)
