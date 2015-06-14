@@ -31,7 +31,7 @@
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="recentMessagesList">
+                                                       Storyboard.TargetName="RecentMessages">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
@@ -76,7 +76,7 @@
                 <friends:FriendInfo x:Name="FriendInfo" Margin="80,60,80,0" />
             </Grid>
 
-            <recentMessages:RecentMessagesList x:Name="recentMessagesList" Grid.Row="1" Margin="20,80" />
+            <recentMessages:RecentMessagesList x:Name="RecentMessages" Grid.Row="1" Margin="20,80" />
 
             <Button Grid.Row="2" HorizontalAlignment="Center" Content="" Margin="20,0,20,20"
                     FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"

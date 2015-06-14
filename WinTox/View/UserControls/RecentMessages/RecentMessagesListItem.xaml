@@ -27,8 +27,8 @@
 
         <Grid Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
@@ -38,7 +38,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" x:Name="FriendName" Foreground="{StaticResource MainColor}"
-                           FontSize="24" Text="{Binding Sender.Name}" TextWrapping="Wrap" VerticalAlignment="Top" />
+                           FontSize="20" Text="{Binding Sender.Name}" TextWrapping="Wrap" VerticalAlignment="Top" />
                 <Ellipse Grid.Row="0" Grid.Column="1" Width="10" Height="10" VerticalAlignment="Center"
                          Margin="10,0,0,0"
                          Fill="{Binding Path=Sender.Status, Converter={StaticResource StatusToColorConverter}}" />
@@ -51,14 +51,13 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock x:Name="MessageText" Grid.Column="0"
-                           FontSize="20" TextWrapping="Wrap" Text="{Binding Text}"
+                           FontSize="18" TextWrapping="Wrap" Text="{Binding Text}"
                            Foreground="{StaticResource ChatBackgroundColor}" />
 
-                <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="16" Margin="10,4,0,0"
+                <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="14" Margin="10,3,0,0"
                            Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"
                            HorizontalAlignment="Left"
-                           Text="{Binding Timestamp, Converter={StaticResource DateTimeConverter}}"
-                           VerticalAlignment="Top" />
+                           Text="{Binding Timestamp, Converter={StaticResource DateTimeConverter}}" />
             </Grid>
         </Grid>
     </Grid>
