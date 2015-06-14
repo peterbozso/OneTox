@@ -1,6 +1,6 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
-using WinTox.ViewModel.FileTransfer;
+using WinTox.ViewModel.FileTransfers;
 
 namespace WinTox.Converters
 {

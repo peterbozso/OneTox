@@ -1,11 +1,12 @@
 ﻿<UserControl
-    x:Class="WinTox.View.UserControls.MessageBlock"
+    x:Class="WinTox.View.UserControls.Messaging.MessageBlock"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:WinTox.View.UserControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:WinTox.Converters"
+    xmlns:messaging="using:WinTox.View.UserControls.Messaging"
     mc:Ignorable="d"
     d:DesignHeight="75"
     d:DesignWidth="400">
@@ -38,7 +39,7 @@
                           HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <local:MessageRibbon />
+                        <messaging:MessageRibbon />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

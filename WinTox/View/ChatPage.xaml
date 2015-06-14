@@ -7,6 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:userControls="using:WinTox.View.UserControls"
     xmlns:viewModel="using:WinTox.ViewModel"
+    xmlns:recentMessages="using:WinTox.View.UserControls.RecentMessages"
+    xmlns:friends="using:WinTox.View.UserControls.Friends"
+    xmlns:messaging="using:WinTox.View.UserControls.Messaging"
+    xmlns:fileTransfers="using:WinTox.View.UserControls.FileTransfers"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -69,10 +73,10 @@
                         AutomationProperties.AutomationId="BackButton"
                         AutomationProperties.ItemType="Navigation Button" />
 
-                <userControls:FriendInfo x:Name="FriendInfo" Margin="80,60,80,0" />
+                <friends:FriendInfo x:Name="FriendInfo" Margin="80,60,80,0" />
             </Grid>
 
-            <userControls:RecentMessagesList x:Name="recentMessagesList" Grid.Row="1" Margin="20,80" />
+            <recentMessages:RecentMessagesList x:Name="recentMessagesList" Grid.Row="1" Margin="20,80" />
 
             <Button Grid.Row="2" HorizontalAlignment="Center" Content="" Margin="20,0,20,20"
                     FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
@@ -89,7 +93,7 @@
             </Grid.RowDefinitions>
 
             <!-- Current file transfer -->
-            <userControls:FileTransfersBlock Grid.Row="0" DataContext="{Binding FileTransfers}" />
+            <fileTransfers:FileTransfersBlock Grid.Row="0" DataContext="{Binding FileTransfers}" />
 
             <!-- List of messages -->
             <ListView Grid.Row="1" x:Name="MessagesListView" Background="{StaticResource ChatBackgroundColor}"
@@ -101,7 +105,7 @@
 
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <userControls:MessageBlock />
+                        <messaging:MessageBlock />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

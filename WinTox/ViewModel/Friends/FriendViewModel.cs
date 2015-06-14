@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
 using WinTox.Common;
 using WinTox.Model;
-using WinTox.ViewModel.FileTransfer;
+using WinTox.ViewModel.FileTransfers;
 using WinTox.ViewModel.Messaging;
 
 namespace WinTox.ViewModel.Friends

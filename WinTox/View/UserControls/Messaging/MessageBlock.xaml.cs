@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace WinTox.View.UserControls
+namespace WinTox.View.UserControls.Messaging
 {
     public sealed partial class MessageBlock : UserControl
     {

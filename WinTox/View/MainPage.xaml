@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helpers="using:WinTox.Helpers"
     xmlns:friends="using:WinTox.ViewModel.Friends"
+    xmlns:friends1="using:WinTox.View.UserControls.Friends"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -45,7 +46,7 @@
                     <GridView ItemsSource="{Binding FriendList.Friends}" SelectionMode="None">
                         <GridView.ItemTemplate>
                             <DataTemplate>
-                                <userControls:FriendTile />
+                                <friends1:FriendTile />
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>

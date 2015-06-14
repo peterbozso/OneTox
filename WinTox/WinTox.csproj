@@ -124,8 +124,8 @@
     <Compile Include="Model\FileTransferManager.cs" />
     <Compile Include="Model\FriendListChangedEventArgs.cs" />
     <Compile Include="Model\ToxModel.cs" />
-    <Compile Include="ViewModel\FileTransfer\OneFileTransferViewModel.cs" />
-    <Compile Include="ViewModel\FileTransfer\FileTransfersViewModel.cs" />
+    <Compile Include="ViewModel\FileTransfers\OneFileTransferViewModel.cs" />
+    <Compile Include="ViewModel\FileTransfers\FileTransfersViewModel.cs" />
     <Compile Include="ViewModel\Friends\AddFriendFlyoutViewModel.cs" />
     <Compile Include="Helpers\FlyoutHelper.cs" />
     <Compile Include="ViewModel\Friends\FriendListViewModel.cs" />
@@ -149,16 +149,16 @@
     <Compile Include="View\ProfileSettingsFlyout.xaml.cs">
       <DependentUpon>ProfileSettingsFlyout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\FileTransferRibbon.xaml.cs">
+    <Compile Include="View\UserControls\FileTransfers\FileTransferRibbon.xaml.cs">
       <DependentUpon>FileTransferRibbon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\FileTransfersBlock.xaml.cs">
+    <Compile Include="View\UserControls\FileTransfers\FileTransfersBlock.xaml.cs">
       <DependentUpon>FileTransfersBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\FriendInfo.xaml.cs">
+    <Compile Include="View\UserControls\Friends\FriendInfo.xaml.cs">
       <DependentUpon>FriendInfo.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\FriendTile.xaml.cs">
+    <Compile Include="View\UserControls\Friends\FriendTile.xaml.cs">
       <DependentUpon>FriendTile.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainPage.xaml.cs">
@@ -169,19 +169,19 @@
     <Compile Include="Common\NavigationHelper.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />
-    <Compile Include="View\UserControls\MessageBlock.xaml.cs">
+    <Compile Include="View\UserControls\Messaging\MessageBlock.xaml.cs">
       <DependentUpon>MessageBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\MessageRibbon.xaml.cs">
+    <Compile Include="View\UserControls\Messaging\MessageRibbon.xaml.cs">
       <DependentUpon>MessageRibbon.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserControls\ProfileManagementBlock.xaml.cs">
       <DependentUpon>ProfileManagementBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\RecentMessagesList.xaml.cs">
+    <Compile Include="View\UserControls\RecentMessages\RecentMessagesList.xaml.cs">
       <DependentUpon>RecentMessagesList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\RecentMessagesListItem.xaml.cs">
+    <Compile Include="View\UserControls\RecentMessages\RecentMessagesListItem.xaml.cs">
       <DependentUpon>RecentMessagesListItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserControls\UserTile.xaml.cs">
@@ -228,19 +228,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\UserControls\FileTransferRibbon.xaml">
+    <Page Include="View\UserControls\FileTransfers\FileTransferRibbon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\UserControls\FileTransfersBlock.xaml">
+    <Page Include="View\UserControls\FileTransfers\FileTransfersBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\UserControls\FriendInfo.xaml">
+    <Page Include="View\UserControls\Friends\FriendInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\UserControls\FriendTile.xaml">
+    <Page Include="View\UserControls\Friends\FriendTile.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -253,11 +253,11 @@
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
-    <Page Include="View\UserControls\MessageBlock.xaml">
+    <Page Include="View\UserControls\Messaging\MessageBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\UserControls\MessageRibbon.xaml">
+    <Page Include="View\UserControls\Messaging\MessageRibbon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -265,11 +265,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\UserControls\RecentMessagesList.xaml">
+    <Page Include="View\UserControls\RecentMessages\RecentMessagesList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\UserControls\RecentMessagesListItem.xaml">
+    <Page Include="View\UserControls\RecentMessages\RecentMessagesListItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

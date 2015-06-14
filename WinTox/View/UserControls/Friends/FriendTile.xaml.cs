@@ -3,7 +3,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 
-namespace WinTox.View.UserControls
+namespace WinTox.View.UserControls.Friends
 {
     public sealed partial class FriendTile : UserControl
     {

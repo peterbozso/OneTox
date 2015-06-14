@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using WinTox.Common;
 
-namespace WinTox.ViewModel.FileTransfer
+namespace WinTox.ViewModel.FileTransfers
 {
     public enum FileTransferState
     {

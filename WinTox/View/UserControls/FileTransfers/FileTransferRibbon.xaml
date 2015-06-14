@@ -7,7 +7,7 @@
     xmlns:converters="using:WinTox.Converters"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    x:Class="WinTox.View.UserControls.FileTransferRibbon"
+    x:Class="WinTox.View.UserControls.FileTransfers.FileTransferRibbon"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="600"

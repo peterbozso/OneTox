@@ -2,7 +2,7 @@
 using Windows.UI.Xaml.Controls;
 using WinTox.ViewModel.Messaging;
 
-namespace WinTox.View.UserControls
+namespace WinTox.View.UserControls.Messaging
 {
     public sealed partial class MessageRibbon : UserControl
     {

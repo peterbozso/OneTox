@@ -10,7 +10,7 @@ using Windows.UI.Xaml;
 using SharpTox.Core;
 using WinTox.Model;
 
-namespace WinTox.ViewModel.FileTransfer
+namespace WinTox.ViewModel.FileTransfers
 {
     public class FileTransfersViewModel
     {
