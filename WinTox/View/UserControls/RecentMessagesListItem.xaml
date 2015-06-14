@@ -1,0 +1,65 @@
+﻿<UserControl
+    x:Class="WinTox.View.UserControls.RecentMessagesListItem"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinTox.View.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:WinTox.Converters"
+    mc:Ignorable="d"
+    d:DesignHeight="55"
+    d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <converters:DateTimeConverter x:Key="DateTimeConverter" />
+        <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+    </UserControl.Resources>
+
+    <Grid Margin="0,10,0,0" Height="55">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="55" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Image Grid.Row="0" Grid.Column="0" Source="{Binding Sender.Avatar}" MaxHeight="55" MaxWidth="55"
+               Stretch="UniformToFill"
+               VerticalAlignment="Top" />
+
+        <Grid Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" x:Name="FriendName" Foreground="{StaticResource MainColor}"
+                           FontSize="24" Text="{Binding Sender.Name}" TextWrapping="Wrap" VerticalAlignment="Top" />
+                <Ellipse Grid.Row="0" Grid.Column="1" Width="10" Height="10" VerticalAlignment="Center"
+                         Margin="10,0,0,0"
+                         Fill="{Binding Path=Sender.Status, Converter={StaticResource StatusToColorConverter}}" />
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:Name="MessageText" Grid.Column="0"
+                           FontSize="20" TextWrapping="Wrap" Text="{Binding Text}"
+                           Foreground="{StaticResource ChatBackgroundColor}" />
+
+                <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="16" Margin="10,4,0,0"
+                           Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"
+                           HorizontalAlignment="Left"
+                           Text="{Binding Timestamp, Converter={StaticResource DateTimeConverter}}"
+                           VerticalAlignment="Top" />
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

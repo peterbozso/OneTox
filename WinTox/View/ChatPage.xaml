@@ -26,6 +26,14 @@
                                                        Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                       Storyboard.TargetName="recentMessagesList">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>
@@ -50,7 +58,7 @@
             </Grid.RowDefinitions>
 
             <!-- Back button and friend info -->
-            <Grid Grid.Row="0" Height="500" VerticalAlignment="Top">
+            <Grid Grid.Row="0" VerticalAlignment="Top">
 
                 <!-- Back button -->
                 <Button Margin="20,60,0,0"
@@ -64,7 +72,7 @@
                 <userControls:FriendInfo x:Name="FriendInfo" Margin="80,60,80,0" />
             </Grid>
 
-            <!--  TODO: List of recent chats comes here! -->
+            <userControls:RecentMessagesList x:Name="recentMessagesList" Grid.Row="1" Margin="20,80" />
 
             <Button Grid.Row="2" HorizontalAlignment="Center" Content="" Margin="20,0,20,20"
                     FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"

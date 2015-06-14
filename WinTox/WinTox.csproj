@@ -133,6 +133,7 @@
     <Compile Include="ViewModel\IToxUserViewModel.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
     <Compile Include="ViewModel\Messaging\ConversationViewModel.cs" />
+    <Compile Include="ViewModel\Messaging\RecentMessagesViewModel.cs" />
     <Compile Include="ViewModel\Messaging\ToxMessageViewModelBase.cs" />
     <Compile Include="ViewModel\Messaging\MessageGroupViewModel.cs" />
     <Compile Include="ViewModel\Messaging\ReceivedMessageViewModel.cs" />
@@ -176,6 +177,12 @@
     </Compile>
     <Compile Include="View\UserControls\ProfileManagementBlock.xaml.cs">
       <DependentUpon>ProfileManagementBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\RecentMessagesList.xaml.cs">
+      <DependentUpon>RecentMessagesList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\RecentMessagesListItem.xaml.cs">
+      <DependentUpon>RecentMessagesListItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserControls\UserTile.xaml.cs">
       <DependentUpon>UserTile.xaml</DependentUpon>
@@ -255,6 +262,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\UserControls\ProfileManagementBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\RecentMessagesList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\RecentMessagesListItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
