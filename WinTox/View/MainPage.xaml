@@ -11,6 +11,7 @@
     xmlns:helpers="using:WinTox.Helpers"
     xmlns:friends="using:WinTox.ViewModel.Friends"
     xmlns:friends1="using:WinTox.View.UserControls.Friends"
+    xmlns:recentMessages="using:WinTox.View.UserControls.RecentMessages"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -41,6 +42,11 @@
                     <userControls:UserTile Grid.Column="1" />
                 </Grid>
             </Hub.Header>
+            <HubSection Header="recent messages">
+                <DataTemplate>
+                    <recentMessages:RecentMessagesList/>
+                </DataTemplate>
+            </HubSection>
             <HubSection Header="friends">
                 <DataTemplate>
                     <GridView ItemsSource="{Binding FriendList.Friends}" SelectionMode="None">

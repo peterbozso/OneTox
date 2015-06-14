@@ -11,7 +11,7 @@
     d:DesignWidth="400">
 
     <Grid>
-        <ItemsControl
+        <ItemsControl Width="300"
             ItemsSource="{Binding RecentMessages}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
