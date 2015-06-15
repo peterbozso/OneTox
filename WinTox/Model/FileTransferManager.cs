@@ -34,7 +34,7 @@ namespace WinTox.Model
                 RemoveTransfer(transferId);
 
                 Debug.WriteLine(
-                    "File transfer CANCELLED (removed) by user! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                    "File transfer CANCELLED (removed) by user! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
                     friendNumber, fileNumber, ActiveTransfers.Count);
             }
         }
@@ -60,7 +60,7 @@ namespace WinTox.Model
                     RemoveTransfer(transferId);
 
                     Debug.WriteLine(
-                        "File transfer CANCELLED by friend! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                        "File transfer CANCELLED by friend! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
                         transferId.FriendNumber, transferId.FileNumber, ActiveTransfers.Count);
 
                     return;
@@ -119,7 +119,7 @@ namespace WinTox.Model
             RemoveTransfer(transferId);
 
             Debug.WriteLine(
-                "File upload removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                "File upload removed! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
                 e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
 
             RaiseTransferFinished(e.FriendNumber, e.FileNumber);
@@ -140,7 +140,7 @@ namespace WinTox.Model
 
             SendResumeControl(friendNumber, fileNumber);
             Debug.WriteLine(
-                "File download confirmed by user! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
+                "File download confirmed by user! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
                 friendNumber, fileNumber, ActiveTransfers.Count);
         }
 

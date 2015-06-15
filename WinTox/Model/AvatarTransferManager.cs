@@ -27,7 +27,7 @@ namespace WinTox.Model
                 case ToxFileControl.Cancel:
                     RemoveTransfer(transferId);
                     Debug.WriteLine(
-                        "Avatar transfer CANCELLED by friend! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                        "Avatar transfer CANCELLED by friend! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
                         transferId.FriendNumber, transferId.FileNumber, ActiveTransfers.Count);
                     return;
             }
@@ -70,7 +70,7 @@ namespace WinTox.Model
             RemoveTransfer(transferId);
 
             Debug.WriteLine(
-                "Avatar upload removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
+                "Avatar upload removed! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
                 e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
         }
 
