@@ -116,6 +116,11 @@ namespace WinTox.View
                 await _friendViewModel.FileTransfers.SendFile(file);
         }
 
+        private void BackButtonClick(object sender, RoutedEventArgs e)
+        {
+            (Window.Current.Content as Frame).Navigate(typeof (MainPage));
+        }
+
         #region NavigationHelper registration
 
         /// The methods provided in this section are simply used to allow
@@ -145,10 +150,5 @@ namespace WinTox.View
         }
 
         #endregion
-
-        private void BackButtonClick(object sender, RoutedEventArgs e)
-        {
-            (Window.Current.Content as Frame).Navigate(typeof(MainPage));
-        }
     }
 }

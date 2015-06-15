@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:WinTox.Converters"
     mc:Ignorable="d"
-    d:DesignHeight="250"
+    d:DesignHeight="150"
     d:DesignWidth="300">
 
     <UserControl.Resources>
@@ -15,19 +15,35 @@
         <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
     </UserControl.Resources>
 
-    <StackPanel Background="{StaticResource BackgroundColor}">
-        <TextBlock FontSize="42" Margin="0,0,0,5" Foreground="{StaticResource MainColor}" VerticalAlignment="Bottom"
-                   Text="{Binding Name}" />
-        <TextBlock VerticalAlignment="Bottom" Margin="0,0,0,10" FontSize="22" Foreground="{StaticResource TextColor}"
-                   Text="{Binding StatusMessage}" />
+    <Grid Background="{StaticResource BackgroundColor}" Width="300" Height="150">
         <Grid>
-            <Image Opacity="{Binding IsConnected, Converter={StaticResource BoolToOpacityConverter}}"
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Image Grid.Column="0"
+                   Opacity="{Binding IsConnected, Converter={StaticResource BoolToOpacityConverter}}"
                    Source="{Binding Avatar}" Width="{StaticResource DefaultAvatarSize}"
                    Height="{StaticResource DefaultAvatarSize}" Stretch="UniformToFill"
                    HorizontalAlignment="Left" />
             <Ellipse
-                Width="15" Height="15" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,10"
+                Grid.Column="0"
+                Width="10" Height="10" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="7,0,0,7"
                 Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}" Stroke="White" />
+
+            <Grid Grid.Column="1" Margin="10,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" FontSize="42" Foreground="{StaticResource MainColor}"
+                           VerticalAlignment="Center"
+                           Text="{Binding Name}" HorizontalAlignment="Left" />
+                <TextBlock Grid.Row="1" VerticalAlignment="Top" FontSize="22" Foreground="{StaticResource TextColor}"
+                           Text="{Binding StatusMessage}" HorizontalAlignment="Left" TextWrapping="WrapWholeWords" />
+            </Grid>
         </Grid>
-    </StackPanel>
+    </Grid>
 </UserControl>

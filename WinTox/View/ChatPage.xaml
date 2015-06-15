@@ -62,15 +62,19 @@
             </Grid.RowDefinitions>
 
             <!-- Back button and friend info -->
-            <Grid Grid.Row="0" VerticalAlignment="Top">
+            <Grid Grid.Row="0" VerticalAlignment="Top" Margin="20,0,20,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
 
                 <!-- Back button -->
-                <Button Margin="20,60,0,0"
+                <Button Margin="0,40,0,0" Grid.Row="0"
                         Style="{StaticResource NavigationBackButtonNormalStyle}"
                         VerticalAlignment="Top"
                         AutomationProperties.ItemType="Navigation Button" Click="BackButtonClick" />
 
-                <friends:FriendInfo x:Name="FriendInfo" Margin="80,60,80,0" />
+                <friends:FriendInfo x:Name="FriendInfo" Grid.Row="1" Margin="0,20,0,0" HorizontalAlignment="Left" />
             </Grid>
 
             <recentMessages:RecentMessagesList DataContext="{Binding RecentMessages}" Grid.Row="1" Margin="20,80" />
