@@ -2,6 +2,7 @@
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using SharpTox.Core;
@@ -27,6 +28,8 @@ namespace WinTox.View
             _viewModel = DataContext as MainPageViewModel;
             _viewModel.FriendRequestReceived += FriendRequestReceivedHandler;
             RecentMessages.DataContext = RecentMessagesGlobalViewModel.Instace;
+
+            SizeChanged += MainPageSizeChanged;
         }
 
         /// <summary>
@@ -34,6 +37,11 @@ namespace WinTox.View
         ///     process lifetime management
         /// </summary>
         public NavigationHelper NavigationHelper { get; private set; }
+
+        private void MainPageSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, e.NewSize.Width < 700 ? "MinimalLayout" : "DefaultLayout", true);
+        }
 
         private async void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
         {

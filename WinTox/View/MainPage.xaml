@@ -24,6 +24,23 @@
 
     <!-- This grid acts as a root panel for the page. -->
     <Grid Background="{StaticResource BackgroundColor}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualState x:Name="DefaultLayout" />
+                <VisualState x:Name="MinimalLayout">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                       Storyboard.TargetName="ToxLogo">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition />
@@ -38,7 +55,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Image Source="/Assets/tox-logo.jpg" Height="70" HorizontalAlignment="Left" />
+                    <Image x:Name="ToxLogo" Source="/Assets/tox-logo.jpg" Height="70" HorizontalAlignment="Left" />
                     <userControls:UserTile Grid.Column="1" />
                 </Grid>
             </Hub.Header>

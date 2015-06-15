@@ -9,7 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     d:DesignHeight="70"
-    d:DesignWidth="250">
+    d:DesignWidth="350">
 
     <UserControl.DataContext>
         <viewModel:UserViewModel />
@@ -20,7 +20,7 @@
         <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource BackgroundColor}" Tapped="UserTileTapped" Width="250">
+    <Grid Background="{StaticResource BackgroundColor}" Tapped="UserTileTapped" Width="350">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
