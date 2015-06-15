@@ -135,6 +135,7 @@
     <Compile Include="ViewModel\Messaging\ConversationViewModel.cs" />
     <Compile Include="ViewModel\Messaging\RecentMessages\RecentMessagesGlobalViewModel.cs" />
     <Compile Include="ViewModel\Messaging\RecentMessages\RecentMessagesPerUserViewModel.cs" />
+    <Compile Include="ViewModel\Messaging\RecentMessages\RecentMessagesViewModelBase.cs" />
     <Compile Include="ViewModel\Messaging\ToxMessageViewModelBase.cs" />
     <Compile Include="ViewModel\Messaging\MessageGroupViewModel.cs" />
     <Compile Include="ViewModel\Messaging\ReceivedMessageViewModel.cs" />
