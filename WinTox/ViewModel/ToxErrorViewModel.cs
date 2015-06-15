@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using SharpTox.Core;
 
 namespace WinTox.ViewModel
@@ -60,37 +61,20 @@ namespace WinTox.ViewModel
 
         public void RelayError(ToxErrorFileSendChunk error)
         {
-            /*
             if (error != ToxErrorFileSendChunk.Ok)
-                RaiseToxErrorOccured("An unexpected error occured when sending a file chunk: " + error);
-            */
+                Debug.WriteLine("An unexpected error occured when sending a file chunk: " + error);
         }
 
         public void RelayError(ToxErrorFileControl error)
         {
-            /*
             if (error != ToxErrorFileControl.Ok)
-                RaiseToxErrorOccured("An unexpected error occured when trying to control a file transfer: " + error);
-            */
+                Debug.WriteLine("An unexpected error occured when controlling a file transfer: " + error);
         }
 
         public void RelayError(ToxErrorFileSend error)
         {
-            /*
-            switch (error)
-            {
-                case ToxErrorFileSend.NameTooLong:
-                    RaiseToxErrorOccured("The file's name you just tried to send is too long.");
-                    return;
-                case ToxErrorFileSend.TooMany:
-                    RaiseToxErrorOccured("There are too many ongoing file transfers for this friend.");
-                    return;
-                default:
-                    if (error != ToxErrorFileSend.Ok)
-                        RaiseToxErrorOccured("An unexpected error occured when trying to send a file: " + error);
-                    return;
-            }
-            */
+            if (error != ToxErrorFileSend.Ok)
+                Debug.WriteLine("An unexpected error occured when sending a file: " + error);
         }
 
         private void RaiseToxErrorOccured(string errorMessage)
