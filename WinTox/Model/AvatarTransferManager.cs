@@ -50,6 +50,10 @@ namespace WinTox.Model
                     "Avatar upload added! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
                     friendNumber, fileInfo.Number, ActiveTransfers.Count);
             }
+            else
+            {
+                stream.Dispose();
+            }
         }
 
         public void SendNullAvatar(int friendNumber)
