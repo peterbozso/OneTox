@@ -20,27 +20,42 @@
         <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource BackgroundColor}" Tapped="UserTileTapped">
+    <Grid Background="{StaticResource BackgroundColor}" Tapped="UserTileTapped" Width="250">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
 
-        <Image Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Source="{Binding Avatar}"
+        <Grid Grid.Column="0" Margin="0,0,10,0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <!-- Status color and user name -->
+            <Grid Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Ellipse Grid.Column="0" Width="10" Height="10"
+                         Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}"
+                         HorizontalAlignment="Left" Margin="0,0,5,0" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" FontSize="24" FontWeight="Bold" TextTrimming="CharacterEllipsis"
+                           Foreground="{StaticResource MainColor}" Text="{Binding Name}" VerticalAlignment="Center" />
+            </Grid>
+
+            <!-- Status message -->
+            <TextBlock Grid.Column="0" Grid.Row="1" FontSize="18" TextTrimming="WordEllipsis"
+                       Foreground="{StaticResource TextColor}" Text="{Binding StatusMessage}"
+                       HorizontalAlignment="Right" VerticalAlignment="Center" />
+        </Grid>
+
+        <!-- User avatar -->
+        <Image Grid.Column="1" Grid.Row="0" Source="{Binding Avatar}"
                Width="{StaticResource SmallAvatarSize}"
                Height="{StaticResource SmallAvatarSize}" Stretch="UniformToFill" VerticalAlignment="Top"
                Opacity="{Binding IsConnected, Converter={StaticResource BoolToOpacityConverter}}" />
-        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right">
-            <Ellipse Width="10" Height="10" VerticalAlignment="Center"
-                     Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}" />
-            <TextBlock FontSize="24" Padding="10,10,10,0" FontWeight="Bold"
-                       Foreground="{StaticResource MainColor}" Text="{Binding Name}" />
-        </StackPanel>
-        <TextBlock Grid.Column="0" Grid.Row="1" FontSize="18" Padding="10,0,10,0"
-                   Foreground="{StaticResource TextColor}" HorizontalAlignment="Right" Text="{Binding StatusMessage}" />
     </Grid>
 </UserControl>
