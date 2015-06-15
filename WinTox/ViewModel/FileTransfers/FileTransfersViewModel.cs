@@ -91,10 +91,16 @@ namespace WinTox.ViewModel.FileTransfers
         {
             var stream = (await file.OpenReadAsync()).AsStreamForRead();
             int fileNumber;
+
             var successfulSend = FileTransferManager.Instance.SendFile(_friendNumber, stream, file.Name, out fileNumber);
+
             if (successfulSend)
             {
                 Transfers.Add(new OneFileTransferViewModel(this, fileNumber, file.Name, FileTransferState.Uploading));
+            }
+            else
+            {
+                stream.Dispose();
             }
         }
 
