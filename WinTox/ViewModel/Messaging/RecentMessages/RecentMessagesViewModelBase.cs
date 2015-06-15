@@ -19,7 +19,7 @@ namespace WinTox.ViewModel.Messaging.RecentMessages
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 TryRemovePreviousMessageFromFriend((FriendViewModel) newMessage.Sender);
-                RecentMessages.Add(newMessage);
+                RecentMessages.Insert(0, newMessage);
             });
         }
 
