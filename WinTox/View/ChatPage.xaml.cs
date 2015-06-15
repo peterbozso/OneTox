@@ -145,5 +145,10 @@ namespace WinTox.View
         }
 
         #endregion
+
+        private void BackButtonClick(object sender, RoutedEventArgs e)
+        {
+            (Window.Current.Content as Frame).Navigate(typeof(MainPage));
+        }
     }
 }

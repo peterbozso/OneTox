@@ -66,12 +66,9 @@
 
                 <!-- Back button -->
                 <Button Margin="20,60,0,0"
-                        Command="{Binding NavigationHelper.GoBackCommand, ElementName=PageRoot}"
                         Style="{StaticResource NavigationBackButtonNormalStyle}"
                         VerticalAlignment="Top"
-                        AutomationProperties.Name="Back"
-                        AutomationProperties.AutomationId="BackButton"
-                        AutomationProperties.ItemType="Navigation Button" />
+                        AutomationProperties.ItemType="Navigation Button" Click="BackButtonClick" />
 
                 <friends:FriendInfo x:Name="FriendInfo" Margin="80,60,80,0" />
             </Grid>
