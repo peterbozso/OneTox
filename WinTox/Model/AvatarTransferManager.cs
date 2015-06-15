@@ -113,12 +113,14 @@ namespace WinTox.Model
 
         private async Task<bool> AlreadyHaveAvatar(int friendNumber, int fileNumber)
         {
-            var stream = await AvatarManager.Instance.GetFriendAvatarStream(friendNumber);
-            if (stream == null)
-                return false;
-            var fileId = ToxModel.Instance.FileGetId(friendNumber, fileNumber);
-            var avatarHash = GetAvatarHash(stream);
-            return fileId.SequenceEqual(avatarHash);
+            using (var stream = await AvatarManager.Instance.GetFriendAvatarStream(friendNumber))
+            {
+                if (stream == null)
+                    return false;
+                var fileId = ToxModel.Instance.FileGetId(friendNumber, fileNumber);
+                var avatarHash = GetAvatarHash(stream);
+                return fileId.SequenceEqual(avatarHash);
+            }
         }
 
         protected override void HandleFinishedDownload(TransferId transferId, ToxEventArgs.FileChunkEventArgs e)
