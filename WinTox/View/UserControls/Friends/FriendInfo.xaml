@@ -39,10 +39,11 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" FontSize="42" Foreground="{StaticResource MainColor}"
-                           VerticalAlignment="Center"
+                           VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
                            Text="{Binding Name}" HorizontalAlignment="Left" />
                 <TextBlock Grid.Row="1" VerticalAlignment="Top" FontSize="22" Foreground="{StaticResource TextColor}"
-                           Text="{Binding StatusMessage}" HorizontalAlignment="Left" TextWrapping="WrapWholeWords" />
+                           Text="{Binding StatusMessage}" HorizontalAlignment="Left" TextWrapping="WrapWholeWords"
+                           TextTrimming="CharacterEllipsis" />
             </Grid>
         </Grid>
     </Grid>
