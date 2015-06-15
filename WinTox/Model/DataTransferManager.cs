@@ -55,6 +55,18 @@ namespace WinTox.Model
             return ToxModel.Instance.FileControl(friendNumber, fileNumber, ToxFileControl.Resume);
         }
 
+        protected void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes)
+        {
+            ActiveTransfers.Add(new TransferId(fileNumber, friendNumber), new TransferData(stream, dataSizeInBytes));
+        }
+
+        protected void RemoveTransfer(TransferId transferId)
+        {
+            var transferToRemove = ActiveTransfers[transferId];
+            transferToRemove.Stream.Dispose();
+            ActiveTransfers.Remove(transferId);
+        }
+
         #endregion
 
         #region Sending

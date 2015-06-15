@@ -25,7 +25,7 @@ namespace WinTox.Model
             switch (fileControl)
             {
                 case ToxFileControl.Cancel:
-                    ActiveTransfers.Remove(transferId);
+                    RemoveTransfer(transferId);
                     Debug.WriteLine(
                         "Avatar transfer CANCELLED by friend! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
                         transferId.FriendNumber, transferId.FileNumber, ActiveTransfers.Count);
@@ -45,8 +45,7 @@ namespace WinTox.Model
 
             if (successfulFileSend)
             {
-                ActiveTransfers.Add(new TransferId(fileInfo.Number, friendNumber),
-                    new TransferData(stream, stream.Length));
+                AddTransfer(friendNumber, fileInfo.Number, stream, stream.Length);
                 Debug.WriteLine(
                     "Avatar upload added! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
                     friendNumber, fileInfo.Number, ActiveTransfers.Count);
@@ -68,7 +67,7 @@ namespace WinTox.Model
 
         protected override void HandleFinishedUpload(TransferId transferId, ToxEventArgs.FileRequestChunkEventArgs e)
         {
-            ActiveTransfers.Remove(transferId);
+            RemoveTransfer(transferId);
 
             Debug.WriteLine(
                 "Avatar upload removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
@@ -102,8 +101,7 @@ namespace WinTox.Model
             if (resumeSent)
             {
                 var stream = new MemoryStream((int) e.FileSize);
-                ActiveTransfers.Add(new TransferId(e.FileNumber, e.FriendNumber),
-                    new TransferData(stream, e.FileSize));
+                AddTransfer(e.FriendNumber, e.FileNumber, stream, e.FileSize);
 
                 Debug.WriteLine(
                     "Avatar download added! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
@@ -126,7 +124,7 @@ namespace WinTox.Model
         protected override void HandleFinishedDownload(TransferId transferId, ToxEventArgs.FileChunkEventArgs e)
         {
             AvatarManager.Instance.ChangeFriendAvatar(e.FriendNumber, ActiveTransfers[transferId].Stream as MemoryStream);
-            ActiveTransfers.Remove(transferId);
+            RemoveTransfer(transferId);
 
             Debug.WriteLine(
                 "Avatar download removed! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",

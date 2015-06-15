@@ -31,7 +31,8 @@ namespace WinTox.Model
             var transferId = new TransferId(fileNumber, friendNumber);
             if (ActiveTransfers.ContainsKey(transferId))
             {
-                ActiveTransfers.Remove(transferId);
+                RemoveTransfer(transferId);
+
                 Debug.WriteLine(
                     "File transfer CANCELLED (removed) by user! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
                     friendNumber, fileNumber, ActiveTransfers.Count);
@@ -56,10 +57,12 @@ namespace WinTox.Model
             switch (fileControl)
             {
                 case ToxFileControl.Cancel:
-                    ActiveTransfers.Remove(transferId);
+                    RemoveTransfer(transferId);
+
                     Debug.WriteLine(
                         "File transfer CANCELLED by friend! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
                         transferId.FriendNumber, transferId.FileNumber, ActiveTransfers.Count);
+
                     return;
             }
         }
@@ -101,8 +104,7 @@ namespace WinTox.Model
 
             if (successfulFileSend)
             {
-                ActiveTransfers.Add(new TransferId(fileInfo.Number, friendNumber),
-                    new TransferData(stream, stream.Length));
+                AddTransfer(friendNumber, fileInfo.Number, stream, stream.Length);
                 Debug.WriteLine(
                     "File upload added! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
                     friendNumber, fileInfo.Number, ActiveTransfers.Count);
@@ -114,7 +116,7 @@ namespace WinTox.Model
 
         protected override void HandleFinishedUpload(TransferId transferId, ToxEventArgs.FileRequestChunkEventArgs e)
         {
-            ActiveTransfers.Remove(transferId);
+            RemoveTransfer(transferId);
 
             Debug.WriteLine(
                 "File upload removed! \t friend number: {0}, \t file number: {1}, \t total transfers: {2}",
@@ -150,8 +152,7 @@ namespace WinTox.Model
 
             // We add a transfer with a null value instead of an actual stream here. We will replace it with an actual file stream
             // in ReceiveFile() when the user accepts the request and chooses a file.
-            ActiveTransfers.Add(new TransferId(e.FileNumber, e.FriendNumber),
-                new TransferData(null, e.FileSize));
+            AddTransfer(e.FriendNumber, e.FileNumber, null, e.FileSize);
 
             Debug.WriteLine(
                 "Dummy file download added! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
@@ -163,7 +164,7 @@ namespace WinTox.Model
 
         protected override void HandleFinishedDownload(TransferId transferId, ToxEventArgs.FileChunkEventArgs e)
         {
-            ActiveTransfers.Remove(transferId);
+            RemoveTransfer(transferId);
 
             Debug.WriteLine(
                 "File download removed! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
