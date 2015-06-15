@@ -7,6 +7,7 @@ using WinTox.Common;
 using WinTox.Model;
 using WinTox.ViewModel.FileTransfers;
 using WinTox.ViewModel.Messaging;
+using WinTox.ViewModel.Messaging.RecentMessages;
 
 namespace WinTox.ViewModel.Friends
 {
@@ -21,10 +22,11 @@ namespace WinTox.ViewModel.Friends
 
         public FriendViewModel(int friendNumber)
         {
+            FriendNumber = friendNumber;
+
             Conversation = new ConversationViewModel(this);
             FileTransfers = new FileTransfersViewModel(friendNumber);
-
-            FriendNumber = friendNumber;
+            RecentMessages = new RecentMessagesPerUserViewModel(friendNumber);
 
             Name = ToxModel.Instance.GetFriendName(friendNumber);
             if (Name == String.Empty)
@@ -38,7 +40,7 @@ namespace WinTox.ViewModel.Friends
                 StatusMessage = "Friend request sent.";
             }
 
-            SetFriendStatus(ToxModel.Instance.GetFriendStatus(FriendNumber));
+            SetFriendStatus(ToxModel.Instance.GetFriendStatus(friendNumber));
             IsConnected = ToxModel.Instance.IsFriendOnline(friendNumber);
 
             AvatarManager.Instance.FriendAvatarChanged += FriendAvatarChangedHandler;
@@ -49,9 +51,10 @@ namespace WinTox.ViewModel.Friends
             ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
         }
 
+        public int FriendNumber { get; private set; }
         public ConversationViewModel Conversation { get; private set; }
         public FileTransfersViewModel FileTransfers { get; private set; }
-        public int FriendNumber { get; private set; }
+        public RecentMessagesPerUserViewModel RecentMessages { get; private set; }
 
         public RelayCommand RemoveFriendCommand
         {

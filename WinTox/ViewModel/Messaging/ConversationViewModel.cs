@@ -10,6 +10,7 @@ using Windows.UI.Core;
 using SharpTox.Core;
 using WinTox.Model;
 using WinTox.ViewModel.Friends;
+using WinTox.ViewModel.Messaging.RecentMessages;
 
 namespace WinTox.ViewModel.Messaging
 {
@@ -44,7 +45,7 @@ namespace WinTox.ViewModel.Messaging
             // Here we make a very benign assumption that message_id stay being uint32_t in toxcore.
             var receivedMessage = new ReceivedMessageViewModel(e.Message, DateTime.Now, e.MessageType, _friendViewModel);
             await StoreMessage(receivedMessage);
-            RecentMessagesViewModel.Instace.AddMessage(receivedMessage);
+            RecentMessagesGlobalViewModel.Instace.AddMessage(receivedMessage);
         }
 
         public async Task SendMessage(string message)

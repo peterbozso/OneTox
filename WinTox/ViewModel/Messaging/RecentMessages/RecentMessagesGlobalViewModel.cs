@@ -3,23 +3,23 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using WinTox.ViewModel.Friends;
 
-namespace WinTox.ViewModel.Messaging
+namespace WinTox.ViewModel.Messaging.RecentMessages
 {
     /// <summary>
     ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
     /// </summary>
-    public class RecentMessagesViewModel
+    public class RecentMessagesGlobalViewModel
     {
-        private static RecentMessagesViewModel _instance;
+        private static RecentMessagesGlobalViewModel _instance;
 
-        private RecentMessagesViewModel()
+        private RecentMessagesGlobalViewModel()
         {
             RecentMessages = new ObservableCollection<ReceivedMessageViewModel>();
         }
 
-        public static RecentMessagesViewModel Instace
+        public static RecentMessagesGlobalViewModel Instace
         {
-            get { return _instance ?? (_instance = new RecentMessagesViewModel()); }
+            get { return _instance ?? (_instance = new RecentMessagesGlobalViewModel()); }
         }
 
         public ObservableCollection<ReceivedMessageViewModel> RecentMessages { get; private set; }

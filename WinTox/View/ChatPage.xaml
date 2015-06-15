@@ -7,10 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:userControls="using:WinTox.View.UserControls"
     xmlns:viewModel="using:WinTox.ViewModel"
-    xmlns:recentMessages="using:WinTox.View.UserControls.RecentMessages"
     xmlns:friends="using:WinTox.View.UserControls.Friends"
     xmlns:messaging="using:WinTox.View.UserControls.Messaging"
     xmlns:fileTransfers="using:WinTox.View.UserControls.FileTransfers"
+    xmlns:recentMessages="using:WinTox.View.UserControls.Messaging.RecentMessages"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -76,7 +76,7 @@
                 <friends:FriendInfo x:Name="FriendInfo" Margin="80,60,80,0" />
             </Grid>
 
-            <recentMessages:RecentMessagesList x:Name="RecentMessages" Grid.Row="1" Margin="20,80" />
+            <recentMessages:RecentMessagesList DataContext="{Binding RecentMessages}" Grid.Row="1" Margin="20,80" />
 
             <Button Grid.Row="2" HorizontalAlignment="Center" Content="" Margin="20,0,20,20"
                     FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"

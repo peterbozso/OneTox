@@ -133,7 +133,8 @@
     <Compile Include="ViewModel\IToxUserViewModel.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
     <Compile Include="ViewModel\Messaging\ConversationViewModel.cs" />
-    <Compile Include="ViewModel\Messaging\RecentMessagesViewModel.cs" />
+    <Compile Include="ViewModel\Messaging\RecentMessages\RecentMessagesGlobalViewModel.cs" />
+    <Compile Include="ViewModel\Messaging\RecentMessages\RecentMessagesPerUserViewModel.cs" />
     <Compile Include="ViewModel\Messaging\ToxMessageViewModelBase.cs" />
     <Compile Include="ViewModel\Messaging\MessageGroupViewModel.cs" />
     <Compile Include="ViewModel\Messaging\ReceivedMessageViewModel.cs" />
@@ -178,10 +179,10 @@
     <Compile Include="View\UserControls\ProfileManagementBlock.xaml.cs">
       <DependentUpon>ProfileManagementBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\RecentMessages\RecentMessagesList.xaml.cs">
+    <Compile Include="View\UserControls\Messaging\RecentMessages\RecentMessagesList.xaml.cs">
       <DependentUpon>RecentMessagesList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\RecentMessages\RecentMessagesListItem.xaml.cs">
+    <Compile Include="View\UserControls\Messaging\RecentMessages\RecentMessagesListItem.xaml.cs">
       <DependentUpon>RecentMessagesListItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserControls\UserTile.xaml.cs">
@@ -265,11 +266,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\UserControls\RecentMessages\RecentMessagesList.xaml">
+    <Page Include="View\UserControls\Messaging\RecentMessages\RecentMessagesList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\UserControls\RecentMessages\RecentMessagesListItem.xaml">
+    <Page Include="View\UserControls\Messaging\RecentMessages\RecentMessagesListItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

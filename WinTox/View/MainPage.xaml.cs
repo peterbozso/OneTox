@@ -7,6 +7,8 @@ using Windows.UI.Xaml.Navigation;
 using SharpTox.Core;
 using WinTox.Common;
 using WinTox.ViewModel;
+using WinTox.ViewModel.Messaging;
+using WinTox.ViewModel.Messaging.RecentMessages;
 
 namespace WinTox.View
 {
@@ -25,6 +27,7 @@ namespace WinTox.View
             NavigationHelper.LoadState += navigationHelper_LoadState;
             _viewModel = DataContext as MainPageViewModel;
             _viewModel.FriendRequestReceived += FriendRequestReceivedHandler;
+            RecentMessages.DataContext = RecentMessagesGlobalViewModel.Instace;
         }
 
         /// <summary>
