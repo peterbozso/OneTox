@@ -55,7 +55,7 @@
 
                 <TextBlock x:Name="MessageText" Grid.Column="0"
                            FontSize="18" Text="{Binding Text}" TextTrimming="CharacterEllipsis"
-                           Foreground="{StaticResource ChatBackgroundColor}" />
+                           Foreground="{StaticResource TextColor}" />
                 
                 <TextBlock x:Name="Timestamp" Grid.Column="1" FontSize="14" Margin="10,3,0,0"
                            Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"
