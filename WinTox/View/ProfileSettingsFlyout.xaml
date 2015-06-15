@@ -28,8 +28,10 @@
 
     <StackPanel Width="266">
         <!-- Name, status message, status -->
-        <TextBox Header="Name" Text="{Binding Name, Mode=TwoWay}" LostFocus="NameTextBoxLostFocus" />
-        <TextBox Header="Status message" Text="{Binding StatusMessage, Mode=TwoWay}" />
+        <TextBox Header="Name" x:Name="NameTextBox" Text="{Binding Name, Mode=TwoWay}" LostFocus="NameTextBoxLostFocus"
+                 KeyDown="NameTextBoxKeyDown" />
+        <TextBox Header="Status message" x:Name="StatusMessageTextBox" Text="{Binding StatusMessage, Mode=TwoWay}"
+                 KeyDown="StatusMessageTextBoxKeyDown" />
         <Grid x:Name="StatusGrid" Margin="0,3,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

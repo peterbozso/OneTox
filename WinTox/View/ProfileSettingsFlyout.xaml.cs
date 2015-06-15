@@ -6,6 +6,7 @@ using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -121,6 +122,32 @@ namespace WinTox.View
         private async void RemoveAvatarButtonClick(object sender, RoutedEventArgs e)
         {
             await _viewModel.RemoveAvatar();
+        }
+
+        private void NameTextBoxKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter && NameTextBox.Text != String.Empty)
+            {
+                // See MessageInputKeyDown()!
+                if (e.KeyStatus.RepeatCount != 1)
+                    return;
+
+                _viewModel.Name = NameTextBox.Text;
+                e.Handled = true;
+            }
+        }
+
+        private void StatusMessageTextBoxKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter && StatusMessageTextBox.Text != String.Empty)
+            {
+                // See MessageInputKeyDown()!
+                if (e.KeyStatus.RepeatCount != 1)
+                    return;
+
+                _viewModel.StatusMessage = StatusMessageTextBox.Text;
+                e.Handled = true;
+            }
         }
     }
 }
