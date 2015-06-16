@@ -37,7 +37,7 @@ namespace WinTox.ViewModel.Friends
 
                                var toxId = DnsTools.TryDiscoverToxId(id);
 
-                               if (IsIdInvalid(toxId))
+                               if (!ToxId.IsValid(toxId))
                                {
                                    ResetIdTextBox(flyoutContent);
                                    return;
@@ -60,21 +60,6 @@ namespace WinTox.ViewModel.Friends
         {
             var idTextBox = (TextBox) flyoutContent.FindName("FriendId");
             return idTextBox.Text.Trim();
-        }
-
-        private bool IsIdInvalid(string toxId)
-        {
-            if (toxId.Length < ToxConstants.AddressSize*2)
-                return true;
-
-            try
-            {
-                return !ToxId.IsValid(toxId);
-            }
-            catch
-            {
-                return true;
-            }
         }
 
         private void ResetIdTextBox(StackPanel flyoutContent)
