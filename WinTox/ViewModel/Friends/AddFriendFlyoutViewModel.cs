@@ -3,6 +3,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using SharpTox.Core;
 using WinTox.Common;
+using WinTox.Helpers;
 using WinTox.Model;
 
 namespace WinTox.ViewModel.Friends
@@ -28,35 +29,78 @@ namespace WinTox.ViewModel.Friends
             {
                 return _addFriendCommand
                        ?? (_addFriendCommand = new RelayCommand(
-                           (object parameter) =>
+                           parameter =>
                            {
                                var flyoutContent = (StackPanel) parameter;
 
-                               var friendIdTextBox = (TextBox) flyoutContent.FindName("FriendId");
-                               var friendId = friendIdTextBox.Text.Trim();
+                               var id = GetId(flyoutContent);
 
-                               if (!ToxId.IsValid(friendId))
+                               var toxId = DnsTools.TryDiscoverToxId(id);
+
+                               if (IsIdInvalid(toxId))
                                {
-                                   friendIdTextBox.Text = String.Empty;
-                                   friendIdTextBox.Focus(FocusState.Programmatic);
+                                   ResetIdTextBox(flyoutContent);
                                    return;
                                }
 
-                               var invitationMessageTextBox = (TextBox) flyoutContent.FindName("InvitationMessage");
-                               var invitationMessage = invitationMessageTextBox.Text;
-                               if (invitationMessage == String.Empty)
-                                   invitationMessage = "Hello! I'd like to add you to my friends list.";
+                               var invitationMessage = GetInvitationMessage(flyoutContent);
 
-                               bool successFulAdd;
-                               ToxModel.Instance.AddFriend(new ToxId(friendId), invitationMessage, out successFulAdd);
-                               if (successFulAdd)
+                               bool successFulAddd;
+                               ToxModel.Instance.AddFriend(new ToxId(toxId), invitationMessage, out successFulAddd);
+
+                               if (successFulAddd)
                                {
-                                   friendIdTextBox.Text = String.Empty;
-                                   invitationMessageTextBox.Text = String.Empty;
-                                   IsFlyoutOpen = false;
+                                   ResetFlyout(flyoutContent);
                                }
                            }));
             }
+        }
+
+        private string GetId(StackPanel flyoutContent)
+        {
+            var idTextBox = (TextBox) flyoutContent.FindName("FriendId");
+            return idTextBox.Text.Trim();
+        }
+
+        private bool IsIdInvalid(string toxId)
+        {
+            if (toxId.Length < ToxConstants.AddressSize*2)
+                return true;
+
+            try
+            {
+                return !ToxId.IsValid(toxId);
+            }
+            catch
+            {
+                return true;
+            }
+        }
+
+        private void ResetIdTextBox(StackPanel flyoutContent)
+        {
+            var idTextBox = (TextBox) flyoutContent.FindName("FriendId");
+            idTextBox.Text = String.Empty;
+            idTextBox.Focus(FocusState.Programmatic);
+        }
+
+        private string GetInvitationMessage(StackPanel flyoutContent)
+        {
+            var invitationMessageTextBox = (TextBox) flyoutContent.FindName("InvitationMessage");
+            if (invitationMessageTextBox.Text == String.Empty)
+                return "Hello! I'd like to add you to my friends list.";
+            return invitationMessageTextBox.Text;
+        }
+
+        private void ResetFlyout(StackPanel flyoutContent)
+        {
+            var idTextBox = (TextBox) flyoutContent.FindName("FriendId");
+            idTextBox.Text = String.Empty;
+
+            var invitationMessageTextBox = (TextBox) flyoutContent.FindName("InvitationMessage");
+            invitationMessageTextBox.Text = String.Empty;
+
+            IsFlyoutOpen = false;
         }
     }
 }

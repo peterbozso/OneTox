@@ -119,6 +119,7 @@
     <Compile Include="Converters\UserStatusToStringConverter.cs" />
     <Compile Include="Model\AvatarManager.cs" />
     <Compile Include="Model\DataTransferManager.cs" />
+    <Compile Include="Helpers\DnsTools.cs" />
     <Compile Include="Model\ExtendedTox.cs" />
     <Compile Include="Model\AvatarTransferManager.cs" />
     <Compile Include="Model\FileTransferManager.cs" />

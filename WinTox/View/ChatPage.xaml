@@ -77,7 +77,8 @@
                 <friends:FriendInfo x:Name="FriendInfo" Grid.Row="1" Margin="0,20,0,0" HorizontalAlignment="Left" />
             </Grid>
 
-            <recentMessages:RecentMessagesList x:Name="RecentMessages" DataContext="{Binding RecentMessages}" Grid.Row="1" Margin="20,80" />
+            <recentMessages:RecentMessagesList x:Name="RecentMessages" DataContext="{Binding RecentMessages}"
+                                               Grid.Row="1" Margin="20,80" />
 
             <Button Grid.Row="2" HorizontalAlignment="Center" Content="" Margin="20,0,20,20"
                     FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
