@@ -14,7 +14,7 @@ namespace WinTox.ViewModel.ProfileSettings
     internal class ProfileManagementViewModel : ViewModelBase
     {
         private RelayCommand _createNewProfileCommand;
-        private bool _isSwitchProfileFlyoutOpen;
+        private bool _isSwitchProfileFlyoutClosed;
         private RelayCommand _refreshProfileListCommand;
 
         public ProfileManagementViewModel()
@@ -29,12 +29,12 @@ namespace WinTox.ViewModel.ProfileSettings
 
         public ObservableCollection<StorageFile> ProfileFiles { get; set; }
 
-        public bool IsSwitchProfileFlyoutOpen
+        public bool IsSwitchProfileFlyoutClosed
         {
-            get { return _isSwitchProfileFlyoutOpen; }
+            get { return _isSwitchProfileFlyoutClosed; }
             set
             {
-                _isSwitchProfileFlyoutOpen = value;
+                _isSwitchProfileFlyoutClosed = value;
                 RaisePropertyChanged();
             }
         }
@@ -110,7 +110,7 @@ namespace WinTox.ViewModel.ProfileSettings
         public async Task SwitchProfile(StorageFile file)
         {
             await SetCurrentProfile(file);
-            IsSwitchProfileFlyoutOpen = false;
+            IsSwitchProfileFlyoutClosed = true;
         }
     }
 }

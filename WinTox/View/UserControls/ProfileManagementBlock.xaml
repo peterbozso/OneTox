@@ -8,6 +8,8 @@
     xmlns:helpers="using:WinTox.Helpers"
     xmlns:viewModel="using:WinTox.ViewModel"
     xmlns:profileSettings="using:WinTox.ViewModel.ProfileSettings"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -49,9 +51,7 @@
             <Button Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Content="Switch"
                     Command="{Binding RefreshProfileListCommand}" x:Name="SwitchButton">
                 <Button.Flyout>
-                    <Flyout helpers:FlyoutHelper.Parent="{Binding ElementName=SwitchButton}"
-                            helpers:FlyoutHelper.IsOpen="{Binding IsSwitchProfileFlyoutOpen, Mode=TwoWay}"
-                            Placement="Left">
+                    <Flyout Placement="Left">
                         <StackPanel>
                             <TextBlock Text="Select profile" Style="{StaticResource BodyTextBlockStyle}"
                                        Margin="0,0,0,10" Width="160" />
@@ -64,6 +64,13 @@
                                 </ListView.ItemTemplate>
                             </ListView>
                         </StackPanel>
+
+                        <interactivity:Interaction.Behaviors>
+                            <core:DataTriggerBehavior Binding="{Binding IsSwitchProfileFlyoutClosed}"
+                                                      ComparisonCondition="Equal" Value="True">
+                                <helpers:CloseFlyoutAction />
+                            </core:DataTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
                     </Flyout>
                 </Button.Flyout>
             </Button>

@@ -12,15 +12,15 @@ namespace WinTox.ViewModel.Friends
     {
         private RelayCommand _addFriendCommand;
         private TextBox _invitationMessageTextBox;
-        private bool _isFlyoutOpen;
+        private bool _isFlyoutClosed;
         private TextBox _toxIdTextBox;
 
-        public bool IsFlyoutOpen
+        public bool IsFlyoutClosed
         {
-            get { return _isFlyoutOpen; }
+            get { return _isFlyoutClosed; }
             set
             {
-                _isFlyoutOpen = value;
+                _isFlyoutClosed = value;
                 RaisePropertyChanged();
             }
         }
@@ -107,7 +107,7 @@ namespace WinTox.ViewModel.Friends
         {
             _toxIdTextBox.Text = String.Empty;
             _invitationMessageTextBox.Text = String.Empty;
-            IsFlyoutOpen = false;
+            IsFlyoutClosed = true;
         }
     }
 }
