@@ -10,6 +10,7 @@ namespace WinTox.ViewModel.Friends
     {
         private RelayCommand _addFriendCommand;
         private string _friendId;
+        private string _friendIdPlaceholder;
         private string _invitationMessage;
         private bool _isFlyoutClosed;
 
@@ -35,6 +36,16 @@ namespace WinTox.ViewModel.Friends
             }
         }
 
+        public string FriendIdPlaceholder
+        {
+            get { return _friendIdPlaceholder; }
+            private set
+            {
+                _friendIdPlaceholder = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public string InvitationMessage
         {
             get { return _invitationMessage; }
@@ -53,6 +64,9 @@ namespace WinTox.ViewModel.Friends
                        ?? (_addFriendCommand = new RelayCommand(
                            parameter =>
                            {
+                               if (String.IsNullOrEmpty(FriendId))
+                                   return;
+
                                bool successfulDnsDiscovery;
                                var discoveredToxId = DnsTools.TryDiscoverToxId(FriendId, out successfulDnsDiscovery);
 
@@ -65,7 +79,7 @@ namespace WinTox.ViewModel.Friends
                                    if (!ToxId.IsValid(FriendId))
                                    {
                                        FriendId = String.Empty;
-                                       // TODO: Tell the user about the problem!
+                                       FriendIdPlaceholder = "Invalid Tox ID, please enter it more carefully!";
                                        return;
                                    }
 
@@ -76,11 +90,18 @@ namespace WinTox.ViewModel.Friends
 
                                    if (successFulAdd)
                                    {
-                                       ResetFlyout();
+                                       IsFlyoutClosed = true;
                                    }
                                }
                            }));
             }
+        }
+
+        public void ResetFlyout()
+        {
+            FriendId = String.Empty;
+            FriendIdPlaceholder = String.Empty;
+            InvitationMessage = String.Empty;
         }
 
         private string GetInvitationMessage()
@@ -88,13 +109,6 @@ namespace WinTox.ViewModel.Friends
             if (String.IsNullOrEmpty(InvitationMessage))
                 return "Hello! I'd like to add you to my friends list.";
             return InvitationMessage;
-        }
-
-        private void ResetFlyout()
-        {
-            FriendId = String.Empty;
-            InvitationMessage = String.Empty;
-            IsFlyoutClosed = true;
         }
     }
 }

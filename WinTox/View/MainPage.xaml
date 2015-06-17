@@ -82,7 +82,6 @@
 
     <Page.BottomAppBar>
         <CommandBar Background="{StaticResource MainColor}">
-            <!-- TODO: Maybe refactor it out later. -->
             <AppBarButton Label="add friend" Icon="AddFriend" x:Name="AddFriendButton">
                 <AppBarButton.DataContext>
                     <friends:AddFriendFlyoutViewModel />
@@ -91,7 +90,8 @@
                     <Flyout>
                         <StackPanel Width="400" x:Name="AddFriendFlyoutContent">
                             <TextBox x:Name="FriendId" Header="Your friend's ID" MaxLength="76" Height="80"
-                                     TextWrapping="Wrap" Text="{Binding FriendId, Mode=TwoWay}" />
+                                     TextWrapping="Wrap" Text="{Binding FriendId, Mode=TwoWay}"
+                                     PlaceholderText="{Binding FriendIdPlaceholder}" />
                             <TextBox x:Name="InvitationMessage" Header="Invitation message" Height="160"
                                      TextWrapping="Wrap" Text="{Binding InvitationMessage, Mode=TwoWay}"
                                      PlaceholderText="Hello! I'd like to add you to my friends list." />
@@ -104,6 +104,11 @@
                                                       ComparisonCondition="Equal" Value="True">
                                 <helpers:CloseFlyoutAction />
                             </core:DataTriggerBehavior>
+
+                            <core:EventTriggerBehavior EventName="Click"
+                                                       SourceObject="{Binding ElementName=AddFriendButton}">
+                                <core:CallMethodAction TargetObject="{Binding}" MethodName="ResetFlyout" />
+                            </core:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
                     </Flyout>
                 </AppBarButton.Flyout>
