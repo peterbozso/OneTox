@@ -22,6 +22,8 @@ namespace WinTox.ViewModel.Friends
             {
                 _isFlyoutClosed = value;
                 RaisePropertyChanged();
+                if (value)
+                    IsFlyoutClosed = false;
             }
         }
 
