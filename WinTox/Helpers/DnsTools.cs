@@ -10,25 +10,36 @@ namespace WinTox.Helpers
     // Kudos: https://github.com/Reverp/Toxy/blob/master/Toxy/ToxHelpers/DnsTools.cs
     public static class DnsTools
     {
-        public static string TryDiscoverToxId(string domain)
+        public static string TryDiscoverToxId(string domain, out bool success)
         {
             if (!domain.Contains("@"))
-                return domain;
+            {
+                success = false;
+                return String.Empty;
+            }
 
             for (var tries = 0; tries < 3; tries++)
             {
                 try
                 {
-                    var id = DiscoverToxId(domain);
+                    var toxId = DiscoverToxId(domain);
 
-                    return string.IsNullOrEmpty(id) ? domain : id;
+                    if (string.IsNullOrEmpty(toxId))
+                    {
+                        success = false;
+                        return String.Empty;
+                    }
+
+                    success = true;
+                    return toxId;
                 }
                 catch (Exception)
                 {
                 }
             }
 
-            return domain;
+            success = false;
+            return String.Empty;
         }
 
         [DllImport("dnsapi", EntryPoint = "DnsQuery_W", CharSet = CharSet.Unicode, SetLastError = true,

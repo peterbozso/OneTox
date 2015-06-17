@@ -35,22 +35,32 @@ namespace WinTox.ViewModel.Friends
 
                                var id = GetId(flyoutContent);
 
-                               var toxId = DnsTools.TryDiscoverToxId(id);
+                               bool successfulDnsDiscovery;
+                               var toxId = DnsTools.TryDiscoverToxId(id, out successfulDnsDiscovery);
 
-                               if (!ToxId.IsValid(toxId))
+                               if (successfulDnsDiscovery)
                                {
-                                   ResetIdTextBox(flyoutContent);
-                                   return;
+                                   SetId(flyoutContent, toxId);
                                }
-
-                               var invitationMessage = GetInvitationMessage(flyoutContent);
-
-                               bool successFulAddd;
-                               ToxModel.Instance.AddFriend(new ToxId(toxId), invitationMessage, out successFulAddd);
-
-                               if (successFulAddd)
+                               else
                                {
-                                   ResetFlyout(flyoutContent);
+                                   toxId = id;
+
+                                   if (!ToxId.IsValid(toxId))
+                                   {
+                                       ResetIdTextBox(flyoutContent);
+                                       return;
+                                   }
+
+                                   var invitationMessage = GetInvitationMessage(flyoutContent);
+
+                                   bool successFulAddd;
+                                   ToxModel.Instance.AddFriend(new ToxId(toxId), invitationMessage, out successFulAddd);
+
+                                   if (successFulAddd)
+                                   {
+                                       ResetFlyout(flyoutContent);
+                                   }
                                }
                            }));
             }
@@ -60,6 +70,13 @@ namespace WinTox.ViewModel.Friends
         {
             var idTextBox = (TextBox) flyoutContent.FindName("FriendId");
             return idTextBox.Text.Trim();
+        }
+
+        private void SetId(StackPanel flyoutContent, string newId)
+        {
+            var idTextBox = (TextBox) flyoutContent.FindName("FriendId");
+            idTextBox.Text = newId;
+            idTextBox.Focus(FocusState.Programmatic);
         }
 
         private void ResetIdTextBox(StackPanel flyoutContent)
