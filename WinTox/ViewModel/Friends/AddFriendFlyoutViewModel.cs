@@ -56,10 +56,10 @@ namespace WinTox.ViewModel.Friends
 
                                    var invitationMessage = GetInvitationMessage();
 
-                                   bool successFulAddd;
-                                   ToxModel.Instance.AddFriend(new ToxId(toxId), invitationMessage, out successFulAddd);
+                                   bool successFulAdd;
+                                   ToxModel.Instance.AddFriend(new ToxId(toxId), invitationMessage, out successFulAdd);
 
-                                   if (successFulAddd)
+                                   if (successFulAdd)
                                    {
                                        ResetFlyout();
                                    }
@@ -106,9 +106,7 @@ namespace WinTox.ViewModel.Friends
         private void ResetFlyout()
         {
             _toxIdTextBox.Text = String.Empty;
-
             _invitationMessageTextBox.Text = String.Empty;
-
             IsFlyoutOpen = false;
         }
     }
