@@ -13,6 +13,7 @@
     <UserControl.Resources>
         <converters:DateTimeConverter x:Key="DateTimeConverter" />
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+        <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
     </UserControl.Resources>
 
     <Grid Height="55" Tapped="RecentMessageListItemTapped" x:Name="ContentGrid">
@@ -39,7 +40,8 @@
 
         <Image Grid.Row="0" Grid.Column="0" Source="{Binding Sender.Avatar}" MaxHeight="55" MaxWidth="55"
                Stretch="UniformToFill"
-               VerticalAlignment="Top" />
+               VerticalAlignment="Top"
+               Opacity="{Binding Sender.IsConnected, Converter={StaticResource BoolToOpacityConverter}}" />
 
         <Grid Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
             <Grid.RowDefinitions>
