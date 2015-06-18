@@ -1,5 +1,6 @@
 ﻿using System;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
@@ -14,6 +15,7 @@ namespace WinTox.ViewModel.Friends
     public class FriendViewModel : ViewModelBase, IToxUserViewModel
     {
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+        private RelayCommand _copyIdCommand;
         private bool _isConnected;
         private string _name;
         private RelayCommand _removeFriendCommand;
@@ -63,6 +65,19 @@ namespace WinTox.ViewModel.Friends
                 return _removeFriendCommand
                        ?? (_removeFriendCommand = new RelayCommand(
                            () => { ToxModel.Instance.DeleteFriend(FriendNumber); }));
+            }
+        }
+
+        public RelayCommand CopyIdCommand
+        {
+            get
+            {
+                return _copyIdCommand ?? (_copyIdCommand = new RelayCommand(() =>
+                {
+                    var dataPackage = new DataPackage {RequestedOperation = DataPackageOperation.Copy};
+                    dataPackage.SetText(ToxModel.Instance.GetFriendPublicKey(FriendNumber).ToString());
+                    Clipboard.SetContent(dataPackage);
+                }));
             }
         }
 

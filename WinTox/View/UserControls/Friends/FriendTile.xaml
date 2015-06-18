@@ -16,6 +16,7 @@
 
         <MenuFlyout x:Key="FriendTileFlyout">
             <MenuFlyoutItem Text="remove" Command="{Binding RemoveFriendCommand}" />
+            <MenuFlyoutItem Text="copy ID" Command="{Binding CopyIdCommand}" />
         </MenuFlyout>
     </UserControl.Resources>
 
