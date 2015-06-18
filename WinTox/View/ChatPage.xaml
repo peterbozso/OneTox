@@ -18,7 +18,7 @@
     </Page.Resources>
 
 
-    <Grid Background="{ThemeResource BackgroundColor}">
+    <Grid>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="DefaultLayout">
@@ -48,57 +48,34 @@
                 <EntranceThemeTransition />
             </TransitionCollection>
         </Grid.ChildrenTransitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
 
-        <!-- Friend info and back button, list of recent messages, file send button -->
-        <Grid Grid.Column="0">
+        <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!-- Back button and friend info -->
-            <Grid Grid.Row="0" VerticalAlignment="Top" Margin="20,0,20,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
+            <!-- Top panel with friend info and send file button -->
+            <Grid Grid.Row="0" Background="{ThemeResource BackgroundColor}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-                <!-- Back button -->
-                <Button Margin="0,40,0,0" Grid.Row="0"
-                        Style="{StaticResource NavigationBackButtonNormalStyle}"
-                        VerticalAlignment="Top"
-                        AutomationProperties.ItemType="Navigation Button" Click="BackButtonClick" />
-
-                <friends:FriendInfo x:Name="FriendInfo" Grid.Row="1" Margin="0,20,0,0" HorizontalAlignment="Left" />
+                <friends:FriendInfo x:Name="FriendInfoControl" Grid.Column="0" HorizontalAlignment="Left" />
+                <Button Grid.Column="1" HorizontalAlignment="Center" Content="" Margin="20,0"
+                        FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
+                        IsEnabled="{Binding IsConnected}" VerticalAlignment="Center" />
             </Grid>
 
-            <recentMessages:RecentMessagesList x:Name="RecentMessages" DataContext="{Binding RecentMessages}"
-                                               Grid.Row="1" Margin="20,80" />
-
-            <Button Grid.Row="2" HorizontalAlignment="Center" Content="" Margin="20,0,20,20"
-                    FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
-                    IsEnabled="{Binding IsConnected}" />
-        </Grid>
-
-        <!-- Current file transfer, list of messages and message input field -->
-        <Grid Grid.Column="1" Grid.RowSpan="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <!-- Current file transfer -->
-            <fileTransfers:FileTransfersBlock Grid.Row="0" DataContext="{Binding FileTransfers}" />
+            <!-- Current file transfer(s) -->
+            <fileTransfers:FileTransfersBlock Grid.Row="1" DataContext="{Binding FileTransfers}" />
 
             <!-- List of messages -->
-            <ListView Grid.Row="1" x:Name="MessagesListView" Background="{StaticResource ChatBackgroundColor}"
+            <ListView Grid.Row="2" x:Name="MessagesListView" Background="{StaticResource ChatBackgroundColor}"
                       ItemsSource="{Binding Conversation.MessageGroups}" SelectionMode="None"
                       HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <ListView.ItemContainerStyle>
@@ -113,14 +90,15 @@
             </ListView>
 
             <!-- Friend typing indicator -->
-            <Grid Grid.Row="2" Background="{StaticResource ChatBackgroundColor}"
+            <Grid Grid.Row="3"
+                  Background="{StaticResource ChatBackgroundColor}"
                   Visibility="{Binding Conversation.IsFriendTyping, Converter={StaticResource BoolToVisibilityConverter}}">
                 <TextBlock Foreground="{StaticResource MainColor}" FontSize="20" Margin="10,2,0,2"
                            Text="{Binding Name, Converter={StaticResource FriendNameToTypingStatusConverter}}" />
             </Grid>
 
             <!-- Message input field -->
-            <Grid Grid.Row="3" Background="{StaticResource MainColor}">
+            <Grid Grid.Row="4" Background="{StaticResource MainColor}">
                 <TextBox x:Name="MessageInput" Margin="20" FontSize="20" MinHeight="40" MaxHeight="250" Height="Auto"
                          KeyDown="MessageInputKeyDown" TextWrapping="Wrap" />
             </Grid>

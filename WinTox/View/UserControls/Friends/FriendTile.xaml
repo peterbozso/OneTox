@@ -32,7 +32,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            
+
             <TextBlock Grid.Column="0"
                        VerticalAlignment="Bottom" Margin="6,0,0,0" FontSize="20" FontWeight="Medium"
                        Text="{Binding Name}" TextTrimming="CharacterEllipsis" />

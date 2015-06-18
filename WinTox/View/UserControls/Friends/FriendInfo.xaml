@@ -7,44 +7,42 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:WinTox.Converters"
     mc:Ignorable="d"
-    d:DesignHeight="150"
-    d:DesignWidth="300">
+    d:DesignHeight="100"
+    d:DesignWidth="500">
 
     <UserControl.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
-        <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource BackgroundColor}" Width="300" Height="150">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+    <Grid Background="{StaticResource BackgroundColor}" Height="100" Margin="20,0,20,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="55" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-            <Image Grid.Column="0"
-                   Opacity="{Binding IsConnected, Converter={StaticResource BoolToOpacityConverter}}"
-                   Source="{Binding Avatar}" Width="{StaticResource DefaultAvatarSize}"
-                   Height="{StaticResource DefaultAvatarSize}" Stretch="UniformToFill"
-                   HorizontalAlignment="Left" />
-            <Ellipse
-                Grid.Column="0"
-                Width="10" Height="10" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="7,0,0,7"
-                Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}" Stroke="White" />
+        <Button x:Name="BackButton" Grid.Column="0"
+                Style="{StaticResource NavigationBackButtonNormalStyle}"
+                VerticalAlignment="Stretch" AutomationProperties.ItemType="Navigation Button"
+                Click="BackButtonClick" HorizontalAlignment="Center" />
 
-            <Grid Grid.Column="1" Margin="10,0,0,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+        <Rectangle Grid.Column="1" Width="5"
+                   Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}" Margin="10,0,0,0" />
 
-                <TextBlock Grid.Row="0" FontSize="42" Foreground="{StaticResource MainColor}"
-                           VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
-                           Text="{Binding Name}" HorizontalAlignment="Left" />
-                <TextBlock Grid.Row="1" VerticalAlignment="Top" FontSize="22" Foreground="{StaticResource TextColor}"
-                           Text="{Binding StatusMessage}" HorizontalAlignment="Left" TextWrapping="WrapWholeWords"
-                           TextTrimming="WordEllipsis" />
-            </Grid>
+        <Grid Grid.Column="2" Margin="15,0,0,0" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="Name" Grid.Row="0"
+                       FontSize="41" Foreground="{StaticResource MainColor}" TextTrimming="CharacterEllipsis"
+                       Text="{Binding Name}" HorizontalAlignment="Left" />
+
+            <TextBlock x:Name="StatusMessage" Grid.Row="1"
+                       VerticalAlignment="Top" FontSize="25" Foreground="{StaticResource TextColor}"
+                       Text="{Binding StatusMessage}" HorizontalAlignment="Left"
+                       TextTrimming="WordEllipsis" />
         </Grid>
     </Grid>
 </UserControl>
