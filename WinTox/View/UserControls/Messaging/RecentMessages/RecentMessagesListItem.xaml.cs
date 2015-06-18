@@ -17,5 +17,17 @@ namespace WinTox.View.UserControls.Messaging.RecentMessages
             (Window.Current.Content as Frame).Navigate(typeof (ChatPage),
                 (DataContext as ReceivedMessageViewModel).Sender);
         }
+
+        protected override void OnPointerPressed(PointerRoutedEventArgs e)
+        {
+            CapturePointer(e.Pointer);
+            VisualStateManager.GoToState(this, "PointerDown", true);
+        }
+
+        protected override void OnPointerReleased(PointerRoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "PointerUp", true);
+            ReleasePointerCapture(e.Pointer);
+        }
     }
 }
