@@ -15,7 +15,7 @@
                       ItemsSource="{Binding RecentMessages}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <recentMessages:RecentMessagesListItem Margin="0,0,0,10" />
+                    <recentMessages:RecentMessagesListItem Margin="0,0,0,20" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
