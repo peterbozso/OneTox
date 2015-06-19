@@ -1,5 +1,4 @@
 ﻿<UserControl
-    x:Class="WinTox.View.UserControls.FileTransfers.FileTransfersBlock"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:WinTox.View.UserControls"
@@ -7,15 +6,100 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:WinTox.Converters"
     xmlns:fileTransfers="using:WinTox.View.UserControls.FileTransfers"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    x:Name="userControl"
+    x:Class="WinTox.View.UserControls.FileTransfers.FileTransfersBlock"
     mc:Ignorable="d"
     d:DesignHeight="60"
     d:DesignWidth="800">
 
-    <ItemsControl ItemsSource="{Binding Transfers}">
-        <ItemsControl.ItemTemplate>
-            <DataTemplate>
-                <fileTransfers:FileTransferRibbon />
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+    <UserControl.Resources>
+        <converters:FileTransferCountToPlaceholderTextConverter x:Key="FileTransferCountToPlaceholderTextConverter" />
+    </UserControl.Resources>
+
+    <Grid x:Name="RootGrid" Background="{StaticResource MainColor}">
+        <Interactivity:Interaction.Behaviors>
+            <Core:DataTriggerBehavior Binding="{Binding Transfers.Count}" Value="0">
+                <Core:GoToStateAction StateName="Invisible" />
+            </Core:DataTriggerBehavior>
+            <Core:DataTriggerBehavior Binding="{Binding Transfers.Count}" ComparisonCondition="GreaterThan" Value="0">
+                <Core:GoToStateAction StateName="Open" />
+            </Core:DataTriggerBehavior>
+        </Interactivity:Interaction.Behaviors>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualState x:Name="Open">
+
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                       Storyboard.TargetName="CollapsedContentGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+
+                </VisualState>
+                <VisualState x:Name="Collapsed">
+
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                       Storyboard.TargetName="OpenContentGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+
+                </VisualState>
+                <VisualState x:Name="Invisible">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                       Storyboard.TargetName="RootGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="CollapsedContentGrid" Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="PlaceholderTextBlock" Grid.Column="0" FontSize="16" Margin="10,5,0,5"
+                       Text="{Binding Transfers.Count, Converter={StaticResource FileTransferCountToPlaceholderTextConverter}}"
+                       VerticalAlignment="Center" />
+            <TextBlock x:Name="ShowArrowTextBlock" Grid.Column="1" FontFamily="Segoe UI Symbol" FontSize="16"
+                       Margin="10,0" VerticalAlignment="Center" Tapped="ShowArrowTextBlockTapped" Text="" />
+        </Grid>
+
+        <Grid x:Name="OpenContentGrid" Grid.Row="1">
+            <ItemsControl x:Name="TransferRibbons" ItemsSource="{Binding Transfers}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <fileTransfers:FileTransferRibbon />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock x:Name="HideArrowTextBlock" FontFamily="Segoe UI Symbol" FontSize="16"
+                       VerticalAlignment="Bottom" Text="" HorizontalAlignment="Right"
+                       Tapped="HideArrowTextBlockTapped" Margin="0,0,10,5" />
+        </Grid>
+    </Grid>
 </UserControl>
