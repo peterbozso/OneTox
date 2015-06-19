@@ -32,7 +32,8 @@
 
             <TextBlock Grid.Row="0" Grid.Column="1" Foreground="{StaticResource MainColor}"
                        Margin="10,-3,0,0"
-                       FontSize="20" Text="{Binding Sender.Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Top" />
+                       FontSize="20" Text="{Binding Sender.Name}" TextTrimming="CharacterEllipsis"
+                       VerticalAlignment="Top" />
 
             <ItemsControl Grid.Row="1" Grid.Column="1"
                           ItemsSource="{Binding Messages}"

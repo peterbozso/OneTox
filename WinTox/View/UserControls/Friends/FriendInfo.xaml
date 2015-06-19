@@ -26,7 +26,7 @@
                 VerticalAlignment="Stretch" AutomationProperties.ItemType="Navigation Button"
                 Click="BackButtonClick" HorizontalAlignment="Center" />
 
-        <Rectangle Grid.Column="1" Width="5"
+        <Rectangle Grid.Column="1" Width="6"
                    Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}" Margin="10,0,0,0" />
 
         <Grid Grid.Column="2" Margin="15,0,0,0" VerticalAlignment="Center">
