@@ -63,7 +63,8 @@ namespace WinTox.Model
         protected void RemoveTransfer(TransferId transferId)
         {
             var transferToRemove = ActiveTransfers[transferId];
-            transferToRemove.Stream.Dispose();
+            if (transferToRemove.Stream != null) // It could be a dummy transfer waiting for accept from the user!
+                transferToRemove.Stream.Dispose();
             ActiveTransfers.Remove(transferId);
         }
 
