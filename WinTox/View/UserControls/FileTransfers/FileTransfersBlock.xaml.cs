@@ -1,25 +1,33 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using WinTox.ViewModel.FileTransfers;
 
 namespace WinTox.View.UserControls.FileTransfers
 {
     public sealed partial class FileTransfersBlock : UserControl
     {
+        private FileTransfersViewModel _viewModel;
+
         public FileTransfersBlock()
         {
             InitializeComponent();
-            VisualStateManager.GoToState(this, "Invisible", true);
+        }
+
+        private void FileTransferBlockUserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            _viewModel = DataContext as FileTransfersViewModel;
+            VisualStateManager.GoToState(this, _viewModel.TransfersBlockState.ToString(), true);
         }
 
         private void ShowArrowTextBlockTapped(object sender, TappedRoutedEventArgs e)
         {
-            VisualStateManager.GoToState(this, "Open", true);
+            _viewModel.TransfersBlockState = FileTransfersViewModel.BlockState.Open;
         }
 
         private void HideArrowTextBlockTapped(object sender, TappedRoutedEventArgs e)
         {
-            VisualStateManager.GoToState(this, "Collapsed", true);
+            _viewModel.TransfersBlockState = FileTransfersViewModel.BlockState.Collapsed;
         }
     }
 }

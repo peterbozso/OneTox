@@ -12,7 +12,7 @@ using WinTox.Model;
 
 namespace WinTox.ViewModel.FileTransfers
 {
-    public class FileTransfersViewModel
+    public class FileTransfersViewModel : ViewModelBase
     {
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly int _friendNumber;
@@ -26,16 +26,33 @@ namespace WinTox.ViewModel.FileTransfers
             FileTransferManager.Instance.TransferFinished += TransferFinishedHandler;
             FileTransferManager.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
             SetupProgressDispatcherTimer();
+            TransfersBlockState = BlockState.Invisible;
         }
 
         public ObservableCollection<OneFileTransferViewModel> Transfers { get; private set; }
 
-        #region Helper search methods
+        #region Helper methods
 
         private OneFileTransferViewModel FindNotPlaceHolderTransferViewModel(int fileNumber)
         {
             return Transfers.FirstOrDefault(transfer => transfer.FileNumber == fileNumber && transfer.IsNotPlaceholder);
             // There can be multiple transfers with the same file number, but there's always only one that's not a placeholder.
+        }
+
+        private void AddTransfer(int fileNumber, string fileName, FileTransferState direction)
+        {
+            Transfers.Add(new OneFileTransferViewModel(this, fileNumber, fileName, direction));
+
+            if (TransfersBlockState == BlockState.Invisible)
+                TransfersBlockState = BlockState.Open;
+        }
+
+        private void RemoveTransfer(OneFileTransferViewModel transferViewModel)
+        {
+            Transfers.Remove(transferViewModel);
+
+            if (Transfers.Count == 0)
+                TransfersBlockState = BlockState.Invisible;
         }
 
         #endregion
@@ -96,7 +113,7 @@ namespace WinTox.ViewModel.FileTransfers
 
             if (successfulSend)
             {
-                Transfers.Add(new OneFileTransferViewModel(this, fileNumber, file.Name, FileTransferState.Uploading));
+                AddTransfer(fileNumber, file.Name, FileTransferState.Uploading);
             }
             else
             {
@@ -113,7 +130,7 @@ namespace WinTox.ViewModel.FileTransfers
         public void CancelTransferByUser(OneFileTransferViewModel transferViewModel)
         {
             FileTransferManager.Instance.CancelTransfer(_friendNumber, transferViewModel.FileNumber);
-            Transfers.Remove(transferViewModel);
+            RemoveTransfer(transferViewModel);
             StopTimerIfNeeded();
         }
 
@@ -127,6 +144,25 @@ namespace WinTox.ViewModel.FileTransfers
         {
             FileTransferManager.Instance.ResumeTransfer(_friendNumber, fileNumber);
             StartTimerIfNeeded();
+        }
+
+        public enum BlockState
+        {
+            Open,
+            Collapsed,
+            Invisible
+        }
+
+        private BlockState _transfersBlockState;
+
+        public BlockState TransfersBlockState
+        {
+            get { return _transfersBlockState; }
+            set
+            {
+                _transfersBlockState = value;
+                RaisePropertyChanged();
+            }
         }
 
         #endregion
@@ -183,11 +219,7 @@ namespace WinTox.ViewModel.FileTransfers
 
             await
                 _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    () =>
-                    {
-                        Transfers.Add(new OneFileTransferViewModel(this, e.FileNumber, e.FileName,
-                            FileTransferState.Downloading));
-                    });
+                    () => { AddTransfer(e.FileNumber, e.FileName, FileTransferState.Downloading); });
         }
 
         #endregion

@@ -1,16 +1,15 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
+using WinTox.ViewModel.FileTransfers;
 
 namespace WinTox.Converters
 {
-    internal class FileTransferCountToPlaceholderTextConverter : IValueConverter
+    internal class BlockStateToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var count = (int) value;
-            if (count == 1)
-                return "There is 1 ongoing file transfer.";
-            return "There are " + count + " ongoing file transfers.";
+            var state = (FileTransfersViewModel.BlockState) value;
+            return state.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
