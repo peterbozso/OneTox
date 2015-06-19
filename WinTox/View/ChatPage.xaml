@@ -68,7 +68,7 @@
                 <friends:FriendInfo x:Name="FriendInfoControl" Grid.Column="0" HorizontalAlignment="Left" />
                 <Button Grid.Column="1" HorizontalAlignment="Center" Content="" Margin="20,0"
                         FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
-                        IsEnabled="{Binding IsConnected}" VerticalAlignment="Center" />
+                        IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71" Height="71" />
             </Grid>
 
             <!-- Current file transfer(s) -->
