@@ -426,7 +426,7 @@
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center" Margin="10,0,0,0" />
 
-        <Grid Grid.Column="1" Margin="0,0,20,0">
+        <Grid Grid.Column="1" Margin="25,0,30,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
