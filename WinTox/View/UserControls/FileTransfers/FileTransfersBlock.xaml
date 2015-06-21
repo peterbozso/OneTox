@@ -11,11 +11,24 @@
     x:Class="WinTox.View.UserControls.FileTransfers.FileTransfersBlock"
     mc:Ignorable="d"
     d:DesignHeight="60"
-    d:DesignWidth="800" Loaded="FileTransferBlockUserControl_Loaded">
+    d:DesignWidth="800" Loaded="FileTransferBlockLoaded">
 
     <UserControl.Resources>
         <converters:FileTransferCountToPlaceholderTextConverter x:Key="FileTransferCountToPlaceholderTextConverter" />
         <converters:BlockStateToStringConverter x:Key="BlockStateToStringConverter" />
+
+        <Storyboard x:Name="HideTransfersStoryboard">
+            <FadeOutThemeAnimation Storyboard.TargetName="OpenContentGrid" />
+        </Storyboard>
+        <Storyboard x:Name="ShowTransfersStoryboard">
+            <FadeInThemeAnimation Storyboard.TargetName="OpenContentGrid" />
+        </Storyboard>
+        <Storyboard x:Name="HidePlaceholderStoryboard">
+            <FadeOutThemeAnimation Storyboard.TargetName="CollapsedContentGrid" />
+        </Storyboard>
+        <Storyboard x:Name="ShowPlaceholderStoryboard">
+            <FadeInThemeAnimation Storyboard.TargetName="CollapsedContentGrid" />
+        </Storyboard>
     </UserControl.Resources>
 
     <Grid x:Name="RootGrid" Background="{StaticResource MainColor}">

@@ -12,22 +12,45 @@ namespace WinTox.View.UserControls.FileTransfers
         public FileTransfersBlock()
         {
             InitializeComponent();
+
+            HidePlaceholderStoryboard.Completed += HidePlaceholderStoryboardCompleted;
+            HideTransfersStoryboard.Completed += HideTransfersStoryboardCompleted;
         }
 
-        private void FileTransferBlockUserControl_Loaded(object sender, RoutedEventArgs e)
+        private void FileTransferBlockLoaded(object sender, RoutedEventArgs e)
         {
             _viewModel = DataContext as FileTransfersViewModel;
             VisualStateManager.GoToState(this, _viewModel.TransfersBlockState.ToString(), true);
         }
 
+        #region Show arrow tap
+
         private void ShowArrowTextBlockTapped(object sender, TappedRoutedEventArgs e)
         {
-            _viewModel.TransfersBlockState = FileTransfersViewModel.BlockState.Open;
+            HidePlaceholderStoryboard.Begin();
         }
+
+        private void HidePlaceholderStoryboardCompleted(object sender, object e)
+        {
+            _viewModel.TransfersBlockState = FileTransfersViewModel.BlockState.Open;
+            ShowTransfersStoryboard.Begin();
+        }
+
+        #endregion
+
+        #region Hide arrow tap
 
         private void HideArrowTextBlockTapped(object sender, TappedRoutedEventArgs e)
         {
-            _viewModel.TransfersBlockState = FileTransfersViewModel.BlockState.Collapsed;
+            HideTransfersStoryboard.Begin();
         }
+
+        private void HideTransfersStoryboardCompleted(object sender, object e)
+        {
+            _viewModel.TransfersBlockState = FileTransfersViewModel.BlockState.Collapsed;
+            ShowPlaceholderStoryboard.Begin();
+        }
+
+        #endregion
     }
 }
