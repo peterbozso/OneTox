@@ -21,6 +21,13 @@ namespace WinTox.View.UserControls.FileTransfers
         {
             _viewModel = DataContext as FileTransfersViewModel;
             VisualStateManager.GoToState(this, _viewModel.VisualStates.BlockState.ToString(), true);
+            _viewModel.VisualStates.PropertyChanged += VisualStatesPropertyChangedHandler;
+        }
+
+        private void VisualStatesPropertyChangedHandler(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "OpenContentGridHeight")
+                OpenContentGrid.Height = _viewModel.VisualStates.OpenContentGridHeight;
         }
 
         #region Show arrow tap

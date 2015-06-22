@@ -52,15 +52,51 @@
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualStateGroup.Transitions>
+                    <VisualTransition From="Open" To="Collapsed" GeneratedDuration="0">
+                        <Storyboard>
+                            <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True"
+                                                           Storyboard.TargetProperty="(FrameworkElement.Height)"
+                                                           Storyboard.TargetName="CollapsedContentGrid">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="30" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True"
+                                                           Storyboard.TargetProperty="(FrameworkElement.Height)"
+                                                           Storyboard.TargetName="OpenContentGrid">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualTransition>
+                    <VisualTransition From="Collapsed" To="Open" GeneratedDuration="0">
+                        <Storyboard>
+                            <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True"
+                                                           Storyboard.TargetProperty="(FrameworkElement.Height)"
+                                                           Storyboard.TargetName="CollapsedContentGrid">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True"
+                                                           Storyboard.TargetProperty="(FrameworkElement.Height)"
+                                                           Storyboard.TargetName="OpenContentGrid">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.5"
+                                                      Value="{Binding VisualStates.OpenContentGridHeight}" />
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
+
                 <VisualState x:Name="Open">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
                                                        Storyboard.TargetName="CollapsedContentGrid">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)"
+                                                       Storyboard.TargetName="CollapsedContentGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)"
+                                                       Storyboard.TargetName="OpenContentGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding VisualStates.OpenContentGridHeight}" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -68,11 +104,15 @@
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
                                                        Storyboard.TargetName="OpenContentGrid">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)"
+                                                       Storyboard.TargetName="CollapsedContentGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="30" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)"
+                                                       Storyboard.TargetName="OpenContentGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -80,11 +120,7 @@
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
                                                        Storyboard.TargetName="RootGrid">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -108,7 +144,7 @@
                        Margin="10,0" VerticalAlignment="Center" Tapped="ShowArrowTextBlockTapped" Text="" />
         </Grid>
 
-        <Grid x:Name="OpenContentGrid" Grid.Row="1" Height="{Binding VisualStates.OpenContentGridHeight}">
+        <Grid x:Name="OpenContentGrid" Grid.Row="1" Height="30"> <!-- This height is really just a dummy value, it's actually never seen during app run. -->
             <ItemsControl x:Name="TransferRibbons" ItemsSource="{Binding Transfers}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
