@@ -4,11 +4,11 @@ using WinTox.ViewModel.FileTransfers;
 
 namespace WinTox.Converters
 {
-    internal class BlockStateToStringConverter : IValueConverter
+    internal class TransfersBlockStateToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var state = (FileTransfersViewModel.BlockState) value;
+            var state = (FileTransfersViewModel.VisualStatesViewModel.TransfersBlockState) value;
             return state.ToString();
         }
 

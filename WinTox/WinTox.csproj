@@ -107,7 +107,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\BlockStateToStringConverter.cs" />
+    <Compile Include="Converters\TransfersBlockStateToStringConverter.cs" />
     <Compile Include="Converters\DateTimeConverter.cs" />
     <Compile Include="Converters\DeliveryStateToStringConverter.cs" />
     <Compile Include="Converters\FileTransferCountToPlaceholderTextConverter.cs" />

@@ -26,7 +26,7 @@ namespace WinTox.ViewModel.FileTransfers
             FileTransferManager.Instance.TransferFinished += TransferFinishedHandler;
             FileTransferManager.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
             SetupProgressDispatcherTimer();
-            TransfersBlockState = BlockState.Invisible;
+            VisualStates = new VisualStatesViewModel {BlockState = VisualStatesViewModel.TransfersBlockState.Invisible};
         }
 
         public ObservableCollection<OneFileTransferViewModel> Transfers { get; private set; }
@@ -43,8 +43,8 @@ namespace WinTox.ViewModel.FileTransfers
         {
             Transfers.Add(new OneFileTransferViewModel(this, fileNumber, fileName, direction));
 
-            if (TransfersBlockState == BlockState.Invisible)
-                TransfersBlockState = BlockState.Open;
+            if (VisualStates.BlockState == VisualStatesViewModel.TransfersBlockState.Invisible)
+                VisualStates.BlockState = VisualStatesViewModel.TransfersBlockState.Open;
         }
 
         private void RemoveTransfer(OneFileTransferViewModel transferViewModel)
@@ -52,7 +52,7 @@ namespace WinTox.ViewModel.FileTransfers
             Transfers.Remove(transferViewModel);
 
             if (Transfers.Count == 0)
-                TransfersBlockState = BlockState.Invisible;
+                VisualStates.BlockState = VisualStatesViewModel.TransfersBlockState.Invisible;
         }
 
         #endregion
@@ -146,24 +146,33 @@ namespace WinTox.ViewModel.FileTransfers
             StartTimerIfNeeded();
         }
 
-        public enum BlockState
-        {
-            Open,
-            Collapsed,
-            Invisible
-        }
+        #endregion
 
-        private BlockState _transfersBlockState;
+        #region Visual states for the View
 
-        public BlockState TransfersBlockState
+        public class VisualStatesViewModel : ViewModelBase
         {
-            get { return _transfersBlockState; }
-            set
+            public enum TransfersBlockState
             {
-                _transfersBlockState = value;
-                RaisePropertyChanged();
+                Open,
+                Collapsed,
+                Invisible
+            }
+
+            private TransfersBlockState _blockState;
+
+            public TransfersBlockState BlockState
+            {
+                get { return _blockState; }
+                set
+                {
+                    _blockState = value;
+                    RaisePropertyChanged();
+                }
             }
         }
+
+        public VisualStatesViewModel VisualStates { get; private set; }
 
         #endregion
 

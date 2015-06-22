@@ -20,7 +20,7 @@ namespace WinTox.View.UserControls.FileTransfers
         private void FileTransferBlockLoaded(object sender, RoutedEventArgs e)
         {
             _viewModel = DataContext as FileTransfersViewModel;
-            VisualStateManager.GoToState(this, _viewModel.TransfersBlockState.ToString(), true);
+            VisualStateManager.GoToState(this, _viewModel.VisualStates.BlockState.ToString(), true);
         }
 
         #region Show arrow tap
@@ -32,7 +32,7 @@ namespace WinTox.View.UserControls.FileTransfers
 
         private void HidePlaceholderStoryboardCompleted(object sender, object e)
         {
-            _viewModel.TransfersBlockState = FileTransfersViewModel.BlockState.Open;
+            _viewModel.VisualStates.BlockState = FileTransfersViewModel.VisualStatesViewModel.TransfersBlockState.Open;
             ShowTransfersStoryboard.Begin();
         }
 
@@ -47,7 +47,7 @@ namespace WinTox.View.UserControls.FileTransfers
 
         private void HideTransfersStoryboardCompleted(object sender, object e)
         {
-            _viewModel.TransfersBlockState = FileTransfersViewModel.BlockState.Collapsed;
+            _viewModel.VisualStates.BlockState = FileTransfersViewModel.VisualStatesViewModel.TransfersBlockState.Collapsed;
             ShowPlaceholderStoryboard.Begin();
         }
 

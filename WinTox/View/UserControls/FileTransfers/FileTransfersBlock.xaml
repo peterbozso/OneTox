@@ -15,7 +15,7 @@
 
     <UserControl.Resources>
         <converters:FileTransferCountToPlaceholderTextConverter x:Key="FileTransferCountToPlaceholderTextConverter" />
-        <converters:BlockStateToStringConverter x:Key="BlockStateToStringConverter" />
+        <converters:TransfersBlockStateToStringConverter x:Key="TransfersBlockStateToStringConverter" />
 
         <Storyboard x:Name="HideTransfersStoryboard">
             <FadeOutThemeAnimation Storyboard.TargetName="OpenContentGrid" />
@@ -34,17 +34,17 @@
     <Grid x:Name="RootGrid" Background="{StaticResource MainColor}">
         <Interactivity:Interaction.Behaviors>
             <Core:DataTriggerBehavior
-                Binding="{Binding TransfersBlockState, Converter={StaticResource BlockStateToStringConverter}}"
+                Binding="{Binding VisualStates.BlockState, Converter={StaticResource TransfersBlockStateToStringConverter}}"
                 Value="Open">
                 <Core:GoToStateAction StateName="Open" />
             </Core:DataTriggerBehavior>
             <Core:DataTriggerBehavior
-                Binding="{Binding TransfersBlockState, Converter={StaticResource BlockStateToStringConverter}}"
+                Binding="{Binding VisualStates.BlockState, Converter={StaticResource TransfersBlockStateToStringConverter}}"
                 Value="Collapsed">
                 <Core:GoToStateAction StateName="Collapsed" />
             </Core:DataTriggerBehavior>
             <Core:DataTriggerBehavior
-                Binding="{Binding TransfersBlockState, Converter={StaticResource BlockStateToStringConverter}}"
+                Binding="{Binding VisualStates.BlockState, Converter={StaticResource TransfersBlockStateToStringConverter}}"
                 Value="Invisible">
                 <Core:GoToStateAction StateName="Invisible" />
             </Core:DataTriggerBehavior>
