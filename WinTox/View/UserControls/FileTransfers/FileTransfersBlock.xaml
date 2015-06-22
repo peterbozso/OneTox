@@ -96,7 +96,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <Grid x:Name="CollapsedContentGrid" Grid.Row="0">
+        <Grid x:Name="CollapsedContentGrid" Grid.Row="0" Height="30">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -108,7 +108,7 @@
                        Margin="10,0" VerticalAlignment="Center" Tapped="ShowArrowTextBlockTapped" Text="" />
         </Grid>
 
-        <Grid x:Name="OpenContentGrid" Grid.Row="1">
+        <Grid x:Name="OpenContentGrid" Grid.Row="1" Height="{Binding VisualStates.OpenContentGridHeight}">
             <ItemsControl x:Name="TransferRibbons" ItemsSource="{Binding Transfers}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>

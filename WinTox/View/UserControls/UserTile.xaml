@@ -43,7 +43,7 @@
                          Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}"
                          HorizontalAlignment="Left" Margin="0,0,10,0" VerticalAlignment="Center" />
                 <TextBlock Grid.Column="1" FontSize="28" TextTrimming="CharacterEllipsis"
-                           Foreground="{StaticResource MainColor}" Text="{Binding Name}" VerticalAlignment="Center"/>
+                           Foreground="{StaticResource MainColor}" Text="{Binding Name}" VerticalAlignment="Center" />
             </Grid>
 
             <!-- Status message -->

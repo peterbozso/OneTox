@@ -45,6 +45,8 @@ namespace WinTox.ViewModel.FileTransfers
 
             if (VisualStates.BlockState == VisualStatesViewModel.TransfersBlockState.Invisible)
                 VisualStates.BlockState = VisualStatesViewModel.TransfersBlockState.Open;
+
+            VisualStates.OpenContentGridHeight = Transfers.Count*60;
         }
 
         private void RemoveTransfer(OneFileTransferViewModel transferViewModel)
@@ -53,6 +55,8 @@ namespace WinTox.ViewModel.FileTransfers
 
             if (Transfers.Count == 0)
                 VisualStates.BlockState = VisualStatesViewModel.TransfersBlockState.Invisible;
+
+            VisualStates.OpenContentGridHeight = Transfers.Count*60;
         }
 
         #endregion
@@ -160,6 +164,7 @@ namespace WinTox.ViewModel.FileTransfers
             }
 
             private TransfersBlockState _blockState;
+            private double _openContentGridHeight;
 
             public TransfersBlockState BlockState
             {
@@ -167,6 +172,16 @@ namespace WinTox.ViewModel.FileTransfers
                 set
                 {
                     _blockState = value;
+                    RaisePropertyChanged();
+                }
+            }
+
+            public double OpenContentGridHeight
+            {
+                get { return _openContentGridHeight; }
+                set
+                {
+                    _openContentGridHeight = value;
                     RaisePropertyChanged();
                 }
             }

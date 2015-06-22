@@ -47,7 +47,8 @@ namespace WinTox.View.UserControls.FileTransfers
 
         private void HideTransfersStoryboardCompleted(object sender, object e)
         {
-            _viewModel.VisualStates.BlockState = FileTransfersViewModel.VisualStatesViewModel.TransfersBlockState.Collapsed;
+            _viewModel.VisualStates.BlockState =
+                FileTransfersViewModel.VisualStatesViewModel.TransfersBlockState.Collapsed;
             ShowPlaceholderStoryboard.Begin();
         }
 
