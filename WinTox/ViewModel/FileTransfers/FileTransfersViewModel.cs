@@ -181,7 +181,7 @@ namespace WinTox.ViewModel.FileTransfers
                 get { return _openContentGridHeight; }
                 private set
                 {
-                    _openContentGridHeight = value;
+                    _openContentGridHeight = value > 240 ? 270 : value;
                     RaisePropertyChanged();
                 }
             }
