@@ -426,7 +426,7 @@
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center" Margin="10,0,0,0" />
 
-        <Grid Grid.Column="1" Margin="25,0,30,0">
+        <Grid Grid.Column="1" Margin="25,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
@@ -451,13 +451,13 @@
         </Grid>
 
         <Button x:Name="AcceptButton" Grid.Column="2" Width="90" Content="Accept"
-                Click="AcceptButtonClick" />
+                Click="AcceptButtonClick" Margin="30,0,0,0" />
         <Button x:Name="PauseButton" Grid.Column="2" Width="90" Content="Pause"
-                Command="{Binding PauseTransferByUserCommand}" />
+                Command="{Binding PauseTransferByUserCommand}" Margin="30,0,0,0" />
         <Button x:Name="ResumeButton" Grid.Column="2" Width="90" Content="Resume"
-                Command="{Binding ResumeTransferByUserCommand}" />
+                Command="{Binding ResumeTransferByUserCommand}" Margin="30,0,0,0" />
         <Button x:Name="PausedByFriendButton" Grid.Column="2" Width="90" Content="Paused"
-                IsEnabled="False" />
+                IsEnabled="False" Margin="30,0,0,0" />
 
         <Button x:Name="CancelButton" Grid.Column="3" FontFamily="Segoe UI Symbol" BorderThickness="0" Padding="0"
                 Margin="25,0,40,0" Content="&#xE0C7;" Command="{Binding CancelTransferByUserCommand}"
