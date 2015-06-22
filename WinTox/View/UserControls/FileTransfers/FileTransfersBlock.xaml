@@ -16,19 +16,6 @@
     <UserControl.Resources>
         <converters:FileTransferCountToPlaceholderTextConverter x:Key="FileTransferCountToPlaceholderTextConverter" />
         <converters:TransfersBlockStateToStringConverter x:Key="TransfersBlockStateToStringConverter" />
-
-        <Storyboard x:Name="HideTransfersStoryboard">
-            <FadeOutThemeAnimation Storyboard.TargetName="OpenContentGrid" />
-        </Storyboard>
-        <Storyboard x:Name="ShowTransfersStoryboard">
-            <FadeInThemeAnimation Storyboard.TargetName="OpenContentGrid" />
-        </Storyboard>
-        <Storyboard x:Name="HidePlaceholderStoryboard">
-            <FadeOutThemeAnimation Storyboard.TargetName="CollapsedContentGrid" />
-        </Storyboard>
-        <Storyboard x:Name="ShowPlaceholderStoryboard">
-            <FadeInThemeAnimation Storyboard.TargetName="CollapsedContentGrid" />
-        </Storyboard>
     </UserControl.Resources>
 
     <Grid x:Name="RootGrid" Background="{StaticResource MainColor}">
@@ -55,31 +42,49 @@
                 <VisualStateGroup.Transitions>
                     <VisualTransition From="Open" To="Collapsed" GeneratedDuration="0">
                         <Storyboard>
+                            <!-- Show placeholder text -->
                             <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True"
                                                            Storyboard.TargetProperty="(FrameworkElement.Height)"
                                                            Storyboard.TargetName="CollapsedContentGrid">
                                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="30" />
                             </DoubleAnimationUsingKeyFrames>
+
+                            <FadeInThemeAnimation Storyboard.TargetName="CollapsedContentGrid" />
+                            <!---->
+
+                            <!-- Hide transfers -->
                             <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True"
                                                            Storyboard.TargetProperty="(FrameworkElement.Height)"
                                                            Storyboard.TargetName="OpenContentGrid">
                                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0" />
                             </DoubleAnimationUsingKeyFrames>
+
+                            <FadeOutThemeAnimation Storyboard.TargetName="OpenContentGrid" />
+                            <!---->
                         </Storyboard>
                     </VisualTransition>
                     <VisualTransition From="Collapsed" To="Open" GeneratedDuration="0">
                         <Storyboard>
+                            <!-- Hide placeholder text -->
                             <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True"
                                                            Storyboard.TargetProperty="(FrameworkElement.Height)"
                                                            Storyboard.TargetName="CollapsedContentGrid">
                                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0" />
                             </DoubleAnimationUsingKeyFrames>
+
+                            <FadeOutThemeAnimation Storyboard.TargetName="CollapsedContentGrid" />
+                            <!---->
+
+                            <!-- Show transfers -->
                             <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True"
                                                            Storyboard.TargetProperty="(FrameworkElement.Height)"
                                                            Storyboard.TargetName="OpenContentGrid">
                                 <EasingDoubleKeyFrame KeyTime="0:0:0.5"
                                                       Value="{Binding VisualStates.OpenContentGridHeight}" />
                             </DoubleAnimationUsingKeyFrames>
+
+                            <FadeInThemeAnimation Storyboard.TargetName="OpenContentGrid" />
+                            <!---->
                         </Storyboard>
                     </VisualTransition>
                 </VisualStateGroup.Transitions>
