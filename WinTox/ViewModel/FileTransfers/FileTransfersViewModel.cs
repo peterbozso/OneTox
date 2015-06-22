@@ -46,7 +46,7 @@ namespace WinTox.ViewModel.FileTransfers
             if (VisualStates.BlockState == VisualStatesViewModel.TransfersBlockState.Invisible)
                 VisualStates.BlockState = VisualStatesViewModel.TransfersBlockState.Open;
 
-            VisualStates.OpenContentGridHeight = Transfers.Count*60;
+            VisualStates.UpdateOpenContentGridHeight(Transfers.Count);
         }
 
         private void RemoveTransfer(OneFileTransferViewModel transferViewModel)
@@ -56,7 +56,7 @@ namespace WinTox.ViewModel.FileTransfers
             if (Transfers.Count == 0)
                 VisualStates.BlockState = VisualStatesViewModel.TransfersBlockState.Invisible;
 
-            VisualStates.OpenContentGridHeight = Transfers.Count*60;
+            VisualStates.UpdateOpenContentGridHeight(Transfers.Count);
         }
 
         #endregion
@@ -179,11 +179,16 @@ namespace WinTox.ViewModel.FileTransfers
             public double OpenContentGridHeight
             {
                 get { return _openContentGridHeight; }
-                set
+                private set
                 {
                     _openContentGridHeight = value;
                     RaisePropertyChanged();
                 }
+            }
+
+            public void UpdateOpenContentGridHeight(int itemsCount)
+            {
+                OpenContentGridHeight = itemsCount*60;
             }
         }
 
