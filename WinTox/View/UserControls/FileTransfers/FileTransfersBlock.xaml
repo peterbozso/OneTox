@@ -182,8 +182,8 @@
         </Grid>
 
         <Grid x:Name="OpenContentGrid" Grid.Row="1" Height="30"> <!-- This height is really just a dummy value, it's actually never seen during app run. -->
-            <ScrollViewer x:Name="TransferRibbonScrollViewer" VerticalScrollBarVisibility="Auto">
-                <ItemsControl x:Name="TransferRibbons" ItemsSource="{Binding Transfers}">
+            <ScrollViewer x:Name="TransferRibbonScrollViewer" VerticalScrollBarVisibility="Auto" >
+                <ItemsControl x:Name="TransferRibbons" ItemsSource="{Binding Transfers}" Margin="0,0,0,10">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <fileTransfers:FileTransferRibbon />
@@ -192,8 +192,8 @@
                 </ItemsControl>
             </ScrollViewer>
             <TextBlock x:Name="HideArrowTextBlock" FontFamily="Segoe UI Symbol" FontSize="16"
-                       VerticalAlignment="Bottom" Text="" HorizontalAlignment="Right"
-                       Tapped="HideArrowTextBlockTapped" Margin="0,0,10,5" />
+                       VerticalAlignment="Bottom" Text="" HorizontalAlignment="Center"
+                       Tapped="HideArrowTextBlockTapped" />
         </Grid>
     </Grid>
 </UserControl>

@@ -188,11 +188,12 @@ namespace WinTox.ViewModel.FileTransfers
 
             public void UpdateOpenContentGridHeight(int itemsCount)
             {
-                if (itemsCount > 4) // We don't show more than 4 items in the list at once.
-                    OpenContentGridHeight = 240;
-                else
-                    OpenContentGridHeight = itemsCount*60;
+                var itemsToDisplay = itemsCount > 4 ? 4 : itemsCount;  // We don't show more than 4 items in the list at once.
+                OpenContentGridHeight = itemsToDisplay * KFileTransferRibbonHeight + KHideArrowTextBlockHeight;
             }
+
+            private const int KHideArrowTextBlockHeight = 10;
+            private const int KFileTransferRibbonHeight = 60;
         }
 
         public VisualStatesViewModel VisualStates { get; private set; }
