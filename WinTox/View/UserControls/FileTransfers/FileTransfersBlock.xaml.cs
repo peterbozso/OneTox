@@ -39,12 +39,12 @@ namespace WinTox.View.UserControls.FileTransfers
                 OpenContentGrid.Height = _viewModel.VisualStates.OpenContentGridHeight;
         }
 
-        private void ShowArrowTextBlockTapped(object sender, TappedRoutedEventArgs e)
+        private void ShowTransfersIconTapped(object sender, TappedRoutedEventArgs e)
         {
             _viewModel.VisualStates.BlockState = FileTransfersViewModel.VisualStatesViewModel.TransfersBlockState.Open;
         }
 
-        private void HideArrowTextBlockTapped(object sender, TappedRoutedEventArgs e)
+        private void HideTransfersIconTapped(object sender, TappedRoutedEventArgs e)
         {
             _viewModel.VisualStates.BlockState =
                 FileTransfersViewModel.VisualStatesViewModel.TransfersBlockState.Collapsed;
