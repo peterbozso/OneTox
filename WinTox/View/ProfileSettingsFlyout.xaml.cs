@@ -60,8 +60,9 @@ namespace WinTox.View
             {
                 _copyClipboardTimer =
                     new Timer(
-                        state => CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                            () => { ClipboardCopyConfirm.Visibility = Visibility.Collapsed; }),
+                        async state =>
+                            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                                () => { ClipboardCopyConfirm.Visibility = Visibility.Collapsed; }),
                         null, 3000, Timeout.Infinite);
             }
             else

@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using WinTox.ViewModel.Friends;
@@ -16,7 +17,8 @@ namespace WinTox.ViewModel.Messaging.RecentMessages
                 RecentMessagesGlobalCollectionChangedHandler;
         }
 
-        private void RecentMessagesGlobalCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
+        private async void RecentMessagesGlobalCollectionChangedHandler(object sender,
+            NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
@@ -24,11 +26,12 @@ namespace WinTox.ViewModel.Messaging.RecentMessages
                 {
                     if (((FriendViewModel) newMessage.Sender).FriendNumber != _friendNumber)
                     {
-                        CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                        {
-                            TryRemovePreviousMessageFromFriend((FriendViewModel) newMessage.Sender);
-                            RecentMessages.Add(newMessage);
-                        });
+                        await
+                            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                            {
+                                TryRemovePreviousMessageFromFriend((FriendViewModel) newMessage.Sender);
+                                RecentMessages.Add(newMessage);
+                            });
                     }
                 }
             }

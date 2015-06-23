@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using WinTox.ViewModel.Friends;
@@ -14,9 +16,9 @@ namespace WinTox.ViewModel.Messaging.RecentMessages
 
         public ObservableCollection<ReceivedMessageViewModel> RecentMessages { get; private set; }
 
-        public void AddMessage(ReceivedMessageViewModel newMessage)
+        public async Task AddMessage(ReceivedMessageViewModel newMessage)
         {
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 TryRemovePreviousMessageFromFriend((FriendViewModel) newMessage.Sender);
                 RecentMessages.Insert(0, newMessage);

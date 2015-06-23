@@ -100,7 +100,7 @@ namespace WinTox.ViewModel.FileTransfers
         {
             State = FileTransferState.Downloading;
             var saveStream = (await saveFile.OpenAsync(FileAccessMode.ReadWrite)).AsStream();
-            _fileTransfers.AcceptTransferByUser(FileNumber, saveStream);
+            await _fileTransfers.AcceptTransferByUser(FileNumber, saveStream);
         }
 
         public RelayCommand PauseTransferByUserCommand
@@ -108,13 +108,13 @@ namespace WinTox.ViewModel.FileTransfers
             get
             {
                 return _pauseTransferByUserCommand ?? (_pauseTransferByUserCommand = new RelayCommand(
-                    () =>
+                    async () =>
                     {
                         if (State == FileTransferState.Downloading || State == FileTransferState.Uploading)
                         {
                             _lastState = State;
                             State = FileTransferState.PausedByUser;
-                            _fileTransfers.PauseTransferByUser(FileNumber);
+                            await _fileTransfers.PauseTransferByUser(FileNumber);
                         }
                     }));
             }
@@ -125,12 +125,12 @@ namespace WinTox.ViewModel.FileTransfers
             get
             {
                 return _resumeTransferByUserCommand ?? (_resumeTransferByUserCommand = new RelayCommand(
-                    () =>
+                    async () =>
                     {
                         if (State == FileTransferState.PausedByUser)
                         {
                             State = _lastState;
-                            _fileTransfers.ResumeTransferByUser(FileNumber);
+                            await _fileTransfers.ResumeTransferByUser(FileNumber);
                         }
                     }));
             }
@@ -141,7 +141,7 @@ namespace WinTox.ViewModel.FileTransfers
             get
             {
                 return _cancelTransferByUserCommand ?? (_cancelTransferByUserCommand = new RelayCommand(
-                    () => { _fileTransfers.CancelTransferByUser(this); }));
+                    async () => { await _fileTransfers.CancelTransferByUser(this); }));
             }
         }
 

@@ -45,7 +45,7 @@ namespace WinTox.ViewModel.Messaging
             // Here we make a very benign assumption that message_id stay being uint32_t in toxcore.
             var receivedMessage = new ReceivedMessageViewModel(e.Message, DateTime.Now, e.MessageType, _friendViewModel);
             await StoreMessage(receivedMessage);
-            RecentMessagesGlobalViewModel.Instace.AddMessage(receivedMessage);
+            await RecentMessagesGlobalViewModel.Instace.AddMessage(receivedMessage);
         }
 
         public async Task SendMessage(string message)
