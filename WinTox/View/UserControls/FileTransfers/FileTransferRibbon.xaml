@@ -418,7 +418,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="85" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="120" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
@@ -428,27 +428,21 @@
 
         <Grid Grid.Column="1" Margin="25,0,0,0">
             <Grid.RowDefinitions>
+                <RowDefinition Height="35" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock x:Name="TransferNameTextBlock" Grid.Column="0" FontSize="20" HorizontalAlignment="Left"
-                           VerticalAlignment="Bottom"
-                           Text="{Binding Name}" />
-                <TextBlock x:Name="WaitingHintTextBlock" Grid.Column="1" Text="Waiting for friend to accept the file"
-                           VerticalAlignment="Bottom" FontSize="16" />
-            </Grid>
+            <TextBlock x:Name="TransferNameTextBlock" Grid.Column="0" FontSize="20" HorizontalAlignment="Left"
+                       VerticalAlignment="Bottom" Grid.Row="0"
+                       Text="{Binding Name}" />
             <ProgressBar x:Name="TransferProgressBar" Grid.Row="1"
                          Foreground="{ThemeResource MessageColor}"
-                         VerticalAlignment="Center"
-                         Margin="0,5,0,15" Value="{Binding Progress}" />
+                         VerticalAlignment="Top"
+                         Value="{Binding Progress}" Margin="0,5,0,0" />
         </Grid>
+
+        <TextBlock x:Name="WaitingHintTextBlock" Grid.Column="2" Text="Waiting for feedback from friend..."
+                   VerticalAlignment="Center" FontSize="13" TextWrapping="Wrap" Margin="34,0,0,0" />
 
         <Button x:Name="AcceptButton" Grid.Column="2" Width="90" Content="Accept"
                 Click="AcceptButtonClick" Margin="30,0,0,0" />
