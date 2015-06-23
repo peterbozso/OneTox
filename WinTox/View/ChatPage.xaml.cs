@@ -104,9 +104,15 @@ namespace WinTox.View
         {
             var openPicker = new FileOpenPicker();
             openPicker.FileTypeFilter.Add("*");
-            var file = await openPicker.PickSingleFileAsync();
-            if (file != null)
+
+            var files = await openPicker.PickMultipleFilesAsync();
+            if (files.Count == 0)
+                return;
+            
+            foreach (var file in files)
+            {
                 await _friendViewModel.FileTransfers.SendFile(file);
+            }
         }
 
         #region NavigationHelper registration
