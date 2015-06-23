@@ -181,14 +181,17 @@ namespace WinTox.ViewModel.FileTransfers
                 get { return _openContentGridHeight; }
                 private set
                 {
-                    _openContentGridHeight = value > 240 ? 240 : value;
+                    _openContentGridHeight = value;
                     RaisePropertyChanged();
                 }
             }
 
             public void UpdateOpenContentGridHeight(int itemsCount)
             {
-                OpenContentGridHeight = itemsCount*60;
+                if (itemsCount > 4) // We don't show more than 4 items in the list at once.
+                    OpenContentGridHeight = 240;
+                else
+                    OpenContentGridHeight = itemsCount*60;
             }
         }
 
