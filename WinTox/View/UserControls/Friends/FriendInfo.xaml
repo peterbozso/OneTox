@@ -35,7 +35,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock x:Name="Name" Grid.Row="0"
+            <TextBlock x:Name="FriendName" Grid.Row="0"
                        FontSize="41" Foreground="{StaticResource MainColor}" TextTrimming="CharacterEllipsis"
                        Text="{Binding Name}" HorizontalAlignment="Left" />
 
