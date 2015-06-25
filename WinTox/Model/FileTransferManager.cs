@@ -30,7 +30,7 @@ namespace WinTox.Model
             base.AddTransfer(friendNumber, fileNumber, stream, dataSizeInBytes, direction);
 
             Debug.WriteLine(
-                "File {0}load added! \t friend number: {1}, \t file number: {2}, \t total avatar transfers: {3}",
+                "File {0}load added! \t friend number: {1}, \t file number: {2}, \t total file transfers: {3}",
                 direction, friendNumber, fileNumber, Transfers.Count);
         }
 
@@ -41,7 +41,7 @@ namespace WinTox.Model
             base.RemoveTransfer(transferId);
 
             Debug.WriteLine(
-                "File {0}load removed! \t friend number: {1}, \t file number: {2}, \t total avatar transfers: {3}",
+                "File {0}load removed! \t friend number: {1}, \t file number: {2}, \t total file transfers: {3}",
                 direction, transferId.FriendNumber, transferId.FileNumber, Transfers.Count);
         }
 
