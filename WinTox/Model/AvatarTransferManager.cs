@@ -33,19 +33,45 @@ namespace WinTox.Model
             }
         }
 
+        /// <summary>
+        /// By calling this function before sending or receiving an avatar, we ensure that there is only
+        /// 1 upload and/or 1 dowload per friend at the same time.
+        /// </summary>
+        /// <param name="friendNumber">The friendNumber of the friend we'd like to remove transfers of.</param>
+        /// <param name="direction">The direction of the transfers we'd like to remove.</param>
+        private void RemoveAllTranfersOfFriendPerDirection(int friendNumber, TransferDirection direction)
+        {
+            var transfers = ActiveTransfers.ToArray();
+            foreach (var transfer in transfers)
+            {
+                if (transfer.Key.FriendNumber == friendNumber && transfer.Value.Direction == direction)
+                {
+                    SendCancelControl(transfer.Key.FriendNumber, transfer.Key.FileNumber);
+                    RemoveTransfer(transfer.Key);
+
+                    Debug.WriteLine(
+                    "Avatar transfer removed! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
+                    friendNumber, transfer.Key.FileNumber, ActiveTransfers.Count);
+                }
+            }
+        }
+
         #endregion
 
         #region Sending
 
         public void SendAvatar(int friendNumber, Stream stream, string fileName)
         {
+            RemoveAllTranfersOfFriendPerDirection(friendNumber, TransferDirection.Up);
+
             bool successfulFileSend;
             var fileInfo = ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, stream.Length, fileName,
                 GetAvatarHash(stream), out successfulFileSend);
 
             if (successfulFileSend)
             {
-                AddTransfer(friendNumber, fileInfo.Number, stream, stream.Length);
+                AddTransfer(friendNumber, fileInfo.Number, stream, stream.Length, TransferDirection.Up);
+
                 Debug.WriteLine(
                     "Avatar upload added! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
                     friendNumber, fileInfo.Number, ActiveTransfers.Count);
@@ -86,7 +112,7 @@ namespace WinTox.Model
             ToxEventArgs.FileSendRequestEventArgs e)
         {
             if (e.FileKind != ToxFileKind.Avatar)
-                return;
+                return;            
 
             if (e.FileSize == 0) // It means the avatar of the friend is removed.
             {
@@ -101,11 +127,13 @@ namespace WinTox.Model
                 return;
             }
 
+            RemoveAllTranfersOfFriendPerDirection(e.FriendNumber, TransferDirection.Down);
+
             var resumeSent = SendResumeControl(e.FriendNumber, e.FileNumber);
             if (resumeSent)
             {
                 var stream = new MemoryStream((int) e.FileSize);
-                AddTransfer(e.FriendNumber, e.FileNumber, stream, e.FileSize);
+                AddTransfer(e.FriendNumber, e.FileNumber, stream, e.FileSize, TransferDirection.Down);
 
                 Debug.WriteLine(
                     "Avatar download added! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",

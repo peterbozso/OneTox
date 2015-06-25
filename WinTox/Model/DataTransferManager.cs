@@ -55,9 +55,15 @@ namespace WinTox.Model
             return ToxModel.Instance.FileControl(friendNumber, fileNumber, ToxFileControl.Resume);
         }
 
-        protected void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes)
+        public enum TransferDirection
         {
-            ActiveTransfers.Add(new TransferId(fileNumber, friendNumber), new TransferData(stream, dataSizeInBytes));
+            Up,
+            Down
+        }
+
+        protected void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes, TransferDirection direction)
+        {
+            ActiveTransfers.Add(new TransferId(fileNumber, friendNumber), new TransferData(stream, dataSizeInBytes, direction));
         }
 
         protected void RemoveTransfer(TransferId transferId)
@@ -176,11 +182,14 @@ namespace WinTox.Model
             private readonly long _dataSizeInBytes;
             private long _transferredBytes;
 
-            public TransferData(Stream stream, long dataSizeInBytes)
+            public TransferDirection Direction { get; private set; }
+
+            public TransferData(Stream stream, long dataSizeInBytes, TransferDirection direction)
             {
                 _transferredBytes = 0;
                 _dataSizeInBytes = dataSizeInBytes;
                 Stream = stream;
+                Direction = direction;
             }
 
             public Stream Stream { get; private set; }

@@ -104,7 +104,7 @@ namespace WinTox.Model
 
             if (successfulFileSend)
             {
-                AddTransfer(friendNumber, fileInfo.Number, stream, stream.Length);
+                AddTransfer(friendNumber, fileInfo.Number, stream, stream.Length, TransferDirection.Up);
                 Debug.WriteLine(
                     "File upload added! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
                     friendNumber, fileInfo.Number, ActiveTransfers.Count);
@@ -152,7 +152,7 @@ namespace WinTox.Model
 
             // We add a transfer with a null value instead of an actual stream here. We will replace it with an actual file stream
             // in ReceiveFile() when the user accepts the request and chooses a file.
-            AddTransfer(e.FriendNumber, e.FileNumber, null, e.FileSize);
+            AddTransfer(e.FriendNumber, e.FileNumber, null, e.FileSize, TransferDirection.Down);
 
             Debug.WriteLine(
                 "Dummy file download added! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
