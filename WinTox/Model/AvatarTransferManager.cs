@@ -34,8 +34,8 @@ namespace WinTox.Model
         }
 
         /// <summary>
-        /// By calling this function before sending or receiving an avatar, we ensure that there is only
-        /// 1 upload and/or 1 dowload per friend at the same time.
+        ///     By calling this function before sending or receiving an avatar, we ensure that there is only
+        ///     1 upload and/or 1 dowload per friend at the same time.
         /// </summary>
         /// <param name="friendNumber">The friendNumber of the friend we'd like to remove transfers of.</param>
         /// <param name="direction">The direction of the transfers we'd like to remove.</param>
@@ -50,8 +50,8 @@ namespace WinTox.Model
                     RemoveTransfer(transfer.Key);
 
                     Debug.WriteLine(
-                    "Avatar transfer removed! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
-                    friendNumber, transfer.Key.FileNumber, Transfers.Count);
+                        "Avatar transfer removed! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
+                        friendNumber, transfer.Key.FileNumber, Transfers.Count);
                 }
             }
         }
@@ -112,7 +112,7 @@ namespace WinTox.Model
             ToxEventArgs.FileSendRequestEventArgs e)
         {
             if (e.FileKind != ToxFileKind.Avatar)
-                return;            
+                return;
 
             if (e.FileSize == 0) // It means the avatar of the friend is removed.
             {

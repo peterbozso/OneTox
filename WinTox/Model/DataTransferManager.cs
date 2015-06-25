@@ -61,7 +61,8 @@ namespace WinTox.Model
             Down
         }
 
-        protected void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes, TransferDirection direction)
+        protected void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes,
+            TransferDirection direction)
         {
             Transfers.Add(new TransferId(fileNumber, friendNumber), new TransferData(stream, dataSizeInBytes, direction));
         }
@@ -182,8 +183,6 @@ namespace WinTox.Model
             private readonly long _dataSizeInBytes;
             private long _transferredBytes;
 
-            public TransferDirection Direction { get; private set; }
-
             public TransferData(Stream stream, long dataSizeInBytes, TransferDirection direction)
             {
                 _transferredBytes = 0;
@@ -192,6 +191,7 @@ namespace WinTox.Model
                 Direction = direction;
             }
 
+            public TransferDirection Direction { get; private set; }
             public Stream Stream { get; private set; }
 
             public double Progress
