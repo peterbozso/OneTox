@@ -144,7 +144,7 @@ namespace WinTox.Model
         {
             var transferId = new TransferId(fileNumber, friendNumber);
 
-            // Replace the dummy stream set it FileSendRequestReceivedHandler():
+            // Replace the dummy stream set previously in FileSendRequestReceivedHandler():
             Transfers[transferId].ReplaceStream(saveStream);
 
             SendResumeControl(friendNumber, fileNumber);
@@ -157,7 +157,7 @@ namespace WinTox.Model
                 return;
 
             // We add a transfer with a null value instead of an actual stream here. We will replace it with an actual file stream
-            // in ReceiveFile() when the user accepts the request and chooses a file.
+            // in ReceiveFile() when the user accepts the request and chooses a location to save the file to.
             AddTransfer(e.FriendNumber, e.FileNumber, null, e.FileSize, TransferDirection.Down);
 
             if (FileSendRequestReceived != null)
