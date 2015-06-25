@@ -55,13 +55,14 @@ namespace WinTox.View.UserControls.FileTransfers
 
         private void ShowTransfersIconTapped(object sender, TappedRoutedEventArgs e)
         {
-            _viewModel.VisualStates.BlockState = FileTransfersViewModel.VisualStatesViewModel.TransfersBlockState.Open;
+            _viewModel.VisualStates.BlockState =
+                FileTransfersViewModel.FileTransfersVisualStates.TransfersBlockState.Open;
         }
 
         private void HideTransfersIconTapped(object sender, TappedRoutedEventArgs e)
         {
             _viewModel.VisualStates.BlockState =
-                FileTransfersViewModel.VisualStatesViewModel.TransfersBlockState.Collapsed;
+                FileTransfersViewModel.FileTransfersVisualStates.TransfersBlockState.Collapsed;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace WinTox.ViewModel.FileTransfers
             FileTransferManager.Instance.TransferFinished += TransferFinishedHandler;
             FileTransferManager.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
             SetupProgressDispatcherTimer();
-            VisualStates = new VisualStatesViewModel {BlockState = VisualStatesViewModel.TransfersBlockState.Invisible};
+            VisualStates = new FileTransfersVisualStates();
         }
 
         public ObservableCollection<OneFileTransferViewModel> Transfers { get; private set; }
@@ -43,8 +43,8 @@ namespace WinTox.ViewModel.FileTransfers
         {
             Transfers.Add(new OneFileTransferViewModel(this, fileNumber, fileName, direction));
 
-            if (VisualStates.BlockState == VisualStatesViewModel.TransfersBlockState.Invisible)
-                VisualStates.BlockState = VisualStatesViewModel.TransfersBlockState.Open;
+            if (VisualStates.BlockState == FileTransfersVisualStates.TransfersBlockState.Invisible)
+                VisualStates.BlockState = FileTransfersVisualStates.TransfersBlockState.Open;
 
             VisualStates.UpdateOpenContentGridHeight(Transfers.Count);
         }
@@ -54,7 +54,7 @@ namespace WinTox.ViewModel.FileTransfers
             Transfers.Remove(transferViewModel);
 
             if (Transfers.Count == 0)
-                VisualStates.BlockState = VisualStatesViewModel.TransfersBlockState.Invisible;
+                VisualStates.BlockState = FileTransfersVisualStates.TransfersBlockState.Invisible;
 
             VisualStates.UpdateOpenContentGridHeight(Transfers.Count);
         }
@@ -154,8 +154,21 @@ namespace WinTox.ViewModel.FileTransfers
 
         #region Visual states for the View
 
-        public class VisualStatesViewModel : ViewModelBase
+        /// <summary>
+        ///     This class's purpose is to supply (trough data binding) the current visual state of FileTransfersBlock and height
+        ///     of OpenContentGrid.
+        /// </summary>
+        public class FileTransfersVisualStates : ViewModelBase
         {
+            /// <summary>
+            ///     Open: we have one or more file transfers for the current friend an we show "all" (4 max at once) of them.
+            ///     Collapsed: we have one or more file transfers for the current friend and we show a placeholder text instead of
+            ///     them.
+            ///     Invisible: we have 0 file transfers, so we make FileTransfersBlock invisible.
+            ///     The user can switch between Open and Collapsed states manually via the UI. Switching to/from Invisible to/from
+            ///     either
+            ///     states happens programmatically.
+            /// </summary>
             public enum TransfersBlockState
             {
                 Open,
@@ -168,6 +181,11 @@ namespace WinTox.ViewModel.FileTransfers
             private TransfersBlockState _blockState;
             private double _openContentGridHeight;
 
+            public FileTransfersVisualStates()
+            {
+                BlockState = TransfersBlockState.Invisible;
+            }
+
             public TransfersBlockState BlockState
             {
                 get { return _blockState; }
@@ -178,6 +196,11 @@ namespace WinTox.ViewModel.FileTransfers
                 }
             }
 
+            /// <summary>
+            ///     The current height of the OpenContentGrid on FileTransfersBlock. We need this workaround to be able to animate the
+            ///     height of the Grid during visual state transitions. It's because to do that, we need concrete heights, what we
+            ///     provide with data binding to this property and the 0 constant.
+            /// </summary>
             public double OpenContentGridHeight
             {
                 get { return _openContentGridHeight; }
@@ -188,15 +211,21 @@ namespace WinTox.ViewModel.FileTransfers
                 }
             }
 
-            public void UpdateOpenContentGridHeight(int itemsCount)
+            /// <summary>
+            ///     Called from FileTransfersViewModel whenever we add or remove a OneFileTransferViewModel (and a FileTransferRibbon
+            ///     to/from FileTransfersBlock through data binding) to update OpenContentGridHeight according to the current number of
+            ///     file transfers.
+            /// </summary>
+            /// <param name="transfersCount">The current number of file transfers.</param>
+            public void UpdateOpenContentGridHeight(int transfersCount)
             {
-                var itemsToDisplay = itemsCount > 4 ? 4 : itemsCount;
-                // We don't show more than 4 items in the list at once.
+                // We don't show more than 4 items in the list at once, but use a scroll bar in that case.
+                var itemsToDisplay = transfersCount > 4 ? 4 : transfersCount;
                 OpenContentGridHeight = itemsToDisplay*KFileTransferRibbonHeight + KHideArrowTextBlockHeight;
             }
         }
 
-        public VisualStatesViewModel VisualStates { get; private set; }
+        public FileTransfersVisualStates VisualStates { get; private set; }
 
         #endregion
 

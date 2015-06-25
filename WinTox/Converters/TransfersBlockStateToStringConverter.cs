@@ -8,7 +8,7 @@ namespace WinTox.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var state = (FileTransfersViewModel.VisualStatesViewModel.TransfersBlockState) value;
+            var state = (FileTransfersViewModel.FileTransfersVisualStates.TransfersBlockState) value;
             return state.ToString();
         }
 

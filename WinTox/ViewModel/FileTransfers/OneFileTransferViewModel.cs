@@ -44,14 +44,13 @@ namespace WinTox.ViewModel.FileTransfers
         #region Fields
 
         private readonly FileTransfersViewModel _fileTransfers;
+        private FileTransferState _state;
         private bool _isNotPlaceholder;
         private double _progress;
         private FileTransferState _lastState;
         private RelayCommand _pauseTransferByUserCommand;
         private RelayCommand _resumeTransferByUserCommand;
         private RelayCommand _cancelTransferByUserCommand;
-
-        private FileTransferState _state;
 
         #endregion
 
