@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using SharpTox.Core;
 
@@ -31,6 +32,8 @@ namespace WinTox.Model
 
         private void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
         {
+            Debug.WriteLine("File control received \t friend number: {0}, \t file number: {1}, \t control: {2}", e.FriendNumber, e.FileNumber, e.Control);
+
             var transferId = new TransferId(e.FileNumber, e.FriendNumber);
 
             if (Transfers.ContainsKey(transferId))
