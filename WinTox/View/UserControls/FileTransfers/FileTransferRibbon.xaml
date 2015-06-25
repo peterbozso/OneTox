@@ -18,6 +18,46 @@
     </UserControl.Resources>
 
     <Grid Background="{StaticResource MainColor}" Height="60">
+        <interactivity:Interaction.Behaviors>
+            <core:DataTriggerBehavior
+                Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}"
+                Value="BeforeUpload">
+                <core:GoToStateAction StateName="BeforeUpload" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior
+                Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}"
+                Value="BeforeDownload">
+                <core:GoToStateAction StateName="BeforeDownload" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior
+                Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="Uploading">
+                <core:GoToStateAction StateName="Uploading" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior
+                Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}"
+                Value="Downloading">
+                <core:GoToStateAction StateName="Downloading" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior
+                Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}"
+                Value="PausedByUser">
+                <core:GoToStateAction StateName="PausedByUser" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior
+                Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}"
+                Value="PausedByFriend">
+                <core:GoToStateAction StateName="PausedByFriend" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior
+                Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="Finished">
+                <core:GoToStateAction StateName="Finished" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior
+                Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="Cancelled">
+                <core:GoToStateAction StateName="Cancelled" />
+            </core:DataTriggerBehavior>
+        </interactivity:Interaction.Behaviors>
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="BeforeUpload">
@@ -374,46 +414,6 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-
-        <interactivity:Interaction.Behaviors>
-            <core:DataTriggerBehavior
-                Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}"
-                Value="BeforeUpload">
-                <core:GoToStateAction StateName="BeforeUpload" />
-            </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior
-                Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}"
-                Value="BeforeDownload">
-                <core:GoToStateAction StateName="BeforeDownload" />
-            </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior
-                Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="Uploading">
-                <core:GoToStateAction StateName="Uploading" />
-            </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior
-                Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}"
-                Value="Downloading">
-                <core:GoToStateAction StateName="Downloading" />
-            </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior
-                Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}"
-                Value="PausedByUser">
-                <core:GoToStateAction StateName="PausedByUser" />
-            </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior
-                Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}"
-                Value="PausedByFriend">
-                <core:GoToStateAction StateName="PausedByFriend" />
-            </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior
-                Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="Finished">
-                <core:GoToStateAction StateName="Finished" />
-            </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior
-                Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}" Value="Cancelled">
-                <core:GoToStateAction StateName="Cancelled" />
-            </core:DataTriggerBehavior>
-        </interactivity:Interaction.Behaviors>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="85" />
