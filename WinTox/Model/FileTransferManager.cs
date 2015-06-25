@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using SharpTox.Core;
 
 namespace WinTox.Model
@@ -15,6 +16,7 @@ namespace WinTox.Model
 
         private FileTransferManager()
         {
+            ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
         }
 
         public static FileTransferManager Instance
@@ -46,7 +48,6 @@ namespace WinTox.Model
         }
 
         #endregion
-
 
         #region Common
 
@@ -99,6 +100,25 @@ namespace WinTox.Model
         {
             if (TransferFinished != null)
                 TransferFinished(friendNumber, fileNumber);
+        }
+
+        private void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
+        {
+            if (!ToxModel.Instance.IsFriendOnline(e.FriendNumber))
+            {
+                var transfers = Transfers.ToArray();
+                foreach (var transfer in transfers)
+                {
+                    if (transfer.Key.FriendNumber == e.FriendNumber)
+                    {
+                        RemoveTransfer(new TransferId(transfer.Key.FileNumber, e.FriendNumber));
+
+                        // If a friend goes offline, we "lie" to the ViewModel saying that the friend cancelled the transfer.
+                        if (FileControlReceived != null)
+                            FileControlReceived(e.FriendNumber, transfer.Key.FileNumber, ToxFileControl.Cancel);
+                    }
+                }
+            }
         }
 
         public delegate void FileControlReceivedDelegate(int friendNumber, int fileNumber, ToxFileControl fileControl);
