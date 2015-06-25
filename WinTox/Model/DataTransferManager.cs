@@ -10,11 +10,11 @@ namespace WinTox.Model
     /// </summary>
     public abstract class DataTransferManager
     {
-        protected readonly Dictionary<TransferId, TransferData> ActiveTransfers;
+        protected readonly Dictionary<TransferId, TransferData> Transfers;
 
         protected DataTransferManager()
         {
-            ActiveTransfers = new Dictionary<TransferId, TransferData>();
+            Transfers = new Dictionary<TransferId, TransferData>();
 
             ToxModel.Instance.FileControlReceived += FileControlReceivedHandler;
             ToxModel.Instance.FileChunkRequested += FileChunkRequestedHandler;
@@ -26,14 +26,14 @@ namespace WinTox.Model
 
         private bool IsTransferFinished(TransferId transferId)
         {
-            return !ActiveTransfers.ContainsKey(transferId);
+            return !Transfers.ContainsKey(transferId);
         }
 
         private void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
         {
             var transferId = new TransferId(e.FileNumber, e.FriendNumber);
 
-            if (ActiveTransfers.ContainsKey(transferId))
+            if (Transfers.ContainsKey(transferId))
                 HandleFileControl(e.Control, transferId);
         }
 
@@ -63,15 +63,15 @@ namespace WinTox.Model
 
         protected void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes, TransferDirection direction)
         {
-            ActiveTransfers.Add(new TransferId(fileNumber, friendNumber), new TransferData(stream, dataSizeInBytes, direction));
+            Transfers.Add(new TransferId(fileNumber, friendNumber), new TransferData(stream, dataSizeInBytes, direction));
         }
 
         protected void RemoveTransfer(TransferId transferId)
         {
-            var transferToRemove = ActiveTransfers[transferId];
+            var transferToRemove = Transfers[transferId];
             if (transferToRemove.Stream != null) // It could be a dummy transfer waiting for accept from the user!
                 transferToRemove.Stream.Dispose();
-            ActiveTransfers.Remove(transferId);
+            Transfers.Remove(transferId);
         }
 
         #endregion
@@ -85,7 +85,7 @@ namespace WinTox.Model
             if (IsTransferFinished(transferId))
                 return;
 
-            var currentTransfer = ActiveTransfers[transferId];
+            var currentTransfer = Transfers[transferId];
 
             var chunk = GetNextChunk(e, currentTransfer);
             bool successfulChunkSend;
@@ -129,7 +129,7 @@ namespace WinTox.Model
             if (IsTransferFinished(transferId))
                 return;
 
-            var currentTransfer = ActiveTransfers[transferId];
+            var currentTransfer = Transfers[transferId];
             var currentStream = currentTransfer.Stream;
 
             PutNextChunk(e, currentStream);

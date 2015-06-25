@@ -28,7 +28,7 @@ namespace WinTox.Model
                     RemoveTransfer(transferId);
                     Debug.WriteLine(
                         "Avatar transfer CANCELLED by friend! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
-                        transferId.FriendNumber, transferId.FileNumber, ActiveTransfers.Count);
+                        transferId.FriendNumber, transferId.FileNumber, Transfers.Count);
                     return;
             }
         }
@@ -41,7 +41,7 @@ namespace WinTox.Model
         /// <param name="direction">The direction of the transfers we'd like to remove.</param>
         private void RemoveAllTranfersOfFriendPerDirection(int friendNumber, TransferDirection direction)
         {
-            var transfers = ActiveTransfers.ToArray();
+            var transfers = Transfers.ToArray();
             foreach (var transfer in transfers)
             {
                 if (transfer.Key.FriendNumber == friendNumber && transfer.Value.Direction == direction)
@@ -51,7 +51,7 @@ namespace WinTox.Model
 
                     Debug.WriteLine(
                     "Avatar transfer removed! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
-                    friendNumber, transfer.Key.FileNumber, ActiveTransfers.Count);
+                    friendNumber, transfer.Key.FileNumber, Transfers.Count);
                 }
             }
         }
@@ -74,7 +74,7 @@ namespace WinTox.Model
 
                 Debug.WriteLine(
                     "Avatar upload added! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
-                    friendNumber, fileInfo.Number, ActiveTransfers.Count);
+                    friendNumber, fileInfo.Number, Transfers.Count);
             }
             else
             {
@@ -101,7 +101,7 @@ namespace WinTox.Model
 
             Debug.WriteLine(
                 "Avatar upload removed! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
-                e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
+                e.FriendNumber, e.FileNumber, Transfers.Count);
         }
 
         #endregion
@@ -137,7 +137,7 @@ namespace WinTox.Model
 
                 Debug.WriteLine(
                     "Avatar download added! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
-                    e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
+                    e.FriendNumber, e.FileNumber, Transfers.Count);
             }
         }
 
@@ -155,12 +155,12 @@ namespace WinTox.Model
 
         protected override void HandleFinishedDownload(TransferId transferId, ToxEventArgs.FileChunkEventArgs e)
         {
-            AvatarManager.Instance.ChangeFriendAvatar(e.FriendNumber, ActiveTransfers[transferId].Stream as MemoryStream);
+            AvatarManager.Instance.ChangeFriendAvatar(e.FriendNumber, Transfers[transferId].Stream as MemoryStream);
             RemoveTransfer(transferId);
 
             Debug.WriteLine(
                 "Avatar download removed! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
-                e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
+                e.FriendNumber, e.FileNumber, Transfers.Count);
         }
 
         #endregion

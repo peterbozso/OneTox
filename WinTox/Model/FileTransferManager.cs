@@ -29,13 +29,13 @@ namespace WinTox.Model
             SendCancelControl(friendNumber, fileNumber);
 
             var transferId = new TransferId(fileNumber, friendNumber);
-            if (ActiveTransfers.ContainsKey(transferId))
+            if (Transfers.ContainsKey(transferId))
             {
                 RemoveTransfer(transferId);
 
                 Debug.WriteLine(
                     "File transfer CANCELLED (removed) by user! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
-                    friendNumber, fileNumber, ActiveTransfers.Count);
+                    friendNumber, fileNumber, Transfers.Count);
             }
         }
 
@@ -61,7 +61,7 @@ namespace WinTox.Model
 
                     Debug.WriteLine(
                         "File transfer CANCELLED by friend! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
-                        transferId.FriendNumber, transferId.FileNumber, ActiveTransfers.Count);
+                        transferId.FriendNumber, transferId.FileNumber, Transfers.Count);
 
                     return;
             }
@@ -70,7 +70,7 @@ namespace WinTox.Model
         public Dictionary<int, double> GetTransferProgressesOfFriend(int friendNumber)
         {
             var progressDict = new Dictionary<int, double>();
-            foreach (var transfer in ActiveTransfers)
+            foreach (var transfer in Transfers)
             {
                 if (transfer.Key.FriendNumber == friendNumber)
                     progressDict.Add(transfer.Key.FileNumber, transfer.Value.Progress);
@@ -107,7 +107,7 @@ namespace WinTox.Model
                 AddTransfer(friendNumber, fileInfo.Number, stream, stream.Length, TransferDirection.Up);
                 Debug.WriteLine(
                     "File upload added! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
-                    friendNumber, fileInfo.Number, ActiveTransfers.Count);
+                    friendNumber, fileInfo.Number, Transfers.Count);
             }
 
             fileNumber = fileInfo.Number;
@@ -120,7 +120,7 @@ namespace WinTox.Model
 
             Debug.WriteLine(
                 "File upload removed! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
-                e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
+                e.FriendNumber, e.FileNumber, Transfers.Count);
 
             RaiseTransferFinished(e.FriendNumber, e.FileNumber);
         }
@@ -136,12 +136,12 @@ namespace WinTox.Model
             var transferId = new TransferId(fileNumber, friendNumber);
 
             // Replace the dummy stream set it FileSendRequestReceivedHandler():
-            ActiveTransfers[transferId].ReplaceStream(saveStream);
+            Transfers[transferId].ReplaceStream(saveStream);
 
             SendResumeControl(friendNumber, fileNumber);
             Debug.WriteLine(
                 "File download confirmed by user! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
-                friendNumber, fileNumber, ActiveTransfers.Count);
+                friendNumber, fileNumber, Transfers.Count);
         }
 
         protected override void FileSendRequestReceivedHandler(object sender,
@@ -156,7 +156,7 @@ namespace WinTox.Model
 
             Debug.WriteLine(
                 "Dummy file download added! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
-                e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
+                e.FriendNumber, e.FileNumber, Transfers.Count);
 
             if (FileSendRequestReceived != null)
                 FileSendRequestReceived(this, e);
@@ -168,7 +168,7 @@ namespace WinTox.Model
 
             Debug.WriteLine(
                 "File download removed! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
-                e.FriendNumber, e.FileNumber, ActiveTransfers.Count);
+                e.FriendNumber, e.FileNumber, Transfers.Count);
 
             RaiseTransferFinished(e.FriendNumber, e.FileNumber);
         }
