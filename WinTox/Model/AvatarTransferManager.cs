@@ -18,6 +18,31 @@ namespace WinTox.Model
             get { return _instance ?? (_instance = new AvatarTransferManager()); }
         }
 
+        #region Debug
+
+        protected new void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes,
+            TransferDirection direction)
+        {
+            base.AddTransfer(friendNumber, fileNumber, stream, dataSizeInBytes, direction);
+
+            Debug.WriteLine(
+                "Avatar {0}load added! \t friend number: {1}, \t file number: {2}, \t total avatar transfers: {3}",
+                direction, friendNumber, fileNumber, Transfers.Count);
+        }
+
+        protected new void RemoveTransfer(TransferId transferId)
+        {
+            var direction = Transfers[transferId].Direction;
+
+            base.RemoveTransfer(transferId);
+
+            Debug.WriteLine(
+                "Avatar {0}load removed! \t friend number: {1}, \t file number: {2}, \t total avatar transfers: {3}",
+                direction, transferId.FriendNumber, transferId.FileNumber, Transfers.Count);
+        }
+
+        #endregion
+
         #region Common
 
         protected override void HandleFileControl(ToxFileControl fileControl, TransferId transferId)
@@ -26,9 +51,6 @@ namespace WinTox.Model
             {
                 case ToxFileControl.Cancel:
                     RemoveTransfer(transferId);
-                    Debug.WriteLine(
-                        "Avatar transfer CANCELLED by friend! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
-                        transferId.FriendNumber, transferId.FileNumber, Transfers.Count);
                     return;
             }
         }
@@ -48,10 +70,6 @@ namespace WinTox.Model
                 {
                     SendCancelControl(transfer.Key.FriendNumber, transfer.Key.FileNumber);
                     RemoveTransfer(transfer.Key);
-
-                    Debug.WriteLine(
-                        "Avatar transfer removed! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
-                        friendNumber, transfer.Key.FileNumber, Transfers.Count);
                 }
             }
         }
@@ -71,10 +89,6 @@ namespace WinTox.Model
             if (successfulFileSend)
             {
                 AddTransfer(friendNumber, fileInfo.Number, stream, stream.Length, TransferDirection.Up);
-
-                Debug.WriteLine(
-                    "Avatar upload added! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
-                    friendNumber, fileInfo.Number, Transfers.Count);
             }
             else
             {
@@ -98,10 +112,6 @@ namespace WinTox.Model
         protected override void HandleFinishedUpload(TransferId transferId, ToxEventArgs.FileRequestChunkEventArgs e)
         {
             RemoveTransfer(transferId);
-
-            Debug.WriteLine(
-                "Avatar upload removed! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
-                e.FriendNumber, e.FileNumber, Transfers.Count);
         }
 
         #endregion
@@ -134,10 +144,6 @@ namespace WinTox.Model
             {
                 var stream = new MemoryStream((int) e.FileSize);
                 AddTransfer(e.FriendNumber, e.FileNumber, stream, e.FileSize, TransferDirection.Down);
-
-                Debug.WriteLine(
-                    "Avatar download added! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
-                    e.FriendNumber, e.FileNumber, Transfers.Count);
             }
         }
 
@@ -157,10 +163,6 @@ namespace WinTox.Model
         {
             AvatarManager.Instance.ChangeFriendAvatar(e.FriendNumber, Transfers[transferId].Stream as MemoryStream);
             RemoveTransfer(transferId);
-
-            Debug.WriteLine(
-                "Avatar download removed! \t friend number: {0}, \t file number: {1}, \t total avatar transfers: {2}",
-                e.FriendNumber, e.FileNumber, Transfers.Count);
         }
 
         #endregion

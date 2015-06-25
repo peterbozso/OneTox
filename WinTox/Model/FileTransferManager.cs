@@ -22,6 +22,32 @@ namespace WinTox.Model
             get { return _instance ?? (_instance = new FileTransferManager()); }
         }
 
+        #region Debug
+
+        protected new void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes,
+            TransferDirection direction)
+        {
+            base.AddTransfer(friendNumber, fileNumber, stream, dataSizeInBytes, direction);
+
+            Debug.WriteLine(
+                "File {0}load added! \t friend number: {1}, \t file number: {2}, \t total avatar transfers: {3}",
+                direction, friendNumber, fileNumber, Transfers.Count);
+        }
+
+        protected new void RemoveTransfer(TransferId transferId)
+        {
+            var direction = Transfers[transferId].Direction;
+
+            base.RemoveTransfer(transferId);
+
+            Debug.WriteLine(
+                "File {0}load removed! \t friend number: {1}, \t file number: {2}, \t total avatar transfers: {3}",
+                direction, transferId.FriendNumber, transferId.FileNumber, Transfers.Count);
+        }
+
+        #endregion
+
+
         #region Common
 
         public void CancelTransfer(int friendNumber, int fileNumber)
@@ -32,10 +58,6 @@ namespace WinTox.Model
             if (Transfers.ContainsKey(transferId))
             {
                 RemoveTransfer(transferId);
-
-                Debug.WriteLine(
-                    "File transfer CANCELLED (removed) by user! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
-                    friendNumber, fileNumber, Transfers.Count);
             }
         }
 
@@ -58,11 +80,6 @@ namespace WinTox.Model
             {
                 case ToxFileControl.Cancel:
                     RemoveTransfer(transferId);
-
-                    Debug.WriteLine(
-                        "File transfer CANCELLED by friend! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
-                        transferId.FriendNumber, transferId.FileNumber, Transfers.Count);
-
                     return;
             }
         }
@@ -105,9 +122,6 @@ namespace WinTox.Model
             if (successfulFileSend)
             {
                 AddTransfer(friendNumber, fileInfo.Number, stream, stream.Length, TransferDirection.Up);
-                Debug.WriteLine(
-                    "File upload added! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
-                    friendNumber, fileInfo.Number, Transfers.Count);
             }
 
             fileNumber = fileInfo.Number;
@@ -117,11 +131,6 @@ namespace WinTox.Model
         protected override void HandleFinishedUpload(TransferId transferId, ToxEventArgs.FileRequestChunkEventArgs e)
         {
             RemoveTransfer(transferId);
-
-            Debug.WriteLine(
-                "File upload removed! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
-                e.FriendNumber, e.FileNumber, Transfers.Count);
-
             RaiseTransferFinished(e.FriendNumber, e.FileNumber);
         }
 
@@ -139,9 +148,6 @@ namespace WinTox.Model
             Transfers[transferId].ReplaceStream(saveStream);
 
             SendResumeControl(friendNumber, fileNumber);
-            Debug.WriteLine(
-                "File download confirmed by user! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
-                friendNumber, fileNumber, Transfers.Count);
         }
 
         protected override void FileSendRequestReceivedHandler(object sender,
@@ -154,10 +160,6 @@ namespace WinTox.Model
             // in ReceiveFile() when the user accepts the request and chooses a file.
             AddTransfer(e.FriendNumber, e.FileNumber, null, e.FileSize, TransferDirection.Down);
 
-            Debug.WriteLine(
-                "Dummy file download added! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
-                e.FriendNumber, e.FileNumber, Transfers.Count);
-
             if (FileSendRequestReceived != null)
                 FileSendRequestReceived(this, e);
         }
@@ -165,11 +167,6 @@ namespace WinTox.Model
         protected override void HandleFinishedDownload(TransferId transferId, ToxEventArgs.FileChunkEventArgs e)
         {
             RemoveTransfer(transferId);
-
-            Debug.WriteLine(
-                "File download removed! \t friend number: {0}, \t file number: {1}, \t total file transfers: {2}",
-                e.FriendNumber, e.FileNumber, Transfers.Count);
-
             RaiseTransferFinished(e.FriendNumber, e.FileNumber);
         }
 
