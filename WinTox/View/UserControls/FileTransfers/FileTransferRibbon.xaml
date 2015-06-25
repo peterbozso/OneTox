@@ -233,6 +233,49 @@
             				<DoubleAnimation Duration="0:0:0.4" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="ControlButtons" d:IsOptimized="True"/>
             			</Storyboard>
             		</VisualTransition>
+            		<VisualTransition From="BeforeUpload" GeneratedDuration="0" To="Cancelled">
+            			<Storyboard>
+            				<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="WaitingHintTextBlock">
+            					<DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+            						<DiscreteObjectKeyFrame.Value>
+            							<Visibility>Collapsed</Visibility>
+            						</DiscreteObjectKeyFrame.Value>
+            					</DiscreteObjectKeyFrame>
+            				</ObjectAnimationUsingKeyFrames>
+            				<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="AcceptButton">
+            					<DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+            						<DiscreteObjectKeyFrame.Value>
+            							<Visibility>Collapsed</Visibility>
+            						</DiscreteObjectKeyFrame.Value>
+            					</DiscreteObjectKeyFrame>
+            				</ObjectAnimationUsingKeyFrames>
+            				<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PauseButton">
+            					<DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+            						<DiscreteObjectKeyFrame.Value>
+            							<Visibility>Collapsed</Visibility>
+            						</DiscreteObjectKeyFrame.Value>
+            					</DiscreteObjectKeyFrame>
+            				</ObjectAnimationUsingKeyFrames>
+            				<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ResumeButton">
+            					<DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+            						<DiscreteObjectKeyFrame.Value>
+            							<Visibility>Collapsed</Visibility>
+            						</DiscreteObjectKeyFrame.Value>
+            					</DiscreteObjectKeyFrame>
+            				</ObjectAnimationUsingKeyFrames>
+            				<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PausedByFriendButton">
+            					<DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+            						<DiscreteObjectKeyFrame.Value>
+            							<Visibility>Collapsed</Visibility>
+            						</DiscreteObjectKeyFrame.Value>
+            					</DiscreteObjectKeyFrame>
+            				</ObjectAnimationUsingKeyFrames>
+            				<DoubleAnimationUsingKeyFrames EnableDependentAnimation="True" Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="ControlButtons">
+            					<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
+            				</DoubleAnimationUsingKeyFrames>
+            				<DoubleAnimation Duration="0:0:0.4" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="ControlButtons" d:IsOptimized="True"/>
+            			</Storyboard>
+            		</VisualTransition>
             	</VisualStateGroup.Transitions>
                 <VisualState x:Name="BeforeUpload">
                     <Storyboard>
@@ -630,8 +673,8 @@
         </Grid>
 
         <Grid x:Name="ControlButtons" Grid.Column="2" Width="120">
-            <TextBlock x:Name="WaitingHintTextBlock" Text="Waiting for feedback from friend..."
-                       VerticalAlignment="Center" FontSize="13" TextWrapping="Wrap" Margin="34,0,0,0" />
+            <TextBlock x:Name="WaitingHintTextBlock" xml:space="preserve" Text="Waiting for feedback from friend..."
+                       VerticalAlignment="Center" FontSize="13" TextWrapping="Wrap" Height="46" Width="86" Margin="34,0,0,0" />
 
             <Button x:Name="AcceptButton" Width="90" Content="Accept"
                     Click="AcceptButtonClick" Margin="30,0,0,0" />
