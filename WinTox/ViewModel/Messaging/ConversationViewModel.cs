@@ -28,25 +28,9 @@ namespace WinTox.ViewModel.Messaging
             ToxModel.Instance.FriendTypingChanged += FriendTypingChangedHandler;
         }
 
-        public bool IsFriendTyping
-        {
-            get { return _isFriendTyping; }
-            set
-            {
-                _isFriendTyping = value;
-                RaisePropertyChanged();
-            }
-        }
-
         public ObservableCollection<MessageGroupViewModel> MessageGroups { get; set; }
 
-        public async Task ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
-        {
-            // Here we make a very benign assumption that message_id stay being uint32_t in toxcore.
-            var receivedMessage = new ReceivedMessageViewModel(e.Message, DateTime.Now, e.MessageType, _friendViewModel);
-            await StoreMessage(receivedMessage);
-            await RecentMessagesGlobalViewModel.Instace.AddMessage(receivedMessage);
-        }
+        #region Message sending
 
         public async Task SendMessage(string message)
         {
@@ -64,76 +48,13 @@ namespace WinTox.ViewModel.Messaging
             }
         }
 
-        private async Task StoreMessage(ToxMessageViewModelBase message)
-        {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                if (AppendToLastGroup(message))
-                    return;
+        #endregion
 
-                var msgGroup = new MessageGroupViewModel(message.Sender);
-                msgGroup.Messages.Add(message);
-                MessageGroups.Add(msgGroup);
-                RaiseMessageAdded();
-            });
-        }
+        #region Message tools
 
         /// <summary>
-        ///     Try to append the message to the last message group.
+        ///     A helper class to encapsulate functions that prepare messages (from the user) for sending.
         /// </summary>
-        /// <param name="message">The message to append.</param>
-        /// <param name="messageType">Type of the message.</param>
-        /// <param name="sender">The sender of the message.</param>
-        /// <param name="messageId">The message ID of the message.</param>
-        /// <returns>True on success, false otherwise.</returns>
-        private bool AppendToLastGroup(ToxMessageViewModelBase message)
-        {
-            if (MessageGroups.Count == 0 || MessageGroups.Last().Messages.Count == 0)
-                return false;
-
-            var lastMessage = MessageGroups.Last().Messages.Last();
-
-            if (lastMessage.Sender.GetType() == message.Sender.GetType())
-                // TODO: Implement and use simple equality operator instead.
-            {
-                MessageGroups.Last()
-                    .Messages.Add(message);
-                RaiseMessageAdded();
-                return true;
-            }
-
-            return false;
-        }
-
-        public event EventHandler MessageAdded;
-
-        private void RaiseMessageAdded()
-        {
-            if (MessageAdded != null)
-                MessageAdded(this, new EventArgs());
-        }
-
-        public void SetTypingStatus(bool isTyping)
-        {
-            ToxModel.Instance.SetTypingStatus(_friendViewModel.FriendNumber, isTyping);
-        }
-
-        private async void FriendTypingChangedHandler(object sender, ToxEventArgs.TypingStatusEventArgs e)
-        {
-            if (e.FriendNumber != _friendViewModel.FriendNumber)
-                return;
-
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { IsFriendTyping = e.IsTyping; });
-        }
-
-        private async void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
-        {
-            if (e.FriendNumber != _friendViewModel.FriendNumber)
-                return;
-
-            await ReceiveMessage(e);
-        }
-
         private static class MessageTools
         {
             public static ToxMessageType GetMessageType(string message)
@@ -215,5 +136,110 @@ namespace WinTox.ViewModel.Messaging
                 return sb.ToString();
             }
         }
+
+        #endregion
+
+        #region Message receiving
+
+        private async void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
+        {
+            if (e.FriendNumber != _friendViewModel.FriendNumber)
+                return;
+
+            await ReceiveMessage(e);
+        }
+
+        private async Task ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
+        {
+            // Here we make a very benign assumption that message_id stay being uint32_t in toxcore.
+            var receivedMessage = new ReceivedMessageViewModel(e.Message, DateTime.Now, e.MessageType, _friendViewModel);
+            await StoreMessage(receivedMessage);
+            await RecentMessagesGlobalViewModel.Instace.AddMessage(receivedMessage);
+        }
+
+        #endregion
+
+        #region Common
+
+        private async Task StoreMessage(ToxMessageViewModelBase message)
+        {
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                var successFulAppend = AppendToLastGroup(message);
+                if (successFulAppend)
+                    return;
+
+                var msgGroup = new MessageGroupViewModel(message.Sender);
+                msgGroup.Messages.Add(message);
+                MessageGroups.Add(msgGroup);
+                RaiseMessageAdded();
+            });
+        }
+
+        /// <summary>
+        ///     Try to append the message to the last message group. It's possible only if the last message group's sender is the
+        ///     same as the message's sender.
+        /// </summary>
+        /// <param name="message">The message to append.</param>
+        /// <param name="messageType">Type of the message.</param>
+        /// <param name="sender">The sender of the message.</param>
+        /// <param name="messageId">The message ID of the message.</param>
+        /// <returns>True on success, false otherwise.</returns>
+        private bool AppendToLastGroup(ToxMessageViewModelBase message)
+        {
+            if (MessageGroups.Count == 0 || MessageGroups.Last().Messages.Count == 0)
+                return false;
+
+            // TODO: Implement and use simple equality operator below. It won't work for group chats like this.
+            if (MessageGroups.Last().Sender.GetType() == message.Sender.GetType())
+            {
+                MessageGroups.Last()
+                    .Messages.Add(message);
+                RaiseMessageAdded();
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     For signaling the View if a message is added to the conversation.
+        /// </summary>
+        public event EventHandler MessageAdded;
+
+        private void RaiseMessageAdded()
+        {
+            if (MessageAdded != null)
+                MessageAdded(this, new EventArgs());
+        }
+
+        #endregion
+
+        #region Typing
+
+        public bool IsFriendTyping
+        {
+            get { return _isFriendTyping; }
+            set
+            {
+                _isFriendTyping = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public void SetTypingStatus(bool isTyping)
+        {
+            ToxModel.Instance.SetTypingStatus(_friendViewModel.FriendNumber, isTyping);
+        }
+
+        private async void FriendTypingChangedHandler(object sender, ToxEventArgs.TypingStatusEventArgs e)
+        {
+            if (e.FriendNumber != _friendViewModel.FriendNumber)
+                return;
+
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { IsFriendTyping = e.IsTyping; });
+        }
+
+        #endregion
     }
 }
