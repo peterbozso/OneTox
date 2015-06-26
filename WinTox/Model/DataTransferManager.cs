@@ -52,7 +52,7 @@ namespace WinTox.Model
         ///     Send a ToxFileControl.Resume to the selected friend for the given transfer.
         /// </summary>
         /// <param name="friendNumber">The friend's friend number.</param>
-        /// <param name="fileNumber">The file number associated with the tranfer.</param>
+        /// <param name="fileNumber">The file number associated with the transfer.</param>
         /// <returns>True on success, false otherwise.</returns>
         protected bool SendResumeControl(int friendNumber, int fileNumber)
         {
