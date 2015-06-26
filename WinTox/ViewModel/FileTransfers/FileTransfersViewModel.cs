@@ -253,18 +253,18 @@ namespace WinTox.ViewModel.FileTransfers
 
         #region Changes coming from the Model, being relayed to the View
 
-        private async void FileControlReceivedHandler(int friendNumber, int fileNumber, ToxFileControl fileControl)
+        private async void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
         {
-            if (FriendNumber != friendNumber)
+            if (FriendNumber != e.FriendNumber)
                 return;
 
-            var transfer = FindNotPlaceHolderTransferViewModel(fileNumber);
+            var transfer = FindNotPlaceHolderTransferViewModel(e.FileNumber);
             if (transfer == null)
                 return;
 
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                switch (fileControl)
+                switch (e.Control)
                 {
                     case ToxFileControl.Cancel:
                         transfer.CancelTransferByFriend();
@@ -282,12 +282,12 @@ namespace WinTox.ViewModel.FileTransfers
             });
         }
 
-        private async void TransferFinishedHandler(int friendNumber, int fileNumber)
+        private async void TransferFinishedHandler(object sender, FileTransferManager.TransferFinishedEventArgs e)
         {
-            if (FriendNumber != friendNumber)
+            if (FriendNumber != e.FriendNumber)
                 return;
 
-            var transfer = FindNotPlaceHolderTransferViewModel(fileNumber);
+            var transfer = FindNotPlaceHolderTransferViewModel(e.FileNumber);
             if (transfer == null)
                 return;
 

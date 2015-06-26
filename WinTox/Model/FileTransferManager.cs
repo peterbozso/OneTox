@@ -75,7 +75,8 @@ namespace WinTox.Model
         protected override void HandleFileControl(ToxFileControl fileControl, TransferId transferId)
         {
             if (FileControlReceived != null)
-                FileControlReceived(transferId.FriendNumber, transferId.FileNumber, fileControl);
+                FileControlReceived(this,
+                    new ToxEventArgs.FileControlEventArgs(transferId.FriendNumber, transferId.FileNumber, fileControl));
 
             switch (fileControl)
             {
@@ -99,7 +100,7 @@ namespace WinTox.Model
         private void RaiseTransferFinished(int friendNumber, int fileNumber)
         {
             if (TransferFinished != null)
-                TransferFinished(friendNumber, fileNumber);
+                TransferFinished(this, new TransferFinishedEventArgs(friendNumber, fileNumber));
         }
 
         private void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
@@ -113,21 +114,26 @@ namespace WinTox.Model
                     {
                         RemoveTransfer(new TransferId(transfer.Key.FileNumber, e.FriendNumber));
 
-                        // If a friend goes offline, we "lie" to the ViewModel saying that the friend cancelled the transfer.
+                        // If a friend goes offline, we "lie" to the ViewModel saying that the friend canceled the transfer.
                         if (FileControlReceived != null)
-                            FileControlReceived(e.FriendNumber, transfer.Key.FileNumber, ToxFileControl.Cancel);
+                            FileControlReceived(this,
+                                new ToxEventArgs.FileControlEventArgs(e.FriendNumber, transfer.Key.FileNumber,
+                                    ToxFileControl.Cancel));
                     }
                 }
             }
         }
 
-        public delegate void FileControlReceivedDelegate(int friendNumber, int fileNumber, ToxFileControl fileControl);
+        public event EventHandler<ToxEventArgs.FileControlEventArgs> FileControlReceived;
 
-        public event FileControlReceivedDelegate FileControlReceived;
+        public class TransferFinishedEventArgs : ToxEventArgs.FileBaseEventArgs
+        {
+            public TransferFinishedEventArgs(int friendNumber, int fileNumber) : base(friendNumber, fileNumber)
+            {
+            }
+        }
 
-        public delegate void TransferfinishedDelegate(int friendNumber, int fileNumber);
-
-        public event TransferfinishedDelegate TransferFinished;
+        public event EventHandler<TransferFinishedEventArgs> TransferFinished;
 
         #endregion
 
