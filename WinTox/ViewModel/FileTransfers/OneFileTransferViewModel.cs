@@ -93,13 +93,22 @@ namespace WinTox.ViewModel.FileTransfers
 
         #endregion
 
-        #region Actions coming from the View
+        #region Changes coming from the View, being relayed to the Model
 
         public async Task AcceptTransferByUser(StorageFile saveFile)
         {
             State = FileTransferState.Downloading;
             var saveStream = (await saveFile.OpenAsync(FileAccessMode.ReadWrite)).AsStream();
             await _fileTransfers.AcceptTransferByUser(FileNumber, saveStream);
+        }
+
+        public RelayCommand CancelTransferByUserCommand
+        {
+            get
+            {
+                return _cancelTransferByUserCommand ?? (_cancelTransferByUserCommand = new RelayCommand(
+                    async () => { await _fileTransfers.CancelTransferByUser(this); }));
+            }
         }
 
         public RelayCommand PauseTransferByUserCommand
@@ -135,18 +144,21 @@ namespace WinTox.ViewModel.FileTransfers
             }
         }
 
-        public RelayCommand CancelTransferByUserCommand
-        {
-            get
-            {
-                return _cancelTransferByUserCommand ?? (_cancelTransferByUserCommand = new RelayCommand(
-                    async () => { await _fileTransfers.CancelTransferByUser(this); }));
-            }
-        }
-
         #endregion
 
-        #region Actions coming from the Model
+        #region Changes coming from the Model, being relayed to the View
+
+        public void FinishTransfer()
+        {
+            State = FileTransferState.Finished;
+            Progress = 100.0;
+        }
+
+        public void CancelTransferByFriend()
+        {
+            State = FileTransferState.Cancelled;
+            Progress = 100.0;
+        }
 
         public void PauseTransferByFriend()
         {
@@ -173,18 +185,6 @@ namespace WinTox.ViewModel.FileTransfers
                 return;
 
             State = _lastState;
-        }
-
-        public void CancelTransferByFriend()
-        {
-            State = FileTransferState.Cancelled;
-            Progress = 100.0;
-        }
-
-        public void FinishTransfer()
-        {
-            State = FileTransferState.Finished;
-            Progress = 100.0;
         }
 
         #endregion
