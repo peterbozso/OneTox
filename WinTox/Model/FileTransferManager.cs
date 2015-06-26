@@ -55,7 +55,7 @@ namespace WinTox.Model
         {
             SendCancelControl(friendNumber, fileNumber);
 
-            var transferId = new TransferId(fileNumber, friendNumber);
+            var transferId = new TransferId(friendNumber, fileNumber);
             if (Transfers.ContainsKey(transferId))
             {
                 RemoveTransfer(transferId);
@@ -112,7 +112,7 @@ namespace WinTox.Model
                 {
                     if (transfer.Key.FriendNumber == e.FriendNumber)
                     {
-                        RemoveTransfer(new TransferId(transfer.Key.FileNumber, e.FriendNumber));
+                        RemoveTransfer(new TransferId(e.FriendNumber, transfer.Key.FileNumber));
 
                         // If a friend goes offline, we "lie" to the ViewModel saying that the friend canceled the transfer.
                         if (FileControlReceived != null)
@@ -168,7 +168,7 @@ namespace WinTox.Model
 
         public void ReceiveFile(int friendNumber, int fileNumber, Stream saveStream)
         {
-            var transferId = new TransferId(fileNumber, friendNumber);
+            var transferId = new TransferId(friendNumber, fileNumber);
 
             // Replace the dummy stream set previously in FileSendRequestReceivedHandler():
             Transfers[transferId].ReplaceStream(saveStream);

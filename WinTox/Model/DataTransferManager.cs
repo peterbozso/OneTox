@@ -41,7 +41,7 @@ namespace WinTox.Model
             Debug.WriteLine("File control received \t friend number: {0}, \t file number: {1}, \t control: {2}",
                 e.FriendNumber, e.FileNumber, e.Control);
 
-            var transferId = new TransferId(e.FileNumber, e.FriendNumber);
+            var transferId = new TransferId(e.FriendNumber, e.FileNumber);
 
             if (Transfers.ContainsKey(transferId))
                 HandleFileControl(e.Control, transferId);
@@ -68,7 +68,7 @@ namespace WinTox.Model
         protected void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes,
             TransferDirection direction)
         {
-            Transfers.Add(new TransferId(fileNumber, friendNumber), new TransferData(stream, dataSizeInBytes, direction));
+            Transfers.Add(new TransferId(friendNumber, fileNumber), new TransferData(stream, dataSizeInBytes, direction));
         }
 
         protected void RemoveTransfer(TransferId transferId)
@@ -85,7 +85,7 @@ namespace WinTox.Model
 
         private void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
         {
-            var transferId = new TransferId(e.FileNumber, e.FriendNumber);
+            var transferId = new TransferId(e.FriendNumber, e.FileNumber);
 
             if (IsTransferFinished(transferId))
                 return;
@@ -129,7 +129,7 @@ namespace WinTox.Model
 
         private void FileChunkReceivedHandler(object sender, ToxEventArgs.FileChunkEventArgs e)
         {
-            var transferId = new TransferId(e.FileNumber, e.FriendNumber);
+            var transferId = new TransferId(e.FriendNumber, e.FileNumber);
 
             if (IsTransferFinished(transferId))
                 return;
@@ -162,18 +162,18 @@ namespace WinTox.Model
 
         protected class TransferId : IEquatable<TransferId>
         {
-            public TransferId(int fileNumber, int friendNumber)
+            public TransferId(int friendNumber, int fileNumber)
             {
-                FileNumber = fileNumber;
                 FriendNumber = friendNumber;
+                FileNumber = fileNumber;
             }
 
-            public int FileNumber { get; private set; }
             public int FriendNumber { get; private set; }
+            public int FileNumber { get; private set; }
 
             public bool Equals(TransferId other)
             {
-                return (FileNumber == other.FileNumber) && (FriendNumber == other.FriendNumber);
+                return (FriendNumber == other.FriendNumber) && (FileNumber == other.FileNumber);
             }
 
             public override int GetHashCode()
