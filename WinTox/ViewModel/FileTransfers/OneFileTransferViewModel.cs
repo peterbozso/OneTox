@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using WinTox.Common;
+using WinTox.Model;
 
 namespace WinTox.ViewModel.FileTransfers
 {
@@ -21,24 +22,14 @@ namespace WinTox.ViewModel.FileTransfers
     public class OneFileTransferViewModel : ViewModelBase
     {
         public OneFileTransferViewModel(FileTransfersViewModel fileTransfers, int fileNumber, string name,
-            FileTransferState state)
+            TransferDirection direction)
         {
             _fileTransfers = fileTransfers;
             FileNumber = fileNumber;
             Name = name;
-            State = state;
             Progress = 0;
-
-            _lastState = state;
-            switch (state)
-            {
-                case FileTransferState.Uploading:
-                    State = FileTransferState.BeforeUpload;
-                    break;
-                case FileTransferState.Downloading:
-                    State = FileTransferState.BeforeDownload;
-                    break;
-            }
+            _direction = direction;
+            SetInitialStateBasedOnDirection();
         }
 
         #region Fields
@@ -47,7 +38,7 @@ namespace WinTox.ViewModel.FileTransfers
         private FileTransferState _state;
         private bool _isNotPlaceholder;
         private double _progress;
-        private FileTransferState _lastState;
+        private readonly TransferDirection _direction;
         private RelayCommand _pauseTransferByUserCommand;
         private RelayCommand _resumeTransferByUserCommand;
         private RelayCommand _cancelTransferByUserCommand;
@@ -93,6 +84,36 @@ namespace WinTox.ViewModel.FileTransfers
 
         #endregion
 
+        #region Helper methods
+
+        private void SetInitialStateBasedOnDirection()
+        {
+            switch (_direction)
+            {
+                case TransferDirection.Up:
+                    State = FileTransferState.BeforeUpload;
+                    break;
+                case TransferDirection.Down:
+                    State = FileTransferState.BeforeDownload;
+                    break;
+            }
+        }
+
+        private void SetResumingStateBasedOnDirection()
+        {
+            switch (_direction)
+            {
+                case TransferDirection.Up:
+                    State = FileTransferState.Uploading;
+                    break;
+                case TransferDirection.Down:
+                    State = FileTransferState.Downloading;
+                    break;
+            }
+        }
+
+        #endregion
+
         #region Changes coming from the View, being relayed to the Model
 
         public async Task AcceptTransferByUser(StorageFile saveFile)
@@ -120,7 +141,6 @@ namespace WinTox.ViewModel.FileTransfers
                     {
                         if (State == FileTransferState.Downloading || State == FileTransferState.Uploading)
                         {
-                            _lastState = State;
                             State = FileTransferState.PausedByUser;
                             await _fileTransfers.PauseTransferByUser(FileNumber);
                         }
@@ -137,7 +157,7 @@ namespace WinTox.ViewModel.FileTransfers
                     {
                         if (State == FileTransferState.PausedByUser)
                         {
-                            State = _lastState;
+                            SetResumingStateBasedOnDirection();
                             await _fileTransfers.ResumeTransferByUser(FileNumber);
                         }
                     }));
@@ -165,7 +185,6 @@ namespace WinTox.ViewModel.FileTransfers
             if (State != FileTransferState.Uploading && State != FileTransferState.Downloading)
                 return;
 
-            _lastState = State;
             State = FileTransferState.PausedByFriend;
         }
 
@@ -184,7 +203,7 @@ namespace WinTox.ViewModel.FileTransfers
             if (State != FileTransferState.PausedByFriend)
                 return;
 
-            State = _lastState;
+            SetResumingStateBasedOnDirection();
         }
 
         #endregion

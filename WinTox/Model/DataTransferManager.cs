@@ -6,6 +6,12 @@ using SharpTox.Core;
 
 namespace WinTox.Model
 {
+    public enum TransferDirection
+    {
+        Up,
+        Down
+    }
+
     /// <summary>
     ///     Abstract base class for TransferManager classes.
     /// </summary>
@@ -57,12 +63,6 @@ namespace WinTox.Model
         protected bool SendResumeControl(int friendNumber, int fileNumber)
         {
             return ToxModel.Instance.FileControl(friendNumber, fileNumber, ToxFileControl.Resume);
-        }
-
-        public enum TransferDirection
-        {
-            Up,
-            Down
         }
 
         protected void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes,

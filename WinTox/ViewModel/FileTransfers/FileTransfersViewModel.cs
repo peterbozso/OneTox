@@ -183,7 +183,7 @@ namespace WinTox.ViewModel.FileTransfers
             // There can be multiple transfers with the same file number, but there's always only one that's not a placeholder.
         }
 
-        private void AddTransfer(int fileNumber, string fileName, FileTransferState direction)
+        private void AddTransfer(int fileNumber, string fileName, TransferDirection direction)
         {
             Transfers.Add(new OneFileTransferViewModel(this, fileNumber, fileName, direction));
 
@@ -216,7 +216,7 @@ namespace WinTox.ViewModel.FileTransfers
 
             if (successfulSend)
             {
-                AddTransfer(fileNumber, file.Name, FileTransferState.Uploading);
+                AddTransfer(fileNumber, file.Name, TransferDirection.Up);
             }
             else
             {
@@ -303,7 +303,7 @@ namespace WinTox.ViewModel.FileTransfers
 
             await
                 _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    () => { AddTransfer(e.FileNumber, e.FileName, FileTransferState.Downloading); });
+                    () => { AddTransfer(e.FileNumber, e.FileName, TransferDirection.Down); });
         }
 
         #endregion
