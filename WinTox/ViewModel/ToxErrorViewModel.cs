@@ -7,7 +7,7 @@ namespace WinTox.ViewModel
     /// <summary>
     ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
     ///     The idea behind this class is that wherever a Tox-related error happens in ToxModel, it is sent to this class.
-    ///     The application itself subsribes to this class' one event (see App.xaml.cs), which will notify the app and
+    ///     The application itself subscribes to this class' one event (see App.xaml.cs), which will notify the app and
     ///     present an user-readable error message that it can display to the user.
     ///     This way, Tox related errors' handling's scope is reduced only to ToxModel and this ViewModel.
     /// </summary>
