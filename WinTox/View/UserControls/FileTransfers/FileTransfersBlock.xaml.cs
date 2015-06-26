@@ -47,7 +47,7 @@ namespace WinTox.View.UserControls.FileTransfers
 
         private async Task SetAddDeleteThemeTransitionForTransferRibbons()
         {
-            // We need this ugly hack becouse otherwise everytime we navigate to ChatPage
+            // We need this ugly hack because otherwise every time we navigate to ChatPage
             // we'd see the "Add" animation of every item in the list (and we do not want that).
             await Task.Delay(1);
             TransferRibbons.ItemContainerTransitions = new TransitionCollection {new AddDeleteThemeTransition()};
