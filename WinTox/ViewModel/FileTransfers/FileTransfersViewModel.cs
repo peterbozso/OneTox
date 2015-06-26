@@ -30,6 +30,7 @@ namespace WinTox.ViewModel.FileTransfers
 
         public int FriendNumber { get; private set; }
         public ObservableCollection<OneFileTransferViewModel> Transfers { get; private set; }
+        public FileTransfersVisualStates VisualStates { get; private set; }
 
         #region Progress updater
 
@@ -99,83 +100,7 @@ namespace WinTox.ViewModel.FileTransfers
 
         #endregion
 
-        #region Helper methods
-
-        private OneFileTransferViewModel FindNotPlaceHolderTransferViewModel(int fileNumber)
-        {
-            return Transfers.FirstOrDefault(transfer => transfer.FileNumber == fileNumber && transfer.IsNotPlaceholder);
-            // There can be multiple transfers with the same file number, but there's always only one that's not a placeholder.
-        }
-
-        private void AddTransfer(int fileNumber, string fileName, FileTransferState direction)
-        {
-            Transfers.Add(new OneFileTransferViewModel(this, fileNumber, fileName, direction));
-
-            if (VisualStates.BlockState == FileTransfersVisualStates.TransfersBlockState.Invisible)
-                VisualStates.BlockState = FileTransfersVisualStates.TransfersBlockState.Open;
-
-            VisualStates.UpdateOpenContentGridHeight(Transfers.Count);
-        }
-
-        private void RemoveTransfer(OneFileTransferViewModel transferViewModel)
-        {
-            Transfers.Remove(transferViewModel);
-
-            if (Transfers.Count == 0)
-                VisualStates.BlockState = FileTransfersVisualStates.TransfersBlockState.Invisible;
-
-            VisualStates.UpdateOpenContentGridHeight(Transfers.Count);
-        }
-
-        #endregion
-
-        #region Actions coming from the View
-
-        public async Task SendFile(StorageFile file)
-        {
-            var stream = (await file.OpenReadAsync()).AsStreamForRead();
-            int fileNumber;
-
-            var successfulSend = FileTransferManager.Instance.SendFile(FriendNumber, stream, file.Name, out fileNumber);
-
-            if (successfulSend)
-            {
-                AddTransfer(fileNumber, file.Name, FileTransferState.Uploading);
-            }
-            else
-            {
-                stream.Dispose();
-            }
-        }
-
-        public async Task AcceptTransferByUser(int fileNumber, Stream saveStream)
-        {
-            FileTransferManager.Instance.ReceiveFile(FriendNumber, fileNumber, saveStream);
-            await _progressUpdater.StartUpdateIfNeeded();
-        }
-
-        public async Task CancelTransferByUser(OneFileTransferViewModel transferViewModel)
-        {
-            FileTransferManager.Instance.CancelTransfer(FriendNumber, transferViewModel.FileNumber);
-            RemoveTransfer(transferViewModel);
-            await _progressUpdater.StopUpdateIfNeeded();
-        }
-
-        public async Task PauseTransferByUser(int fileNumber)
-        {
-            FileTransferManager.Instance.PauseTransfer(FriendNumber, fileNumber);
-            await _progressUpdater.StopUpdateIfNeeded();
-        }
-
-        public async Task ResumeTransferByUser(int fileNumber)
-        {
-            FileTransferManager.Instance.ResumeTransfer(FriendNumber, fileNumber);
-            await _progressUpdater.StartUpdateIfNeeded();
-        }
-
-        #endregion
-
-        #region Visual states for the View
+        #region Visual states
 
         /// <summary>
         ///     This class's purpose is to supply (trough data binding) the current visual state of FileTransfersBlock and height
@@ -248,11 +173,85 @@ namespace WinTox.ViewModel.FileTransfers
             }
         }
 
-        public FileTransfersVisualStates VisualStates { get; private set; }
+        #endregion
+
+        #region Helper methods
+
+        private OneFileTransferViewModel FindNotPlaceHolderTransferViewModel(int fileNumber)
+        {
+            return Transfers.FirstOrDefault(transfer => transfer.FileNumber == fileNumber && transfer.IsNotPlaceholder);
+            // There can be multiple transfers with the same file number, but there's always only one that's not a placeholder.
+        }
+
+        private void AddTransfer(int fileNumber, string fileName, FileTransferState direction)
+        {
+            Transfers.Add(new OneFileTransferViewModel(this, fileNumber, fileName, direction));
+
+            if (VisualStates.BlockState == FileTransfersVisualStates.TransfersBlockState.Invisible)
+                VisualStates.BlockState = FileTransfersVisualStates.TransfersBlockState.Open;
+
+            VisualStates.UpdateOpenContentGridHeight(Transfers.Count);
+        }
+
+        private void RemoveTransfer(OneFileTransferViewModel transferViewModel)
+        {
+            Transfers.Remove(transferViewModel);
+
+            if (Transfers.Count == 0)
+                VisualStates.BlockState = FileTransfersVisualStates.TransfersBlockState.Invisible;
+
+            VisualStates.UpdateOpenContentGridHeight(Transfers.Count);
+        }
 
         #endregion
 
-        #region Actions coming from the Model
+        #region Changes coming from the View, being relayed to the Model
+
+        public async Task SendFile(StorageFile file)
+        {
+            var stream = (await file.OpenReadAsync()).AsStreamForRead();
+            int fileNumber;
+
+            var successfulSend = FileTransferManager.Instance.SendFile(FriendNumber, stream, file.Name, out fileNumber);
+
+            if (successfulSend)
+            {
+                AddTransfer(fileNumber, file.Name, FileTransferState.Uploading);
+            }
+            else
+            {
+                stream.Dispose();
+            }
+        }
+
+        public async Task AcceptTransferByUser(int fileNumber, Stream saveStream)
+        {
+            FileTransferManager.Instance.ReceiveFile(FriendNumber, fileNumber, saveStream);
+            await _progressUpdater.StartUpdateIfNeeded();
+        }
+
+        public async Task CancelTransferByUser(OneFileTransferViewModel transferViewModel)
+        {
+            FileTransferManager.Instance.CancelTransfer(FriendNumber, transferViewModel.FileNumber);
+            RemoveTransfer(transferViewModel);
+            await _progressUpdater.StopUpdateIfNeeded();
+        }
+
+        public async Task PauseTransferByUser(int fileNumber)
+        {
+            FileTransferManager.Instance.PauseTransfer(FriendNumber, fileNumber);
+            await _progressUpdater.StopUpdateIfNeeded();
+        }
+
+        public async Task ResumeTransferByUser(int fileNumber)
+        {
+            FileTransferManager.Instance.ResumeTransfer(FriendNumber, fileNumber);
+            await _progressUpdater.StartUpdateIfNeeded();
+        }
+
+        #endregion
+
+        #region Changes coming from the Model, being relayed to the View
 
         private async void FileControlReceivedHandler(int friendNumber, int fileNumber, ToxFileControl fileControl)
         {
