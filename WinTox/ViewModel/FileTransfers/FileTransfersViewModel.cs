@@ -15,21 +15,89 @@ namespace WinTox.ViewModel.FileTransfers
     public class FileTransfersViewModel : ViewModelBase
     {
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
-        private readonly int _friendNumber;
-        private DispatcherTimer _progressDispatcherTimer;
+        private readonly ProgressUpdater _progressUpdater;
 
         public FileTransfersViewModel(int friendNumber)
         {
-            _friendNumber = friendNumber;
+            FriendNumber = friendNumber;
             Transfers = new ObservableCollection<OneFileTransferViewModel>();
             FileTransferManager.Instance.FileControlReceived += FileControlReceivedHandler;
             FileTransferManager.Instance.TransferFinished += TransferFinishedHandler;
             FileTransferManager.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
-            SetupProgressDispatcherTimer();
+            _progressUpdater = new ProgressUpdater(this);
             VisualStates = new FileTransfersVisualStates();
         }
 
+        public int FriendNumber { get; private set; }
         public ObservableCollection<OneFileTransferViewModel> Transfers { get; private set; }
+
+        #region Progress updater
+
+        /// <summary>
+        ///     This class's purpose is to update the progress bars' progress on FileTransfersBlock.
+        /// </summary>
+        private class ProgressUpdater
+        {
+            private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+            private readonly FileTransfersViewModel _fileTransfers;
+            private readonly DispatcherTimer _progressDispatcherTimer;
+
+            public ProgressUpdater(FileTransfersViewModel fileTransfers)
+            {
+                _fileTransfers = fileTransfers;
+
+                _progressDispatcherTimer = new DispatcherTimer();
+                _progressDispatcherTimer.Tick += ProgressDispatcherTimerTickHandler;
+                _progressDispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
+            }
+
+            /// <summary>
+            ///     On every tick, we get the progress of all transfers from FileTransferManager, then update each
+            ///     OneFileTransferViewModel accordingly. We need to do this periodically to not to block the UI thread and maintain a
+            ///     fluid display of progress changes.
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
+            private void ProgressDispatcherTimerTickHandler(object sender, object e)
+            {
+                var progresses = FileTransferManager.Instance.GetTransferProgressesOfFriend(_fileTransfers.FriendNumber);
+                foreach (var progress in progresses)
+                {
+                    var transfer = _fileTransfers.FindNotPlaceHolderTransferViewModel(progress.Key);
+                    if (transfer == null)
+                        continue;
+
+                    transfer.Progress = progress.Value;
+                }
+            }
+
+            public async Task StartUpdateIfNeeded()
+            {
+                if (GetActiveTransfersCount() > 0)
+                {
+                    await
+                        _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { _progressDispatcherTimer.Start(); });
+                }
+            }
+
+            public async Task StopUpdateIfNeeded()
+            {
+                if (GetActiveTransfersCount() == 0)
+                {
+                    await
+                        _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { _progressDispatcherTimer.Stop(); });
+                }
+            }
+
+            private int GetActiveTransfersCount()
+            {
+                return _fileTransfers.Transfers.Count(transfer => transfer.IsNotPlaceholder &&
+                                                                  transfer.State != FileTransferState.PausedByFriend &&
+                                                                  transfer.State != FileTransferState.PausedByUser);
+            }
+        }
+
+        #endregion
 
         #region Helper methods
 
@@ -61,51 +129,6 @@ namespace WinTox.ViewModel.FileTransfers
 
         #endregion
 
-        #region Helper methods for DispatcherTimer
-
-        private void SetupProgressDispatcherTimer()
-        {
-            _progressDispatcherTimer = new DispatcherTimer();
-            _progressDispatcherTimer.Tick += (s, e) =>
-            {
-                var progresses = FileTransferManager.Instance.GetTransferProgressesOfFriend(_friendNumber);
-                foreach (var progress in progresses)
-                {
-                    var transfer = FindNotPlaceHolderTransferViewModel(progress.Key);
-                    if (transfer == null)
-                        continue;
-
-                    transfer.Progress = progress.Value;
-                }
-            };
-            _progressDispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
-        }
-
-        private async Task StartTimerIfNeeded()
-        {
-            if (GetActiveTransfersCount() > 0)
-            {
-                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { _progressDispatcherTimer.Start(); });
-            }
-        }
-
-        private async Task StopTimerIfNeeded()
-        {
-            if (GetActiveTransfersCount() == 0)
-            {
-                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { _progressDispatcherTimer.Stop(); });
-            }
-        }
-
-        private int GetActiveTransfersCount()
-        {
-            return Transfers.Count(transfer => transfer.IsNotPlaceholder &&
-                                               transfer.State != FileTransferState.PausedByFriend &&
-                                               transfer.State != FileTransferState.PausedByUser);
-        }
-
-        #endregion
-
         #region Actions coming from the View
 
         public async Task SendFile(StorageFile file)
@@ -113,7 +136,7 @@ namespace WinTox.ViewModel.FileTransfers
             var stream = (await file.OpenReadAsync()).AsStreamForRead();
             int fileNumber;
 
-            var successfulSend = FileTransferManager.Instance.SendFile(_friendNumber, stream, file.Name, out fileNumber);
+            var successfulSend = FileTransferManager.Instance.SendFile(FriendNumber, stream, file.Name, out fileNumber);
 
             if (successfulSend)
             {
@@ -127,27 +150,27 @@ namespace WinTox.ViewModel.FileTransfers
 
         public async Task AcceptTransferByUser(int fileNumber, Stream saveStream)
         {
-            FileTransferManager.Instance.ReceiveFile(_friendNumber, fileNumber, saveStream);
-            await StartTimerIfNeeded();
+            FileTransferManager.Instance.ReceiveFile(FriendNumber, fileNumber, saveStream);
+            await _progressUpdater.StartUpdateIfNeeded();
         }
 
         public async Task CancelTransferByUser(OneFileTransferViewModel transferViewModel)
         {
-            FileTransferManager.Instance.CancelTransfer(_friendNumber, transferViewModel.FileNumber);
+            FileTransferManager.Instance.CancelTransfer(FriendNumber, transferViewModel.FileNumber);
             RemoveTransfer(transferViewModel);
-            await StopTimerIfNeeded();
+            await _progressUpdater.StopUpdateIfNeeded();
         }
 
         public async Task PauseTransferByUser(int fileNumber)
         {
-            FileTransferManager.Instance.PauseTransfer(_friendNumber, fileNumber);
-            await StopTimerIfNeeded();
+            FileTransferManager.Instance.PauseTransfer(FriendNumber, fileNumber);
+            await _progressUpdater.StopUpdateIfNeeded();
         }
 
         public async Task ResumeTransferByUser(int fileNumber)
         {
-            FileTransferManager.Instance.ResumeTransfer(_friendNumber, fileNumber);
-            await StartTimerIfNeeded();
+            FileTransferManager.Instance.ResumeTransfer(FriendNumber, fileNumber);
+            await _progressUpdater.StartUpdateIfNeeded();
         }
 
         #endregion
@@ -233,7 +256,7 @@ namespace WinTox.ViewModel.FileTransfers
 
         private async void FileControlReceivedHandler(int friendNumber, int fileNumber, ToxFileControl fileControl)
         {
-            if (_friendNumber != friendNumber)
+            if (FriendNumber != friendNumber)
                 return;
 
             var transfer = FindNotPlaceHolderTransferViewModel(fileNumber);
@@ -246,15 +269,15 @@ namespace WinTox.ViewModel.FileTransfers
                 {
                     case ToxFileControl.Cancel:
                         transfer.CancelTransferByFriend();
-                        await StopTimerIfNeeded();
+                        await _progressUpdater.StopUpdateIfNeeded();
                         return;
                     case ToxFileControl.Pause:
                         transfer.PauseTransferByFriend();
-                        await StopTimerIfNeeded();
+                        await _progressUpdater.StopUpdateIfNeeded();
                         return;
                     case ToxFileControl.Resume:
                         transfer.ResumeTransferByFriend();
-                        await StartTimerIfNeeded();
+                        await _progressUpdater.StartUpdateIfNeeded();
                         return;
                 }
             });
@@ -262,7 +285,7 @@ namespace WinTox.ViewModel.FileTransfers
 
         private async void TransferFinishedHandler(int friendNumber, int fileNumber)
         {
-            if (_friendNumber != friendNumber)
+            if (FriendNumber != friendNumber)
                 return;
 
             var transfer = FindNotPlaceHolderTransferViewModel(fileNumber);
@@ -271,12 +294,12 @@ namespace WinTox.ViewModel.FileTransfers
 
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { transfer.FinishTransfer(); });
 
-            await StopTimerIfNeeded();
+            await _progressUpdater.StopUpdateIfNeeded();
         }
 
         private async void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
         {
-            if (e.FriendNumber != _friendNumber)
+            if (e.FriendNumber != FriendNumber)
                 return;
 
             await
