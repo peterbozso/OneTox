@@ -6,9 +6,11 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
 using WinTox.ViewModel.Friends;
+using WinTox.ViewModel.Messaging;
 
 namespace WinTox.View
 {
@@ -20,6 +22,7 @@ namespace WinTox.View
         private readonly Timer _chatTimer;
         private FriendViewModel _friendViewModel;
         private InputPaneChangeHandler _inputPaneChangeHandler;
+        private ScrollManager _scollManager;
 
         public ChatPage()
         {
@@ -88,20 +91,6 @@ namespace WinTox.View
             }
         }
 
-        private void SetupViewModel(FriendViewModel friendViewModel)
-        {
-            DataContext = _friendViewModel = friendViewModel;
-            _friendViewModel.Conversation.MessageAdded += MessageAddedHandler;
-        }
-
-        private void MessageAddedHandler(object sender, EventArgs e)
-        {
-            var selectedIndex = MessagesListView.Items.Count - 1;
-            MessagesListView.SelectedIndex = selectedIndex;
-            MessagesListView.UpdateLayout();
-            MessagesListView.ScrollIntoView(MessagesListView.SelectedItem);
-        }
-
         private async void SendFileButtonClick(object sender, RoutedEventArgs e)
         {
             var openPicker = new FileOpenPicker();
@@ -158,6 +147,107 @@ namespace WinTox.View
 
         #endregion
 
+        #region Management of scrolling of MessagesListView
+
+        /// <summary>
+        ///     This class's responsibility is to manage the following behavior(s):
+        ///     A) (By default and) if the user scrolls to the bottom of the conversation, whenever a new message is received, the
+        ///     view scrolls to the bottom to include that message too. It does the same if the size of MessagesListView changes,
+        ///     so no matter how long text the user enters to MessageInput (and by that, automatically increase it's size and
+        ///     reduce MessagesListView's), the last message would still be shown.
+        ///     B) The other case is when the user scrolls up in the conversation. Most likely he/she does it to read previous
+        ///     messages. In this case, the user shouldn't be interrupted while reading with the automatically scrolling behavior,
+        ///     so it is turned off and the view stays where it is, no matter what happens to the list (a new message is added or
+        ///     the TextBox on the bottom grows an squishes it).
+        /// </summary>
+        private class ScrollManager
+        {
+            private readonly ConversationViewModel _conversationViewModel;
+            private readonly ListView _messagesListView;
+            private ScrollViewer _messagesScrollViewer;
+
+            /// <summary>
+            ///     If true, we are behaving as defined in A), otherwise B).
+            /// </summary>
+            private bool _stickToBottom = true;
+
+            public ScrollManager(ListView messagesListView, ConversationViewModel conversationViewModel)
+            {
+                _messagesListView = messagesListView;
+                _conversationViewModel = conversationViewModel;
+            }
+
+            public void RegisterHandlers()
+            {
+                _messagesListView.SizeChanged += MessagesListViewSizeChangedHandler;
+                _messagesListView.Loaded += (sender, args) =>
+                {
+                    // We need to do it this way because if we'd get the ScrollViewer sooner, the function would just return a null.
+                    _messagesScrollViewer = GetScrollViewer(_messagesListView);
+                    _messagesScrollViewer.ViewChanged += MessagesScrollViewerViewChangedHandler;
+                };
+                _conversationViewModel.MessageAdded += MessageAddedHandler;
+            }
+
+            public void DeregisterHandlers()
+            {
+                _messagesListView.SizeChanged -= MessagesListViewSizeChangedHandler;
+                _messagesScrollViewer.ViewChanged -= MessagesScrollViewerViewChangedHandler;
+                _conversationViewModel.MessageAdded -= MessageAddedHandler;
+            }
+
+            private ScrollViewer GetScrollViewer(DependencyObject o)
+            {
+                if (o is ScrollViewer)
+                {
+                    return o as ScrollViewer;
+                }
+
+                for (var i = 0; i < VisualTreeHelper.GetChildrenCount(o); i++)
+                {
+                    var child = VisualTreeHelper.GetChild(o, i);
+
+                    var result = GetScrollViewer(child);
+                    if (result == null)
+                    {
+                        continue;
+                    }
+
+                    return result;
+                }
+
+                return null;
+            }
+
+            private void MessagesListViewSizeChangedHandler(object sender, SizeChangedEventArgs e)
+            {
+                ScrollToBottomIfNeeded();
+            }
+
+            private void MessageAddedHandler(object sender, EventArgs e)
+            {
+                ScrollToBottomIfNeeded();
+            }
+
+            private void ScrollToBottomIfNeeded()
+            {
+                if (!_stickToBottom || _messagesScrollViewer == null)
+                    return;
+
+                _messagesScrollViewer.UpdateLayout();
+                _messagesScrollViewer.ScrollToVerticalOffset(_messagesScrollViewer.ScrollableHeight);
+            }
+
+            private void MessagesScrollViewerViewChangedHandler(object sender, ScrollViewerViewChangedEventArgs e)
+            {
+                // We "stick to the bottom" if the user scrolled to the bottom intentionally. Of course it's set true if we scroll
+                // to the bottom programmatically as well, but the initial set is always due to the constructor (see case A)), or user activity.
+                _stickToBottom = (_messagesScrollViewer.VerticalOffset.Equals(_messagesScrollViewer.ScrollableHeight));
+            }
+        }
+
+        #endregion
+
         #region NavigationHelper registration
 
         /// The methods provided in this section are simply used to allow
@@ -177,18 +267,37 @@ namespace WinTox.View
             var friendViewModel = e.Parameter as FriendViewModel;
             if (friendViewModel != null)
             {
-                SetupViewModel(friendViewModel);
-            }
+                DataContext = _friendViewModel = friendViewModel;
 
-            _inputPaneChangeHandler = new InputPaneChangeHandler(MessageInput);
-            _inputPaneChangeHandler.RegisterHandlers();
+                SetupView();
+            }
+            else
+            {
+                throw new ArgumentException(
+                    "Navigated to ChatPage with wrong type of parameter or with null! An object with the type of FirendViewModel is expected.");
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             NavigationHelper.OnNavigatedFrom(e);
 
+            TearDownView();
+        }
+
+        private void SetupView()
+        {
+            _inputPaneChangeHandler = new InputPaneChangeHandler(MessageInput);
+            _inputPaneChangeHandler.RegisterHandlers();
+
+            _scollManager = new ScrollManager(MessagesListView, _friendViewModel.Conversation);
+            _scollManager.RegisterHandlers();
+        }
+
+        private void TearDownView()
+        {
             _inputPaneChangeHandler.DeregisterHandlers();
+            _scollManager.DeregisterHandlers();
         }
 
         #endregion

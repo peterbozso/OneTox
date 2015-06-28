@@ -55,7 +55,6 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <!-- Top panel with friend info and send file button -->
@@ -78,7 +77,7 @@
             <!-- List of messages -->
             <ListView Grid.Row="2" x:Name="MessagesListView" Background="{StaticResource ChatBackgroundColor}"
                       ItemsSource="{Binding Conversation.MessageGroups}" SelectionMode="None"
-                      HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                      HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IncrementalLoadingTrigger="None">
                 <ListView.ItemContainerStyle>
                     <StaticResource ResourceKey="ChatPageListViewItemStyle" />
                 </ListView.ItemContainerStyle>
@@ -91,15 +90,12 @@
             </ListView>
 
             <!-- Friend typing indicator -->
-            <Grid Grid.Row="3"
-                  Background="{StaticResource ChatBackgroundColor}"
-                  Visibility="{Binding Conversation.IsFriendTyping, Converter={StaticResource BoolToVisibilityConverter}}">
-                <TextBlock Foreground="{StaticResource MainColor}" FontSize="20" Margin="10,2,0,2"
-                           Text="{Binding Name, Converter={StaticResource FriendNameToTypingStatusConverter}}" />
-            </Grid>
+            <TextBlock FontSize="13" Margin="20,2,0,0" Grid.Row="3" VerticalAlignment="Top" Canvas.ZIndex="1"             
+                       Visibility="{Binding Conversation.IsFriendTyping, Converter={StaticResource BoolToVisibilityConverter}}"
+                       Text="{Binding Name, Converter={StaticResource FriendNameToTypingStatusConverter}}" />
 
             <!-- Message input field -->
-            <Grid Grid.Row="4" Background="{StaticResource MainColor}">
+            <Grid Grid.Row="3" Background="{StaticResource MainColor}">
                 <TextBox x:Name="MessageInput" Margin="20" FontSize="20" MinHeight="40" MaxHeight="250" Height="Auto"
                          KeyDown="MessageInputKeyDown" TextWrapping="Wrap" />
             </Grid>
