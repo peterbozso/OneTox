@@ -96,7 +96,7 @@
 
             <!-- Message input field -->
             <Grid Grid.Row="3" Background="{StaticResource MainColor}">
-                <TextBox x:Name="MessageInput" Margin="20" FontSize="20" MinHeight="40" MaxHeight="250" Height="Auto"
+                <TextBox x:Name="MessageInputTextBox" Margin="20" FontSize="20" MinHeight="40" MaxHeight="250" Height="Auto"
                          KeyDown="MessageInputKeyDown" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10,3,20,5" />
             </Grid>
         </Grid>

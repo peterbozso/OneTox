@@ -78,15 +78,15 @@ namespace WinTox.View
             _chatTimer.Change(500, -1);
             _friendViewModel.Conversation.SetTypingStatus(true);
 
-            if (e.Key == VirtualKey.Enter && MessageInput.Text != String.Empty)
+            if (e.Key == VirtualKey.Enter && MessageInputTextBox.Text != String.Empty)
             {
                 // I don't even... 
                 // https://social.msdn.microsoft.com/Forums/windowsapps/en-US/734d6c7a-8da2-48c6-9b3d-fa868b4dfb1d/c-textbox-keydown-triggered-twice-in-metro-applications?forum=winappswithcsharp
                 if (e.KeyStatus.RepeatCount != 1)
                     return;
 
-                await _friendViewModel.Conversation.SendMessage(MessageInput.Text);
-                MessageInput.Text = String.Empty;
+                await _friendViewModel.Conversation.SendMessage(MessageInputTextBox.Text);
+                MessageInputTextBox.Text = String.Empty;
                 e.Handled = true;
             }
         }
@@ -153,7 +153,7 @@ namespace WinTox.View
         ///     This class's responsibility is to manage the following behavior(s):
         ///     A) (By default and) if the user scrolls to the bottom of the conversation, whenever a new message is received, the
         ///     view scrolls to the bottom to include that message too. It does the same if the size of MessagesListView changes,
-        ///     so no matter how long text the user enters to MessageInput (and by that, automatically increase it's size and
+        ///     so no matter how long text the user enters to MessageInputTextBox (and by that, automatically increase it's size and
         ///     reduce MessagesListView's), the last message would still be shown.
         ///     B) The other case is when the user scrolls up in the conversation. Most likely he/she does it to read previous
         ///     messages. In this case, the user shouldn't be interrupted while reading with the automatically scrolling behavior,
@@ -287,7 +287,7 @@ namespace WinTox.View
 
         private void SetupView()
         {
-            _inputPaneChangeHandler = new InputPaneChangeHandler(MessageInput);
+            _inputPaneChangeHandler = new InputPaneChangeHandler(MessageInputTextBox);
             _inputPaneChangeHandler.RegisterHandlers();
 
             _scollManager = new ScrollManager(MessagesListView, _friendViewModel.Conversation);
