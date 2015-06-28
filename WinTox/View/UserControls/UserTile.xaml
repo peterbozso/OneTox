@@ -54,8 +54,7 @@
 
         <!-- User avatar -->
         <Image Grid.Column="1" Grid.Row="0" Source="{Binding Avatar}"
-               Width="{StaticResource SmallAvatarSize}"
-               Height="{StaticResource SmallAvatarSize}" Stretch="UniformToFill" VerticalAlignment="Top"
+               Width="70" Height="70" Stretch="UniformToFill" VerticalAlignment="Top"
                Opacity="{Binding IsConnected, Converter={StaticResource BoolToOpacityConverter}}" />
     </Grid>
 </UserControl>
