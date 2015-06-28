@@ -2,6 +2,7 @@
 using System.Threading;
 using Windows.Storage.Pickers;
 using Windows.System;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -18,6 +19,7 @@ namespace WinTox.View
     {
         private readonly Timer _chatTimer;
         private FriendViewModel _friendViewModel;
+        private InputPaneChangeHandler _inputPaneChangeHandler;
 
         public ChatPage()
         {
@@ -115,6 +117,47 @@ namespace WinTox.View
             }
         }
 
+        #region Handle changes of the input pane's state
+
+        /// <summary>
+        ///     Inner class for handling the input pane's changes (the on-screen keyboard is being shown/hidden).
+        /// </summary>
+        private class InputPaneChangeHandler
+        {
+            private readonly InputPane _inputPane = InputPane.GetForCurrentView();
+            private readonly TextBox _messageInputTextBox;
+
+            public InputPaneChangeHandler(TextBox messageInputTextBox)
+            {
+                _messageInputTextBox = messageInputTextBox;
+            }
+
+            public void RegisterHandlers()
+            {
+                _inputPane.Showing += ShowingHandler;
+                _inputPane.Hiding += HidingHandler;
+            }
+
+            public void DeregisterHandlers()
+            {
+                _inputPane.Showing -= ShowingHandler;
+                _inputPane.Hiding -= HidingHandler;
+            }
+
+            private void ShowingHandler(InputPane sender, InputPaneVisibilityEventArgs args)
+            {
+                args.EnsuredFocusedElementInView = true;
+                _messageInputTextBox.Margin = new Thickness(20, 20, 20, args.OccludedRect.Height + 20);
+            }
+
+            private void HidingHandler(InputPane sender, InputPaneVisibilityEventArgs args)
+            {
+                _messageInputTextBox.Margin = new Thickness(20);
+            }
+        }
+
+        #endregion
+
         #region NavigationHelper registration
 
         /// The methods provided in this section are simply used to allow
@@ -136,11 +179,16 @@ namespace WinTox.View
             {
                 SetupViewModel(friendViewModel);
             }
+
+            _inputPaneChangeHandler = new InputPaneChangeHandler(MessageInput);
+            _inputPaneChangeHandler.RegisterHandlers();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             NavigationHelper.OnNavigatedFrom(e);
+
+            _inputPaneChangeHandler.DeregisterHandlers();
         }
 
         #endregion
