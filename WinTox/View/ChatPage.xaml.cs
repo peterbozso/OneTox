@@ -233,7 +233,7 @@ namespace WinTox.View
             {
                 if (IsSticky())
                 {
-                    ScrollToBottom();
+                    ScrollToBottom(true);
                 }
             }
 
@@ -241,7 +241,7 @@ namespace WinTox.View
             {
                 if (IsSticky())
                 {
-                    ScrollToBottom();
+                    ScrollToBottom(true);
                 }
                 else
                 {
@@ -265,7 +265,7 @@ namespace WinTox.View
 
                 if (_messagesScrollViewer != null)
                 {
-                    ScrollToBottom();
+                    ScrollToBottom(false);
                 }
             }
 
@@ -274,14 +274,17 @@ namespace WinTox.View
                 return (_messagesScrollViewer != null && _stickToBottom);
             }
 
-            private void ScrollToBottom()
+            private void ScrollToBottom(bool disableAnimation)
             {
                 _messagesScrollViewer.UpdateLayout();
-                _messagesScrollViewer.ChangeView(null, Double.MaxValue, null);
+                _messagesScrollViewer.ChangeView(null, Double.MaxValue, null, disableAnimation);
             }
 
             private void MessagesScrollViewerViewChangedHandler(object sender, ScrollViewerViewChangedEventArgs e)
             {
+                if (e.IsIntermediate)
+                    return;
+
                 // We "stick to the bottom" if the user scrolled to the bottom intentionally. Of course it's set true if we scroll
                 // to the bottom programmatically as well, but the initial set is always due to the constructor (see case A)), or user activity.
                 _stickToBottom = (_messagesScrollViewer.VerticalOffset.Equals(_messagesScrollViewer.ScrollableHeight));

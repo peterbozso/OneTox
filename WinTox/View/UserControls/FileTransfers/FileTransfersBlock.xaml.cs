@@ -43,7 +43,7 @@ namespace WinTox.View.UserControls.FileTransfers
         private void ScrollTransferRibbonsToBottom()
         {
             TransferRibbonsScrollViewer.UpdateLayout();
-            TransferRibbonsScrollViewer.ChangeView(null, Double.MaxValue, null);
+            TransferRibbonsScrollViewer.ChangeView(null, Double.MaxValue, null, true);
         }
 
         private async Task SetAddDeleteThemeTransitionForTransferRibbons()
