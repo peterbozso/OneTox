@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -42,7 +43,7 @@ namespace WinTox.View.UserControls.FileTransfers
         private void ScrollTransferRibbonsToBottom()
         {
             TransferRibbonsScrollViewer.UpdateLayout();
-            TransferRibbonsScrollViewer.ScrollToVerticalOffset(TransferRibbonsScrollViewer.ScrollableHeight);
+            TransferRibbonsScrollViewer.ChangeView(null, Double.MaxValue, null);
         }
 
         private async Task SetAddDeleteThemeTransitionForTransferRibbons()
