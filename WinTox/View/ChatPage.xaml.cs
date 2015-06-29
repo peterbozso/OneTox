@@ -7,6 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
 using WinTox.ViewModel.Friends;
@@ -22,7 +23,7 @@ namespace WinTox.View
         private readonly Timer _chatTimer;
         private FriendViewModel _friendViewModel;
         private InputPaneChangeHandler _inputPaneChangeHandler;
-        private ScrollManager _scollManager;
+        private ScrollManager _scrollManager;
 
         public ChatPage()
         {
@@ -153,16 +154,20 @@ namespace WinTox.View
         ///     This class's responsibility is to manage the following behavior(s):
         ///     A) (By default and) if the user scrolls to the bottom of the conversation, whenever a new message is received, the
         ///     view scrolls to the bottom to include that message too. It does the same if the size of MessagesListView changes,
-        ///     so no matter how long text the user enters to MessageInputTextBox (and by that, automatically increase it's size and
+        ///     so no matter how long text the user enters to MessageInputTextBox (and by that, automatically increase it's size
+        ///     and
         ///     reduce MessagesListView's), the last message would still be shown.
         ///     B) The other case is when the user scrolls up in the conversation. Most likely he/she does it to read previous
         ///     messages. In this case, the user shouldn't be interrupted while reading with the automatically scrolling behavior,
         ///     so it is turned off and the view stays where it is, no matter what happens to the list (a new message is added or
-        ///     the TextBox on the bottom grows an squishes it).
+        ///     the TextBox on the bottom grows an squishes it). In this case, we also show a notification what the user can use
+        ///     (by clicking/tapping it) to scroll to the bottom instantly.
         /// </summary>
         private class ScrollManager
         {
             private readonly ConversationViewModel _conversationViewModel;
+            private readonly Storyboard _messageAddedNotificationAnimation;
+            private readonly Grid _messageAddedNotificationGrid;
             private readonly ListView _messagesListView;
             private ScrollViewer _messagesScrollViewer;
 
@@ -171,10 +176,13 @@ namespace WinTox.View
             /// </summary>
             private bool _stickToBottom = true;
 
-            public ScrollManager(ListView messagesListView, ConversationViewModel conversationViewModel)
+            public ScrollManager(ListView messagesListView, ConversationViewModel conversationViewModel,
+                Grid messageAddedNotificationGrid, Storyboard messageAddedNotificationAnimation)
             {
                 _messagesListView = messagesListView;
                 _conversationViewModel = conversationViewModel;
+                _messageAddedNotificationGrid = messageAddedNotificationGrid;
+                _messageAddedNotificationAnimation = messageAddedNotificationAnimation;
             }
 
             public void RegisterHandlers()
@@ -187,6 +195,7 @@ namespace WinTox.View
                     _messagesScrollViewer.ViewChanged += MessagesScrollViewerViewChangedHandler;
                 };
                 _conversationViewModel.MessageAdded += MessageAddedHandler;
+                _messageAddedNotificationGrid.Tapped += MessageAddedNotificationGridTapped;
             }
 
             public void DeregisterHandlers()
@@ -194,6 +203,7 @@ namespace WinTox.View
                 _messagesListView.SizeChanged -= MessagesListViewSizeChangedHandler;
                 _messagesScrollViewer.ViewChanged -= MessagesScrollViewerViewChangedHandler;
                 _conversationViewModel.MessageAdded -= MessageAddedHandler;
+                _messageAddedNotificationGrid.Tapped -= MessageAddedNotificationGridTapped;
             }
 
             private ScrollViewer GetScrollViewer(DependencyObject o)
@@ -221,21 +231,53 @@ namespace WinTox.View
 
             private void MessagesListViewSizeChangedHandler(object sender, SizeChangedEventArgs e)
             {
-                ScrollToBottomIfNeeded();
+                if (IsSticky())
+                {
+                    ScrollToBottom();
+                }
             }
 
-            private void MessageAddedHandler(object sender, EventArgs e)
+            private void MessageAddedHandler(object sender, ToxMessageViewModelBase message)
             {
-                ScrollToBottomIfNeeded();
+                if (IsSticky())
+                {
+                    ScrollToBottom();
+                }
+                else
+                {
+                    // We only play the notification animation if the user receives a message.
+                    // We do not disturb the user with his/her own messages, only give him/her the opportunity to
+                    // scroll to the bottom fast to catch up with the recent messages.
+
+                    _messageAddedNotificationGrid.Visibility = Visibility.Visible;
+
+                    if (message is ReceivedMessageViewModel)
+                    {
+                        _messageAddedNotificationAnimation.Begin();
+                    }
+                }
             }
 
-            private void ScrollToBottomIfNeeded()
+            private void MessageAddedNotificationGridTapped(object sender, TappedRoutedEventArgs e)
             {
-                if (!_stickToBottom || _messagesScrollViewer == null)
-                    return;
+                _messageAddedNotificationAnimation.Stop();
+                _messageAddedNotificationGrid.Visibility = Visibility.Collapsed;
 
+                if (_messagesScrollViewer != null)
+                {
+                    ScrollToBottom();
+                }
+            }
+
+            private bool IsSticky()
+            {
+                return (_messagesScrollViewer != null && _stickToBottom);
+            }
+
+            private void ScrollToBottom()
+            {
                 _messagesScrollViewer.UpdateLayout();
-                _messagesScrollViewer.ScrollToVerticalOffset(_messagesScrollViewer.ScrollableHeight);
+                _messagesScrollViewer.ChangeView(null, Double.MaxValue, null);
             }
 
             private void MessagesScrollViewerViewChangedHandler(object sender, ScrollViewerViewChangedEventArgs e)
@@ -243,6 +285,10 @@ namespace WinTox.View
                 // We "stick to the bottom" if the user scrolled to the bottom intentionally. Of course it's set true if we scroll
                 // to the bottom programmatically as well, but the initial set is always due to the constructor (see case A)), or user activity.
                 _stickToBottom = (_messagesScrollViewer.VerticalOffset.Equals(_messagesScrollViewer.ScrollableHeight));
+
+                // If the user scrolled to the bottom manually, we do not show the notification anymore.
+                if (_stickToBottom)
+                    _messageAddedNotificationGrid.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -290,14 +336,15 @@ namespace WinTox.View
             _inputPaneChangeHandler = new InputPaneChangeHandler(MessageInputTextBox);
             _inputPaneChangeHandler.RegisterHandlers();
 
-            _scollManager = new ScrollManager(MessagesListView, _friendViewModel.Conversation);
-            _scollManager.RegisterHandlers();
+            _scrollManager = new ScrollManager(MessagesListView, _friendViewModel.Conversation,
+                MessageAddedNotificationGrid, MessageAddedNotificationAnimation);
+            _scrollManager.RegisterHandlers();
         }
 
         private void TearDownView()
         {
             _inputPaneChangeHandler.DeregisterHandlers();
-            _scollManager.DeregisterHandlers();
+            _scrollManager.DeregisterHandlers();
         }
 
         #endregion

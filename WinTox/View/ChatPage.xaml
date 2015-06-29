@@ -14,7 +14,30 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <ResourceDictionary Source="ResourceDictionaries/ChatPageDictionary.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ResourceDictionaries/ChatPageDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Storyboard x:Name="MessageAddedNotificationAnimation">
+                <DoubleAnimationUsingKeyFrames
+                    Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                    Storyboard.TargetName="MessageAddedNotificationEllipse">
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2" />
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames
+                    Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                    Storyboard.TargetName="MessageAddedNotificationEllipse">
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2" />
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
+                                               Storyboard.TargetName="MessageAddedNotificationIcon">
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0.5" />
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+        </ResourceDictionary>
     </Page.Resources>
 
 
@@ -77,7 +100,8 @@
             <!-- List of messages -->
             <ListView Grid.Row="2" x:Name="MessagesListView" Background="{StaticResource ChatBackgroundColor}"
                       ItemsSource="{Binding Conversation.MessageGroups}" SelectionMode="None"
-                      HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IncrementalLoadingTrigger="None">
+                      HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                      IncrementalLoadingTrigger="None">
                 <ListView.ItemContainerStyle>
                     <StaticResource ResourceKey="ChatPageListViewItemStyle" />
                 </ListView.ItemContainerStyle>
@@ -89,15 +113,35 @@
                 </ListView.ItemTemplate>
             </ListView>
 
+            <!-- Received message notification -->
+            <Grid x:Name="MessageAddedNotificationGrid" Grid.Row="2" HorizontalAlignment="Left"
+                  VerticalAlignment="Bottom" Margin="20,0,0,0" Visibility="Collapsed">
+                <Ellipse x:Name="MessageAddedNotificationEllipse" Width="36" Height="36"
+                         Fill="{StaticResource MainColor}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.RenderTransform>
+                        <CompositeTransform />
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+                <TextBlock x:Name="MessageAddedNotificationIcon" FontFamily="Segoe UI Symbol"
+                           Foreground="{StaticResource ChatBackgroundColor}" VerticalAlignment="Center" FontSize="30"
+                           HorizontalAlignment="Center" Margin="0,0,0,4">
+                    
+                </TextBlock>
+            </Grid>
+
             <!-- Friend typing indicator -->
-            <TextBlock FontSize="13" Margin="20,2,0,0" Grid.Row="3" VerticalAlignment="Top" Canvas.ZIndex="1"             
+            <TextBlock FontSize="13" Margin="20,2,0,0" Grid.Row="3" VerticalAlignment="Top" Canvas.ZIndex="1"
                        Visibility="{Binding Conversation.IsFriendTyping, Converter={StaticResource BoolToVisibilityConverter}}"
                        Text="{Binding Name, Converter={StaticResource FriendNameToTypingStatusConverter}}" />
 
             <!-- Message input field -->
             <Grid Grid.Row="3" Background="{StaticResource MainColor}">
-                <TextBox x:Name="MessageInputTextBox" Margin="20" FontSize="20" MinHeight="40" MaxHeight="250" Height="Auto"
-                         KeyDown="MessageInputKeyDown" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10,3,20,5" />
+                <TextBox x:Name="MessageInputTextBox" Margin="20" FontSize="20" MinHeight="40" MaxHeight="250"
+                         Height="Auto"
+                         KeyDown="MessageInputKeyDown" TextWrapping="Wrap"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10,3,20,5"
+                         FontFamily="Global User Interface" />
             </Grid>
         </Grid>
     </Grid>

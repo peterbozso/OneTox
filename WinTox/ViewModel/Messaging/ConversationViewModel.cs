@@ -172,7 +172,7 @@ namespace WinTox.ViewModel.Messaging
                 var msgGroup = new MessageGroupViewModel(message.Sender);
                 msgGroup.Messages.Add(message);
                 MessageGroups.Add(msgGroup);
-                RaiseMessageAdded();
+                RaiseMessageAdded(message);
             });
         }
 
@@ -195,7 +195,7 @@ namespace WinTox.ViewModel.Messaging
             {
                 MessageGroups.Last()
                     .Messages.Add(message);
-                RaiseMessageAdded();
+                RaiseMessageAdded(message);
                 return true;
             }
 
@@ -205,12 +205,12 @@ namespace WinTox.ViewModel.Messaging
         /// <summary>
         ///     For signaling the View if a message is added to the conversation.
         /// </summary>
-        public event EventHandler MessageAdded;
+        public event EventHandler<ToxMessageViewModelBase> MessageAdded;
 
-        private void RaiseMessageAdded()
+        private void RaiseMessageAdded(ToxMessageViewModelBase message)
         {
             if (MessageAdded != null)
-                MessageAdded(this, new EventArgs());
+                MessageAdded(this, message);
         }
 
         #endregion
