@@ -50,8 +50,12 @@ namespace WinTox.Model
         public async Task ConfirmTransfer(int friendNumber, int fileNumber, long transferredBytes)
         {
             var token = FindEntry(friendNumber, fileNumber);
+            if (token == String.Empty)
+                return;
+
             var file = await _futureAccesList.GetFileAsync(token);
             var metadata = SerializeMetadata(friendNumber, fileNumber, transferredBytes);
+
             _futureAccesList.AddOrReplace(token, file, metadata);
         }
 
