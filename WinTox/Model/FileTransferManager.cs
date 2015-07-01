@@ -154,10 +154,10 @@ namespace WinTox.Model
             return successfulFileSend;
         }
 
-        protected override void HandleFinishedUpload(TransferId transferId, ToxEventArgs.FileRequestChunkEventArgs e)
+        protected override void HandleFinishedUpload(TransferId transferId, int friendNumber, int fileNumber)
         {
             RemoveTransfer(transferId);
-            RaiseTransferFinished(e.FriendNumber, e.FileNumber);
+            RaiseTransferFinished(friendNumber, fileNumber);
         }
 
         #endregion
@@ -190,10 +190,10 @@ namespace WinTox.Model
                 FileSendRequestReceived(this, e);
         }
 
-        protected override void HandleFinishedDownload(TransferId transferId, ToxEventArgs.FileChunkEventArgs e)
+        protected override void HandleFinishedDownload(TransferId transferId, int friendNumber, int fileNumber)
         {
             RemoveTransfer(transferId);
-            RaiseTransferFinished(e.FriendNumber, e.FileNumber);
+            RaiseTransferFinished(friendNumber, fileNumber);
         }
 
         #endregion

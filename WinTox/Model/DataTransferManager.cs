@@ -101,7 +101,7 @@ namespace WinTox.Model
                 currentTransfer.IncreaseProgress(e.Length);
                 if (currentTransfer.IsFinished())
                 {
-                    HandleFinishedUpload(transferId, e);
+                    HandleFinishedUpload(transferId, e.FriendNumber, e.FileNumber);
                 }
             }
         }
@@ -119,7 +119,7 @@ namespace WinTox.Model
             return chunk;
         }
 
-        protected abstract void HandleFinishedUpload(TransferId transferId, ToxEventArgs.FileRequestChunkEventArgs e);
+        protected abstract void HandleFinishedUpload(TransferId transferId, int friendNumber, int fileNumber);
 
         #endregion
 
@@ -142,7 +142,7 @@ namespace WinTox.Model
             currentTransfer.IncreaseProgress(e.Data.Length);
             if (currentTransfer.IsFinished())
             {
-                HandleFinishedDownload(transferId, e);
+                HandleFinishedDownload(transferId, e.FriendNumber, e.FileNumber);
             }
         }
 
@@ -154,7 +154,7 @@ namespace WinTox.Model
             currentStream.Write(e.Data, 0, e.Data.Length);
         }
 
-        protected abstract void HandleFinishedDownload(TransferId transferId, ToxEventArgs.FileChunkEventArgs e);
+        protected abstract void HandleFinishedDownload(TransferId transferId, int friendNumber, int fileNumber);
 
         #endregion
 

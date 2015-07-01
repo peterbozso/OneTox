@@ -57,7 +57,7 @@ namespace WinTox.Model
 
         /// <summary>
         ///     By calling this function before sending or receiving an avatar, we ensure that there is only
-        ///     1 upload and/or 1 dowload per friend at the same time.
+        ///     1 upload and/or 1 download per friend at the same time.
         /// </summary>
         /// <param name="friendNumber">The friendNumber of the friend we'd like to remove transfers of.</param>
         /// <param name="direction">The direction of the transfers we'd like to remove.</param>
@@ -109,7 +109,7 @@ namespace WinTox.Model
             return ToxTools.Hash(buffer);
         }
 
-        protected override void HandleFinishedUpload(TransferId transferId, ToxEventArgs.FileRequestChunkEventArgs e)
+        protected override void HandleFinishedUpload(TransferId transferId, int friendNumber, int fileNumber)
         {
             RemoveTransfer(transferId);
         }
@@ -159,9 +159,9 @@ namespace WinTox.Model
             }
         }
 
-        protected override void HandleFinishedDownload(TransferId transferId, ToxEventArgs.FileChunkEventArgs e)
+        protected override void HandleFinishedDownload(TransferId transferId, int friendNumber, int fileNumber)
         {
-            AvatarManager.Instance.ChangeFriendAvatar(e.FriendNumber, Transfers[transferId].Stream as MemoryStream);
+            AvatarManager.Instance.ChangeFriendAvatar(friendNumber, Transfers[transferId].Stream as MemoryStream);
             RemoveTransfer(transferId);
         }
 
