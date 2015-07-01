@@ -42,9 +42,9 @@ namespace WinTox.Model
             if (_futureAccesList.MaximumItemsAllowed == _futureAccesList.Entries.Count)
                 return;
 
-            var onlyFileIdMetaData = GetFileIdAsString(friendNumber, fileNumber);
+            var metadata = SerializeMetadata(friendNumber, fileNumber, 0);
 
-            _futureAccesList.Add(file, onlyFileIdMetaData);
+            _futureAccesList.Add(file, metadata);
         }
 
         public async Task ConfirmTransfer(int friendNumber, int fileNumber, long transferredBytes)
@@ -55,14 +55,13 @@ namespace WinTox.Model
             _futureAccesList.AddOrReplace(token, file, metadata);
         }
 
-        // We use it only when the metadata is just the fileId in string format so it's all okay like this.
         private string FindEntry(int friendNumber, int fileNumber)
         {
-            var onlyFileIdMetaData = GetFileIdAsString(friendNumber, fileNumber);
-
             foreach (var entry in _futureAccesList.Entries)
             {
-                if (entry.Metadata == onlyFileIdMetaData)
+                var metadata = DeserializeMetadata(entry.Metadata);
+
+                if (metadata.FriendNumber == friendNumber && metadata.FriendNumber == fileNumber)
                 {
                     return entry.Token;
                 }
@@ -78,6 +77,8 @@ namespace WinTox.Model
             var writer = new StringWriter(xmlMetadata);
             var metadata = new TransferMetadata
             {
+                FriendNumber = friendNumber,
+                FileNumber = fileNumber,
                 FileId = ToxModel.Instance.FileGetId(friendNumber, fileNumber),
                 TransferredBytes = transferredBytes
             };
@@ -85,15 +86,18 @@ namespace WinTox.Model
             return xmlMetadata.ToString();
         }
 
-        private string GetFileIdAsString(int friendNumber, int fileNumber)
+        private TransferMetadata DeserializeMetadata(string xaml)
         {
-            var fileId = ToxModel.Instance.FileGetId(friendNumber, fileNumber);
-            return Encoding.UTF8.GetString(fileId, 0, fileId.Length);
+            var deserializer = new XmlSerializer(typeof(TransferMetadata));
+            var reader = new StringReader(xaml);
+            return (TransferMetadata) deserializer.Deserialize(reader);
         }
     }
 
     public struct TransferMetadata
     {
+        public int FriendNumber;
+        public int FileNumber;
         public byte[] FileId;
         public long TransferredBytes;
     }

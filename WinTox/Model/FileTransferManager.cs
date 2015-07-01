@@ -121,7 +121,7 @@ namespace WinTox.Model
                 TransferFinished(this, new TransferFinishedEventArgs(friendNumber, fileNumber));
         }
 
-        private void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
+        private async void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
         {
             if (!ToxModel.Instance.IsFriendOnline(e.FriendNumber))
             {
@@ -130,7 +130,8 @@ namespace WinTox.Model
                 {
                     if (transfer.Key.FriendNumber == e.FriendNumber)
                     {
-                        RemoveTransfer(new TransferId(e.FriendNumber, transfer.Key.FileNumber));
+                        RemoveTransfer(new TransferId(transfer.Key.FriendNumber, transfer.Key.FileNumber));
+                        await FileTransferResumer.Instance.ConfirmTransfer(transfer.Key.FriendNumber, transfer.Key.FileNumber, transfer.Value.TransferredBytes);
 
                         // If a friend goes offline, we "lie" to the ViewModel saying that the friend canceled the transfer.
                         if (FileControlReceived != null)
