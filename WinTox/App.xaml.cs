@@ -168,14 +168,20 @@ namespace WinTox
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            await SuspensionManager.SaveAsync();
+
+            // Disabled until "GetNavigationState doesn't support serialization of a parameter type which was passed to Frame.Navigate." exception is fixed.
+            // (It's the FriendViewModel on MainPage -> ChatPage navigation.)
+            // await SuspensionManager.SaveAsync();
+            
             await ToxModel.Instance.SaveDataAsync();
             deferral.Complete();
         }
 
         private async void OnResuming(object sender, object e)
         {
-            await SuspensionManager.RestoreAsync();
+            // See OnSuspending()!
+            // await SuspensionManager.RestoreAsync();
+
             await ToxModel.Instance.RestoreDataAsync();
             ToxModel.Instance.Start();
         }
