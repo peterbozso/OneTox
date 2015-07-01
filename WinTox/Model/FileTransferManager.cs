@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using SharpTox.Core;
+using System.Threading.Tasks;
 
 namespace WinTox.Model
 {
@@ -45,6 +46,23 @@ namespace WinTox.Model
             Debug.WriteLine(
                 "File {0}load removed! \t friend number: {1}, \t file number: {2}, \t total file transfers: {3}",
                 direction, transferId.FriendNumber, transferId.FileNumber, Transfers.Count);
+        }
+
+        #endregion
+
+        #region File transfer resuming between core restarts
+
+        public async Task StoreUnfinishedTransfers()
+        {
+            foreach (var transfer in Transfers)
+            {
+                await FileTransferResumer.Instance.ConfirmTransfer(transfer.Key.FriendNumber, transfer.Key.FileNumber, transfer.Value.TransferredBytes);
+            }
+        }
+
+        public void RestoreUnfinishedTransfers()
+        {
+
         }
 
         #endregion
@@ -158,6 +176,7 @@ namespace WinTox.Model
         {
             RemoveTransfer(transferId);
             RaiseTransferFinished(friendNumber, fileNumber);
+            FileTransferResumer.Instance.RemoveTransfer(friendNumber, fileNumber);
         }
 
         #endregion

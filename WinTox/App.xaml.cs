@@ -174,6 +174,7 @@ namespace WinTox
             // await SuspensionManager.SaveAsync();
             
             await ToxModel.Instance.SaveDataAsync();
+            await FileTransferManager.Instance.StoreUnfinishedTransfers();
             deferral.Complete();
         }
 
@@ -184,6 +185,7 @@ namespace WinTox
 
             await ToxModel.Instance.RestoreDataAsync();
             ToxModel.Instance.Start();
+            FileTransferManager.Instance.RestoreUnfinishedTransfers();
         }
 
         #region Profile settings flyout setup

@@ -185,11 +185,10 @@ namespace WinTox.Model
         protected class TransferData
         {
             private readonly long _dataSizeInBytes;
-            private long _transferredBytes;
 
             public TransferData(Stream stream, long dataSizeInBytes, TransferDirection direction)
             {
-                _transferredBytes = 0;
+                TransferredBytes = 0;
                 _dataSizeInBytes = dataSizeInBytes;
                 Stream = stream;
                 Direction = direction;
@@ -200,17 +199,19 @@ namespace WinTox.Model
 
             public double Progress
             {
-                get { return ((double) _transferredBytes/_dataSizeInBytes)*100; }
+                get { return ((double)TransferredBytes / _dataSizeInBytes) * 100; }
             }
 
             public void IncreaseProgress(long amount)
             {
-                _transferredBytes += amount;
+                TransferredBytes += amount;
             }
+
+            public long TransferredBytes { get; private set; }
 
             public bool IsFinished()
             {
-                return _transferredBytes == _dataSizeInBytes;
+                return TransferredBytes == _dataSizeInBytes;
             }
 
             public void ReplaceStream(Stream newStream)

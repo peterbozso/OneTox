@@ -217,6 +217,7 @@ namespace WinTox.ViewModel.FileTransfers
             if (successfulSend)
             {
                 AddTransfer(fileNumber, file.Name, TransferDirection.Up);
+                FileTransferResumer.Instance.RecordTransfer(file, FriendNumber, fileNumber);
             }
             else
             {

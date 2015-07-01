@@ -126,6 +126,7 @@
     <Compile Include="Model\ExtendedTox.cs" />
     <Compile Include="Model\AvatarTransferManager.cs" />
     <Compile Include="Model\FileTransferManager.cs" />
+    <Compile Include="Model\FileTransferResumer.cs" />
     <Compile Include="Model\FriendListChangedEventArgs.cs" />
     <Compile Include="Model\ToxModel.cs" />
     <Compile Include="ViewModel\FileTransfers\OneFileTransferViewModel.cs" />
