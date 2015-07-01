@@ -176,7 +176,6 @@ namespace WinTox.Model
         {
             RemoveTransfer(transferId);
             RaiseTransferFinished(friendNumber, fileNumber);
-            FileTransferResumer.Instance.RemoveTransfer(friendNumber, fileNumber);
         }
 
         #endregion

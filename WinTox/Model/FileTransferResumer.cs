@@ -18,7 +18,17 @@ namespace WinTox.Model
 
         private FileTransferResumer()
         {
+            FileTransferManager.Instance.TransferFinished += TransferFinishedHandler;
+
             _futureAccesList.Clear(); // TODO: Remove!
+        }
+
+        private void TransferFinishedHandler(object sender, FileTransferManager.TransferFinishedEventArgs e)
+        {
+            var token = FindEntry(e.FriendNumber, e.FileNumber);
+
+            if (token != String.Empty)
+                _futureAccesList.Remove(token);
         }
 
         public static FileTransferResumer Instance
@@ -43,14 +53,6 @@ namespace WinTox.Model
             var file = await _futureAccesList.GetFileAsync(token);
             var metadata = SerializeMetadata(friendNumber, fileNumber, transferredBytes);
             _futureAccesList.AddOrReplace(token, file, metadata);
-        }
-
-        public void RemoveTransfer(int friendNumber, int fileNumber)
-        {
-            var token = FindEntry(friendNumber, fileNumber);
-
-            if (token != String.Empty)
-                _futureAccesList.Remove(token);
         }
 
         // We use it only when the metadata is just the fileId in string format so it's all okay like this.
