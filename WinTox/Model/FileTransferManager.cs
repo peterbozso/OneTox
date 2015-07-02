@@ -60,9 +60,24 @@ namespace WinTox.Model
             }
         }
 
-        public void RestoreUnfinishedTransfers()
+        private async Task RestoreUnfinishedTransfersForFriend(int friendNumber)
         {
+            var resumeDataOfFinishedTransfers = await FileTransferResumer.Instance.GetResumeDataOfSavedTransfersForFriend(friendNumber);
+            foreach (var resumeData in resumeDataOfFinishedTransfers)
+            {
+                bool successfulFileSend;
+                var fileInfo = ToxModel.Instance.FileSend(resumeData.FriendNumber, ToxFileKind.Data, resumeData.FileStream.Length, resumeData.FileName,
+                    resumeData.FileId, out successfulFileSend);
 
+                if (successfulFileSend)
+                {
+                    AddTransfer(resumeData.FriendNumber, fileInfo.Number, resumeData.FileStream, resumeData.FileStream.Length, TransferDirection.Up);
+                }
+                else
+                {
+                    resumeData.FileStream.Dispose();
+                }
+            }
         }
 
         #endregion
@@ -140,6 +155,10 @@ namespace WinTox.Model
                                     ToxFileControl.Cancel));
                     }
                 }
+            }
+            else
+            {
+                await RestoreUnfinishedTransfersForFriend(e.FriendNumber);
             }
         }
 

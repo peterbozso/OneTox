@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -19,16 +21,6 @@ namespace WinTox.Model
         private FileTransferResumer()
         {
             FileTransferManager.Instance.TransferFinished += TransferFinishedHandler;
-
-            _futureAccesList.Clear(); // TODO: Remove!
-        }
-
-        private void TransferFinishedHandler(object sender, FileTransferManager.TransferFinishedEventArgs e)
-        {
-            var token = FindEntry(e.FriendNumber, e.FileNumber);
-
-            if (token != String.Empty)
-                _futureAccesList.Remove(token);
         }
 
         public static FileTransferResumer Instance
@@ -42,24 +34,71 @@ namespace WinTox.Model
             if (_futureAccesList.MaximumItemsAllowed == _futureAccesList.Entries.Count)
                 return;
 
-            var metadata = SerializeMetadata(friendNumber, fileNumber, 0);
+            var metadata = new TransferMetadata
+            {
+                FriendNumber = friendNumber,
+                FileNumber = fileNumber,
+                FileId = ToxModel.Instance.FileGetId(friendNumber, fileNumber),
+                TransferredBytes = 0
+            };
 
-            _futureAccesList.Add(file, metadata);
+            var xmlMetadata = SerializeMetadata(metadata);
+
+            _futureAccesList.Add(file, xmlMetadata);
         }
 
         public async Task ConfirmTransfer(int friendNumber, int fileNumber, long transferredBytes)
         {
-            var token = FindEntry(friendNumber, fileNumber);
-            if (token == String.Empty)
+            var entry = FindEntry(friendNumber, fileNumber);
+            if (entry.Token == String.Empty)
                 return;
 
-            var file = await _futureAccesList.GetFileAsync(token);
-            var metadata = SerializeMetadata(friendNumber, fileNumber, transferredBytes);
+            var file = await _futureAccesList.GetFileAsync(entry.Token);
+            var metadata = DeserializeMetadata(entry.Metadata);
+            metadata.TransferredBytes = transferredBytes;
 
-            _futureAccesList.AddOrReplace(token, file, metadata);
+            _futureAccesList.AddOrReplace(entry.Token, file, SerializeMetadata(metadata));
         }
 
-        private string FindEntry(int friendNumber, int fileNumber)
+        public async Task<List<ResumeData>> GetResumeDataOfSavedTransfersForFriend(int friendNumber)
+        {
+            var resumeDataOfSavedTransfers = new List<ResumeData>();
+            var entries = _futureAccesList.Entries.ToArray();
+
+            foreach (var entry in entries)
+            {
+                var metadata = DeserializeMetadata(entry.Metadata);
+
+                if (metadata.FriendNumber != friendNumber)
+                    continue;
+
+                // TODO: Check if the file is still available!!!
+                var file = await _futureAccesList.GetFileAsync(entry.Token);
+                var stream = (await file.OpenReadAsync()).AsStreamForRead();
+                var resumeData = new ResumeData()
+                {
+                    FriendNumber = metadata.FriendNumber,
+                    FileStream = stream,
+                    FileName = file.Name,
+                    FileId = ToxModel.Instance.FileGetId(metadata.FriendNumber, metadata.FileNumber)
+                };
+                resumeDataOfSavedTransfers.Add(resumeData);
+
+                _futureAccesList.Remove(entry.Token);
+            }
+
+            return resumeDataOfSavedTransfers;
+        }
+
+        private void TransferFinishedHandler(object sender, FileTransferManager.TransferFinishedEventArgs e)
+        {
+            var entry = FindEntry(e.FriendNumber, e.FileNumber);
+
+            if (entry.Token != String.Empty)
+                _futureAccesList.Remove(entry.Token);
+        }
+
+        private AccessListEntry FindEntry(int friendNumber, int fileNumber)
         {
             foreach (var entry in _futureAccesList.Entries)
             {
@@ -67,42 +106,43 @@ namespace WinTox.Model
 
                 if (metadata.FriendNumber == friendNumber && metadata.FriendNumber == fileNumber)
                 {
-                    return entry.Token;
+                    return entry;
                 }
             }
 
-            return String.Empty;
+            return new AccessListEntry();
         }
 
-        private string SerializeMetadata(int friendNumber, int fileNumber, long transferredBytes)
+        private string SerializeMetadata(TransferMetadata metadata)
         {
-            var serializer = new XmlSerializer(typeof (TransferMetadata));
+            var serializer = new XmlSerializer(typeof(TransferMetadata));
             var xmlMetadata = new StringBuilder();
             var writer = new StringWriter(xmlMetadata);
-            var metadata = new TransferMetadata
-            {
-                FriendNumber = friendNumber,
-                FileNumber = fileNumber,
-                FileId = ToxModel.Instance.FileGetId(friendNumber, fileNumber),
-                TransferredBytes = transferredBytes
-            };
             serializer.Serialize(writer, metadata);
             return xmlMetadata.ToString();
         }
 
         private TransferMetadata DeserializeMetadata(string xaml)
         {
-            var deserializer = new XmlSerializer(typeof(TransferMetadata));
+            var deserializer = new XmlSerializer(typeof (TransferMetadata));
             var reader = new StringReader(xaml);
             return (TransferMetadata) deserializer.Deserialize(reader);
         }
     }
 
-    public struct TransferMetadata
+    public class ResumeData
     {
         public int FriendNumber;
-        public int FileNumber;
+        public Stream FileStream;
+        public string FileName;
         public byte[] FileId;
+    }
+
+    public struct TransferMetadata
+    {
+        public byte[] FileId;
+        public int FileNumber;
+        public int FriendNumber;
         public long TransferredBytes;
     }
 }
