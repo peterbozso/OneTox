@@ -104,7 +104,7 @@ namespace WinTox.Model
             {
                 var metadata = DeserializeMetadata(entry.Metadata);
 
-                if (metadata.FriendNumber == friendNumber && metadata.FriendNumber == fileNumber)
+                if (metadata.FriendNumber == friendNumber && metadata.FileNumber == fileNumber)
                 {
                     return entry;
                 }
