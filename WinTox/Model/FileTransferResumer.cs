@@ -80,7 +80,8 @@ namespace WinTox.Model
                     FriendNumber = metadata.FriendNumber,
                     FileStream = stream,
                     FileName = file.Name,
-                    FileId = metadata.FileId
+                    FileId = metadata.FileId,
+                    TransferredBytes = metadata.TransferredBytes
                 };
                 resumeDataOfSavedTransfers.Add(resumeData);
 
@@ -136,6 +137,7 @@ namespace WinTox.Model
         public Stream FileStream;
         public string FileName;
         public byte[] FileId;
+        public long TransferredBytes;
     }
 
     public struct TransferMetadata

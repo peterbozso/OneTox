@@ -20,7 +20,7 @@ namespace WinTox.Model
 
         #region Debug
 
-        protected new void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes,
+        protected void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes,
             TransferDirection direction)
         {
             base.AddTransfer(friendNumber, fileNumber, stream, dataSizeInBytes, direction);

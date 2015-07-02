@@ -66,9 +66,9 @@ namespace WinTox.Model
         }
 
         protected void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes,
-            TransferDirection direction)
+            TransferDirection direction, long transferredBytes = 0)
         {
-            Transfers.Add(new TransferId(friendNumber, fileNumber), new TransferData(stream, dataSizeInBytes, direction));
+            Transfers.Add(new TransferId(friendNumber, fileNumber), new TransferData(stream, dataSizeInBytes, direction, transferredBytes));
         }
 
         protected void RemoveTransfer(TransferId transferId)
@@ -186,9 +186,9 @@ namespace WinTox.Model
         {
             private readonly long _dataSizeInBytes;
 
-            public TransferData(Stream stream, long dataSizeInBytes, TransferDirection direction)
+            public TransferData(Stream stream, long dataSizeInBytes, TransferDirection direction, long transferredBytes = 0)
             {
-                TransferredBytes = 0;
+                TransferredBytes = transferredBytes;
                 _dataSizeInBytes = dataSizeInBytes;
                 Stream = stream;
                 Direction = direction;

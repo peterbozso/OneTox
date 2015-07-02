@@ -28,9 +28,9 @@ namespace WinTox.Model
         #region Debug
 
         protected new void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes,
-            TransferDirection direction)
+            TransferDirection direction, long transferredBytes = 0)
         {
-            base.AddTransfer(friendNumber, fileNumber, stream, dataSizeInBytes, direction);
+            base.AddTransfer(friendNumber, fileNumber, stream, dataSizeInBytes, direction, transferredBytes);
 
             Debug.WriteLine(
                 "File {0}load added! \t friend number: {1}, \t file number: {2}, \t total file transfers: {3}",
@@ -71,7 +71,7 @@ namespace WinTox.Model
 
                 if (successfulFileSend)
                 {
-                    AddTransfer(resumeData.FriendNumber, fileInfo.Number, resumeData.FileStream, resumeData.FileStream.Length, TransferDirection.Up);
+                    AddTransfer(resumeData.FriendNumber, fileInfo.Number, resumeData.FileStream, resumeData.FileStream.Length, TransferDirection.Up, resumeData.TransferredBytes);
 
                     if (FileUploadAdded != null)
                         FileUploadAdded(this, new ToxEventArgs.FileSendRequestEventArgs(friendNumber, fileInfo.Number, ToxFileKind.Data, resumeData.FileStream.Length, resumeData.FileName));
