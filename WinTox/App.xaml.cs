@@ -87,7 +87,7 @@ namespace WinTox
             // Ensure the current window is active
             Window.Current.Activate();
 
-            StorageApplicationPermissions.FutureAccessList.Clear(); // TODO: Remove!
+            //StorageApplicationPermissions.FutureAccessList.Clear(); // TODO: Remove!
         }
 
         private async Task InitializeSingletons()

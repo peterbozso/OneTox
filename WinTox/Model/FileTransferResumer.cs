@@ -50,7 +50,7 @@ namespace WinTox.Model
         public async Task ConfirmTransfer(int friendNumber, int fileNumber, long transferredBytes)
         {
             var entry = FindEntry(friendNumber, fileNumber);
-            if (entry.Token == String.Empty)
+            if (entry.Token == null)
                 return;
 
             var file = await _futureAccesList.GetFileAsync(entry.Token);
@@ -80,7 +80,7 @@ namespace WinTox.Model
                     FriendNumber = metadata.FriendNumber,
                     FileStream = stream,
                     FileName = file.Name,
-                    FileId = ToxModel.Instance.FileGetId(metadata.FriendNumber, metadata.FileNumber)
+                    FileId = metadata.FileId
                 };
                 resumeDataOfSavedTransfers.Add(resumeData);
 
@@ -94,7 +94,7 @@ namespace WinTox.Model
         {
             var entry = FindEntry(e.FriendNumber, e.FileNumber);
 
-            if (entry.Token != String.Empty)
+            if (entry.Token != null)
                 _futureAccesList.Remove(entry.Token);
         }
 
