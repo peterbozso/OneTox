@@ -24,6 +24,7 @@ namespace WinTox.ViewModel.FileTransfers
             FileTransferManager.Instance.FileControlReceived += FileControlReceivedHandler;
             FileTransferManager.Instance.TransferFinished += TransferFinishedHandler;
             FileTransferManager.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
+            FileTransferManager.Instance.FileUploadAdded += FileUploadAddedHandler;
             _progressUpdater = new ProgressUpdater(this);
             VisualStates = new FileTransfersVisualStates();
         }
@@ -305,6 +306,16 @@ namespace WinTox.ViewModel.FileTransfers
             await
                 _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                     () => { AddTransfer(e.FileNumber, e.FileName, TransferDirection.Down); });
+        }
+
+        private async void FileUploadAddedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
+        {
+            if (e.FriendNumber != FriendNumber)
+                return;
+
+            await
+                _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { AddTransfer(e.FileNumber, e.FileName, TransferDirection.Up); });
         }
 
         #endregion

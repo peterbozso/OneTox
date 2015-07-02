@@ -72,6 +72,9 @@ namespace WinTox.Model
                 if (successfulFileSend)
                 {
                     AddTransfer(resumeData.FriendNumber, fileInfo.Number, resumeData.FileStream, resumeData.FileStream.Length, TransferDirection.Up);
+
+                    if (FileUploadAdded != null)
+                        FileUploadAdded(this, new ToxEventArgs.FileSendRequestEventArgs(friendNumber, fileInfo.Number, ToxFileKind.Data, resumeData.FileStream.Length, resumeData.FileName));
                 }
                 else
                 {
@@ -79,6 +82,8 @@ namespace WinTox.Model
                 }
             }
         }
+
+        public event EventHandler<ToxEventArgs.FileSendRequestEventArgs> FileUploadAdded;
 
         #endregion
 
