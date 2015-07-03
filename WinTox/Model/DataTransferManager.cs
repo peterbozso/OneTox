@@ -93,8 +93,7 @@ namespace WinTox.Model
             var currentTransfer = Transfers[transferId];
 
             var chunk = GetNextChunk(e, currentTransfer);
-            bool successfulChunkSend;
-            ToxModel.Instance.FileSendChunk(e.FriendNumber, e.FileNumber, e.Position, chunk, out successfulChunkSend);
+            var successfulChunkSend = ToxModel.Instance.FileSendChunk(e.FriendNumber, e.FileNumber, e.Position, chunk);
 
             if (successfulChunkSend)
             {

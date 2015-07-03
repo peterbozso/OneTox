@@ -322,13 +322,11 @@ namespace WinTox.Model
             return retVal;
         }
 
-        public bool FileSendChunk(int friendNumber, int fileNumber, long position, byte[] data,
-            out bool success)
+        public bool FileSendChunk(int friendNumber, int fileNumber, long position, byte[] data)
         {
             ToxErrorFileSendChunk error;
             var retVal = _tox.FileSendChunk(friendNumber, fileNumber, position, data, out error);
             ToxErrorViewModel.Instance.RelayError(error);
-            success = error == ToxErrorFileSendChunk.Ok;
             return retVal;
         }
 
