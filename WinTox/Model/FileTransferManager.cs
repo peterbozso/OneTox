@@ -164,6 +164,9 @@ namespace WinTox.Model
             }
             else
             {
+                if (ToxModel.Instance.LastConnectionStatusOfFriend(e.FriendNumber) != ToxConnectionStatus.None)
+                    return;
+
                 await RestoreUnfinishedUploadsForFriend(e.FriendNumber);
             }
         }

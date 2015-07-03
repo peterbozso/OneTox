@@ -78,7 +78,6 @@ namespace WinTox.Model
                     continue;
 
                 resumeDataOfSavedUploads.Add(resumeData);
-                _futureAccesList.Remove(entry.Token);
             }
 
             return resumeDataOfSavedUploads;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -41,6 +42,8 @@ namespace WinTox.Model
         private readonly SemaphoreSlim _semaphore;
         private ExtendedTox _tox;
 
+        private Dictionary<int, ToxConnectionStatus> _lastConnectionStatuses; 
+
         private ToxModel()
         {
             var tox = new ExtendedTox(new ToxOptions(true, true))
@@ -51,6 +54,8 @@ namespace WinTox.Model
             SetCurrent(tox);
 
             _semaphore = new SemaphoreSlim(1);
+
+            _lastConnectionStatuses = new Dictionary<int, ToxConnectionStatus>();
         }
 
         #region Properties
@@ -343,6 +348,16 @@ namespace WinTox.Model
             return retVal;
         }
 
+        public ToxConnectionStatus LastConnectionStatusOfFriend(int friendNumber)
+        {
+            if (_lastConnectionStatuses.ContainsKey(friendNumber))
+            {
+                return _lastConnectionStatuses[friendNumber];
+            }
+
+            return ToxConnectionStatus.None;
+        }
+
         private void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
             if (PropertyChanged != null)
@@ -404,6 +419,8 @@ namespace WinTox.Model
         {
             if (FriendConnectionStatusChanged != null)
                 FriendConnectionStatusChanged(this, e);
+
+            _lastConnectionStatuses[e.FriendNumber] = e.Status;
         }
 
         private void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
