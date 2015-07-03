@@ -153,6 +153,7 @@ namespace WinTox.Model
                         RemoveTransfer(new TransferId(transfer.Key.FriendNumber, transfer.Key.FileNumber));
                         await FileTransferResumer.Instance.ConfirmTransfer(transfer.Key.FriendNumber, transfer.Key.FileNumber, transfer.Value.TransferredBytes);
 
+                        // TODO: This belove is very ugly and might be dangerous. Find a better solution for it!!!
                         // If a friend goes offline, we "lie" to the ViewModel saying that the friend canceled the transfer.
                         if (FileControlReceived != null)
                             FileControlReceived(this,
@@ -232,16 +233,26 @@ namespace WinTox.Model
                 AddTransfer(e.FriendNumber, e.FileNumber, resumeData.FileStream, e.FileSize, TransferDirection.Down, resumeData.TransferredBytes);
                 ToxModel.Instance.FileSeek(e.FriendNumber, e.FileNumber, resumeData.TransferredBytes);
                 ResumeTransfer(e.FriendNumber, e.FileNumber);
+
+                if (FileSendRequestReceived != null)
+                    FileSendRequestReceived(this, e);
+
+                // TODO: This belove is very ugly and might be dangerous. Find a better solution for it!!!
+                // If we resume a download from a previous run, we "lie" to the ViewModel saying that the friend resumed the transfer.
+                if (FileControlReceived != null)
+                    FileControlReceived(this,
+                        new ToxEventArgs.FileControlEventArgs(e.FriendNumber, e.FileNumber,
+                            ToxFileControl.Resume));
             }
             else
             {
                 // We add a transfer with a null value instead of an actual stream here. We will replace it with an actual file stream
                 // in ReceiveFile() when the user accepts the request and chooses a location to save the file to.
                 AddTransfer(e.FriendNumber, e.FileNumber, null, e.FileSize, TransferDirection.Down);
-            }
 
-            if (FileSendRequestReceived != null)
-                FileSendRequestReceived(this, e);
+                if (FileSendRequestReceived != null)
+                    FileSendRequestReceived(this, e);
+            }
         }
 
         protected override void HandleFinishedDownload(TransferId transferId, int friendNumber, int fileNumber)
