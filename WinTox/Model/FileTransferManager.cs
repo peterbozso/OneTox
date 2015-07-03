@@ -226,14 +226,12 @@ namespace WinTox.Model
                 return;
 
             var fileId = ToxModel.Instance.FileGetId(e.FriendNumber, e.FileNumber);
-            if (FileTransferResumer.Instance.IsFileIdSaved(fileId))
+            var resumeData = await FileTransferResumer.Instance.GetDownloadData(fileId);
+            if (resumeData != null)
             {
-                var resumeData = await FileTransferResumer.Instance.GetDownloadData(fileId);
-                if (resumeData != null)
-                {
-                    AddTransfer(e.FriendNumber, e.FileNumber, resumeData.FileStream, e.FileSize, TransferDirection.Down, resumeData.TransferredBytes);
-                    ResumeTransfer(e.FriendNumber, e.FileNumber);
-                }
+                AddTransfer(e.FriendNumber, e.FileNumber, resumeData.FileStream, e.FileSize, TransferDirection.Down, resumeData.TransferredBytes);
+                ToxModel.Instance.FileSeek(e.FriendNumber, e.FileNumber, resumeData.TransferredBytes);
+                ResumeTransfer(e.FriendNumber, e.FileNumber);
             }
             else
             {

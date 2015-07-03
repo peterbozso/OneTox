@@ -84,17 +84,6 @@ namespace WinTox.Model
             return resumeDataOfSavedUploads;
         }
 
-        public bool IsFileIdSaved(byte[] fileId)
-        {
-            foreach (var entry in _futureAccesList.Entries)
-            {
-                var metadata = DeserializeMetadata(entry.Metadata);
-                if (metadata.FileId.SequenceEqual(fileId))
-                    return true;
-            }
-            return false;
-        }
-
         public async Task<ResumeData> GetDownloadData(byte[] fileId)
         {
             foreach (var entry in _futureAccesList.Entries)
