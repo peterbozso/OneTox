@@ -335,6 +335,14 @@ namespace WinTox.Model
             return _tox.FileGetId(friendNumber, fileNumber);
         }
 
+        public bool FileSeek(int friendNumber, int fileNumber, long position)
+        {
+            ToxErrorFileSeek error;
+            var retVal = _tox.FileSeek(friendNumber, fileNumber, position, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
+        }
+
         private void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
             if (PropertyChanged != null)

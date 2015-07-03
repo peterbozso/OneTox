@@ -60,10 +60,10 @@ namespace WinTox.Model
             }
         }
 
-        private async Task RestoreUnfinishedTransfersForFriend(int friendNumber)
+        private async Task RestoreUnfinishedUploadsForFriend(int friendNumber)
         {
-            var resumeDataOfFinishedTransfers = await FileTransferResumer.Instance.GetResumeDataOfSavedTransfersForFriend(friendNumber);
-            foreach (var resumeData in resumeDataOfFinishedTransfers)
+            var resumeDataOfFinishedUploads = await FileTransferResumer.Instance.GetResumeDataOfSavedUploadsForFriend(friendNumber);
+            foreach (var resumeData in resumeDataOfFinishedUploads)
             {
                 bool successfulFileSend;
                 var fileInfo = ToxModel.Instance.FileSend(resumeData.FriendNumber, ToxFileKind.Data, resumeData.FileStream.Length, resumeData.FileName,
@@ -163,7 +163,7 @@ namespace WinTox.Model
             }
             else
             {
-                await RestoreUnfinishedTransfersForFriend(e.FriendNumber);
+                await RestoreUnfinishedUploadsForFriend(e.FriendNumber);
             }
         }
 
@@ -216,18 +216,31 @@ namespace WinTox.Model
             // Replace the dummy stream set previously in FileSendRequestReceivedHandler():
             Transfers[transferId].ReplaceStream(saveStream);
 
-            SendResumeControl(friendNumber, fileNumber);
+            ResumeTransfer(friendNumber, fileNumber);
         }
 
-        protected override void FileSendRequestReceivedHandler(object sender,
+        protected override async void FileSendRequestReceivedHandler(object sender,
             ToxEventArgs.FileSendRequestEventArgs e)
         {
             if (e.FileKind != ToxFileKind.Data)
                 return;
 
-            // We add a transfer with a null value instead of an actual stream here. We will replace it with an actual file stream
-            // in ReceiveFile() when the user accepts the request and chooses a location to save the file to.
-            AddTransfer(e.FriendNumber, e.FileNumber, null, e.FileSize, TransferDirection.Down);
+            var fileId = ToxModel.Instance.FileGetId(e.FriendNumber, e.FileNumber);
+            if (FileTransferResumer.Instance.IsFileIdSaved(fileId))
+            {
+                var resumeData = await FileTransferResumer.Instance.GetDownloadData(fileId);
+                if (resumeData != null)
+                {
+                    AddTransfer(e.FriendNumber, e.FileNumber, resumeData.FileStream, e.FileSize, TransferDirection.Down, resumeData.TransferredBytes);
+                    ResumeTransfer(e.FriendNumber, e.FileNumber);
+                }
+            }
+            else
+            {
+                // We add a transfer with a null value instead of an actual stream here. We will replace it with an actual file stream
+                // in ReceiveFile() when the user accepts the request and chooses a location to save the file to.
+                AddTransfer(e.FriendNumber, e.FileNumber, null, e.FileSize, TransferDirection.Down);
+            }
 
             if (FileSendRequestReceived != null)
                 FileSendRequestReceived(this, e);

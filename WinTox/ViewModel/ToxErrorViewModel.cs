@@ -77,6 +77,12 @@ namespace WinTox.ViewModel
                 Debug.WriteLine("An unexpected error occurred when sending a file: " + error);
         }
 
+        public void RelayError(ToxErrorFileSeek error)
+        {
+            if (error != ToxErrorFileSeek.Ok)
+                Debug.WriteLine("An unexpected error occurred when seeking in a file: " + error);
+        }
+
         private void RaiseToxErrorOccured(string errorMessage)
         {
             if (ToxErrorOccured != null)

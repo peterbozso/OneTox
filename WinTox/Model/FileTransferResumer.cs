@@ -28,7 +28,7 @@ namespace WinTox.Model
             get { return _instace ?? (_instace = new FileTransferResumer()); }
         }
 
-        public void RecordTransfer(StorageFile file, int friendNumber, int fileNumber)
+        public void RecordTransfer(StorageFile file, int friendNumber, int fileNumber, TransferDirection direction)
         {
             // TODO: Maybe we should try to make place for newer items?
             if (_futureAccesList.MaximumItemsAllowed == _futureAccesList.Entries.Count)
@@ -39,7 +39,8 @@ namespace WinTox.Model
                 FriendNumber = friendNumber,
                 FileNumber = fileNumber,
                 FileId = ToxModel.Instance.FileGetId(friendNumber, fileNumber),
-                TransferredBytes = 0
+                TransferredBytes = 0,
+                Direction = direction
             };
 
             var xmlMetadata = SerializeMetadata(metadata);
@@ -60,22 +61,59 @@ namespace WinTox.Model
             _futureAccesList.AddOrReplace(entry.Token, file, SerializeMetadata(metadata));
         }
 
-        public async Task<List<ResumeData>> GetResumeDataOfSavedTransfersForFriend(int friendNumber)
+        public async Task<List<ResumeData>> GetResumeDataOfSavedUploadsForFriend(int friendNumber)
         {
-            var resumeDataOfSavedTransfers = new List<ResumeData>();
+            var resumeDataOfSavedUploads = new List<ResumeData>();
             var entries = _futureAccesList.Entries.ToArray();
 
             foreach (var entry in entries)
             {
                 var metadata = DeserializeMetadata(entry.Metadata);
 
-                if (metadata.FriendNumber != friendNumber)
+                if (metadata.Direction != TransferDirection.Up || metadata.FriendNumber != friendNumber)
                     continue;
 
-                // TODO: Check if the file is still available!!!
-                var file = await _futureAccesList.GetFileAsync(entry.Token);
-                var stream = (await file.OpenReadAsync()).AsStreamForRead();
-                var resumeData = new ResumeData()
+                var resumeData = await GetResumeData(entry.Token, metadata);
+                if (resumeData == null)
+                    continue;
+
+                resumeDataOfSavedUploads.Add(resumeData);
+            }
+
+            return resumeDataOfSavedUploads;
+        }
+
+        public bool IsFileIdSaved(byte[] fileId)
+        {
+            foreach (var entry in _futureAccesList.Entries)
+            {
+                var metadata = DeserializeMetadata(entry.Metadata);
+                if (metadata.FileId.SequenceEqual(fileId))
+                    return true;
+            }
+            return false;
+        }
+
+        public async Task<ResumeData> GetDownloadData(byte[] fileId)
+        {
+            foreach (var entry in _futureAccesList.Entries)
+            {
+                var metadata = DeserializeMetadata(entry.Metadata);
+                if (metadata.FileId.SequenceEqual(fileId))
+                {
+                    return await GetResumeData(entry.Token, metadata);
+                }
+            }
+            return null;
+        }
+
+        private async Task<ResumeData> GetResumeData(string token, TransferMetadata metadata)
+        {
+            try
+            {
+                var file = await _futureAccesList.GetFileAsync(token);
+                var stream = await GetStreamBasedOnDirection(file, metadata.Direction);
+                var resumeData = new ResumeData
                 {
                     FriendNumber = metadata.FriendNumber,
                     FileStream = stream,
@@ -83,12 +121,26 @@ namespace WinTox.Model
                     FileId = metadata.FileId,
                     TransferredBytes = metadata.TransferredBytes
                 };
-                resumeDataOfSavedTransfers.Add(resumeData);
 
-                _futureAccesList.Remove(entry.Token);
+                return resumeData;
             }
+            catch (FileNotFoundException)
+            {
+                _futureAccesList.Remove(token);
+            }
+            return null;
+        }
 
-            return resumeDataOfSavedTransfers;
+        private async Task<Stream> GetStreamBasedOnDirection(StorageFile file, TransferDirection direction)
+        {
+            switch (direction)
+            {
+                case TransferDirection.Up:
+                    return await file.OpenStreamForReadAsync();
+                case TransferDirection.Down:
+                    return await file.OpenStreamForWriteAsync();
+            }
+            return null;
         }
 
         private void TransferFinishedHandler(object sender, FileTransferManager.TransferFinishedEventArgs e)
@@ -146,5 +198,6 @@ namespace WinTox.Model
         public int FileNumber;
         public int FriendNumber;
         public long TransferredBytes;
+        public TransferDirection Direction;
     }
 }

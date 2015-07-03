@@ -218,7 +218,7 @@ namespace WinTox.ViewModel.FileTransfers
             if (successfulSend)
             {
                 AddTransfer(fileNumber, file.Name, TransferDirection.Up);
-                FileTransferResumer.Instance.RecordTransfer(file, FriendNumber, fileNumber);
+                FileTransferResumer.Instance.RecordTransfer(file, FriendNumber, fileNumber, TransferDirection.Up);
             }
             else
             {
@@ -226,9 +226,11 @@ namespace WinTox.ViewModel.FileTransfers
             }
         }
 
-        public async Task AcceptTransferByUser(int fileNumber, Stream saveStream)
+        public async Task AcceptTransferByUser(int fileNumber, StorageFile saveFile)
         {
+            var saveStream = (await saveFile.OpenAsync(FileAccessMode.ReadWrite)).AsStream();
             FileTransferManager.Instance.ReceiveFile(FriendNumber, fileNumber, saveStream);
+            FileTransferResumer.Instance.RecordTransfer(saveFile, FriendNumber, fileNumber, TransferDirection.Down);
             await _progressUpdater.StartUpdateIfNeeded();
         }
 
