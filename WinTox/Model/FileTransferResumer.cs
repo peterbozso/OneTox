@@ -145,7 +145,8 @@ namespace WinTox.Model
 
         private void TransferFinishedHandler(object sender, FileTransferManager.TransferFinishedEventArgs e)
         {
-            var entry = FindEntry(e.FriendNumber, e.FileNumber);
+            var fileId = ToxModel.Instance.FileGetId(e.FriendNumber, e.FileNumber);
+            var entry = FindEntry(fileId);
 
             if (entry.Token != null)
                 _futureAccesList.Remove(entry.Token);
@@ -158,6 +159,21 @@ namespace WinTox.Model
                 var metadata = DeserializeMetadata(entry.Metadata);
 
                 if (metadata.FriendNumber == friendNumber && metadata.FileNumber == fileNumber)
+                {
+                    return entry;
+                }
+            }
+
+            return new AccessListEntry();
+        }
+
+        private AccessListEntry FindEntry(byte[] fileId)
+        {
+            foreach (var entry in _futureAccesList.Entries)
+            {
+                var metadata = DeserializeMetadata(entry.Metadata);
+
+                if (metadata.FileId.SequenceEqual(fileId))
                 {
                     return entry;
                 }
