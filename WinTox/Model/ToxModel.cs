@@ -39,10 +39,9 @@ namespace WinTox.Model
         };
 
         private static ToxModel _instance;
+        private readonly LastConnectionStatusRegistry _lastConnectionStatusRegistry;
         private readonly SemaphoreSlim _semaphore;
         private ExtendedTox _tox;
-
-        private Dictionary<int, ToxConnectionStatus> _lastConnectionStatuses; 
 
         private ToxModel()
         {
@@ -55,8 +54,42 @@ namespace WinTox.Model
 
             _semaphore = new SemaphoreSlim(1);
 
-            _lastConnectionStatuses = new Dictionary<int, ToxConnectionStatus>();
+            _lastConnectionStatusRegistry = new LastConnectionStatusRegistry();
         }
+
+        #region Last ConnectionStatus registry
+
+        /// <summary>
+        ///     This class's responsibility is to keep record of last connection statuses of friends.
+        ///     It doesn't keep record of last connection statuses between core restarts, only contains data for the current
+        ///     session.
+        /// </summary>
+        private class LastConnectionStatusRegistry
+        {
+            private readonly Dictionary<int, ToxConnectionStatus> _lastConnectionStatuses;
+
+            public LastConnectionStatusRegistry()
+            {
+                _lastConnectionStatuses = new Dictionary<int, ToxConnectionStatus>();
+            }
+
+            public void RegisterLast(int friendNumber, ToxConnectionStatus connectionStatus)
+            {
+                _lastConnectionStatuses[friendNumber] = connectionStatus;
+            }
+
+            public ToxConnectionStatus GetLast(int friendNumber)
+            {
+                if (_lastConnectionStatuses.ContainsKey(friendNumber))
+                {
+                    return _lastConnectionStatuses[friendNumber];
+                }
+
+                return ToxConnectionStatus.None;
+            }
+        }
+
+        #endregion
 
         #region Properties
 
@@ -350,12 +383,7 @@ namespace WinTox.Model
 
         public ToxConnectionStatus LastConnectionStatusOfFriend(int friendNumber)
         {
-            if (_lastConnectionStatuses.ContainsKey(friendNumber))
-            {
-                return _lastConnectionStatuses[friendNumber];
-            }
-
-            return ToxConnectionStatus.None;
+            return _lastConnectionStatusRegistry.GetLast(friendNumber);
         }
 
         private void RaisePropertyChanged([CallerMemberName] string propertyName = null)
@@ -420,7 +448,7 @@ namespace WinTox.Model
             if (FriendConnectionStatusChanged != null)
                 FriendConnectionStatusChanged(this, e);
 
-            _lastConnectionStatuses[e.FriendNumber] = e.Status;
+            _lastConnectionStatusRegistry.RegisterLast(e.FriendNumber, e.Status);
         }
 
         private void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
