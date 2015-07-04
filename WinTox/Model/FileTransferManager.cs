@@ -97,6 +97,7 @@ namespace WinTox.Model
             if (Transfers.ContainsKey(transferId))
             {
                 RemoveTransfer(transferId);
+                FileTransferResumer.Instance.RemoveTransfer(friendNumber, fileNumber);
             }
         }
 
@@ -120,6 +121,7 @@ namespace WinTox.Model
             {
                 case ToxFileControl.Cancel:
                     RemoveTransfer(transferId);
+                    FileTransferResumer.Instance.RemoveTransfer(transferId.FriendNumber, transferId.FileNumber);
                     return;
             }
         }
@@ -133,12 +135,6 @@ namespace WinTox.Model
                     progressDict.Add(transfer.Key.FileNumber, transfer.Value.Progress);
             }
             return progressDict;
-        }
-
-        private void RaiseTransferFinished(int friendNumber, int fileNumber)
-        {
-            if (TransferFinished != null)
-                TransferFinished(this, new TransferFinishedEventArgs(friendNumber, fileNumber));
         }
 
         private async void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
@@ -169,6 +165,12 @@ namespace WinTox.Model
 
                 await RestoreUnfinishedUploadsForFriend(e.FriendNumber);
             }
+        }
+
+        private void RaiseTransferFinished(int friendNumber, int fileNumber)
+        {
+            if (TransferFinished != null)
+                TransferFinished(this, new TransferFinishedEventArgs(friendNumber, fileNumber));
         }
 
         public event EventHandler<ToxEventArgs.FileControlEventArgs> FileControlReceived;

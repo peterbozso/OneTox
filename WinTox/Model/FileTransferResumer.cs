@@ -61,6 +61,15 @@ namespace WinTox.Model
             _futureAccesList.AddOrReplace(entry.Token, file, SerializeMetadata(metadata));
         }
 
+        public void RemoveTransfer(int friendNumber, int fileNumber)
+        {
+            var fileId = ToxModel.Instance.FileGetId(friendNumber, fileNumber);
+            var entry = FindEntry(fileId);
+
+            if (entry.Token != null)
+                _futureAccesList.Remove(entry.Token);
+        }
+
         public async Task<List<ResumeData>> GetResumeDataOfSavedUploadsForFriend(int friendNumber)
         {
             var resumeDataOfSavedUploads = new List<ResumeData>();
@@ -134,11 +143,7 @@ namespace WinTox.Model
 
         private void TransferFinishedHandler(object sender, FileTransferManager.TransferFinishedEventArgs e)
         {
-            var fileId = ToxModel.Instance.FileGetId(e.FriendNumber, e.FileNumber);
-            var entry = FindEntry(fileId);
-
-            if (entry.Token != null)
-                _futureAccesList.Remove(entry.Token);
+            RemoveTransfer(e.FriendNumber, e.FileNumber);
         }
 
         private AccessListEntry FindEntry(int friendNumber, int fileNumber)
