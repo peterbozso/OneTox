@@ -73,6 +73,9 @@ namespace WinTox.Model
 
         protected void RemoveTransfer(TransferId transferId)
         {
+            if (!Transfers.ContainsKey(transferId))
+                return;
+
             var transferToRemove = Transfers[transferId];
             if (transferToRemove.Stream != null) // It could be a dummy transfer waiting for accept from the user!
                 transferToRemove.Stream.Dispose();
@@ -85,6 +88,11 @@ namespace WinTox.Model
 
         private void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
         {
+            if (e.Length == 0)
+            {
+                return;
+            }
+
             var transferId = new TransferId(e.FriendNumber, e.FileNumber);
 
             if (IsTransferFinished(transferId))
