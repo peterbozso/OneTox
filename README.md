@@ -18,9 +18,9 @@ This client is under heavy development and it's very far from being complete. Pu
 * Message splitting
 * Changing nospam
 * Avatars
+* File transfer resuming across core restarts
 
 ## TODO
-* File resuming
 * Audio
 * Video
 * Group chat
