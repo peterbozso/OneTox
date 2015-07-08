@@ -18,12 +18,30 @@ namespace WinTox.Model
             get { return _instance ?? (_instance = new AvatarTransferManager()); }
         }
 
+        #region Data model
+
+        protected class AvatarTransferData : TransferData
+        {
+            public AvatarTransferData(Stream stream, long dataSizeInBytes, TransferDirection direction,
+                long transferredBytes = 0)
+                : base(stream, dataSizeInBytes, direction, transferredBytes)
+            {
+            }
+
+            public MemoryStream GetMemoryStream()
+            {
+                return Stream as MemoryStream;
+            }
+        }
+
+        #endregion
+
         #region Debug
 
         protected void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes,
             TransferDirection direction)
         {
-            base.AddTransfer(friendNumber, fileNumber, stream, dataSizeInBytes, direction);
+            base.AddTransfer(friendNumber, fileNumber, new AvatarTransferData(stream, dataSizeInBytes, direction));
 
             Debug.WriteLine(
                 "Avatar {0}load added! \t friend number: {1}, \t file number: {2}, \t total avatar transfers: {3}",
@@ -161,7 +179,8 @@ namespace WinTox.Model
 
         protected override void HandleFinishedDownload(TransferId transferId, int friendNumber, int fileNumber)
         {
-            AvatarManager.Instance.ChangeFriendAvatar(friendNumber, Transfers[transferId].GetMemoryStream());
+            AvatarManager.Instance.ChangeFriendAvatar(friendNumber,
+                (Transfers[transferId] as AvatarTransferData).GetMemoryStream());
             RemoveTransfer(transferId);
         }
 

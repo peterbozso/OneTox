@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using SharpTox.Core;
 using System.Threading.Tasks;
+using SharpTox.Core;
 
 namespace WinTox.Model
 {
@@ -25,12 +25,37 @@ namespace WinTox.Model
             get { return _instance ?? (_instance = new FileTransferManager()); }
         }
 
+        #region Data model
+
+        protected class FileTransferData : TransferData
+        {
+            private readonly long _dataSizeInBytes;
+
+            public FileTransferData(Stream stream, long dataSizeInBytes, TransferDirection direction,
+                long transferredBytes = 0) : base(stream, dataSizeInBytes, direction, transferredBytes)
+            {
+                _dataSizeInBytes = dataSizeInBytes;
+            }
+
+            public void ReplaceStream(Stream newStream)
+            {
+                if (Stream != null) // We only allow replacement of a dummy stream.
+                    return;
+
+                newStream.SetLength(_dataSizeInBytes);
+                Stream = newStream;
+            }
+        }
+
+        #endregion
+
         #region Debug
 
-        protected new void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes,
+        protected void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes,
             TransferDirection direction, long transferredBytes = 0)
         {
-            base.AddTransfer(friendNumber, fileNumber, stream, dataSizeInBytes, direction, transferredBytes);
+            base.AddTransfer(friendNumber, fileNumber,
+                new FileTransferData(stream, dataSizeInBytes, direction, transferredBytes));
 
             Debug.WriteLine(
                 "File {0}load added! \t friend number: {1}, \t file number: {2}, \t total file transfers: {3}",
@@ -56,25 +81,32 @@ namespace WinTox.Model
         {
             foreach (var transfer in Transfers)
             {
-                await FileTransferResumer.Instance.ConfirmTransfer(transfer.Key.FriendNumber, transfer.Key.FileNumber, transfer.Value.TransferredBytes);
+                await
+                    FileTransferResumer.Instance.ConfirmTransfer(transfer.Key.FriendNumber, transfer.Key.FileNumber,
+                        transfer.Value.TransferredBytes);
             }
         }
 
         private async Task RestoreUnfinishedUploadsForFriend(int friendNumber)
         {
-            var resumeDataOfFinishedUploads = await FileTransferResumer.Instance.GetResumeDataOfSavedUploadsForFriend(friendNumber);
+            var resumeDataOfFinishedUploads =
+                await FileTransferResumer.Instance.GetResumeDataOfSavedUploadsForFriend(friendNumber);
             foreach (var resumeData in resumeDataOfFinishedUploads)
             {
                 bool successfulFileSend;
-                var fileInfo = ToxModel.Instance.FileSend(resumeData.FriendNumber, ToxFileKind.Data, resumeData.FileStream.Length, resumeData.FileName,
+                var fileInfo = ToxModel.Instance.FileSend(resumeData.FriendNumber, ToxFileKind.Data,
+                    resumeData.FileStream.Length, resumeData.FileName,
                     resumeData.FileId, out successfulFileSend);
 
                 if (successfulFileSend)
                 {
-                    AddTransfer(resumeData.FriendNumber, fileInfo.Number, resumeData.FileStream, resumeData.FileStream.Length, TransferDirection.Up, resumeData.TransferredBytes);
+                    AddTransfer(resumeData.FriendNumber, fileInfo.Number, resumeData.FileStream,
+                        resumeData.FileStream.Length, TransferDirection.Up, resumeData.TransferredBytes);
 
                     if (FileUploadAdded != null)
-                        FileUploadAdded(this, new ToxEventArgs.FileSendRequestEventArgs(friendNumber, fileInfo.Number, ToxFileKind.Data, resumeData.FileStream.Length, resumeData.FileName));
+                        FileUploadAdded(this,
+                            new ToxEventArgs.FileSendRequestEventArgs(friendNumber, fileInfo.Number, ToxFileKind.Data,
+                                resumeData.FileStream.Length, resumeData.FileName));
                 }
                 else
                 {
@@ -137,7 +169,8 @@ namespace WinTox.Model
             return progressDict;
         }
 
-        private async void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
+        private async void FriendConnectionStatusChangedHandler(object sender,
+            ToxEventArgs.FriendConnectionStatusEventArgs e)
         {
             if (!ToxModel.Instance.IsFriendOnline(e.FriendNumber))
             {
@@ -146,7 +179,9 @@ namespace WinTox.Model
                 {
                     if (transfer.Key.FriendNumber == e.FriendNumber)
                     {
-                        await FileTransferResumer.Instance.ConfirmTransfer(transfer.Key.FriendNumber, transfer.Key.FileNumber, transfer.Value.TransferredBytes);
+                        await
+                            FileTransferResumer.Instance.ConfirmTransfer(transfer.Key.FriendNumber,
+                                transfer.Key.FileNumber, transfer.Value.TransferredBytes);
                         RemoveTransfer(new TransferId(transfer.Key.FriendNumber, transfer.Key.FileNumber));
 
                         // TODO: This belove is very ugly and might be dangerous. Find a better solution for it!!!
@@ -220,7 +255,7 @@ namespace WinTox.Model
             var transferId = new TransferId(friendNumber, fileNumber);
 
             // Replace the dummy stream set previously in FileSendRequestReceivedHandler():
-            Transfers[transferId].ReplaceStream(saveStream);
+            (Transfers[transferId] as FileTransferData).ReplaceStream(saveStream);
 
             ResumeTransfer(friendNumber, fileNumber);
         }
@@ -235,7 +270,8 @@ namespace WinTox.Model
             var resumeData = await FileTransferResumer.Instance.GetDownloadData(fileId);
             if (resumeData != null)
             {
-                AddTransfer(e.FriendNumber, e.FileNumber, resumeData.FileStream, e.FileSize, TransferDirection.Down, resumeData.TransferredBytes);
+                AddTransfer(e.FriendNumber, e.FileNumber, resumeData.FileStream, e.FileSize, TransferDirection.Down,
+                    resumeData.TransferredBytes);
                 ToxModel.Instance.FileSeek(e.FriendNumber, e.FileNumber, resumeData.TransferredBytes);
                 ResumeTransfer(e.FriendNumber, e.FileNumber);
 

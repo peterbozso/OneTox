@@ -17,8 +17,6 @@ namespace WinTox.Model
     /// </summary>
     public abstract class DataTransferManager
     {
-        protected readonly Dictionary<TransferId, TransferData> Transfers;
-
         protected DataTransferManager()
         {
             Transfers = new Dictionary<TransferId, TransferData>();
@@ -28,6 +26,114 @@ namespace WinTox.Model
             ToxModel.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
             ToxModel.Instance.FileChunkReceived += FileChunkReceivedHandler;
         }
+
+        #region Data model
+
+        protected readonly Dictionary<TransferId, TransferData> Transfers;
+
+        protected class TransferId : IEquatable<TransferId>
+        {
+            public TransferId(int friendNumber, int fileNumber)
+            {
+                FriendNumber = friendNumber;
+                FileNumber = fileNumber;
+            }
+
+            public int FriendNumber { get; private set; }
+            public int FileNumber { get; private set; }
+
+            public bool Equals(TransferId other)
+            {
+                return (FriendNumber == other.FriendNumber) && (FileNumber == other.FileNumber);
+            }
+
+            public override int GetHashCode()
+            {
+                return FriendNumber | (FileNumber << 1);
+            }
+        }
+
+        protected class TransferData
+        {
+            protected Stream Stream;
+
+            public TransferData(Stream stream, long dataSizeInBytes, TransferDirection direction,
+                long transferredBytes = 0)
+            {
+                Stream = stream;
+                if (Stream != null)
+                {
+                    if (Stream.CanWrite)
+                        Stream.SetLength(dataSizeInBytes);
+
+                    Stream.Position = transferredBytes;
+                }
+                Direction = direction;
+            }
+
+            public TransferDirection Direction { get; private set; }
+
+            public double Progress
+            {
+                get
+                {
+                    lock (Stream)
+                    {
+                        return ((double) Stream.Position/Stream.Length)*100;
+                    }
+                }
+            }
+
+            public long TransferredBytes
+            {
+                get { return Stream.Position; }
+            }
+
+            public bool IsFinished()
+            {
+                lock (Stream)
+                {
+                    return Stream.Position == Stream.Length;
+                }
+            }
+
+            public byte[] GetNextChunk(ToxEventArgs.FileRequestChunkEventArgs e)
+            {
+                lock (Stream)
+                {
+                    if (Stream.Position != e.Position)
+                    {
+                        Stream.Seek(e.Position, SeekOrigin.Begin);
+                    }
+
+                    var chunk = new byte[e.Length];
+                    Stream.Read(chunk, 0, e.Length);
+
+                    return chunk;
+                }
+            }
+
+            public void PutNextChunk(ToxEventArgs.FileChunkEventArgs e)
+            {
+                lock (Stream)
+                {
+                    if (Stream.Position != e.Position)
+                    {
+                        Stream.Seek(e.Position, SeekOrigin.Begin);
+                    }
+
+                    Stream.Write(e.Data, 0, e.Data.Length);
+                }
+            }
+
+            public void Dispose()
+            {
+                if (Stream != null) // It could be a dummy transfer waiting for accept from the user!
+                    Stream.Dispose();
+            }
+        }
+
+        #endregion
 
         #region Common
 
@@ -65,11 +171,9 @@ namespace WinTox.Model
             return ToxModel.Instance.FileControl(friendNumber, fileNumber, ToxFileControl.Resume);
         }
 
-        protected void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes,
-            TransferDirection direction, long transferredBytes = 0)
+        protected void AddTransfer(int friendNumber, int fileNumber, TransferData transferData)
         {
-            Transfers.Add(new TransferId(friendNumber, fileNumber),
-                new TransferData(stream, dataSizeInBytes, direction, transferredBytes));
+            Transfers.Add(new TransferId(friendNumber, fileNumber), transferData);
         }
 
         protected void RemoveTransfer(TransferId transferId)
@@ -133,126 +237,6 @@ namespace WinTox.Model
         }
 
         protected abstract void HandleFinishedDownload(TransferId transferId, int friendNumber, int fileNumber);
-
-        #endregion
-
-        #region Helper classes
-
-        protected class TransferId : IEquatable<TransferId>
-        {
-            public TransferId(int friendNumber, int fileNumber)
-            {
-                FriendNumber = friendNumber;
-                FileNumber = fileNumber;
-            }
-
-            public int FriendNumber { get; private set; }
-            public int FileNumber { get; private set; }
-
-            public bool Equals(TransferId other)
-            {
-                return (FriendNumber == other.FriendNumber) && (FileNumber == other.FileNumber);
-            }
-
-            public override int GetHashCode()
-            {
-                return FriendNumber | (FileNumber << 1);
-            }
-        }
-
-        protected class TransferData
-        {
-            private readonly long _dataSizeInBytes;
-
-            public TransferData(Stream stream, long dataSizeInBytes, TransferDirection direction,
-                long transferredBytes = 0)
-            {
-                _dataSizeInBytes = dataSizeInBytes;
-
-                _stream = stream;
-                if (_stream != null)
-                {
-                    if (_stream.CanWrite)
-                        _stream.SetLength(_dataSizeInBytes);
-
-                    _stream.Position = transferredBytes;
-                }
-                Direction = direction;
-            }
-
-            public TransferDirection Direction { get; private set; }
-            private Stream _stream;
-
-            public double Progress
-            {
-                get
-                {
-                    lock (_stream)
-                    {
-                        return ((double) _stream.Position/_stream.Length)*100;
-                    }
-                }
-            }
-
-            public long TransferredBytes { get { return _stream.Position; } }
-
-            public bool IsFinished()
-            {
-                lock (_stream)
-                {
-                    return _stream.Position == _stream.Length;
-                }
-            }
-
-            public void ReplaceStream(Stream newStream)
-            {
-                if (_stream != null) // We only allow replacement of a dummy stream.
-                    return;
-
-                newStream.SetLength(_dataSizeInBytes);
-                _stream = newStream;
-            }
-
-            public MemoryStream GetMemoryStream()
-            {
-                return _stream as MemoryStream;
-            }
-
-            public byte[] GetNextChunk(ToxEventArgs.FileRequestChunkEventArgs e)
-            {
-                lock (_stream)
-                {
-                    if (_stream.Position != e.Position)
-                    {
-                        _stream.Seek(e.Position, SeekOrigin.Begin);
-                    }
-
-                    var chunk = new byte[e.Length];
-                    _stream.Read(chunk, 0, e.Length);
-
-                    return chunk;
-                }
-            }
-
-            public void PutNextChunk(ToxEventArgs.FileChunkEventArgs e)
-            {
-                lock (_stream)
-                {
-                    if (_stream.Position != e.Position)
-                    {
-                        _stream.Seek(e.Position, SeekOrigin.Begin);
-                    }
-
-                    _stream.Write(e.Data, 0, e.Data.Length);
-                }
-            }
-
-            public void Dispose()
-            {
-                if (_stream != null) // It could be a dummy transfer waiting for accept from the user!
-                    _stream.Dispose(); 
-            }
-        }
 
         #endregion
     }
