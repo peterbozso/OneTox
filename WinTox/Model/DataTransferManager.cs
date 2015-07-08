@@ -78,8 +78,7 @@ namespace WinTox.Model
                 return;
 
             var transferToRemove = Transfers[transferId];
-            if (transferToRemove.Stream != null) // It could be a dummy transfer waiting for accept from the user!
-                transferToRemove.Stream.Dispose();
+            transferToRemove.Dispose();
             Transfers.Remove(transferId);
         }
 
@@ -170,27 +169,27 @@ namespace WinTox.Model
             {
                 _dataSizeInBytes = dataSizeInBytes;
 
-                Stream = stream;
-                if (Stream != null)
+                _stream = stream;
+                if (_stream != null)
                 {
-                    if (Stream.CanWrite)
-                        Stream.SetLength(_dataSizeInBytes);
+                    if (_stream.CanWrite)
+                        _stream.SetLength(_dataSizeInBytes);
 
-                    Stream.Position = transferredBytes;
+                    _stream.Position = transferredBytes;
                 }
                 Direction = direction;
             }
 
             public TransferDirection Direction { get; private set; }
-            public Stream Stream { get; private set; }
+            private Stream _stream;
 
             public double Progress
             {
                 get
                 {
-                    lock (Stream)
+                    lock (_stream)
                     {
-                        return ((double) Stream.Position/Stream.Length)*100;
+                        return ((double) _stream.Position/_stream.Length)*100;
                     }
                 }
             }
@@ -199,37 +198,42 @@ namespace WinTox.Model
 
             public bool IsFinished()
             {
-                lock (Stream)
+                lock (_stream)
                 {
-                    return Stream.Position == Stream.Length;
+                    return _stream.Position == _stream.Length;
                 }
             }
 
             public void ReplaceStream(Stream newStream)
             {
-                lock (Stream)
+                lock (_stream)
                 {
-                    if (Stream != null) // We only allow replacement of a dummy stream.
+                    if (_stream != null) // We only allow replacement of a dummy stream.
                         return;
 
                     newStream.SetLength(_dataSizeInBytes);
-                    Stream = newStream;
+                    _stream = newStream;
                 }
+            }
+
+            public MemoryStream GetMemoryStream()
+            {
+                return _stream as MemoryStream;
             }
 
             public byte[] GetNextChunk(ToxEventArgs.FileRequestChunkEventArgs e)
             {
-                lock (Stream)
+                lock (_stream)
                 {
-                    if (Stream.Position != e.Position)
+                    if (_stream.Position != e.Position)
                     {
-                        Stream.Seek(e.Position, SeekOrigin.Begin);
+                        _stream.Seek(e.Position, SeekOrigin.Begin);
                     }
 
                     var chunk = new byte[e.Length];
-                    Stream.Read(chunk, 0, e.Length);
+                    _stream.Read(chunk, 0, e.Length);
 
-                    TransferredBytes = Stream.Position;
+                    TransferredBytes = _stream.Position;
 
                     return chunk;
                 }
@@ -237,17 +241,23 @@ namespace WinTox.Model
 
             public void PutNextChunk(ToxEventArgs.FileChunkEventArgs e)
             {
-                lock (Stream)
+                lock (_stream)
                 {
-                    if (Stream.Position != e.Position)
+                    if (_stream.Position != e.Position)
                     {
-                        Stream.Seek(e.Position, SeekOrigin.Begin);
+                        _stream.Seek(e.Position, SeekOrigin.Begin);
                     }
 
-                    Stream.Write(e.Data, 0, e.Data.Length);
+                    _stream.Write(e.Data, 0, e.Data.Length);
 
-                    TransferredBytes = Stream.Position;
+                    TransferredBytes = _stream.Position;
                 }
+            }
+
+            public void Dispose()
+            {
+                if (_stream != null) // It could be a dummy transfer waiting for accept from the user!
+                    _stream.Dispose(); 
             }
         }
 

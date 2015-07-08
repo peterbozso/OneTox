@@ -161,7 +161,7 @@ namespace WinTox.Model
 
         protected override void HandleFinishedDownload(TransferId transferId, int friendNumber, int fileNumber)
         {
-            AvatarManager.Instance.ChangeFriendAvatar(friendNumber, Transfers[transferId].Stream as MemoryStream);
+            AvatarManager.Instance.ChangeFriendAvatar(friendNumber, Transfers[transferId].GetMemoryStream());
             RemoveTransfer(transferId);
         }
 
