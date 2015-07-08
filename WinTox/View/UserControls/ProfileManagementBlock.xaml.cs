@@ -29,7 +29,7 @@ namespace WinTox.View.UserControls
                     await _viewModel.ExportProfile(file, PasswordTextBox.Text);
                 if (!successfulExport)
                 {
-                    var msgDialog = new MessageDialog("Unsuccesfull export: the file couldn't be saved.");
+                    var msgDialog = new MessageDialog("Unsuccessful export: the file couldn't be saved.");
                     await msgDialog.ShowAsync();
                 }
             }
