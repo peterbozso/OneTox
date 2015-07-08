@@ -82,7 +82,7 @@ namespace WinTox.Model
             foreach (var transfer in Transfers)
             {
                 await
-                    FileTransferResumer.Instance.ConfirmTransfer(transfer.Key.FriendNumber, transfer.Key.FileNumber,
+                    FileTransferResumer.Instance.UpdateTransfer(transfer.Key.FriendNumber, transfer.Key.FileNumber,
                         transfer.Value.TransferredBytes);
             }
         }
@@ -90,7 +90,7 @@ namespace WinTox.Model
         private async Task RestoreUnfinishedUploadsForFriend(int friendNumber)
         {
             var resumeDataOfFinishedUploads =
-                await FileTransferResumer.Instance.GetResumeDataOfSavedUploadsForFriend(friendNumber);
+                await FileTransferResumer.Instance.GetUploadData(friendNumber);
             foreach (var resumeData in resumeDataOfFinishedUploads)
             {
                 bool successfulFileSend;
@@ -180,7 +180,7 @@ namespace WinTox.Model
                     if (transfer.Key.FriendNumber == e.FriendNumber)
                     {
                         await
-                            FileTransferResumer.Instance.ConfirmTransfer(transfer.Key.FriendNumber,
+                            FileTransferResumer.Instance.UpdateTransfer(transfer.Key.FriendNumber,
                                 transfer.Key.FileNumber, transfer.Value.TransferredBytes);
                         RemoveTransfer(new TransferId(transfer.Key.FriendNumber, transfer.Key.FileNumber));
 
