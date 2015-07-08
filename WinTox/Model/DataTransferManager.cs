@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using Windows.Devices.Geolocation;
 using SharpTox.Core;
 
 namespace WinTox.Model
@@ -118,7 +119,10 @@ namespace WinTox.Model
             var currentStream = currentTransfer.Stream;
 
             if (e.Position != currentStream.Position)
+            {
                 currentStream.Seek(e.Position, SeekOrigin.Begin);
+                currentTransfer.AdjustProgress(e.Position);
+            }
 
             var chunk = new byte[e.Length];
             currentStream.Read(chunk, 0, e.Length);
@@ -142,9 +146,8 @@ namespace WinTox.Model
                 return;
 
             var currentTransfer = Transfers[transferId];
-            var currentStream = currentTransfer.Stream;
 
-            PutNextChunk(e, currentStream);
+            PutNextChunk(e, currentTransfer);
 
             currentTransfer.IncreaseProgress(e.Data.Length);
             if (currentTransfer.IsFinished())
@@ -153,10 +156,15 @@ namespace WinTox.Model
             }
         }
 
-        private void PutNextChunk(ToxEventArgs.FileChunkEventArgs e, Stream currentStream)
+        private void PutNextChunk(ToxEventArgs.FileChunkEventArgs e, TransferData currentTransfer)
         {
+            var currentStream = currentTransfer.Stream;
+
             if (currentStream.Position != e.Position)
+            {
                 currentStream.Seek(e.Position, SeekOrigin.Begin);
+                currentTransfer.AdjustProgress(e.Position);
+            }
 
             currentStream.Write(e.Data, 0, e.Data.Length);
         }
@@ -212,6 +220,11 @@ namespace WinTox.Model
             public void IncreaseProgress(long amount)
             {
                 TransferredBytes += amount;
+            }
+
+            public void AdjustProgress(long poistion)
+            {
+                TransferredBytes = poistion;
             }
 
             public long TransferredBytes { get; private set; }
