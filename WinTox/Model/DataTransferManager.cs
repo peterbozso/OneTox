@@ -206,14 +206,11 @@ namespace WinTox.Model
 
             public void ReplaceStream(Stream newStream)
             {
-                lock (_stream)
-                {
-                    if (_stream != null) // We only allow replacement of a dummy stream.
-                        return;
+                if (_stream != null) // We only allow replacement of a dummy stream.
+                    return;
 
-                    newStream.SetLength(_dataSizeInBytes);
-                    _stream = newStream;
-                }
+                newStream.SetLength(_dataSizeInBytes);
+                _stream = newStream;
             }
 
             public MemoryStream GetMemoryStream()
