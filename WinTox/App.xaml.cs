@@ -6,7 +6,6 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Globalization;
-using Windows.Storage.AccessCache;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.Core;
 using Windows.UI.Popups;
@@ -175,7 +174,7 @@ namespace WinTox
             // Disabled until "GetNavigationState doesn't support serialization of a parameter type which was passed to Frame.Navigate." exception is fixed.
             // (It's the FriendViewModel on MainPage -> ChatPage navigation.)
             // await SuspensionManager.SaveAsync();
-            
+
             await ToxModel.Instance.SaveDataAsync();
             await FileTransferManager.Instance.StoreUnfinishedTransfers();
             deferral.Complete();

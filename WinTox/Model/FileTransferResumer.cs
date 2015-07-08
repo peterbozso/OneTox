@@ -178,7 +178,7 @@ namespace WinTox.Model
 
         private string SerializeMetadata(TransferMetadata metadata)
         {
-            var serializer = new XmlSerializer(typeof(TransferMetadata));
+            var serializer = new XmlSerializer(typeof (TransferMetadata));
             var xmlMetadata = new StringBuilder();
             var writer = new StringWriter(xmlMetadata);
             serializer.Serialize(writer, metadata);
@@ -195,19 +195,19 @@ namespace WinTox.Model
 
     public class ResumeData
     {
-        public int FriendNumber;
-        public Stream FileStream;
-        public string FileName;
         public byte[] FileId;
+        public string FileName;
+        public Stream FileStream;
+        public int FriendNumber;
         public long TransferredBytes;
     }
 
     public struct TransferMetadata
     {
+        public TransferDirection Direction;
         public byte[] FileId;
         public int FileNumber;
         public int FriendNumber;
         public long TransferredBytes;
-        public TransferDirection Direction;
     }
 }
