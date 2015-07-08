@@ -13,7 +13,11 @@ namespace WinTox.Model
     /// <summary>
     ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
     ///     This class's responsibility is to keep record of broken file transfers between core restarts. It accomplishes this
-    ///     goal by leveraging the benefits of future access list.
+    ///     goal by leveraging the benefits of future access list. We use it like this: whenever a file transfer added by
+    ///     FileTransfersViewModel, we record that transfer in future access list with RecordTransfer(). If a transfer finishes
+    ///     (due to really finishing it's progress, or because of being canceled by someone), it is removed from the future
+    ///     access list. If one of the participants goes offline before a transfer finishes, we update it's progress with
+    ///     UpdateTransfer() so we can resume the transfer where it is left off.
     /// </summary>
     internal class FileTransferResumer
     {
