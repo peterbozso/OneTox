@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using Windows.Devices.Geolocation;
 using SharpTox.Core;
 
 namespace WinTox.Model
@@ -69,7 +68,8 @@ namespace WinTox.Model
         protected void AddTransfer(int friendNumber, int fileNumber, Stream stream, long dataSizeInBytes,
             TransferDirection direction, long transferredBytes = 0)
         {
-            Transfers.Add(new TransferId(friendNumber, fileNumber), new TransferData(stream, dataSizeInBytes, direction, transferredBytes));
+            Transfers.Add(new TransferId(friendNumber, fileNumber),
+                new TransferData(stream, dataSizeInBytes, direction, transferredBytes));
         }
 
         protected void RemoveTransfer(TransferId transferId)
@@ -89,11 +89,6 @@ namespace WinTox.Model
 
         private void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
         {
-            if (e.Length == 0)
-            {
-                return;
-            }
-
             var transferId = new TransferId(e.FriendNumber, e.FileNumber);
 
             if (IsTransferFinished(transferId))
@@ -101,33 +96,16 @@ namespace WinTox.Model
 
             var currentTransfer = Transfers[transferId];
 
-            var chunk = GetNextChunk(e, currentTransfer);
+            var chunk = currentTransfer.GetNextChunk(e);
             var successfulChunkSend = ToxModel.Instance.FileSendChunk(e.FriendNumber, e.FileNumber, e.Position, chunk);
 
             if (successfulChunkSend)
             {
-                currentTransfer.IncreaseProgress(e.Length);
                 if (currentTransfer.IsFinished())
                 {
                     HandleFinishedUpload(transferId, e.FriendNumber, e.FileNumber);
                 }
             }
-        }
-
-        private byte[] GetNextChunk(ToxEventArgs.FileRequestChunkEventArgs e, TransferData currentTransfer)
-        {
-            var currentStream = currentTransfer.Stream;
-
-            if (e.Position != currentStream.Position)
-            {
-                currentStream.Seek(e.Position, SeekOrigin.Begin);
-                currentTransfer.AdjustProgress(e.Position);
-            }
-
-            var chunk = new byte[e.Length];
-            currentStream.Read(chunk, 0, e.Length);
-
-            return chunk;
         }
 
         protected abstract void HandleFinishedUpload(TransferId transferId, int friendNumber, int fileNumber);
@@ -147,26 +125,12 @@ namespace WinTox.Model
 
             var currentTransfer = Transfers[transferId];
 
-            PutNextChunk(e, currentTransfer);
+            currentTransfer.PutNextChunk(e);
 
-            currentTransfer.IncreaseProgress(e.Data.Length);
             if (currentTransfer.IsFinished())
             {
                 HandleFinishedDownload(transferId, e.FriendNumber, e.FileNumber);
             }
-        }
-
-        private void PutNextChunk(ToxEventArgs.FileChunkEventArgs e, TransferData currentTransfer)
-        {
-            var currentStream = currentTransfer.Stream;
-
-            if (currentStream.Position != e.Position)
-            {
-                currentStream.Seek(e.Position, SeekOrigin.Begin);
-                currentTransfer.AdjustProgress(e.Position);
-            }
-
-            currentStream.Write(e.Data, 0, e.Data.Length);
         }
 
         protected abstract void HandleFinishedDownload(TransferId transferId, int friendNumber, int fileNumber);
@@ -201,11 +165,19 @@ namespace WinTox.Model
         {
             private readonly long _dataSizeInBytes;
 
-            public TransferData(Stream stream, long dataSizeInBytes, TransferDirection direction, long transferredBytes = 0)
+            public TransferData(Stream stream, long dataSizeInBytes, TransferDirection direction,
+                long transferredBytes = 0)
             {
-                TransferredBytes = transferredBytes;
                 _dataSizeInBytes = dataSizeInBytes;
+
                 Stream = stream;
+                if (Stream != null)
+                {
+                    if (Stream.CanWrite)
+                        Stream.SetLength(_dataSizeInBytes);
+
+                    Stream.Position = transferredBytes;
+                }
                 Direction = direction;
             }
 
@@ -214,30 +186,68 @@ namespace WinTox.Model
 
             public double Progress
             {
-                get { return ((double)TransferredBytes / _dataSizeInBytes) * 100; }
-            }
-
-            public void IncreaseProgress(long amount)
-            {
-                TransferredBytes += amount;
-            }
-
-            public void AdjustProgress(long poistion)
-            {
-                TransferredBytes = poistion;
+                get
+                {
+                    lock (Stream)
+                    {
+                        return ((double) Stream.Position/Stream.Length)*100;
+                    }
+                }
             }
 
             public long TransferredBytes { get; private set; }
 
             public bool IsFinished()
             {
-                return TransferredBytes == _dataSizeInBytes;
+                lock (Stream)
+                {
+                    return Stream.Position == Stream.Length;
+                }
             }
 
             public void ReplaceStream(Stream newStream)
             {
-                newStream.SetLength(_dataSizeInBytes);
-                Stream = newStream;
+                lock (Stream)
+                {
+                    if (Stream != null) // We only allow replacement of a dummy stream.
+                        return;
+
+                    newStream.SetLength(_dataSizeInBytes);
+                    Stream = newStream;
+                }
+            }
+
+            public byte[] GetNextChunk(ToxEventArgs.FileRequestChunkEventArgs e)
+            {
+                lock (Stream)
+                {
+                    if (Stream.Position != e.Position)
+                    {
+                        Stream.Seek(e.Position, SeekOrigin.Begin);
+                    }
+
+                    var chunk = new byte[e.Length];
+                    Stream.Read(chunk, 0, e.Length);
+
+                    TransferredBytes = Stream.Position;
+
+                    return chunk;
+                }
+            }
+
+            public void PutNextChunk(ToxEventArgs.FileChunkEventArgs e)
+            {
+                lock (Stream)
+                {
+                    if (Stream.Position != e.Position)
+                    {
+                        Stream.Seek(e.Position, SeekOrigin.Begin);
+                    }
+
+                    Stream.Write(e.Data, 0, e.Data.Length);
+
+                    TransferredBytes = Stream.Position;
+                }
             }
         }
 
