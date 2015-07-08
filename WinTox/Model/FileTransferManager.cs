@@ -146,8 +146,8 @@ namespace WinTox.Model
                 {
                     if (transfer.Key.FriendNumber == e.FriendNumber)
                     {
-                        RemoveTransfer(new TransferId(transfer.Key.FriendNumber, transfer.Key.FileNumber));
                         await FileTransferResumer.Instance.ConfirmTransfer(transfer.Key.FriendNumber, transfer.Key.FileNumber, transfer.Value.TransferredBytes);
+                        RemoveTransfer(new TransferId(transfer.Key.FriendNumber, transfer.Key.FileNumber));
 
                         // TODO: This belove is very ugly and might be dangerous. Find a better solution for it!!!
                         // If a friend goes offline, we "lie" to the ViewModel saying that the friend canceled the transfer.

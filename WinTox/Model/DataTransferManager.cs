@@ -194,7 +194,7 @@ namespace WinTox.Model
                 }
             }
 
-            public long TransferredBytes { get; private set; }
+            public long TransferredBytes { get { return _stream.Position; } }
 
             public bool IsFinished()
             {
@@ -233,8 +233,6 @@ namespace WinTox.Model
                     var chunk = new byte[e.Length];
                     _stream.Read(chunk, 0, e.Length);
 
-                    TransferredBytes = _stream.Position;
-
                     return chunk;
                 }
             }
@@ -249,8 +247,6 @@ namespace WinTox.Model
                     }
 
                     _stream.Write(e.Data, 0, e.Data.Length);
-
-                    TransferredBytes = _stream.Position;
                 }
             }
 
