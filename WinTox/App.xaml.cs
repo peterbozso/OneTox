@@ -85,8 +85,6 @@ namespace WinTox
             }
             // Ensure the current window is active
             Window.Current.Activate();
-
-            //StorageApplicationPermissions.FutureAccessList.Clear(); // TODO: Remove!
         }
 
         private async Task InitializeSingletons()
@@ -176,7 +174,7 @@ namespace WinTox
             // await SuspensionManager.SaveAsync();
 
             await ToxModel.Instance.SaveDataAsync();
-            await FileTransferManager.Instance.StoreUnfinishedTransfers();
+            await FileTransferManager.Instance.StoreBrokenTransfers();
             deferral.Complete();
         }
 

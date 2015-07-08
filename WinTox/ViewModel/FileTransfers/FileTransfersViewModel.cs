@@ -23,7 +23,7 @@ namespace WinTox.ViewModel.FileTransfers
             Transfers = new ObservableCollection<OneFileTransferViewModel>();
             FileTransferManager.Instance.FileControlReceived += FileControlReceivedHandler;
             FileTransferManager.Instance.TransferFinished += TransferFinishedHandler;
-            FileTransferManager.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
+            FileTransferManager.Instance.FileDownloadAdded += FileDownloadAddedHandler;
             FileTransferManager.Instance.FileUploadAdded += FileUploadAddedHandler;
             _progressUpdater = new ProgressUpdater(this);
             VisualStates = new FileTransfersVisualStates();
@@ -300,7 +300,7 @@ namespace WinTox.ViewModel.FileTransfers
             await _progressUpdater.StopUpdateIfNeeded();
         }
 
-        private async void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
+        private async void FileDownloadAddedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
         {
             if (e.FriendNumber != FriendNumber)
                 return;

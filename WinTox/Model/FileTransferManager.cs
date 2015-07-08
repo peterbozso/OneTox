@@ -77,7 +77,7 @@ namespace WinTox.Model
 
         #region File transfer resuming between core restarts
 
-        public async Task StoreUnfinishedTransfers()
+        public async Task StoreBrokenTransfers()
         {
             foreach (var transfer in Transfers)
             {
@@ -87,11 +87,13 @@ namespace WinTox.Model
             }
         }
 
-        private async Task RestoreUnfinishedUploadsForFriend(int friendNumber)
+        public event EventHandler<ToxEventArgs.FileSendRequestEventArgs> FileUploadAdded;
+
+        private async Task ResumeBrokenUploadsForFriend(int friendNumber)
         {
-            var resumeDataOfFinishedUploads =
-                await FileTransferResumer.Instance.GetUploadData(friendNumber);
-            foreach (var resumeData in resumeDataOfFinishedUploads)
+            var resumeDataOfBrokenUploads = await FileTransferResumer.Instance.GetUploadData(friendNumber);
+
+            foreach (var resumeData in resumeDataOfBrokenUploads)
             {
                 bool successfulFileSend;
                 var fileInfo = ToxModel.Instance.FileSend(resumeData.FriendNumber, ToxFileKind.Data,
@@ -115,7 +117,23 @@ namespace WinTox.Model
             }
         }
 
-        public event EventHandler<ToxEventArgs.FileSendRequestEventArgs> FileUploadAdded;
+        private void ResumeBrokenDownload(ToxEventArgs.FileSendRequestEventArgs e, ResumeData resumeData)
+        {
+            AddTransfer(e.FriendNumber, e.FileNumber, resumeData.FileStream, e.FileSize, TransferDirection.Down,
+                resumeData.TransferredBytes);
+            ToxModel.Instance.FileSeek(e.FriendNumber, e.FileNumber, resumeData.TransferredBytes);
+            ResumeTransfer(e.FriendNumber, e.FileNumber);
+
+            if (FileDownloadAdded != null)
+                FileDownloadAdded(this, e);
+
+            // TODO: This belove is very ugly and might be dangerous. Find a better solution for it!!!
+            // If we resume a download from a previous run, we "lie" to the ViewModel saying that the friend resumed the transfer.
+            if (FileControlReceived != null)
+                FileControlReceived(this,
+                    new ToxEventArgs.FileControlEventArgs(e.FriendNumber, e.FileNumber,
+                        ToxFileControl.Resume));
+        }
 
         #endregion
 
@@ -198,7 +216,7 @@ namespace WinTox.Model
                 if (ToxModel.Instance.LastConnectionStatusOfFriend(e.FriendNumber) != ToxConnectionStatus.None)
                     return;
 
-                await RestoreUnfinishedUploadsForFriend(e.FriendNumber);
+                await ResumeBrokenUploadsForFriend(e.FriendNumber);
             }
         }
 
@@ -248,7 +266,7 @@ namespace WinTox.Model
 
         #region Receiving
 
-        public event EventHandler<ToxEventArgs.FileSendRequestEventArgs> FileSendRequestReceived;
+        public event EventHandler<ToxEventArgs.FileSendRequestEventArgs> FileDownloadAdded;
 
         public void ReceiveFile(int friendNumber, int fileNumber, Stream saveStream)
         {
@@ -270,20 +288,7 @@ namespace WinTox.Model
             var resumeData = await FileTransferResumer.Instance.GetDownloadData(fileId);
             if (resumeData != null)
             {
-                AddTransfer(e.FriendNumber, e.FileNumber, resumeData.FileStream, e.FileSize, TransferDirection.Down,
-                    resumeData.TransferredBytes);
-                ToxModel.Instance.FileSeek(e.FriendNumber, e.FileNumber, resumeData.TransferredBytes);
-                ResumeTransfer(e.FriendNumber, e.FileNumber);
-
-                if (FileSendRequestReceived != null)
-                    FileSendRequestReceived(this, e);
-
-                // TODO: This belove is very ugly and might be dangerous. Find a better solution for it!!!
-                // If we resume a download from a previous run, we "lie" to the ViewModel saying that the friend resumed the transfer.
-                if (FileControlReceived != null)
-                    FileControlReceived(this,
-                        new ToxEventArgs.FileControlEventArgs(e.FriendNumber, e.FileNumber,
-                            ToxFileControl.Resume));
+                ResumeBrokenDownload(e, resumeData);
             }
             else
             {
@@ -291,8 +296,8 @@ namespace WinTox.Model
                 // in ReceiveFile() when the user accepts the request and chooses a location to save the file to.
                 AddTransfer(e.FriendNumber, e.FileNumber, null, e.FileSize, TransferDirection.Down);
 
-                if (FileSendRequestReceived != null)
-                    FileSendRequestReceived(this, e);
+                if (FileDownloadAdded != null)
+                    FileDownloadAdded(this, e);
             }
         }
 
