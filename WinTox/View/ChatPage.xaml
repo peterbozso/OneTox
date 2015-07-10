@@ -94,6 +94,24 @@
                         FontFamily="Segoe UI Symbol" FontSize="30" Click="CallButtonClick"
                         IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
                         Height="71" />
+
+                <Grid x:Name="DuringCallButtons" Grid.Column="1" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="MuteButton" Grid.Column="0" HorizontalAlignment="Center" Content="" Margin="0,0,20,0"
+                        FontFamily="Segoe UI Symbol" FontSize="30"
+                        IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
+                        Height="71" />
+
+                    <Button x:Name="HangUpButton" Grid.Column="1" HorizontalAlignment="Center" Content="" Margin="0,0,20,0"
+                        FontFamily="Segoe UI Symbol" FontSize="30"
+                        IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
+                        Height="71" />
+                </Grid>
+                
                 <Button x:Name="SendFileButton" Grid.Column="2" HorizontalAlignment="Center" Content=""
                         Margin="0,0,20,0" FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
                         IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
