@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using Windows.Storage.Pickers;
 using Windows.System;
@@ -105,6 +106,11 @@ namespace WinTox.View
             {
                 await _friendViewModel.FileTransfers.SendFile(file);
             }
+        }
+
+        private void CallButtonClick(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("STUB: CallButtonClick()");
         }
 
         #region Handle changes of the input pane's state

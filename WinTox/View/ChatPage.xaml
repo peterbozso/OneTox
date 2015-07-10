@@ -80,16 +80,22 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!-- Top panel with friend info and send file button -->
+            <!-- Top panel with friend info and action buttons -->
             <Grid Grid.Row="0" Background="{ThemeResource BackgroundColor}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <friends:FriendInfo x:Name="FriendInfoControl" Grid.Column="0" HorizontalAlignment="Left" />
-                <Button Grid.Column="1" HorizontalAlignment="Center" Content="" Margin="20,0"
-                        FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
+                <friends:FriendInfo x:Name="FriendInfoControl" Grid.Column="0" HorizontalAlignment="Left"
+                                    Margin="0,0,20,0" />
+                <Button x:Name="CallButton" Grid.Column="1" HorizontalAlignment="Center" Content="" Margin="0,0,20,0"
+                        FontFamily="Segoe UI Symbol" FontSize="30" Click="CallButtonClick"
+                        IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
+                        Height="71" />
+                <Button x:Name="SendFileButton" Grid.Column="2" HorizontalAlignment="Center" Content=""
+                        Margin="0,0,20,0" FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
                         IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
                         Height="71" />
             </Grid>
