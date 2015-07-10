@@ -1,6 +1,4 @@
 ﻿<Page
-    x:Name="PageRoot"
-    x:Class="WinTox.View.ChatPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,6 +9,9 @@
     xmlns:messaging="using:WinTox.View.UserControls.Messaging"
     xmlns:fileTransfers="using:WinTox.View.UserControls.FileTransfers"
     xmlns:recentMessages="using:WinTox.View.UserControls.Messaging.RecentMessages"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    x:Name="PageRoot"
+    x:Class="WinTox.View.ChatPage"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -69,110 +70,112 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EntranceThemeTransition />
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+        <Interactivity:Interaction.Behaviors>
+            <Core:DataTriggerBehavior Binding="{Binding Call.IsDuringCall}"
+                                      ComparisonCondition="Equal" Value="False">
+                <Core:GoToStateAction StateName="Default" />
+            </Core:DataTriggerBehavior>
+            <Core:DataTriggerBehavior Binding="{Binding Call.IsDuringCall}"
+                                      ComparisonCondition="Equal" Value="True">
+                <Core:GoToStateAction StateName="DuringCall" />
+            </Core:DataTriggerBehavior>
+        </Interactivity:Interaction.Behaviors>
 
-            <!-- Top panel with friend info and action buttons -->
-            <Grid Grid.Row="0" Background="{ThemeResource BackgroundColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Top panel with friend info and action buttons -->
+        <Grid Grid.Row="0" Background="{ThemeResource BackgroundColor}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <friends:FriendInfo x:Name="FriendInfoControl" Grid.Column="0" HorizontalAlignment="Left"
+                                Margin="0,0,20,0" />
+            <Button x:Name="CallButton" Grid.Column="1" HorizontalAlignment="Center" Content="&#xE13A;"
+                    Margin="0,0,20,0"
+                    FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.StartCallByUserCommand}"
+                    IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
+                    Height="71" />
+
+            <Grid x:Name="DuringCallButtons" Grid.Column="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <friends:FriendInfo x:Name="FriendInfoControl" Grid.Column="0" HorizontalAlignment="Left"
-                                    Margin="0,0,20,0" />
-                <Button x:Name="CallButton" Grid.Column="1" HorizontalAlignment="Center" Content="" Margin="0,0,20,0"
-                        FontFamily="Segoe UI Symbol" FontSize="30" Click="CallButtonClick"
+                <Button x:Name="MuteButton" Grid.Column="0" HorizontalAlignment="Center" Content="&#xE1D6;"
+                        Margin="0,0,20,0"
+                        FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.ChangeMuteCommand}"
                         IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
-                        Height="71" />
+                        Height="71"
+                        Background="{Binding Call.IsMuted, Converter={StaticResource IsMutedToBackgroundColorConverter}}" />
 
-                <Grid x:Name="DuringCallButtons" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <Button x:Name="MuteButton" Grid.Column="0" HorizontalAlignment="Center" Content=""
-                            Margin="0,0,20,0"
-                            FontFamily="Segoe UI Symbol" FontSize="30" Click="MuteButtonClick"
-                            IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
-                            Height="71"
-                            Background="{Binding Call.IsMuted, Converter={StaticResource IsMutedToBackgroundColorConverter}}" />
-
-                    <Button x:Name="HangUpButton" Grid.Column="1" HorizontalAlignment="Center" Content=""
-                            Margin="0,0,20,0"
-                            FontFamily="Segoe UI Symbol" FontSize="30" Click="HangUpButtonClick"
-                            IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
-                            Height="71" />
-                </Grid>
-
-                <Button x:Name="SendFileButton" Grid.Column="2" HorizontalAlignment="Center" Content=""
-                        Margin="0,0,20,0" FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
+                <Button x:Name="HangUpButton" Grid.Column="1" HorizontalAlignment="Center" Content="&#xE137;"
+                        Margin="0,0,20,0"
+                        FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.StopCallByUserCommand}"
                         IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
                         Height="71" />
             </Grid>
 
-            <!-- Current file transfer(s) -->
-            <fileTransfers:FileTransfersBlock Grid.Row="1" DataContext="{Binding FileTransfers}" />
+            <Button x:Name="SendFileButton" Grid.Column="2" HorizontalAlignment="Center" Content="&#xE1A5;"
+                    Margin="0,0,20,0" FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
+                    IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
+                    Height="71" />
+        </Grid>
 
-            <!-- List of messages -->
-            <ListView Grid.Row="2" x:Name="MessagesListView" Background="{StaticResource ChatBackgroundColor}"
-                      ItemsSource="{Binding Conversation.MessageGroups}" SelectionMode="None"
-                      HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                      IncrementalLoadingTrigger="None">
-                <ListView.ItemContainerStyle>
-                    <StaticResource ResourceKey="ChatPageListViewItemStyle" />
-                </ListView.ItemContainerStyle>
+        <!-- Current file transfer(s) -->
+        <fileTransfers:FileTransfersBlock Grid.Row="1" DataContext="{Binding FileTransfers}" />
 
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <messaging:MessageBlock />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+        <!-- List of messages -->
+        <ListView Grid.Row="2" x:Name="MessagesListView" Background="{StaticResource ChatBackgroundColor}"
+                  ItemsSource="{Binding Conversation.MessageGroups}" SelectionMode="None"
+                  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                  IncrementalLoadingTrigger="None" ItemContainerStyle="{StaticResource ChatPageListViewItemStyle}">
 
-            <!-- Received message notification -->
-            <Grid x:Name="MessageAddedNotificationGrid" Grid.Row="2" HorizontalAlignment="Left"
-                  VerticalAlignment="Bottom" Margin="20,0,0,0" Visibility="Collapsed">
-                <Ellipse x:Name="MessageAddedNotificationEllipse" Width="36" Height="36"
-                         Fill="{StaticResource MainColor}" HorizontalAlignment="Center" VerticalAlignment="Center"
-                         RenderTransformOrigin="0.5,0.5">
-                    <Ellipse.RenderTransform>
-                        <CompositeTransform />
-                    </Ellipse.RenderTransform>
-                </Ellipse>
-                <TextBlock x:Name="MessageAddedNotificationIcon" FontFamily="Segoe UI Symbol"
-                           Foreground="{StaticResource ChatBackgroundColor}" VerticalAlignment="Center" FontSize="30"
-                           HorizontalAlignment="Center" Margin="0,0,0,4">
-                    
-                </TextBlock>
-            </Grid>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <messaging:MessageBlock />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
 
-            <!-- Friend typing indicator -->
-            <TextBlock FontSize="13" Margin="20,2,0,0" Grid.Row="3" VerticalAlignment="Top" Canvas.ZIndex="1"
-                       Visibility="{Binding Conversation.IsFriendTyping, Converter={StaticResource BoolToVisibilityConverter}}"
-                       Text="{Binding Name, Converter={StaticResource FriendNameToTypingStatusConverter}}" />
+        <!-- Received message notification -->
+        <Grid x:Name="MessageAddedNotificationGrid" Grid.Row="2" HorizontalAlignment="Left"
+              VerticalAlignment="Bottom" Margin="20,0,0,0" Visibility="Collapsed">
+            <Ellipse x:Name="MessageAddedNotificationEllipse" Width="36" Height="36"
+                     Fill="{StaticResource MainColor}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                     RenderTransformOrigin="0.5,0.5">
+                <Ellipse.RenderTransform>
+                    <CompositeTransform />
+                </Ellipse.RenderTransform>
+            </Ellipse>
+            <TextBlock x:Name="MessageAddedNotificationIcon" FontFamily="Segoe UI Symbol"
+                       Foreground="{StaticResource ChatBackgroundColor}" VerticalAlignment="Center" FontSize="30"
+                       HorizontalAlignment="Center" Margin="0,0,0,4">
+                <Run Text="&#xE00D;" />
+            </TextBlock>
+        </Grid>
 
-            <!-- Message input field -->
-            <Grid Grid.Row="3" Background="{StaticResource MainColor}">
-                <TextBox x:Name="MessageInputTextBox" Margin="20" FontSize="20" MinHeight="40" MaxHeight="250"
-                         Height="Auto"
-                         KeyDown="MessageInputKeyDown" TextWrapping="Wrap"
-                         ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10,3,20,5"
-                         FontFamily="Global User Interface" />
-            </Grid>
+        <!-- Friend typing indicator -->
+        <TextBlock FontSize="13" Margin="20,2,0,0" Grid.Row="3" VerticalAlignment="Top" Canvas.ZIndex="1"
+                   Visibility="{Binding Conversation.IsFriendTyping, Converter={StaticResource BoolToVisibilityConverter}}"
+                   Text="{Binding Name, Converter={StaticResource FriendNameToTypingStatusConverter}}" />
+
+        <!-- Message input field -->
+        <Grid Grid.Row="3" Background="{StaticResource MainColor}">
+            <TextBox x:Name="MessageInputTextBox" Margin="20" FontSize="20" MinHeight="40" MaxHeight="250"
+                     Height="Auto"
+                     KeyDown="MessageInputKeyDown" TextWrapping="Wrap"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10,3,20,5"
+                     FontFamily="Global User Interface" />
         </Grid>
     </Grid>
 </Page>

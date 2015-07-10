@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using Windows.Storage.Pickers;
 using Windows.System;
@@ -108,27 +107,6 @@ namespace WinTox.View
             {
                 await _friendViewModel.FileTransfers.SendFile(file);
             }
-        }
-
-        private void CallButtonClick(object sender, RoutedEventArgs e)
-        {
-            VisualStateManager.GoToState(this, "DuringCall", true);
-
-            Debug.WriteLine("STUB: CallButtonClick()");
-        }
-
-        private void MuteButtonClick(object sender, RoutedEventArgs e)
-        {
-            _friendViewModel.Call.IsMuted = !_friendViewModel.Call.IsMuted;
-
-            Debug.WriteLine("STUB: MuteButtonClick()");
-        }
-
-        private void HangUpButtonClick(object sender, RoutedEventArgs e)
-        {
-            VisualStateManager.GoToState(this, "Default", true);
-
-            Debug.WriteLine("STUB: HangUpButtonClick()");
         }
 
         #region Handle changes of the input pane's state
