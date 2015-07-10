@@ -41,32 +41,34 @@
     </Page.Resources>
 
     <Grid>
-    	<VisualStateManager.VisualStateGroups>
-    		<VisualStateGroup x:Name="VisualStateGroup">
-    			<VisualState x:Name="Default">
-    				<Storyboard>
-    					<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="DuringCallButtons">
-    						<DiscreteObjectKeyFrame KeyTime="0">
-    							<DiscreteObjectKeyFrame.Value>
-    								<Visibility>Collapsed</Visibility>
-    							</DiscreteObjectKeyFrame.Value>
-    						</DiscreteObjectKeyFrame>
-    					</ObjectAnimationUsingKeyFrames>
-    				</Storyboard>
-    			</VisualState>
-    			<VisualState x:Name="DuringCall">
-    				<Storyboard>
-    					<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CallButton">
-    						<DiscreteObjectKeyFrame KeyTime="0">
-    							<DiscreteObjectKeyFrame.Value>
-    								<Visibility>Collapsed</Visibility>
-    							</DiscreteObjectKeyFrame.Value>
-    						</DiscreteObjectKeyFrame>
-    					</ObjectAnimationUsingKeyFrames>
-    				</Storyboard>
-    			</VisualState>
-    		</VisualStateGroup>
-    	</VisualStateManager.VisualStateGroups>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualState x:Name="Default">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                       Storyboard.TargetName="DuringCallButtons">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="DuringCall">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                       Storyboard.TargetName="CallButton">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition />
@@ -96,23 +98,26 @@
                         IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
                         Height="71" />
 
-                <Grid x:Name="DuringCallButtons" Grid.Column="1" >
+                <Grid x:Name="DuringCallButtons" Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="MuteButton" Grid.Column="0" HorizontalAlignment="Center" Content="" Margin="0,0,20,0"
-                        FontFamily="Segoe UI Symbol" FontSize="30" Click="MuteButtonClick"
-                        IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
-                        Height="71" />
+                    <Button x:Name="MuteButton" Grid.Column="0" HorizontalAlignment="Center" Content=""
+                            Margin="0,0,20,0"
+                            FontFamily="Segoe UI Symbol" FontSize="30" Click="MuteButtonClick"
+                            IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
+                            Height="71"
+                            Background="{Binding Call.IsMuted, Converter={StaticResource IsMutedToBackgroundColorConverter}}" />
 
-                    <Button x:Name="HangUpButton" Grid.Column="1" HorizontalAlignment="Center" Content="" Margin="0,0,20,0"
-                        FontFamily="Segoe UI Symbol" FontSize="30" Click="HangUpButtonClick"
-                        IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
-                        Height="71" />
+                    <Button x:Name="HangUpButton" Grid.Column="1" HorizontalAlignment="Center" Content=""
+                            Margin="0,0,20,0"
+                            FontFamily="Segoe UI Symbol" FontSize="30" Click="HangUpButtonClick"
+                            IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
+                            Height="71" />
                 </Grid>
-                
+
                 <Button x:Name="SendFileButton" Grid.Column="2" HorizontalAlignment="Center" Content=""
                         Margin="0,0,20,0" FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
                         IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"

@@ -29,6 +29,7 @@ namespace WinTox.ViewModel.Friends
             Conversation = new ConversationViewModel(this);
             FileTransfers = new FileTransfersViewModel(friendNumber);
             RecentMessages = new RecentMessagesPerUserViewModel(friendNumber);
+            Call = new CallViewModel();
 
             Name = ToxModel.Instance.GetFriendName(friendNumber);
             if (Name == String.Empty)
@@ -57,6 +58,7 @@ namespace WinTox.ViewModel.Friends
         public ConversationViewModel Conversation { get; private set; }
         public FileTransfersViewModel FileTransfers { get; private set; }
         public RecentMessagesPerUserViewModel RecentMessages { get; private set; }
+        public CallViewModel Call { get; private set; }
 
         public RelayCommand RemoveFriendCommand
         {

@@ -119,6 +119,8 @@ namespace WinTox.View
 
         private void MuteButtonClick(object sender, RoutedEventArgs e)
         {
+            _friendViewModel.Call.IsMuted = !_friendViewModel.Call.IsMuted;
+
             Debug.WriteLine("STUB: MuteButtonClick()");
         }
 

@@ -5,6 +5,7 @@
 
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <converters:FriendNameToTypingStatusConverter x:Key="FriendNameToTypingStatusConverter" />
+    <converters:IsMutedToBackgroundColorConverter x:Key="IsMutedToBackgroundColorConverter" />
 
     <FontFamily x:Key="ContentControlThemeFontFamily">Segoe WP</FontFamily>
     <x:Double x:Key="ControlContentThemeFontSize">12</x:Double>
