@@ -39,11 +39,13 @@
                                     <VisualState x:Name="Normal" />
                                     <VisualState x:Name="PointerOver">
                                         <Storyboard>
+                                            <!-- Disable unnecessary change of background color when the pointer is over the button.
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
                                                                            Storyboard.TargetName="Border">
                                                 <DiscreteObjectKeyFrame KeyTime="0"
                                                                         Value="{ThemeResource ButtonPointerOverBackgroundThemeBrush}" />
                                             </ObjectAnimationUsingKeyFrames>
+                                            -->
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground"
                                                                            Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0"
