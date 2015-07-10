@@ -164,6 +164,12 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
+        <Grid.Transitions>
+            <TransitionCollection>
+                <EntranceThemeTransition FromVerticalOffset="-100" FromHorizontalOffset="0" />
+            </TransitionCollection>
+        </Grid.Transitions>
+
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
@@ -184,6 +190,12 @@
         <Grid x:Name="OpenContentGrid" Grid.Row="1">
             <ScrollViewer x:Name="TransferRibbonsScrollViewer" VerticalScrollBarVisibility="Auto">
                 <ItemsControl x:Name="TransferRibbons" ItemsSource="{Binding Transfers}" Margin="0,0,0,10">
+                    <ItemsControl.Transitions>
+                        <TransitionCollection>
+                            <EntranceThemeTransition FromVerticalOffset="-100" FromHorizontalOffset="0" />
+                        </TransitionCollection>
+                    </ItemsControl.Transitions>
+
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <fileTransfers:FileTransferRibbon />

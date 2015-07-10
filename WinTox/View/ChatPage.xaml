@@ -41,7 +41,7 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <Grid>
+    <Grid Background="{StaticResource ChatBackgroundColor}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
                 <VisualState x:Name="Default">
@@ -91,6 +91,17 @@
 
         <!-- Top panel with friend info and action buttons -->
         <Grid Grid.Row="0" Background="{ThemeResource BackgroundColor}">
+            <Grid.Transitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromVerticalOffset="-100" FromHorizontalOffset="0" />
+                </TransitionCollection>
+            </Grid.Transitions>
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromVerticalOffset="-100" FromHorizontalOffset="0" />
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -140,6 +151,12 @@
                   HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                   IncrementalLoadingTrigger="None" ItemContainerStyle="{StaticResource ChatPageListViewItemStyle}">
 
+            <ListView.Transitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromVerticalOffset="0" FromHorizontalOffset="100" />
+                </TransitionCollection>
+            </ListView.Transitions>
+
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <messaging:MessageBlock />
@@ -171,6 +188,17 @@
 
         <!-- Message input field -->
         <Grid Grid.Row="3" Background="{StaticResource MainColor}">
+            <Grid.Transitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromVerticalOffset="100" FromHorizontalOffset="0" />
+                </TransitionCollection>
+            </Grid.Transitions>
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromVerticalOffset="100" FromHorizontalOffset="0" />
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
+
             <TextBox x:Name="MessageInputTextBox" Margin="20" FontSize="20" MinHeight="40" MaxHeight="250"
                      Height="Auto"
                      KeyDown="MessageInputKeyDown" TextWrapping="Wrap"
