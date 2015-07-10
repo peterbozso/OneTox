@@ -36,6 +36,8 @@ namespace WinTox.View
 
             _chatTimer = new Timer(state => _friendViewModel.Conversation.SetTypingStatus(false),
                 null, Timeout.Infinite, Timeout.Infinite);
+
+            VisualStateManager.GoToState(this, "Default", false);
         }
 
         /// <summary>
@@ -110,7 +112,21 @@ namespace WinTox.View
 
         private void CallButtonClick(object sender, RoutedEventArgs e)
         {
+            VisualStateManager.GoToState(this, "DuringCall", true);
+
             Debug.WriteLine("STUB: CallButtonClick()");
+        }
+
+        private void MuteButtonClick(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("STUB: MuteButtonClick()");
+        }
+
+        private void HangUpButtonClick(object sender, RoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "Default", true);
+
+            Debug.WriteLine("STUB: HangUpButtonClick()");
         }
 
         #region Handle changes of the input pane's state

@@ -103,12 +103,12 @@
                     </Grid.ColumnDefinitions>
 
                     <Button x:Name="MuteButton" Grid.Column="0" HorizontalAlignment="Center" Content="" Margin="0,0,20,0"
-                        FontFamily="Segoe UI Symbol" FontSize="30"
+                        FontFamily="Segoe UI Symbol" FontSize="30" Click="MuteButtonClick"
                         IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
                         Height="71" />
 
                     <Button x:Name="HangUpButton" Grid.Column="1" HorizontalAlignment="Center" Content="" Margin="0,0,20,0"
-                        FontFamily="Segoe UI Symbol" FontSize="30"
+                        FontFamily="Segoe UI Symbol" FontSize="30" Click="HangUpButtonClick"
                         IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
                         Height="71" />
                 </Grid>
