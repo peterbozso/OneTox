@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.Media.Capture;
+using Windows.Media.MediaProperties;
+using Windows.Storage.Streams;
 using WinTox.Common;
 
 namespace WinTox.ViewModel
 {
     public class CallViewModel : ViewModelBase
     {
+        private InMemoryRandomAccessStream _audioStream;
         private RelayCommand _changeMuteCommand;
         private bool _isDuringCall;
         private bool _isMuted;
+        private MediaCapture _mediaCapture;
         private RelayCommand _startCallByUserCommand;
         private RelayCommand _stopCallByUserCommand;
 
@@ -38,13 +42,24 @@ namespace WinTox.ViewModel
             get
             {
                 return _stopCallByUserCommand ??
-                       (_stopCallByUserCommand = new RelayCommand(() => { IsDuringCall = false; }));
+                       (_stopCallByUserCommand = new RelayCommand(async () =>
+                       {
+                           await _mediaCapture.StopRecordAsync();
+                           IsDuringCall = false;
+                       }));
             }
         }
 
         public RelayCommand ChangeMuteCommand
         {
-            get { return _changeMuteCommand ?? (_changeMuteCommand = new RelayCommand(() => { IsMuted = !IsMuted; })); }
+            get
+            {
+                return _changeMuteCommand ?? (_changeMuteCommand = new RelayCommand(() =>
+                {
+                    IsMuted = !IsMuted;
+                    _mediaCapture.AudioDeviceController.Muted = IsMuted;
+                }));
+            }
         }
 
         #region Starting a call by the user
@@ -56,24 +71,29 @@ namespace WinTox.ViewModel
                 return _startCallByUserCommand ??
                        (_startCallByUserCommand = new RelayCommand(async () =>
                        {
-                           var mediaCapture = new MediaCapture();
+                           _mediaCapture = new MediaCapture();
                            var captureInitSettings = new MediaCaptureInitializationSettings
                            {
-                               StreamingCaptureMode = StreamingCaptureMode.Audio
+                               StreamingCaptureMode = StreamingCaptureMode.Audio,
+                               MediaCategory = MediaCategory.Communications
                            };
 
                            var successfulInitialization =
-                               await InitializeMediaCapture(mediaCapture, captureInitSettings);
+                               await InitializeMediaCapture(_mediaCapture, captureInitSettings);
                            if (!successfulInitialization)
                                return;
 
-                           mediaCapture.Failed += MediaCaptureFailedHandler;
-                           mediaCapture.RecordLimitationExceeded += MediaCaptureRecordLimitationExceededHandler;
+                           _mediaCapture.Failed += MediaCaptureFailedHandler;
+                           _mediaCapture.RecordLimitationExceeded += MediaCaptureRecordLimitationExceededHandler;
+
+                           await SetupAudioStream();
 
                            IsDuringCall = true;
                        }));
             }
         }
+
+        public event EventHandler<string> StartCallByUserFailed;
 
         private async Task<bool> InitializeMediaCapture(MediaCapture mediaCapture,
             MediaCaptureInitializationSettings captureInitSettings)
@@ -99,12 +119,17 @@ namespace WinTox.ViewModel
             }
         }
 
-        public event EventHandler<string> StartCallByUserFailed;
-
         private void RaiseStartCallByUserFailed(string errorMessage)
         {
             if (StartCallByUserFailed != null)
                 StartCallByUserFailed(this, errorMessage);
+        }
+
+        private async Task SetupAudioStream()
+        {
+            _audioStream = new InMemoryRandomAccessStream();
+            var encodingProfile = MediaEncodingProfile.CreateMp3(AudioEncodingQuality.Auto);
+            await _mediaCapture.StartRecordToStreamAsync(encodingProfile, _audioStream);
         }
 
         private void MediaCaptureRecordLimitationExceededHandler(MediaCapture sender)
