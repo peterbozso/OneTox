@@ -147,11 +147,6 @@ namespace WinTox.Model
 
         #region Methods
 
-        public void SetNospam(uint nospam)
-        {
-            _tox.SetNospam(nospam);
-        }
-
         /// <summary>
         ///     Replaces the current underlying EntededTox instance with a new one.
         ///     It's used for profile switching.
@@ -169,6 +164,8 @@ namespace WinTox.Model
 
             RaiseAllPropertiesChanged();
             RaiseFriendListReseted();
+
+            ToxAvModel.Instance.SetCurrent(_tox);
         }
 
         private void RegisterHandlers()
@@ -202,6 +199,8 @@ namespace WinTox.Model
         {
             _tox.Start();
             BootstrapContinously();
+
+            ToxAvModel.Instance.Start();
         }
 
         /// <summary>
@@ -222,6 +221,11 @@ namespace WinTox.Model
                 if (!_tox.IsConnected)
                     await Task.Delay(5000);
             }
+        }
+
+        public void SetNospam(uint nospam)
+        {
+            _tox.SetNospam(nospam);
         }
 
         public int AddFriend(ToxId id, string message, out bool success)

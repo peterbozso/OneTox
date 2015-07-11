@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
+using SharpTox.Av;
 using SharpTox.Core;
 
 namespace WinTox.ViewModel
 {
     /// <summary>
     ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
-    ///     The idea behind this class is that wherever a Tox-related error happens in ToxModel, it is sent to this class.
-    ///     The application itself subscribes to this class' one event (see App.xaml.cs), which will notify the app and
-    ///     present an user-readable error message that it can display to the user.
+    ///     The idea behind this class is that wherever a Tox-related error happens in ToxModel or ToxAvModel, it is
+    ///     sent to this class. The application itself subscribes to this class' one event (see App.xaml.cs), which
+    ///     will notify the app and present an user-readable error message that it can display to the user.
+    ///     But in most cases, this class will simply log to the debug output.
     ///     This way, Tox related errors' handling's scope is reduced only to ToxModel and this ViewModel.
     /// </summary>
     public class ToxErrorViewModel
@@ -21,6 +23,14 @@ namespace WinTox.ViewModel
         }
 
         public event EventHandler<string> ToxErrorOccured;
+
+        private void RaiseToxErrorOccured(string errorMessage)
+        {
+            if (ToxErrorOccured != null)
+                ToxErrorOccured(this, errorMessage);
+        }
+
+        #region Core errors
 
         public void RelayError(ToxErrorSendMessage error)
         {
@@ -83,10 +93,40 @@ namespace WinTox.ViewModel
                 Debug.WriteLine("An unexpected error occurred when seeking in a file: " + error);
         }
 
-        private void RaiseToxErrorOccured(string errorMessage)
+        #endregion
+
+        #region Audio/Video errors
+
+        public void RelayError(ToxAvErrorCall error)
         {
-            if (ToxErrorOccured != null)
-                ToxErrorOccured(this, errorMessage);
+            if (error != ToxAvErrorCall.Ok)
+                Debug.WriteLine("An unexpected error occurred when calling a friend: " + error);
         }
+
+        public void RelayError(ToxAvErrorAnswer error)
+        {
+            if (error != ToxAvErrorAnswer.Ok)
+                Debug.WriteLine("An unexpected error occurred when answering a call: " + error);
+        }
+
+        public void RelayError(ToxAvErrorCallControl error)
+        {
+            if (error != ToxAvErrorCallControl.Ok)
+                Debug.WriteLine("An unexpected error occurred when sending a call control: " + error);
+        }
+
+        public void RelayError(ToxAvErrorSetBitrate error)
+        {
+            if (error != ToxAvErrorSetBitrate.Ok)
+                Debug.WriteLine("An unexpected error occurred when setting bitrate: " + error);
+        }
+
+        public void RelayError(ToxAvErrorSendFrame error)
+        {
+            if (error != ToxAvErrorSendFrame.Ok)
+                Debug.WriteLine("An unexpected error occurred when sending a frame: " + error);
+        }
+
+        #endregion
     }
 }
