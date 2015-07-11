@@ -37,20 +37,6 @@ namespace WinTox.ViewModel
             }
         }
 
-        public RelayCommand StopCallByUserCommand
-        {
-            get
-            {
-                return _stopCallByUserCommand ??
-                       (_stopCallByUserCommand = new RelayCommand(async () =>
-                       {
-                           await _mediaCapture.StopRecordAsync();
-                           _audioStream.Dispose();
-                           IsDuringCall = false;
-                       }));
-            }
-        }
-
         public RelayCommand ChangeMuteCommand
         {
             get
@@ -87,7 +73,7 @@ namespace WinTox.ViewModel
                            _mediaCapture.Failed += MediaCaptureFailedHandler;
                            _mediaCapture.RecordLimitationExceeded += MediaCaptureRecordLimitationExceededHandler;
 
-                           await SetupAudioStream();
+                           await StartRecording();
 
                            IsDuringCall = true;
                        }));
@@ -126,7 +112,7 @@ namespace WinTox.ViewModel
                 StartCallByUserFailed(this, errorMessage);
         }
 
-        private async Task SetupAudioStream()
+        private async Task StartRecording()
         {
             _audioStream = new InMemoryRandomAccessStream();
             var encodingProfile = MediaEncodingProfile.CreateMp3(AudioEncodingQuality.Auto);
@@ -141,6 +127,29 @@ namespace WinTox.ViewModel
         private void MediaCaptureFailedHandler(MediaCapture sender, MediaCaptureFailedEventArgs errorEventArgs)
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Stopping a call by the user
+
+        public RelayCommand StopCallByUserCommand
+        {
+            get
+            {
+                return _stopCallByUserCommand ??
+                       (_stopCallByUserCommand = new RelayCommand(async () =>
+                       {
+                           await StopRecording();
+                           IsDuringCall = false;
+                       }));
+            }
+        }
+
+        private async Task StopRecording()
+        {
+            await _mediaCapture.StopRecordAsync();
+            _audioStream.Dispose();
         }
 
         #endregion
