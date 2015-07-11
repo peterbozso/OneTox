@@ -35,8 +35,6 @@ namespace WinTox.View
 
             _chatTimer = new Timer(state => _friendViewModel.Conversation.SetTypingStatus(false),
                 null, Timeout.Infinite, Timeout.Infinite);
-
-            VisualStateManager.GoToState(this, "Default", false);
         }
 
         /// <summary>
@@ -319,7 +317,6 @@ namespace WinTox.View
             if (friendViewModel != null)
             {
                 DataContext = _friendViewModel = friendViewModel;
-
                 SetupView();
             }
             else
@@ -344,6 +341,8 @@ namespace WinTox.View
             _scrollManager = new ScrollManager(MessagesListView, _friendViewModel.Conversation,
                 MessageAddedNotificationGrid, MessageAddedNotificationAnimation);
             _scrollManager.RegisterHandlers();
+
+            VisualStateManager.GoToState(this, _friendViewModel.Call.IsDuringCall ? "DuringCall" : "Default", false);
         }
 
         private void TearDownView()
