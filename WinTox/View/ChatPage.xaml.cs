@@ -343,12 +343,40 @@ namespace WinTox.View
             _scrollManager.RegisterHandlers();
 
             VisualStateManager.GoToState(this, _friendViewModel.Call.IsDuringCall ? "DuringCall" : "Default", false);
+
+            _friendViewModel.Call.StartCallByUserFailed += StartCallByUserFailedHandler;
         }
 
         private void TearDownView()
         {
             _inputPaneChangeHandler.DeregisterHandlers();
             _scrollManager.DeregisterHandlers();
+            _friendViewModel.Call.StartCallByUserFailed -= StartCallByUserFailedHandler;
+        }
+
+        #endregion
+
+        #region Call error handling
+
+        private void StartCallByUserFailedHandler(object sender, string errorMessage)
+        {
+            var contentGrid = GetCallByUserFailedFlyoutContent(errorMessage);
+            var flyout = new Flyout {Content = contentGrid};
+            flyout.ShowAt(CallButton);
+        }
+
+        private Grid GetCallByUserFailedFlyoutContent(string errorMessage)
+        {
+            var contentGrid = new Grid {Width = 300};
+
+            contentGrid.Children.Add(new TextBlock
+            {
+                Text = errorMessage,
+                FontSize = 15,
+                TextWrapping = TextWrapping.WrapWholeWords
+            });
+
+            return contentGrid;
         }
 
         #endregion
