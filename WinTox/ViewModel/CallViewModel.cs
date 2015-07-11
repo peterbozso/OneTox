@@ -45,6 +45,7 @@ namespace WinTox.ViewModel
                        (_stopCallByUserCommand = new RelayCommand(async () =>
                        {
                            await _mediaCapture.StopRecordAsync();
+                           _audioStream.Dispose();
                            IsDuringCall = false;
                        }));
             }
