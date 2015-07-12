@@ -8,7 +8,7 @@
     xmlns:converters="using:WinTox.Converters"
     mc:Ignorable="d"
     d:DesignHeight="55"
-    d:DesignWidth="400">
+    d:DesignWidth="300">
 
     <UserControl.Resources>
         <converters:DateTimeConverter x:Key="DateTimeConverter" />
@@ -16,7 +16,7 @@
         <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
     </UserControl.Resources>
 
-    <Grid Height="55" Tapped="RecentMessageListItemTapped" x:Name="ContentGrid">
+    <Grid Height="55" Tapped="RecentMessageListItemTapped" x:Name="ContentGrid" Width="300">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="TapStates">
                 <VisualState x:Name="Normal" />
