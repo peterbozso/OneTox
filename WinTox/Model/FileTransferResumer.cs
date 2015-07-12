@@ -190,7 +190,7 @@ namespace WinTox.Model
         }
 
         /// <summary>
-        /// In case a friend is removed from the friend list, we remove all broken transfers associated with him/her as well.
+        ///     In case a friend is removed from the friend list, we remove all broken transfers associated with him/her as well.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -207,7 +207,6 @@ namespace WinTox.Model
                         _futureAccesList.Remove(entry.Token);
                     }
                 }
-
             }
         }
 
