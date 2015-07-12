@@ -27,7 +27,6 @@ namespace WinTox.View
             NavigationHelper.LoadState += navigationHelper_LoadState;
             _viewModel = DataContext as MainPageViewModel;
             _viewModel.FriendRequestReceived += FriendRequestReceivedHandler;
-            RecentMessages.DataContext = RecentMessagesGlobalViewModel.Instace;
 
             SizeChanged += MainPageSizeChanged;
         }

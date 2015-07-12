@@ -61,7 +61,7 @@
                     <userControls:UserTile Grid.Column="1" />
                 </Grid>
             </Hub.Header>
-            <HubSection Header="recent messages" x:Name="RecentMessages">
+            <HubSection Header="recent messages">
                 <DataTemplate>
                     <recentMessages:RecentMessagesList />
                 </DataTemplate>

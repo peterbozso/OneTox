@@ -11,8 +11,7 @@
     d:DesignWidth="400">
 
     <Grid>
-        <ItemsControl Width="300"
-                      ItemsSource="{Binding RecentMessages}">
+        <ItemsControl Width="300" x:Name="ContentControl"> <!-- ItemsSource set in code-behind. -->
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <recentMessages:RecentMessagesListItem Margin="0,0,0,20" />
