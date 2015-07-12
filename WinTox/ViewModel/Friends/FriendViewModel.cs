@@ -29,7 +29,7 @@ namespace WinTox.ViewModel.Friends
             Conversation = new ConversationViewModel(this);
             FileTransfers = new FileTransfersViewModel(friendNumber);
             RecentMessages = new RecentMessagesPerUserViewModel(friendNumber);
-            Call = new CallViewModel();
+            Call = new CallViewModel(friendNumber);
 
             Name = ToxModel.Instance.GetFriendName(friendNumber);
             if (Name == String.Empty)

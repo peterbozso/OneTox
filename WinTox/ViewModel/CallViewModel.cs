@@ -1,21 +1,28 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
-using Windows.Storage.Streams;
 using WinTox.Common;
+using WinTox.Model;
 
 namespace WinTox.ViewModel
 {
     public class CallViewModel : ViewModelBase
     {
-        private InMemoryRandomAccessStream _audioStream;
+        private readonly int _friendNumber;
+        private CallAudioStream _callAudioStream;
         private RelayCommand _changeMuteCommand;
         private bool _isDuringCall;
         private bool _isMuted;
         private MediaCapture _mediaCapture;
         private RelayCommand _startCallByUserCommand;
         private RelayCommand _stopCallByUserCommand;
+
+        public CallViewModel(int friendNumber)
+        {
+            _friendNumber = friendNumber;
+        }
 
         public bool IsMuted
         {
@@ -114,9 +121,11 @@ namespace WinTox.ViewModel
 
         private async Task StartRecording()
         {
-            _audioStream = new InMemoryRandomAccessStream();
+            _callAudioStream = new CallAudioStream(_friendNumber);
             var encodingProfile = MediaEncodingProfile.CreateMp3(AudioEncodingQuality.Auto);
-            await _mediaCapture.StartRecordToStreamAsync(encodingProfile, _audioStream);
+            await _mediaCapture.StartRecordToStreamAsync(encodingProfile, _callAudioStream);
+            var successfulCall = ToxAvModel.Instance.Call(_friendNumber, 48, 0);
+            Debug.WriteLine("Calling " + _friendNumber + " " + successfulCall);
         }
 
         private void MediaCaptureRecordLimitationExceededHandler(MediaCapture sender)
@@ -149,7 +158,7 @@ namespace WinTox.ViewModel
         private async Task StopRecording()
         {
             await _mediaCapture.StopRecordAsync();
-            _audioStream.Dispose();
+            _callAudioStream.Dispose();
         }
 
         #endregion

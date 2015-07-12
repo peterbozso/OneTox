@@ -154,6 +154,8 @@ namespace WinTox.Model
         /// <param name="tox">The new ExtendedTox instance.</param>
         public void SetCurrent(ExtendedTox tox)
         {
+            ToxAvModel.Instance.SetCurrent(tox);
+
             if (_tox != null)
             {
                 _tox.Dispose();
@@ -164,8 +166,6 @@ namespace WinTox.Model
 
             RaiseAllPropertiesChanged();
             RaiseFriendListReseted();
-
-            ToxAvModel.Instance.SetCurrent(_tox);
         }
 
         private void RegisterHandlers()
