@@ -8,7 +8,6 @@ using Windows.UI.Xaml.Navigation;
 using SharpTox.Core;
 using WinTox.Common;
 using WinTox.ViewModel;
-using WinTox.ViewModel.Messaging.RecentMessages;
 
 namespace WinTox.View
 {

@@ -14,6 +14,7 @@
     xmlns:recentMessages="using:WinTox.View.UserControls.Messaging.RecentMessages"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:friendRequests="using:WinTox.View.UserControls.FriendRequests"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -61,12 +62,15 @@
                     <userControls:UserTile Grid.Column="1" />
                 </Grid>
             </Hub.Header>
+            
+            <!-- TODO: Hide it if there are no recent messages! -->
             <HubSection Header="recent messages">
                 <DataTemplate>
                     <recentMessages:RecentMessagesList />
                 </DataTemplate>
             </HubSection>
-            <HubSection Header="friends">
+            
+            <HubSection Header="friends" MinWidth="400">
                 <DataTemplate>
                     <GridView ItemsSource="{Binding FriendList.Friends}" SelectionMode="None">
                         <GridView.ItemTemplate>
@@ -75,6 +79,13 @@
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
+                </DataTemplate>
+            </HubSection>
+
+            <!-- TODO: Hide it if there are no friend requests! -->
+            <HubSection Header="friend requests">
+                <DataTemplate>
+                    <friendRequests:FriendRequestsList />
                 </DataTemplate>
             </HubSection>
         </Hub>

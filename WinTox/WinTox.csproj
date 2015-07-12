@@ -165,6 +165,12 @@
     <Compile Include="View\UserControls\FileTransfers\FileTransfersBlock.xaml.cs">
       <DependentUpon>FileTransfersBlock.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\UserControls\FriendRequests\FriendRequestsList.xaml.cs">
+      <DependentUpon>FriendRequestsList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\FriendRequests\FriendRequestsListItem.xaml.cs">
+      <DependentUpon>FriendRequestsListItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\UserControls\Friends\FriendInfo.xaml.cs">
       <DependentUpon>FriendInfo.xaml</DependentUpon>
     </Compile>
@@ -243,6 +249,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\UserControls\FileTransfers\FileTransfersBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\FriendRequests\FriendRequestsList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\FriendRequests\FriendRequestsListItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
