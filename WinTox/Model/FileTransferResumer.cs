@@ -27,6 +27,7 @@ namespace WinTox.Model
         private FileTransferResumer()
         {
             FileTransferManager.Instance.TransferFinished += TransferFinishedHandler;
+            ToxModel.Instance.FriendListChanged += FriendListChangedHandler;
         }
 
         public static FileTransferResumer Instance
@@ -186,6 +187,28 @@ namespace WinTox.Model
         private void TransferFinishedHandler(object sender, FileTransferManager.TransferFinishedEventArgs e)
         {
             RemoveTransfer(e.FriendNumber, e.FileNumber);
+        }
+
+        /// <summary>
+        /// In case a friend is removed from the friend list, we remove all broken transfers associated with him/her as well.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FriendListChangedHandler(object sender, FriendListChangedEventArgs e)
+        {
+            if (e.Action == FriendListChangedAction.Remove)
+            {
+                foreach (var entry in _futureAccesList.Entries)
+                {
+                    var metadata = DeserializeMetadata(entry.Metadata);
+
+                    if (metadata.FriendNumber == e.FriendNumber)
+                    {
+                        _futureAccesList.Remove(entry.Token);
+                    }
+                }
+
+            }
         }
 
         /// <summary>
