@@ -113,7 +113,7 @@
             <Button x:Name="CallButton" Grid.Column="1" HorizontalAlignment="Center" Content="&#xE13A;"
                     Margin="0,0,20,0"
                     FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.StartCallByUserCommand}"
-                    IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
+                    IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
                     Height="71" />
 
             <Grid x:Name="DuringCallButtons" Grid.Column="1">
@@ -126,20 +126,20 @@
                         Margin="0,0,20,0"
                         FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.ChangeMuteCommand}"
                         IsEnabled="{Binding IsConnected}"
-                        Style="{StaticResource RoundButtonWithoutPointerOverBackgroundColorChangeStyle}"
+                        Template="{StaticResource RoundButtonWithoutPointerOverBackgroundColorChangeTemplate}"
                         Width="71" Height="71"
                         Background="{Binding Call.IsMuted, Converter={StaticResource IsMutedToBackgroundColorConverter}}" />
 
                 <Button x:Name="HangUpButton" Grid.Column="1" HorizontalAlignment="Center" Content="&#xE137;"
                         Margin="0,0,20,0"
                         FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.StopCallByUserCommand}"
-                        IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
+                        IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
                         Height="71" />
             </Grid>
 
             <Button x:Name="SendFileButton" Grid.Column="2" HorizontalAlignment="Center" Content="&#xE1A5;"
                     Margin="0,0,20,0" FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
-                    IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
+                    IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
                     Height="71" />
         </Grid>
 

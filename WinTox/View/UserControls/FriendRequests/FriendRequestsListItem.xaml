@@ -39,9 +39,9 @@
                    Text="{Binding Name}" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left" />
 
         <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-            <Button x:Name="AcceptButton" FontFamily="Segoe UI Symbol" Style="{StaticResource RoundButtonStyle}"
+            <Button x:Name="AcceptButton" FontFamily="Segoe UI Symbol" Template="{StaticResource RoundButtonTemplate}"
                     Height="35" Width="35" Content="&#xE10B;" Padding="0" Command="{Binding AcceptCommand}" />
-            <Button x:Name="DeclineButton" FontFamily="Segoe UI Symbol" Style="{StaticResource RoundButtonStyle}"
+            <Button x:Name="DeclineButton" FontFamily="Segoe UI Symbol" Template="{StaticResource RoundButtonTemplate}"
                     Height="35" Width="35" Content="&#xE10A;" Padding="0" Command="{Binding DeclineCommand}" />
         </StackPanel>
     </Grid>
