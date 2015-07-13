@@ -63,13 +63,6 @@
                 </Grid>
             </Hub.Header>
 
-            <!-- TODO: Hide it if there are no recent messages! -->
-            <HubSection Header="recent messages">
-                <DataTemplate>
-                    <recentMessages:RecentMessagesList />
-                </DataTemplate>
-            </HubSection>
-
             <HubSection Header="friends" Width="400">
                 <DataTemplate>
                     <GridView ItemsSource="{Binding FriendList.Friends}" SelectionMode="None">
@@ -87,8 +80,13 @@
                 </DataTemplate>
             </HubSection>
 
-            <!-- TODO: Hide it if there are no friend requests! -->
-            <HubSection Header="friend requests">
+            <HubSection Header="recent messages" Visibility="{Binding RecentMessagesListVisibility}">
+                <DataTemplate>
+                    <recentMessages:RecentMessagesList />
+                </DataTemplate>
+            </HubSection>
+
+            <HubSection Header="friend requests"  Visibility="{Binding FriendRequestsListVisibility}">
                 <DataTemplate>
                     <friendRequests:FriendRequestsList />
                 </DataTemplate>
