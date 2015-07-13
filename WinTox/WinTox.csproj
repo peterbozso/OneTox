@@ -135,6 +135,8 @@
     <Compile Include="ViewModel\CallViewModel.cs" />
     <Compile Include="ViewModel\FileTransfers\OneFileTransferViewModel.cs" />
     <Compile Include="ViewModel\FileTransfers\FileTransfersViewModel.cs" />
+    <Compile Include="ViewModel\FriendRequests\FriendRequestsViewModel.cs" />
+    <Compile Include="ViewModel\FriendRequests\OneFriendRequestViewModel.cs" />
     <Compile Include="ViewModel\Friends\AddFriendFlyoutViewModel.cs" />
     <Compile Include="ViewModel\Friends\FriendListViewModel.cs" />
     <Compile Include="ViewModel\Friends\FriendViewModel.cs" />
@@ -156,6 +158,7 @@
     <Compile Include="View\ChatPage.xaml.cs">
       <DependentUpon>ChatPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\FriendRequestView.cs" />
     <Compile Include="View\ProfileSettingsFlyout.xaml.cs">
       <DependentUpon>ProfileSettingsFlyout.xaml</DependentUpon>
     </Compile>

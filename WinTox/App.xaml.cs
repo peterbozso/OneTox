@@ -26,6 +26,7 @@ namespace WinTox
     /// </summary>
     sealed partial class App : Application
     {
+        private FriendRequestView _friendRequestView;
         private IAsyncOperation<IUICommand> _showErrorDialogCommand;
 
         /// <summary>
@@ -72,6 +73,8 @@ namespace WinTox
                 await HandlePreviousExecutionState(e.PreviousExecutionState);
 
                 await InitializeSingletons();
+
+                _friendRequestView = new FriendRequestView();
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;

@@ -1,11 +1,7 @@
 ﻿using System;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using SharpTox.Core;
 using WinTox.Common;
 using WinTox.ViewModel;
 
@@ -25,7 +21,6 @@ namespace WinTox.View
             NavigationHelper = new NavigationHelper(this);
             NavigationHelper.LoadState += navigationHelper_LoadState;
             _viewModel = DataContext as MainPageViewModel;
-            _viewModel.FriendRequestReceived += FriendRequestReceivedHandler;
 
             SizeChanged += MainPageSizeChanged;
         }
@@ -39,20 +34,6 @@ namespace WinTox.View
         private void MainPageSizeChanged(object sender, SizeChangedEventArgs e)
         {
             VisualStateManager.GoToState(this, e.NewSize.Width < 700 ? "MinimalLayout" : "DefaultLayout", true);
-        }
-
-        private async void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
-        {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                var message = "From: " + e.PublicKey + "\n" + "Message: " + e.Message;
-                var msgDialog = new MessageDialog(message, "Friend request received");
-                msgDialog.Commands.Add(new UICommand("Accept", null, MainPageViewModel.FriendRequestAnswer.Accept));
-                msgDialog.Commands.Add(new UICommand("Decline", null, MainPageViewModel.FriendRequestAnswer.Decline));
-                msgDialog.Commands.Add(new UICommand("Later", null, MainPageViewModel.FriendRequestAnswer.Later));
-                var answer = await msgDialog.ShowAsync();
-                _viewModel.HandleFriendRequestAnswer((MainPageViewModel.FriendRequestAnswer) answer.Id, e);
-            });
         }
 
         /// <summary>
