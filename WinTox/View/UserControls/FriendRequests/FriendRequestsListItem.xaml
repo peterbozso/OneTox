@@ -35,7 +35,7 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock x:Name="FriendName" Grid.Column="0" Foreground="{StaticResource MainColor}" FontSize="20"
+        <TextBlock x:Name="FriendName" Grid.Column="0" Foreground="{StaticResource MainColor}" FontSize="25"
                    Text="{Binding Name}" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left" />
 
         <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">

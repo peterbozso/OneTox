@@ -18,7 +18,7 @@ namespace WinTox.ViewModel.FriendRequests
 
         public string Name
         {
-            get { return _publicKey.ToString().Substring(0, 20); }
+            get { return _publicKey.ToString().Substring(0, 15); }
         }
 
         public string PublicKey
