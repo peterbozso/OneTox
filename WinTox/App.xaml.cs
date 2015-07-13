@@ -16,6 +16,7 @@ using WinTox.Common;
 using WinTox.Model;
 using WinTox.View;
 using WinTox.ViewModel;
+using WinTox.ViewModel.FriendRequests;
 
 // The Hub App template is documented at http://go.microsoft.com/fwlink/?LinkId=321221
 
@@ -95,6 +96,7 @@ namespace WinTox
             ToxModel.Instance.Start();
             await AvatarManager.Instance.LoadAvatars();
             ToxErrorViewModel.Instance.ToxErrorOccured += ToxErrorOccuredHandler;
+            await FriendRequestsViewModel.Instance.RestoreDataAsync();
         }
 
         private async void ToxErrorOccuredHandler(object sender, string errorMessage)
@@ -188,6 +190,7 @@ namespace WinTox
 
             await ToxModel.Instance.RestoreDataAsync();
             ToxModel.Instance.Start();
+            await FriendRequestsViewModel.Instance.RestoreDataAsync();
         }
 
         #region Profile settings flyout setup
