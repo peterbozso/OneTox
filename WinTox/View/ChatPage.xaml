@@ -125,8 +125,9 @@
                 <Button x:Name="MuteButton" Grid.Column="0" HorizontalAlignment="Center" Content="&#xE1D6;"
                         Margin="0,0,20,0"
                         FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.ChangeMuteCommand}"
-                        IsEnabled="{Binding IsConnected}" Style="{StaticResource RoundButtonStyle}" Width="71"
-                        Height="71"
+                        IsEnabled="{Binding IsConnected}"
+                        Style="{StaticResource RoundButtonWithoutPointerOverBackgroundColorChangeStyle}"
+                        Width="71" Height="71"
                         Background="{Binding Call.IsMuted, Converter={StaticResource IsMutedToBackgroundColorConverter}}" />
 
                 <Button x:Name="HangUpButton" Grid.Column="1" HorizontalAlignment="Center" Content="&#xE137;"

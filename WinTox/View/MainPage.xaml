@@ -62,14 +62,14 @@
                     <userControls:UserTile Grid.Column="1" />
                 </Grid>
             </Hub.Header>
-            
+
             <!-- TODO: Hide it if there are no recent messages! -->
             <HubSection Header="recent messages">
                 <DataTemplate>
                     <recentMessages:RecentMessagesList />
                 </DataTemplate>
             </HubSection>
-            
+
             <HubSection Header="friends" MinWidth="400">
                 <DataTemplate>
                     <GridView ItemsSource="{Binding FriendList.Friends}" SelectionMode="None">
