@@ -240,10 +240,10 @@ namespace WinTox.Model
             return xmlMetadata.ToString();
         }
 
-        private TransferMetadata DeserializeMetadata(string xaml)
+        private TransferMetadata DeserializeMetadata(string xml)
         {
             var deserializer = new XmlSerializer(typeof (TransferMetadata));
-            var reader = new StringReader(xaml);
+            var reader = new StringReader(xml);
             return (TransferMetadata) deserializer.Deserialize(reader);
         }
     }
