@@ -70,9 +70,14 @@
                 </DataTemplate>
             </HubSection>
 
-            <HubSection Header="friends" MinWidth="400">
+            <HubSection Header="friends" Width="400">
                 <DataTemplate>
                     <GridView ItemsSource="{Binding FriendList.Friends}" SelectionMode="None">
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapGrid Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
                         <GridView.ItemTemplate>
                             <DataTemplate>
                                 <friends1:FriendTile />
