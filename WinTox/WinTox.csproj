@@ -306,6 +306,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="NAudio.Win8">
+      <HintPath>..\packages\NAudio.1.7.3\lib\windows8\NAudio.Win8.dll</HintPath>
+    </Reference>
     <Reference Include="SharpTox Portable, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\SharpTox Portable.dll</HintPath>

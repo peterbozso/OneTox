@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Media.Capture;
-using Windows.Media.MediaProperties;
+using NAudio.Wave;
 using SharpTox.Av;
 using WinTox.Common;
 using WinTox.Model;
@@ -16,7 +17,7 @@ namespace WinTox.ViewModel
         private RelayCommand _changeMuteCommand;
         private bool _isDuringCall;
         private bool _isMuted;
-        private MediaCapture _mediaCapture;
+        private IWaveIn _recorder;
         private RelayCommand _startCallByUserCommand;
         private RelayCommand _stopCallByUserCommand;
 
@@ -52,7 +53,7 @@ namespace WinTox.ViewModel
                 return _changeMuteCommand ?? (_changeMuteCommand = new RelayCommand(() =>
                 {
                     IsMuted = !IsMuted;
-                    _mediaCapture.AudioDeviceController.Muted = IsMuted;
+                    Debug.WriteLine("STUB: ChangeMuteCommand");
                 }));
             }
         }
@@ -66,37 +67,27 @@ namespace WinTox.ViewModel
                 return _startCallByUserCommand ??
                        (_startCallByUserCommand = new RelayCommand(async () =>
                        {
-                           _mediaCapture = new MediaCapture();
-                           var captureInitSettings = new MediaCaptureInitializationSettings
-                           {
-                               StreamingCaptureMode = StreamingCaptureMode.Audio,
-                               MediaCategory = MediaCategory.Communications
-                           };
-
-                           var successfulInitialization =
-                               await InitializeMediaCapture(_mediaCapture, captureInitSettings);
-                           if (!successfulInitialization)
+                           var microphoneIsAvailabe = await IsMicrophoneAvailable();
+                           if (!microphoneIsAvailabe)
                                return;
 
-                           _mediaCapture.Failed += MediaCaptureFailedHandler;
-                           _mediaCapture.RecordLimitationExceeded += MediaCaptureRecordLimitationExceededHandler;
+                           StartRecording();
 
-                           await StartRecording();
+                           var successfulCall = ToxAvModel.Instance.Call(_friendNumber, 48, 0);
+                           Debug.WriteLine("Calling " + _friendNumber + " " + successfulCall);
 
                            IsDuringCall = true;
                        }));
             }
         }
 
-        public event EventHandler<string> StartCallByUserFailed;
-
-        private async Task<bool> InitializeMediaCapture(MediaCapture mediaCapture,
-            MediaCaptureInitializationSettings captureInitSettings)
+        private async Task<bool> IsMicrophoneAvailable()
         {
             // Error messages from: https://msdn.microsoft.com/en-us/library/windows/apps/hh768223.aspx#additional_usage_guidance
             try
             {
-                await mediaCapture.InitializeAsync(captureInitSettings);
+                var mediaCapture = new MediaCapture();
+                await mediaCapture.InitializeAsync();
                 return true;
             }
             catch (UnauthorizedAccessException)
@@ -120,24 +111,31 @@ namespace WinTox.ViewModel
                 StartCallByUserFailed(this, errorMessage);
         }
 
-        private async Task StartRecording()
+        private void StartRecording()
         {
+            _recorder = new WasapiCaptureRT
+            {
+                WaveFormat = new WaveFormat(48000, 1)
+            };
+            _recorder.RecordingStopped += RecordingStoppedHandler;
+            _recorder.DataAvailable += DataAvailableHandler;
+
+            _recorder.StartRecording();
+
             _callAudioStream = new CallAudioStream(_friendNumber);
-            var encodingProfile = MediaEncodingProfile.CreateMp3(AudioEncodingQuality.Auto);
-            await _mediaCapture.StartRecordToStreamAsync(encodingProfile, _callAudioStream);
-            var successfulCall = ToxAvModel.Instance.Call(_friendNumber, 48, 0);
-            Debug.WriteLine("Calling " + _friendNumber + " " + successfulCall);
         }
 
-        private void MediaCaptureRecordLimitationExceededHandler(MediaCapture sender)
+        private async void DataAvailableHandler(object sender, WaveInEventArgs e)
+        {
+            await _callAudioStream.WriteAsync(e.Buffer.AsBuffer());
+        }
+
+        private void RecordingStoppedHandler(object sender, StoppedEventArgs e)
         {
             throw new NotImplementedException();
         }
 
-        private void MediaCaptureFailedHandler(MediaCapture sender, MediaCaptureFailedEventArgs errorEventArgs)
-        {
-            throw new NotImplementedException();
-        }
+        public event EventHandler<string> StartCallByUserFailed;
 
         #endregion
 
@@ -150,16 +148,17 @@ namespace WinTox.ViewModel
                 return _stopCallByUserCommand ??
                        (_stopCallByUserCommand = new RelayCommand(async () =>
                        {
-                           await StopRecording();
+                           StopRecording();
                            ToxAvModel.Instance.SendControl(_friendNumber, ToxAvCallControl.Cancel);
                            IsDuringCall = false;
                        }));
             }
         }
 
-        private async Task StopRecording()
+        private void StopRecording()
         {
-            await _mediaCapture.StopRecordAsync();
+            _recorder.StopRecording();
+            _recorder.Dispose();
             _callAudioStream.Dispose();
         }
 
