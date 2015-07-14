@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Media.Capture;
 using NAudio.Wave;
@@ -13,7 +13,6 @@ namespace WinTox.ViewModel
     public class CallViewModel : ViewModelBase
     {
         private readonly int _friendNumber;
-        private CallAudioStream _callAudioStream;
         private RelayCommand _changeMuteCommand;
         private bool _isDuringCall;
         private bool _isMuted;
@@ -24,6 +23,7 @@ namespace WinTox.ViewModel
         public CallViewModel(int friendNumber)
         {
             _friendNumber = friendNumber;
+            ToxAvModel.Instance.CallStateChanged += CallStateChangedHandler;
         }
 
         public bool IsMuted
@@ -62,6 +62,17 @@ namespace WinTox.ViewModel
                         _recorder.StartRecording();
                     }
                 }));
+            }
+        }
+
+        private void CallStateChangedHandler(object sender, ToxAvEventArgs.CallStateEventArgs e)
+        {
+            if (e.FriendNumber != _friendNumber)
+                return;
+
+            if (e.State.HasFlag(ToxAvFriendCallState.SendingAudio))
+            {
+                _canSend = true;
             }
         }
 
@@ -129,14 +140,21 @@ namespace WinTox.ViewModel
             _recorder.DataAvailable += DataAvailableHandler;
 
             _recorder.StartRecording();
-
-            _callAudioStream = new CallAudioStream(_friendNumber);
         }
 
-        private async void DataAvailableHandler(object sender, WaveInEventArgs e)
+        private void DataAvailableHandler(object sender, WaveInEventArgs e)
         {
-            await _callAudioStream.WriteAsync(e.Buffer.AsBuffer());
+            if (!_canSend)
+                return;
+
+            var bytes = e.Buffer.ToArray();
+            var shorts = new short[bytes.Length/2];
+            Buffer.BlockCopy(bytes, 0, shorts, 0, bytes.Length);
+
+            ToxAvModel.Instance.SendAudioFrame(_friendNumber, new ToxAvAudioFrame(shorts, 48000, 1));
         }
+
+        private bool _canSend;
 
         public event EventHandler<string> StartCallByUserFailed;
 
@@ -162,7 +180,6 @@ namespace WinTox.ViewModel
         {
             _recorder.StopRecording();
             _recorder.Dispose();
-            _callAudioStream.Dispose();
         }
 
         #endregion

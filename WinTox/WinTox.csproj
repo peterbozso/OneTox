@@ -122,7 +122,6 @@
     <Compile Include="Converters\UserStatusToStringConverter.cs" />
     <Compile Include="Helpers\CloseFlyoutAction.cs" />
     <Compile Include="Model\AvatarManager.cs" />
-    <Compile Include="Model\CallAudioStream.cs" />
     <Compile Include="Model\DataTransferManager.cs" />
     <Compile Include="Helpers\DnsTools.cs" />
     <Compile Include="Model\ExtendedTox.cs" />
