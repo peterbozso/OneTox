@@ -53,7 +53,14 @@ namespace WinTox.ViewModel
                 return _changeMuteCommand ?? (_changeMuteCommand = new RelayCommand(() =>
                 {
                     IsMuted = !IsMuted;
-                    Debug.WriteLine("STUB: ChangeMuteCommand");
+                    if (IsMuted)
+                    {
+                        _recorder.StopRecording();
+                    }
+                    else
+                    {
+                        _recorder.StartRecording();
+                    }
                 }));
             }
         }
@@ -72,6 +79,8 @@ namespace WinTox.ViewModel
                                return;
 
                            StartRecording();
+
+                           IsMuted = false;
 
                            var successfulCall = ToxAvModel.Instance.Call(_friendNumber, 48, 0);
                            Debug.WriteLine("Calling " + _friendNumber + " " + successfulCall);
@@ -115,9 +124,8 @@ namespace WinTox.ViewModel
         {
             _recorder = new WasapiCaptureRT
             {
-                WaveFormat = new WaveFormat(48000, 1)
+                WaveFormat = new WaveFormat(48000, 16, 1)
             };
-            _recorder.RecordingStopped += RecordingStoppedHandler;
             _recorder.DataAvailable += DataAvailableHandler;
 
             _recorder.StartRecording();
@@ -128,11 +136,6 @@ namespace WinTox.ViewModel
         private async void DataAvailableHandler(object sender, WaveInEventArgs e)
         {
             await _callAudioStream.WriteAsync(e.Buffer.AsBuffer());
-        }
-
-        private void RecordingStoppedHandler(object sender, StoppedEventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         public event EventHandler<string> StartCallByUserFailed;
