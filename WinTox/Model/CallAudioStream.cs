@@ -14,10 +14,12 @@ namespace WinTox.Model
     public class CallAudioStream : IRandomAccessStream
     {
         private readonly int _friendNumber;
+        private bool _canSend;
 
         public CallAudioStream(int friendNumber)
         {
             _friendNumber = friendNumber;
+            ToxAvModel.Instance.CallStateChanged += CallStateChangedHandler;
         }
 
         public bool CanRead
@@ -81,22 +83,27 @@ namespace WinTox.Model
             {
                 return Task.Run(() =>
                 {
-                    var shortArray = buffer.ToArray().Select(b => (short) b).ToArray();
+                    if (!_canSend)
+                        return (uint) 0;
 
-                    /*
-                    var debugOutput = new StringBuilder();
-                    foreach (var element in shortArray)
-                    {
-                        debugOutput.Append(element);
-                    }
-                    Debug.WriteLine(debugOutput);
-                    */
+                    var shortArray = buffer.ToArray().Select(b => (short) b).ToArray();
 
                     ToxAvModel.Instance.SendAudioFrame(_friendNumber, new ToxAvAudioFrame(shortArray, 48000, 1));
 
                     return (uint) 0;
                 });
             });
+        }
+
+        private void CallStateChangedHandler(object sender, ToxAvEventArgs.CallStateEventArgs e)
+        {
+            if (e.FriendNumber != _friendNumber)
+                return;
+
+            if (e.State.HasFlag(ToxAvFriendCallState.SendingAudio))
+            {
+                _canSend = true;
+            }
         }
     }
 }
