@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
+using SharpTox.Av;
 using WinTox.Common;
 using WinTox.Model;
 
@@ -150,6 +151,7 @@ namespace WinTox.ViewModel
                        (_stopCallByUserCommand = new RelayCommand(async () =>
                        {
                            await StopRecording();
+                           ToxAvModel.Instance.SendControl(_friendNumber, ToxAvCallControl.Cancel);
                            IsDuringCall = false;
                        }));
             }
