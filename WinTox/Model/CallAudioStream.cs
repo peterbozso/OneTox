@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage.Streams;
 using SharpTox.Av;
+using Buffer = System.Buffer;
 
 namespace WinTox.Model
 {
@@ -86,9 +86,11 @@ namespace WinTox.Model
                     if (!_canSend)
                         return (uint) 0;
 
-                    var shortArray = buffer.ToArray().Select(b => (short) b).ToArray();
+                    var bytes = buffer.ToArray();
+                    var shorts = new short[bytes.Length/2];
+                    Buffer.BlockCopy(bytes, 0, shorts, 0, bytes.Length);
 
-                    ToxAvModel.Instance.SendAudioFrame(_friendNumber, new ToxAvAudioFrame(shortArray, 48000, 1));
+                    ToxAvModel.Instance.SendAudioFrame(_friendNumber, new ToxAvAudioFrame(shorts, 48000, 1));
 
                     return (uint) 0;
                 });
