@@ -11,12 +11,14 @@
     d:DesignWidth="400">
 
     <Grid>
-        <ItemsControl Width="300" x:Name="ContentControl"> <!-- ItemsSource set in code-behind. -->
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <recentMessages:RecentMessagesListItem Margin="0,0,0,20" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <ScrollViewer>
+            <ItemsControl x:Name="ContentControl" Width="300"> <!-- ItemsSource set in code-behind. -->
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <recentMessages:RecentMessagesListItem Margin="0,0,0,20" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </UserControl>

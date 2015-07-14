@@ -10,12 +10,14 @@
     d:DesignWidth="400">
 
     <Grid>
-        <ItemsControl x:Name="ContentControl" Width="300"> <!-- ItemsSource set in code-behind. -->
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <local:FriendRequestsListItem />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <ScrollViewer>
+            <ItemsControl x:Name="ContentControl" Width="300"> <!-- ItemsSource set in code-behind. -->
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:FriendRequestsListItem />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </UserControl>
