@@ -147,9 +147,10 @@ namespace WinTox.ViewModel
             if (!_canSend)
                 return;
 
-            var bytes = e.Buffer.ToArray();
-            var shorts = new short[bytes.Length/2];
-            Buffer.BlockCopy(bytes, 0, shorts, 0, bytes.Length);
+            // It doesn't make much sense, but WaveInEventArgs.Buffer.Length != WaveInEventArgs.BytesRecorded.
+            // Let's just call that a feature of NAudio... ;)
+            var shorts = new short[e.BytesRecorded / 2];
+            Buffer.BlockCopy(e.Buffer, 0, shorts, 0, e.BytesRecorded);
 
             ToxAvModel.Instance.SendAudioFrame(_friendNumber, new ToxAvAudioFrame(shorts, 48000, 1));
         }
