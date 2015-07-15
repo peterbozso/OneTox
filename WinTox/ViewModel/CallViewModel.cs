@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.Media.Capture;
 using NAudio.Wave;
@@ -13,10 +13,12 @@ namespace WinTox.ViewModel
     public class CallViewModel : ViewModelBase
     {
         private readonly int _friendNumber;
+        private bool _canSend;
         private RelayCommand _changeMuteCommand;
         private bool _isDuringCall;
         private bool _isMuted;
         private IWaveIn _recorder;
+        private List<short> _sendBuffer;
         private RelayCommand _startCallByUserCommand;
         private RelayCommand _stopCallByUserCommand;
 
@@ -133,6 +135,8 @@ namespace WinTox.ViewModel
 
         private void StartRecording()
         {
+            _sendBuffer = new List<short>();
+
             _recorder = new WasapiCaptureRT
             {
                 WaveFormat = new WaveFormat(48000, 16, 1)
@@ -149,13 +153,17 @@ namespace WinTox.ViewModel
 
             // It doesn't make much sense, but WaveInEventArgs.Buffer.Length != WaveInEventArgs.BytesRecorded.
             // Let's just call that a feature of NAudio... ;)
-            var shorts = new short[e.BytesRecorded / 2];
+            var shorts = new short[e.BytesRecorded/2];
             Buffer.BlockCopy(e.Buffer, 0, shorts, 0, e.BytesRecorded);
 
-            ToxAvModel.Instance.SendAudioFrame(_friendNumber, new ToxAvAudioFrame(shorts, 48000, 1));
-        }
+            _sendBuffer.AddRange(shorts);
 
-        private bool _canSend;
+            if (_sendBuffer.Count == 960)
+            {
+                ToxAvModel.Instance.SendAudioFrame(_friendNumber, new ToxAvAudioFrame(_sendBuffer.ToArray(), 48000, 1));
+                _sendBuffer.Clear();
+            }
+        }
 
         public event EventHandler<string> StartCallByUserFailed;
 
