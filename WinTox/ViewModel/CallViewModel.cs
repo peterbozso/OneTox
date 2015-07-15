@@ -12,12 +12,16 @@ namespace WinTox.ViewModel
 {
     public class CallViewModel : ViewModelBase
     {
+        private const int KAudioLength = 20; // Based on measurements. Take it with a grain of salt!
         private readonly int _friendNumber;
+        private int _audioFrameSize;
+        private int _bitRate;
         private bool _canSend;
         private RelayCommand _changeMuteCommand;
         private bool _isDuringCall;
         private bool _isMuted;
         private IWaveIn _recorder;
+        private int _samplingRate;
         private List<short> _sendBuffer;
         private RelayCommand _startCallByUserCommand;
         private RelayCommand _stopCallByUserCommand;
@@ -26,6 +30,7 @@ namespace WinTox.ViewModel
         {
             _friendNumber = friendNumber;
             ToxAvModel.Instance.CallStateChanged += CallStateChangedHandler;
+            SetAudioValues();
         }
 
         public bool IsMuted
@@ -67,6 +72,14 @@ namespace WinTox.ViewModel
             }
         }
 
+        private void SetAudioValues()
+        {
+            // TODO: Set these based on app settings!
+            _bitRate = 48;
+            _samplingRate = _bitRate*1000;
+            _audioFrameSize = _samplingRate*KAudioLength/1000;
+        }
+
         private void CallStateChangedHandler(object sender, ToxAvEventArgs.CallStateEventArgs e)
         {
             if (e.FriendNumber != _friendNumber)
@@ -95,7 +108,7 @@ namespace WinTox.ViewModel
 
                            IsMuted = false;
 
-                           var successfulCall = ToxAvModel.Instance.Call(_friendNumber, 48, 0);
+                           var successfulCall = ToxAvModel.Instance.Call(_friendNumber, _bitRate, 0);
                            Debug.WriteLine("Calling " + _friendNumber + " " + successfulCall);
 
                            IsDuringCall = true;
@@ -139,7 +152,7 @@ namespace WinTox.ViewModel
 
             _recorder = new WasapiCaptureRT
             {
-                WaveFormat = new WaveFormat(48000, 16, 1)
+                WaveFormat = new WaveFormat(_samplingRate, 16, 1)
             };
             _recorder.DataAvailable += DataAvailableHandler;
 
@@ -158,9 +171,10 @@ namespace WinTox.ViewModel
 
             _sendBuffer.AddRange(shorts);
 
-            if (_sendBuffer.Count == 960)
+            if (_sendBuffer.Count == _audioFrameSize)
             {
-                ToxAvModel.Instance.SendAudioFrame(_friendNumber, new ToxAvAudioFrame(_sendBuffer.ToArray(), 48000, 1));
+                ToxAvModel.Instance.SendAudioFrame(_friendNumber,
+                    new ToxAvAudioFrame(_sendBuffer.ToArray(), _samplingRate, 1));
                 _sendBuffer.Clear();
             }
         }
