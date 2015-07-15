@@ -70,7 +70,7 @@ namespace WinTox.ViewModel
             if (e.FriendNumber != _friendNumber)
                 return;
 
-            if (e.State.HasFlag(ToxAvFriendCallState.SendingAudio))
+            if (e.State.HasFlag(ToxAvFriendCallState.ReceivingAudio))
             {
                 _canSend = true;
             }
