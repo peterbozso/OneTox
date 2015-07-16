@@ -246,7 +246,7 @@ namespace WinTox.ViewModel
             var bytes = new byte[e.Frame.Data.Length*2];
             Buffer.BlockCopy(e.Frame.Data, 0, bytes, 0, e.Frame.Data.Length);
 
-            _waveProvider.AddSamples(bytes, 0, e.Frame.Data.Length);
+            _waveProvider.AddSamples(bytes, 0, bytes.Length);
         }
 
         #endregion
