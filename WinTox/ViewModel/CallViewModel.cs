@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Media.Capture;
+using NAudio.CoreAudioApi;
 using NAudio.Wave;
+using NAudio.Win8.Wave.WaveOutputs;
 using SharpTox.Av;
 using WinTox.Common;
 using WinTox.Model;
@@ -20,16 +22,19 @@ namespace WinTox.ViewModel
         private RelayCommand _changeMuteCommand;
         private bool _isDuringCall;
         private bool _isMuted;
+        private IWavePlayer _player;
         private IWaveIn _recorder;
         private int _samplingRate;
         private List<short> _sendBuffer;
         private RelayCommand _startCallByUserCommand;
         private RelayCommand _stopCallByUserCommand;
+        private BufferedWaveProvider _waveProvider;
 
         public CallViewModel(int friendNumber)
         {
             _friendNumber = friendNumber;
             ToxAvModel.Instance.CallStateChanged += CallStateChangedHandler;
+            ToxAvModel.Instance.AudioFrameReceived += AudioFrameReceivedHandler;
             SetAudioValues();
         }
 
@@ -89,7 +94,36 @@ namespace WinTox.ViewModel
             {
                 _canSend = true;
             }
+
+            if (e.State.HasFlag(ToxAvFriendCallState.SendingAudio))
+            {
+                TrySetupAudioReceiving();
+            }
         }
+
+        #region Audio sending
+
+        private void DataAvailableHandler(object sender, WaveInEventArgs e)
+        {
+            if (!_canSend)
+                return;
+
+            // It doesn't make much sense, but WaveInEventArgs.Buffer.Length != WaveInEventArgs.BytesRecorded.
+            // Let's just call that a feature of NAudio... ;)
+            var shorts = new short[e.BytesRecorded/2];
+            Buffer.BlockCopy(e.Buffer, 0, shorts, 0, e.BytesRecorded);
+
+            _sendBuffer.AddRange(shorts);
+
+            if (_sendBuffer.Count == _audioFrameSize)
+            {
+                ToxAvModel.Instance.SendAudioFrame(_friendNumber,
+                    new ToxAvAudioFrame(_sendBuffer.ToArray(), _samplingRate, 1));
+                _sendBuffer.Clear();
+            }
+        }
+
+        #endregion
 
         #region Starting a call by the user
 
@@ -159,26 +193,6 @@ namespace WinTox.ViewModel
             _recorder.StartRecording();
         }
 
-        private void DataAvailableHandler(object sender, WaveInEventArgs e)
-        {
-            if (!_canSend)
-                return;
-
-            // It doesn't make much sense, but WaveInEventArgs.Buffer.Length != WaveInEventArgs.BytesRecorded.
-            // Let's just call that a feature of NAudio... ;)
-            var shorts = new short[e.BytesRecorded/2];
-            Buffer.BlockCopy(e.Buffer, 0, shorts, 0, e.BytesRecorded);
-
-            _sendBuffer.AddRange(shorts);
-
-            if (_sendBuffer.Count == _audioFrameSize)
-            {
-                ToxAvModel.Instance.SendAudioFrame(_friendNumber,
-                    new ToxAvAudioFrame(_sendBuffer.ToArray(), _samplingRate, 1));
-                _sendBuffer.Clear();
-            }
-        }
-
         public event EventHandler<string> StartCallByUserFailed;
 
         #endregion
@@ -203,6 +217,36 @@ namespace WinTox.ViewModel
         {
             _recorder.StopRecording();
             _recorder.Dispose();
+        }
+
+        #endregion
+
+        #region Audio receiving
+
+        private void TrySetupAudioReceiving()
+        {
+            if (_player == null)
+            {
+                _player = new WasapiOutRT(AudioClientShareMode.Shared, 0);
+                _player.Init(CreateReader);
+                _player.Play();
+            }
+        }
+
+        private IWaveProvider CreateReader()
+        {
+            return _waveProvider ?? (_waveProvider = new BufferedWaveProvider(_recorder.WaveFormat));
+        }
+
+        private void AudioFrameReceivedHandler(object sender, ToxAvEventArgs.AudioFrameEventArgs e)
+        {
+            if (_player == null)
+                return;
+
+            var bytes = new byte[e.Frame.Data.Length*2];
+            Buffer.BlockCopy(e.Frame.Data, 0, bytes, 0, e.Frame.Data.Length);
+
+            _waveProvider.AddSamples(bytes, 0, e.Frame.Data.Length);
         }
 
         #endregion
