@@ -204,7 +204,7 @@ namespace WinTox.ViewModel
             get
             {
                 return _stopCallByUserCommand ??
-                       (_stopCallByUserCommand = new RelayCommand(async () =>
+                       (_stopCallByUserCommand = new RelayCommand(() =>
                        {
                            StopRecording();
                            ToxAvModel.Instance.SendControl(_friendNumber, ToxAvCallControl.Cancel);
