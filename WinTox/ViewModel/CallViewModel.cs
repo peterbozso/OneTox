@@ -62,8 +62,21 @@ namespace WinTox.ViewModel
         {
             get
             {
-                return _changeMuteCommand ?? (_changeMuteCommand = new RelayCommand(() =>
+                return _changeMuteCommand ?? (_changeMuteCommand = new RelayCommand(async () =>
                 {
+                    if (_recorder == null) // This means that we weren't able to instantiate it due to missing microphone or access permission.
+                    {
+                        // So we give it another go, maybe the user enabled the microphone/plugged one in since then.
+                        var microphoneIsAvailabe = await IsMicrophoneAvailable();
+                        if (microphoneIsAvailabe)
+                        {
+                            StartRecording();
+                            IsMuted = false;
+                        }
+
+                        return;
+                    }
+
                     IsMuted = !IsMuted;
                     if (IsMuted)
                     {
@@ -134,17 +147,19 @@ namespace WinTox.ViewModel
                 return _startCallByUserCommand ??
                        (_startCallByUserCommand = new RelayCommand(async () =>
                        {
-                           var microphoneIsAvailabe = await IsMicrophoneAvailable();
-                           if (!microphoneIsAvailabe)
-                               return;
-
-                           StartRecording();
-
-                           IsMuted = false;
-
                            var successfulCall = ToxAvModel.Instance.Call(_friendNumber, _bitRate, 0);
                            Debug.WriteLine("Calling " + _friendNumber + " " + successfulCall);
 
+                           var microphoneIsAvailabe = await IsMicrophoneAvailable();
+                           if (!microphoneIsAvailabe)
+                           {
+                               IsMuted = true;
+                               IsDuringCall = true;
+                               return;
+                           }
+
+                           StartRecording();
+                           IsMuted = false;
                            IsDuringCall = true;
                        }));
             }
@@ -157,13 +172,14 @@ namespace WinTox.ViewModel
             {
                 var mediaCapture = new MediaCapture();
                 await mediaCapture.InitializeAsync();
+                mediaCapture.Dispose();
                 return true;
             }
             catch (UnauthorizedAccessException)
             {
                 RaiseStartCallByUserFailed(
                     "Your microphone is currently turned off. To change your microphone setting, open the settings charm and tap permissions. " +
-                    "Then tap this button to start using microphone again.");
+                    "Then tap the mute button to start using microphone again.");
                 return false;
             }
             catch (Exception)
@@ -207,6 +223,7 @@ namespace WinTox.ViewModel
                        (_stopCallByUserCommand = new RelayCommand(() =>
                        {
                            StopRecording();
+                           StopPlaying();
                            ToxAvModel.Instance.SendControl(_friendNumber, ToxAvCallControl.Cancel);
                            IsDuringCall = false;
                        }));
@@ -215,8 +232,12 @@ namespace WinTox.ViewModel
 
         private void StopRecording()
         {
+            if (_recorder == null)
+                return;
+
             _recorder.StopRecording();
             _recorder.Dispose();
+            _recorder = null;
         }
 
         #endregion
@@ -235,7 +256,7 @@ namespace WinTox.ViewModel
 
         private IWaveProvider CreateReader()
         {
-            return _waveProvider ?? (_waveProvider = new BufferedWaveProvider(_recorder.WaveFormat));
+            return _waveProvider ?? (_waveProvider = new BufferedWaveProvider(new WaveFormat(_samplingRate, 16, 1))); // TODO: Replace it with actual values received from friend!
         }
 
         private void AudioFrameReceivedHandler(object sender, ToxAvEventArgs.AudioFrameEventArgs e)
@@ -247,6 +268,16 @@ namespace WinTox.ViewModel
             Buffer.BlockCopy(e.Frame.Data, 0, bytes, 0, e.Frame.Data.Length);
 
             _waveProvider.AddSamples(bytes, 0, bytes.Length);
+        }
+
+        private void StopPlaying()
+        {
+            if (_player == null)
+                return;
+
+            _player.Stop();
+            _player.Dispose();
+            _player = null;
         }
 
         #endregion
