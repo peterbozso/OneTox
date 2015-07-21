@@ -27,7 +27,6 @@ namespace WinTox.ViewModel
         private readonly int _friendNumber;
         private int _audioFrameSize;
         private int _bitRate;
-        private bool _canSend;
         private RelayCommand _changeMuteCommand;
         private bool _isMuted;
         private IWavePlayer _player;
@@ -115,20 +114,29 @@ namespace WinTox.ViewModel
 
             if (e.State.HasFlag(ToxAvFriendCallState.ReceivingAudio))
             {
-                _canSend = true;
-
                 await
                     CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                         () => { State = CallState.DuringCall; });
+
+
+                var microphoneIsAvailabe = await IsMicrophoneAvailable();
+                if (!microphoneIsAvailabe)
+                {
+                    IsMuted = true;
+                }
+                else
+                {
+                    StartRecording();
+                }
             }
 
             if (e.State.HasFlag(ToxAvFriendCallState.SendingAudio))
             {
-                TrySetupAudioReceiving();
-
                 await
                     CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                         () => { State = CallState.DuringCall; });
+
+                TrySetupAudioReceiving();
             }
         }
 
@@ -136,9 +144,6 @@ namespace WinTox.ViewModel
 
         private void DataAvailableHandler(object sender, WaveInEventArgs e)
         {
-            if (!_canSend)
-                return;
-
             // It doesn't make much sense, but WaveInEventArgs.Buffer.Length != WaveInEventArgs.BytesRecorded.
             // Let's just call that a feature of NAudio... ;)
             var shorts = new short[e.BytesRecorded/2];
@@ -168,15 +173,6 @@ namespace WinTox.ViewModel
                            var successfulCall = ToxAvModel.Instance.Call(_friendNumber, _bitRate, 0);
                            Debug.WriteLine("Calling " + _friendNumber + " " + successfulCall);
 
-                           var microphoneIsAvailabe = await IsMicrophoneAvailable();
-                           if (!microphoneIsAvailabe)
-                           {
-                               IsMuted = true;
-                               State = CallState.Calling;
-                               return;
-                           }
-
-                           StartRecording();
                            IsMuted = false;
                            State = CallState.Calling;
                        }));
