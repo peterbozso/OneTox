@@ -87,7 +87,14 @@
 				<VisualState x:Name="Default">
 					<Storyboard>
 						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-							Storyboard.TargetName="DuringCallButtons">
+							Storyboard.TargetName="MuteButton">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Collapsed</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="HangUpButton">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Collapsed</Visibility>
@@ -109,9 +116,8 @@
 					</Storyboard>
 				</VisualState>
 				<VisualState x:Name="Calling">
-					<Storyboard>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-							Storyboard.TargetName="DuringCallButtons">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="MuteButton">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Collapsed</Visibility>
@@ -147,42 +153,35 @@
 				<ColumnDefinition Width="*" />
 				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
 			</Grid.ColumnDefinitions>
 
 			<friends:FriendInfo x:Name="FriendInfoControl" Grid.Column="0" HorizontalAlignment="Left"
 				Margin="0,0,20,0" />
-			<Button x:Name="CallButton" Grid.Column="1" HorizontalAlignment="Center" Content="&#xE13A;"
+
+            <Button x:Name="CallButton" Grid.Column="1" HorizontalAlignment="Center" Content="&#xE13A;"
 				Margin="0,0,20,0"
 				FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.StartCallByUserCommand}"
 				IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
 				Height="71" RenderTransformOrigin="0.5,0.5">
-				<Button.RenderTransform>
-					<CompositeTransform />
-				</Button.RenderTransform>
-			</Button>
+                <Button.RenderTransform>
+                    <CompositeTransform />
+                </Button.RenderTransform>
+            </Button>
+            <Button x:Name="MuteButton" Grid.Column="1" HorizontalAlignment="Center" Content="&#xE1D6;"
+				Margin="0,0,20,0"
+				FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.ChangeMuteCommand}"
+				IsEnabled="{Binding IsConnected}"
+				Template="{StaticResource RoundButtonWithoutPointerOverBackgroundColorChangeTemplate}"
+				Width="71" Height="71"
+				Background="{Binding Call.IsMuted, Converter={StaticResource IsMutedToBackgroundColorConverter}}" />
+            <Button x:Name="HangUpButton" Grid.Column="2" HorizontalAlignment="Center" Content="&#xE137;"
+				Margin="0,0,20,0"
+				FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.StopCallByUserCommand}"
+				IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
+				Height="71" />
 
-			<Grid x:Name="DuringCallButtons" Grid.Column="1">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="Auto" />
-				</Grid.ColumnDefinitions>
-
-				<Button x:Name="MuteButton" Grid.Column="0" HorizontalAlignment="Center" Content="&#xE1D6;"
-					Margin="0,0,20,0"
-					FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.ChangeMuteCommand}"
-					IsEnabled="{Binding IsConnected}"
-					Template="{StaticResource RoundButtonWithoutPointerOverBackgroundColorChangeTemplate}"
-					Width="71" Height="71"
-					Background="{Binding Call.IsMuted, Converter={StaticResource IsMutedToBackgroundColorConverter}}" />
-
-				<Button x:Name="HangUpButton" Grid.Column="1" HorizontalAlignment="Center" Content="&#xE137;"
-					Margin="0,0,20,0"
-					FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.StopCallByUserCommand}"
-					IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
-					Height="71" />
-			</Grid>
-
-			<Button x:Name="SendFileButton" Grid.Column="2" HorizontalAlignment="Center" Content="&#xE1A5;"
+            <Button x:Name="SendFileButton" Grid.Column="3" HorizontalAlignment="Center" Content="&#xE1A5;"
 				Margin="0,0,20,0" FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
 				IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
 				Height="71" />
