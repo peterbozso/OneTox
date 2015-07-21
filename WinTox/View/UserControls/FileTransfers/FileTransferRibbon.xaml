@@ -831,7 +831,9 @@
                     IsEnabled="False" Margin="30,0,0,0" />
         </Grid>
 
-        <Button Grid.Column="3" x:Name="DeclineButton" FontFamily="Segoe UI Symbol" Template="{StaticResource RoundButtonTemplate}"
-                Margin="22,0,38,0"  Height="35" Width="35" Content="&#xE10A;" Padding="0"  Command="{Binding CancelTransferByUserCommand}" />
+        <Button Grid.Column="3" x:Name="DeclineButton" FontFamily="Segoe UI Symbol"
+                Template="{StaticResource RoundButtonTemplate}"
+                Margin="22,0,38,0" Height="35" Width="35" Content="&#xE10A;" Padding="0"
+                Command="{Binding CancelTransferByUserCommand}" />
     </Grid>
 </UserControl>
