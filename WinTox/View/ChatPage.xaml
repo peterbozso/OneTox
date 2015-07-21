@@ -25,230 +25,234 @@
             <converters:CallStateToStringConverter x:Key="CallStateToStringConverter" />
 
             <Storyboard x:Name="MessageAddedNotificationAnimation">
-            	<DoubleAnimationUsingKeyFrames
-            		Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
-            		Storyboard.TargetName="MessageAddedNotificationEllipse">
-            		<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2" />
-            		<EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
-            	</DoubleAnimationUsingKeyFrames>
-            	<DoubleAnimationUsingKeyFrames
-            		Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
-            		Storyboard.TargetName="MessageAddedNotificationEllipse">
-            		<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2" />
-            		<EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
-            	</DoubleAnimationUsingKeyFrames>
-            	<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-            		Storyboard.TargetName="MessageAddedNotificationIcon">
-            		<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0.5" />
-            		<EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
-            	</DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames
+                    Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                    Storyboard.TargetName="MessageAddedNotificationEllipse">
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2" />
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames
+                    Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                    Storyboard.TargetName="MessageAddedNotificationEllipse">
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2" />
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
+                                               Storyboard.TargetName="MessageAddedNotificationIcon">
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0.5" />
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
+                </DoubleAnimationUsingKeyFrames>
             </Storyboard>
             <Storyboard x:Name="CallingAnimation" RepeatBehavior="Forever">
-            	<DoubleAnimationUsingKeyFrames
-            		Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
-            		Storyboard.TargetName="CallButton">
-            		<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.8" />
-            		<EasingDoubleKeyFrame KeyTime="0:0:2" Value="1"/>
-            	</DoubleAnimationUsingKeyFrames>
-            	<DoubleAnimationUsingKeyFrames
-            		Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
-            		Storyboard.TargetName="CallButton">
-            		<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.8" />
-            		<EasingDoubleKeyFrame KeyTime="0:0:2" Value="1"/>
-            	</DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames
+                    Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                    Storyboard.TargetName="CallButton">
+                    <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.8" />
+                    <EasingDoubleKeyFrame KeyTime="0:0:2" Value="1" />
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames
+                    Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                    Storyboard.TargetName="CallButton">
+                    <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.8" />
+                    <EasingDoubleKeyFrame KeyTime="0:0:2" Value="1" />
+                </DoubleAnimationUsingKeyFrames>
             </Storyboard>
         </ResourceDictionary>
     </Page.Resources>
 
-	<Grid Background="{StaticResource ChatBackgroundColor}">
-		<Interactivity:Interaction.Behaviors>
-			<Core:DataTriggerBehavior
-				Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
-				Value="Default">
-				<Core:GoToStateAction StateName="Default" />
-				<Media:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource CallingAnimation}"/>
-			</Core:DataTriggerBehavior>
-			<Core:DataTriggerBehavior
-				Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
-				Value="DuringCall">
-				<Core:GoToStateAction StateName="DuringCall" />
-				<Media:ControlStoryboardAction Storyboard="{StaticResource CallingAnimation}" ControlStoryboardOption="Stop"/>
-			</Core:DataTriggerBehavior>
-			<Core:DataTriggerBehavior
-				Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
-				Value="Calling">
-				<Core:GoToStateAction StateName="Calling" />
-				<Media:ControlStoryboardAction Storyboard="{StaticResource CallingAnimation}"/>
-			</Core:DataTriggerBehavior>
-		</Interactivity:Interaction.Behaviors>
+    <Grid Background="{StaticResource ChatBackgroundColor}">
+        <Interactivity:Interaction.Behaviors>
+            <Core:DataTriggerBehavior
+                Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
+                Value="Default">
+                <Core:GoToStateAction StateName="Default" />
+                <Media:ControlStoryboardAction ControlStoryboardOption="Stop"
+                                               Storyboard="{StaticResource CallingAnimation}" />
+            </Core:DataTriggerBehavior>
+            <Core:DataTriggerBehavior
+                Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
+                Value="DuringCall">
+                <Core:GoToStateAction StateName="DuringCall" />
+                <Media:ControlStoryboardAction Storyboard="{StaticResource CallingAnimation}"
+                                               ControlStoryboardOption="Stop" />
+            </Core:DataTriggerBehavior>
+            <Core:DataTriggerBehavior
+                Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
+                Value="Calling">
+                <Core:GoToStateAction StateName="Calling" />
+                <Media:ControlStoryboardAction Storyboard="{StaticResource CallingAnimation}" />
+            </Core:DataTriggerBehavior>
+        </Interactivity:Interaction.Behaviors>
 
-		<VisualStateManager.VisualStateGroups>
-			<VisualStateGroup x:Name="VisualStateGroup">
-				<VisualState x:Name="Default">
-					<Storyboard>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-							Storyboard.TargetName="MuteButton">
-							<DiscreteObjectKeyFrame KeyTime="0">
-								<DiscreteObjectKeyFrame.Value>
-									<Visibility>Collapsed</Visibility>
-								</DiscreteObjectKeyFrame.Value>
-							</DiscreteObjectKeyFrame>
-						</ObjectAnimationUsingKeyFrames>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="HangUpButton">
-							<DiscreteObjectKeyFrame KeyTime="0">
-								<DiscreteObjectKeyFrame.Value>
-									<Visibility>Collapsed</Visibility>
-								</DiscreteObjectKeyFrame.Value>
-							</DiscreteObjectKeyFrame>
-						</ObjectAnimationUsingKeyFrames>
-					</Storyboard>
-				</VisualState>
-				<VisualState x:Name="DuringCall">
-					<Storyboard>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-							Storyboard.TargetName="CallButton">
-							<DiscreteObjectKeyFrame KeyTime="0">
-								<DiscreteObjectKeyFrame.Value>
-									<Visibility>Collapsed</Visibility>
-								</DiscreteObjectKeyFrame.Value>
-							</DiscreteObjectKeyFrame>
-						</ObjectAnimationUsingKeyFrames>
-					</Storyboard>
-				</VisualState>
-				<VisualState x:Name="Calling">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualState x:Name="Default">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="MuteButton">
-							<DiscreteObjectKeyFrame KeyTime="0">
-								<DiscreteObjectKeyFrame.Value>
-									<Visibility>Collapsed</Visibility>
-								</DiscreteObjectKeyFrame.Value>
-							</DiscreteObjectKeyFrame>
-						</ObjectAnimationUsingKeyFrames>
-					</Storyboard>
-				</VisualState>
-			</VisualStateGroup>
-		</VisualStateManager.VisualStateGroups>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                       Storyboard.TargetName="MuteButton">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                       Storyboard.TargetName="HangUpButton">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="DuringCall">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                       Storyboard.TargetName="CallButton">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="Calling">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                       Storyboard.TargetName="MuteButton">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
 
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="*" />
-			<RowDefinition Height="Auto" />
-		</Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-		<!-- Top panel with friend info and action buttons -->
-		<Grid Grid.Row="0" Background="{ThemeResource BackgroundColor}">
-			<Grid.Transitions>
-				<TransitionCollection>
-					<EntranceThemeTransition FromVerticalOffset="-100" FromHorizontalOffset="0" />
-				</TransitionCollection>
-			</Grid.Transitions>
-			<Grid.ChildrenTransitions>
-				<TransitionCollection>
-					<EntranceThemeTransition FromVerticalOffset="-100" FromHorizontalOffset="0" />
-				</TransitionCollection>
-			</Grid.ChildrenTransitions>
+        <!-- Top panel with friend info and action buttons -->
+        <Grid Grid.Row="0" Background="{ThemeResource BackgroundColor}">
+            <Grid.Transitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromVerticalOffset="-100" FromHorizontalOffset="0" />
+                </TransitionCollection>
+            </Grid.Transitions>
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromVerticalOffset="-100" FromHorizontalOffset="0" />
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
 
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="Auto" />
-				<ColumnDefinition Width="Auto" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
-			</Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-			<friends:FriendInfo x:Name="FriendInfoControl" Grid.Column="0" HorizontalAlignment="Left"
-				Margin="0,0,20,0" />
+            <friends:FriendInfo x:Name="FriendInfoControl" Grid.Column="0" HorizontalAlignment="Left"
+                                Margin="0,0,20,0" />
 
             <Button x:Name="CallButton" Grid.Column="1" HorizontalAlignment="Center" Content="&#xE13A;"
-				Margin="0,0,20,0"
-				FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.StartCallByUserCommand}"
-				IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
-				Height="71" RenderTransformOrigin="0.5,0.5">
+                    Margin="0,0,20,0"
+                    FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.StartCallByUserCommand}"
+                    IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
+                    Height="71" RenderTransformOrigin="0.5,0.5">
                 <Button.RenderTransform>
                     <CompositeTransform />
                 </Button.RenderTransform>
             </Button>
             <Button x:Name="MuteButton" Grid.Column="1" HorizontalAlignment="Center" Content="&#xE1D6;"
-				Margin="0,0,20,0"
-				FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.ChangeMuteCommand}"
-				IsEnabled="{Binding IsConnected}"
-				Template="{StaticResource RoundButtonWithoutPointerOverBackgroundColorChangeTemplate}"
-				Width="71" Height="71"
-				Background="{Binding Call.IsMuted, Converter={StaticResource IsMutedToBackgroundColorConverter}}" />
+                    Margin="0,0,20,0"
+                    FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.ChangeMuteCommand}"
+                    IsEnabled="{Binding IsConnected}"
+                    Template="{StaticResource RoundButtonWithoutPointerOverBackgroundColorChangeTemplate}"
+                    Width="71" Height="71"
+                    Background="{Binding Call.IsMuted, Converter={StaticResource IsMutedToBackgroundColorConverter}}" />
             <Button x:Name="HangUpButton" Grid.Column="2" HorizontalAlignment="Center" Content="&#xE137;"
-				Margin="0,0,20,0"
-				FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.StopCallByUserCommand}"
-				IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
-				Height="71" />
+                    Margin="0,0,20,0"
+                    FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.StopCallByUserCommand}"
+                    IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
+                    Height="71" />
 
             <Button x:Name="SendFileButton" Grid.Column="3" HorizontalAlignment="Center" Content="&#xE1A5;"
-				Margin="0,0,20,0" FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
-				IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
-				Height="71" />
-		</Grid>
+                    Margin="0,0,20,0" FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
+                    IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
+                    Height="71" />
+        </Grid>
 
-		<!-- Current file transfer(s) -->
-		<fileTransfers:FileTransfersBlock Grid.Row="1" DataContext="{Binding FileTransfers}" />
+        <!-- Current file transfer(s) -->
+        <fileTransfers:FileTransfersBlock Grid.Row="1" DataContext="{Binding FileTransfers}" />
 
         <!-- List of messages -->
-		<ListView Grid.Row="2" x:Name="MessagesListView" Background="{StaticResource ChatBackgroundColor}"
-			ItemsSource="{Binding Conversation.MessageGroups}" SelectionMode="None"
-			HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-			IncrementalLoadingTrigger="None" ItemContainerStyle="{StaticResource ChatPageListViewItemStyle}">
+        <ListView Grid.Row="2" x:Name="MessagesListView" Background="{StaticResource ChatBackgroundColor}"
+                  ItemsSource="{Binding Conversation.MessageGroups}" SelectionMode="None"
+                  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                  IncrementalLoadingTrigger="None" ItemContainerStyle="{StaticResource ChatPageListViewItemStyle}">
 
-			<ListView.Transitions>
-				<TransitionCollection>
-					<EntranceThemeTransition FromVerticalOffset="0" FromHorizontalOffset="100" />
-				</TransitionCollection>
-			</ListView.Transitions>
+            <ListView.Transitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromVerticalOffset="0" FromHorizontalOffset="100" />
+                </TransitionCollection>
+            </ListView.Transitions>
 
-			<ListView.ItemTemplate>
-				<DataTemplate>
-					<messaging:MessageBlock />
-				</DataTemplate>
-			</ListView.ItemTemplate>
-		</ListView>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <messaging:MessageBlock />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
 
         <!-- Received message notification -->
-		<Grid x:Name="MessageAddedNotificationGrid" Grid.Row="2" HorizontalAlignment="Left"
-			VerticalAlignment="Bottom" Margin="20,0,0,0" Visibility="Collapsed">
-			<Ellipse x:Name="MessageAddedNotificationEllipse" Width="36" Height="36"
-				Fill="{StaticResource MainColor}" HorizontalAlignment="Center" VerticalAlignment="Center"
-				RenderTransformOrigin="0.5,0.5">
-				<Ellipse.RenderTransform>
-					<CompositeTransform />
-				</Ellipse.RenderTransform>
-			</Ellipse>
-			<TextBlock x:Name="MessageAddedNotificationIcon" FontFamily="Segoe UI Symbol"
-				Foreground="{StaticResource ChatBackgroundColor}" VerticalAlignment="Center" FontSize="30"
-				HorizontalAlignment="Center" Margin="0,0,0,4">
-				<Run Text="&#xE00D;" />
-			</TextBlock>
-		</Grid>
+        <Grid x:Name="MessageAddedNotificationGrid" Grid.Row="2" HorizontalAlignment="Left"
+              VerticalAlignment="Bottom" Margin="20,0,0,0" Visibility="Collapsed">
+            <Ellipse x:Name="MessageAddedNotificationEllipse" Width="36" Height="36"
+                     Fill="{StaticResource MainColor}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                     RenderTransformOrigin="0.5,0.5">
+                <Ellipse.RenderTransform>
+                    <CompositeTransform />
+                </Ellipse.RenderTransform>
+            </Ellipse>
+            <TextBlock x:Name="MessageAddedNotificationIcon" FontFamily="Segoe UI Symbol"
+                       Foreground="{StaticResource ChatBackgroundColor}" VerticalAlignment="Center" FontSize="30"
+                       HorizontalAlignment="Center" Margin="0,0,0,4">
+                <Run Text="&#xE00D;" />
+            </TextBlock>
+        </Grid>
 
-		<!-- Friend typing indicator -->
-		<TextBlock FontSize="13" Margin="20,2,0,0" Grid.Row="3" VerticalAlignment="Top" Canvas.ZIndex="1"
-			Visibility="{Binding Conversation.IsFriendTyping, Converter={StaticResource BoolToVisibilityConverter}}"
-			Text="{Binding Name, Converter={StaticResource FriendNameToTypingStatusConverter}}" />
+        <!-- Friend typing indicator -->
+        <TextBlock FontSize="13" Margin="20,2,0,0" Grid.Row="3" VerticalAlignment="Top" Canvas.ZIndex="1"
+                   Visibility="{Binding Conversation.IsFriendTyping, Converter={StaticResource BoolToVisibilityConverter}}"
+                   Text="{Binding Name, Converter={StaticResource FriendNameToTypingStatusConverter}}" />
 
-		<!-- Message input field -->
-		<Grid Grid.Row="3" Background="{StaticResource MainColor}">
-			<Grid.Transitions>
-				<TransitionCollection>
-					<EntranceThemeTransition FromVerticalOffset="100" FromHorizontalOffset="0" />
-				</TransitionCollection>
-			</Grid.Transitions>
-			<Grid.ChildrenTransitions>
-				<TransitionCollection>
-					<EntranceThemeTransition FromVerticalOffset="100" FromHorizontalOffset="0" />
-				</TransitionCollection>
-			</Grid.ChildrenTransitions>
+        <!-- Message input field -->
+        <Grid Grid.Row="3" Background="{StaticResource MainColor}">
+            <Grid.Transitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromVerticalOffset="100" FromHorizontalOffset="0" />
+                </TransitionCollection>
+            </Grid.Transitions>
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromVerticalOffset="100" FromHorizontalOffset="0" />
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
 
-			<TextBox x:Name="MessageInputTextBox" Margin="20" FontSize="20" MinHeight="40" MaxHeight="250"
-				Height="Auto"
-				KeyDown="MessageInputKeyDown" TextWrapping="Wrap"
-				ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10,3,20,5"
-				FontFamily="Global User Interface" />
-		</Grid>
-	</Grid>
+            <TextBox x:Name="MessageInputTextBox" Margin="20" FontSize="20" MinHeight="40" MaxHeight="250"
+                     Height="Auto"
+                     KeyDown="MessageInputKeyDown" TextWrapping="Wrap"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10,3,20,5"
+                     FontFamily="Global User Interface" />
+        </Grid>
+    </Grid>
 </Page>

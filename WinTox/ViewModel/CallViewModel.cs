@@ -188,6 +188,8 @@ namespace WinTox.ViewModel
             // Error messages from: https://msdn.microsoft.com/en-us/library/windows/apps/hh768223.aspx#additional_usage_guidance
             try
             {
+                // We do this initialization (and tear down immediately after) just to check if we have access to a microphone.
+                // We'll do the actual work with NAudio, since MediaCapture doesn't supply raw PCM data that we need.
                 var mediaCapture = new MediaCapture();
                 await mediaCapture.InitializeAsync();
                 mediaCapture.Dispose();
