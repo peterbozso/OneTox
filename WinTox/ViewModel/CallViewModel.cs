@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Media.Capture;
+using Windows.UI.Core;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using NAudio.Win8.Wave.WaveOutputs;
@@ -106,7 +108,7 @@ namespace WinTox.ViewModel
             _audioFrameSize = _samplingRate*KAudioLength/1000;
         }
 
-        private void CallStateChangedHandler(object sender, ToxAvEventArgs.CallStateEventArgs e)
+        private async void CallStateChangedHandler(object sender, ToxAvEventArgs.CallStateEventArgs e)
         {
             if (e.FriendNumber != _friendNumber)
                 return;
@@ -114,11 +116,19 @@ namespace WinTox.ViewModel
             if (e.State.HasFlag(ToxAvFriendCallState.ReceivingAudio))
             {
                 _canSend = true;
+
+                await
+                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                        () => { State = CallState.DuringCall; });
             }
 
             if (e.State.HasFlag(ToxAvFriendCallState.SendingAudio))
             {
                 TrySetupAudioReceiving();
+
+                await
+                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                        () => { State = CallState.DuringCall; });
             }
         }
 
@@ -162,13 +172,13 @@ namespace WinTox.ViewModel
                            if (!microphoneIsAvailabe)
                            {
                                IsMuted = true;
-                               State = CallState.DuringCall;
+                               State = CallState.Calling;
                                return;
                            }
 
                            StartRecording();
                            IsMuted = false;
-                           State = CallState.DuringCall;
+                           State = CallState.Calling;
                        }));
             }
         }
