@@ -12,6 +12,13 @@ using WinTox.Model;
 
 namespace WinTox.ViewModel
 {
+    public enum CallState
+    {
+        Default,
+        DuringCall,
+        Calling
+    }
+
     public class CallViewModel : ViewModelBase
     {
         private const int KAudioLength = 20; // Based on measurements. Take it with a grain of salt!
@@ -20,13 +27,13 @@ namespace WinTox.ViewModel
         private int _bitRate;
         private bool _canSend;
         private RelayCommand _changeMuteCommand;
-        private bool _isDuringCall;
         private bool _isMuted;
         private IWavePlayer _player;
         private IWaveIn _recorder;
         private int _samplingRate;
         private List<short> _sendBuffer;
         private RelayCommand _startCallByUserCommand;
+        private CallState _state;
         private RelayCommand _stopCallByUserCommand;
         private BufferedWaveProvider _waveProvider;
 
@@ -48,12 +55,12 @@ namespace WinTox.ViewModel
             }
         }
 
-        public bool IsDuringCall
+        public CallState State
         {
-            get { return _isDuringCall; }
-            private set
+            get { return _state; }
+            set
             {
-                _isDuringCall = value;
+                _state = value;
                 RaisePropertyChanged();
             }
         }
@@ -64,7 +71,8 @@ namespace WinTox.ViewModel
             {
                 return _changeMuteCommand ?? (_changeMuteCommand = new RelayCommand(async () =>
                 {
-                    if (_recorder == null) // This means that we weren't able to instantiate it due to missing microphone or access permission.
+                    if (_recorder == null)
+                        // This means that we weren't able to instantiate it due to missing microphone or access permission.
                     {
                         // So we give it another go, maybe the user enabled the microphone/plugged one in since then.
                         var microphoneIsAvailabe = await IsMicrophoneAvailable();
@@ -154,13 +162,13 @@ namespace WinTox.ViewModel
                            if (!microphoneIsAvailabe)
                            {
                                IsMuted = true;
-                               IsDuringCall = true;
+                               State = CallState.DuringCall;
                                return;
                            }
 
                            StartRecording();
                            IsMuted = false;
-                           IsDuringCall = true;
+                           State = CallState.DuringCall;
                        }));
             }
         }
@@ -225,7 +233,7 @@ namespace WinTox.ViewModel
                            StopRecording();
                            StopPlaying();
                            ToxAvModel.Instance.SendControl(_friendNumber, ToxAvCallControl.Cancel);
-                           IsDuringCall = false;
+                           State = CallState.Default;
                        }));
             }
         }
@@ -256,7 +264,8 @@ namespace WinTox.ViewModel
 
         private IWaveProvider CreateReader()
         {
-            return _waveProvider ?? (_waveProvider = new BufferedWaveProvider(new WaveFormat(_samplingRate, 16, 1))); // TODO: Replace it with actual values received from friend!
+            return _waveProvider ?? (_waveProvider = new BufferedWaveProvider(new WaveFormat(_samplingRate, 16, 1)));
+            // TODO: Replace it with actual values received from friend!
         }
 
         private void AudioFrameReceivedHandler(object sender, ToxAvEventArgs.AudioFrameEventArgs e)

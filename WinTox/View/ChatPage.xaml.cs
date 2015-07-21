@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
+using WinTox.Converters;
 using WinTox.ViewModel.Friends;
 using WinTox.ViewModel.Messaging;
 
@@ -342,7 +343,10 @@ namespace WinTox.View
                 MessageAddedNotificationGrid, MessageAddedNotificationAnimation);
             _scrollManager.RegisterHandlers();
 
-            VisualStateManager.GoToState(this, _friendViewModel.Call.IsDuringCall ? "DuringCall" : "Default", false);
+            var stateString =
+                (string)
+                    new CallStateToStringConverter().Convert(_friendViewModel.Call.State, typeof (string), null, null);
+            VisualStateManager.GoToState(this, stateString, false);
 
             _friendViewModel.Call.StartCallByUserFailed += StartCallByUserFailedHandler;
         }

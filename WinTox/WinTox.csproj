@@ -107,6 +107,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\CallStateToStringConverter.cs" />
     <Compile Include="Converters\IsMutedToBackgroundColorConverter.cs" />
     <Compile Include="Converters\TransfersBlockStateToStringConverter.cs" />
     <Compile Include="Converters\DateTimeConverter.cs" />

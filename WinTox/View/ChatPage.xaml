@@ -10,6 +10,7 @@
     xmlns:fileTransfers="using:WinTox.View.UserControls.FileTransfers"
     xmlns:recentMessages="using:WinTox.View.UserControls.Messaging.RecentMessages"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:converters="using:WinTox.Converters"
     x:Name="PageRoot"
     x:Class="WinTox.View.ChatPage"
     mc:Ignorable="d">
@@ -19,6 +20,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ResourceDictionaries/ChatPageDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <converters:CallStateToStringConverter x:Key="CallStateToStringConverter" />
+
             <Storyboard x:Name="MessageAddedNotificationAnimation">
                 <DoubleAnimationUsingKeyFrames
                     Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
@@ -38,10 +42,50 @@
                     <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
                 </DoubleAnimationUsingKeyFrames>
             </Storyboard>
+            <Storyboard x:Name="IncomingCallAnimation" RepeatBehavior="Forever">
+                <DoubleAnimationUsingKeyFrames
+                    Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                    Storyboard.TargetName="CallButton">
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0.8" />
+                    <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1">
+                        <EasingDoubleKeyFrame.EasingFunction>
+                            <BackEase EasingMode="EaseInOut" />
+                        </EasingDoubleKeyFrame.EasingFunction>
+                    </EasingDoubleKeyFrame>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames
+                    Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                    Storyboard.TargetName="CallButton">
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0.8" />
+                    <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1">
+                        <EasingDoubleKeyFrame.EasingFunction>
+                            <BackEase EasingMode="EaseInOut" />
+                        </EasingDoubleKeyFrame.EasingFunction>
+                    </EasingDoubleKeyFrame>
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
         </ResourceDictionary>
     </Page.Resources>
 
     <Grid Background="{StaticResource ChatBackgroundColor}">
+        <Interactivity:Interaction.Behaviors>
+            <Core:DataTriggerBehavior
+                Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
+                Value="Default">
+                <Core:GoToStateAction StateName="Default" />
+            </Core:DataTriggerBehavior>
+            <Core:DataTriggerBehavior
+                Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
+                Value="DuringCall">
+                <Core:GoToStateAction StateName="DuringCall" />
+            </Core:DataTriggerBehavior>
+            <Core:DataTriggerBehavior
+                Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
+                Value="Calling">
+                <Core:GoToStateAction StateName="Calling" />
+            </Core:DataTriggerBehavior>
+        </Interactivity:Interaction.Behaviors>
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
                 <VisualState x:Name="Default">
@@ -68,19 +112,20 @@
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
+                <VisualState x:Name="Calling">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                       Storyboard.TargetName="DuringCallButtons">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-
-        <Interactivity:Interaction.Behaviors>
-            <Core:DataTriggerBehavior Binding="{Binding Call.IsDuringCall}"
-                                      ComparisonCondition="Equal" Value="False">
-                <Core:GoToStateAction StateName="Default" />
-            </Core:DataTriggerBehavior>
-            <Core:DataTriggerBehavior Binding="{Binding Call.IsDuringCall}"
-                                      ComparisonCondition="Equal" Value="True">
-                <Core:GoToStateAction StateName="DuringCall" />
-            </Core:DataTriggerBehavior>
-        </Interactivity:Interaction.Behaviors>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -114,7 +159,11 @@
                     Margin="0,0,20,0"
                     FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.StartCallByUserCommand}"
                     IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
-                    Height="71" />
+                    Height="71" RenderTransformOrigin="0.5,0.5">
+                <Button.RenderTransform>
+                    <CompositeTransform />
+                </Button.RenderTransform>
+            </Button>
 
             <Grid x:Name="DuringCallButtons" Grid.Column="1">
                 <Grid.ColumnDefinitions>
