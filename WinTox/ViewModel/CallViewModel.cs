@@ -104,7 +104,13 @@ namespace WinTox.ViewModel
             {
                 return _acceptCallCommand ??
                        (_acceptCallCommand =
-                           new RelayCommand(async () => { ToxAvModel.Instance.Answer(_friendNumber, _bitRate, 0); }));
+                           new RelayCommand(async () =>
+                           {
+                               ToxAvModel.Instance.Answer(_friendNumber, _bitRate, 0);
+                               await TryStartRecording();
+                               TryStartPlaying();
+                               State = CallState.DuringCall;
+                           }));
             }
         }
 
@@ -254,11 +260,13 @@ namespace WinTox.ViewModel
 
                     _recorder.StartRecording();
 
-                    IsMuted = false;
+                    await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                        () => { IsMuted = false; });
                 }
                 else
                 {
-                    IsMuted = true;
+                    await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                        () => { IsMuted = true; });
                 }
             }
         }
