@@ -270,9 +270,9 @@
                 <TextBlock FontSize="30" Grid.Row="0" VerticalAlignment="Bottom">Incoming call!</TextBlock>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
                     <Button x:Name="AcceptButton" FontFamily="Segoe UI Symbol" Template="{StaticResource RoundButtonTemplate}"
-                    Height="35" Width="35" Content="&#xE10B;" Padding="0" Command="{Binding Call.AcceptCallCommand}"  />
+                    Height="35" Width="35" Content="&#xE10B;" Padding="0" Command="{Binding Call.AcceptCallCommand}" Margin="0,0,10,0"  />
                     <Button x:Name="DeclineButton" FontFamily="Segoe UI Symbol" Template="{StaticResource RoundButtonTemplate}"
-                    Height="35" Width="35" Content="&#xE10A;" Padding="0" Command="{Binding Call.CancelCallCommand}"  />
+                    Height="35" Width="35" Content="&#xE10A;" Padding="0" Command="{Binding Call.CancelCallCommand}" Margin="10,0,0,0"  />
                 </StackPanel>
             </Grid>
 
