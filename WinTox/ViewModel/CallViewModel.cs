@@ -237,10 +237,13 @@ namespace WinTox.ViewModel
             }
         }
 
-        private void RaiseStartCallByUserFailed(string errorMessage)
+        private async void RaiseStartCallByUserFailed(string errorMessage)
         {
-            if (StartCallByUserFailed != null)
-                StartCallByUserFailed(this, errorMessage);
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (StartCallByUserFailed != null)
+                    StartCallByUserFailed(this, errorMessage);
+            });
         }
 
         private async Task TryStartRecording()
