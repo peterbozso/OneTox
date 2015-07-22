@@ -25,6 +25,7 @@ namespace WinTox.ViewModel
     public class CallViewModel : ViewModelBase
     {
         private const int KAudioLength = 20; // Based on measurements. Take it with a grain of salt!
+        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly int _friendNumber;
         private RelayCommand _acceptCallCommand;
         private int _audioFrameSize;
@@ -141,9 +142,8 @@ namespace WinTox.ViewModel
             if (e.State.HasFlag(ToxAvFriendCallState.ReceivingAudio) ||
                 e.State.HasFlag(ToxAvFriendCallState.SendingAudio))
             {
-                await
-                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                        () => { State = CallState.DuringCall; });
+                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { State = CallState.DuringCall; });
             }
 
             if (e.State.HasFlag(ToxAvFriendCallState.ReceivingAudio))
@@ -161,22 +161,22 @@ namespace WinTox.ViewModel
 
             if (e.State.HasFlag(ToxAvFriendCallState.SendingAudio))
             {
-                TrySetupAudioReceiving();
+                StartPlaying();
             }
 
             if (e.State.HasFlag(ToxAvFriendCallState.Finished) || e.State.HasFlag(ToxAvFriendCallState.Error))
             {
                 StopRecording();
                 StopPlaying();
-                State = CallState.Default;
+                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { State = CallState.Default; });
             }
         }
 
         private async void CallRequestReceivedHandler(object sender, ToxAvEventArgs.CallRequestEventArgs e)
         {
-            await
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    () => { State = CallState.IncomingCall; });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () => { State = CallState.IncomingCall; });
         }
 
         #region Audio sending
@@ -253,15 +253,18 @@ namespace WinTox.ViewModel
 
         private void StartRecording()
         {
-            _sendBuffer = new List<short>();
-
-            _recorder = new WasapiCaptureRT
+            if (_recorder == null)
             {
-                WaveFormat = new WaveFormat(_samplingRate, 16, 1)
-            };
-            _recorder.DataAvailable += DataAvailableHandler;
+                _sendBuffer = new List<short>();
 
-            _recorder.StartRecording();
+                _recorder = new WasapiCaptureRT
+                {
+                    WaveFormat = new WaveFormat(_samplingRate, 16, 1)
+                };
+                _recorder.DataAvailable += DataAvailableHandler;
+
+                _recorder.StartRecording();
+            }
         }
 
         public event EventHandler<string> StartCallByUserFailed;
@@ -299,7 +302,7 @@ namespace WinTox.ViewModel
 
         #region Audio receiving
 
-        private void TrySetupAudioReceiving()
+        private void StartPlaying()
         {
             if (_player == null)
             {
