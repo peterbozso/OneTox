@@ -43,20 +43,6 @@
                     <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
                 </DoubleAnimationUsingKeyFrames>
             </Storyboard>
-            <Storyboard x:Name="CallingAnimation" RepeatBehavior="Forever">
-                <DoubleAnimationUsingKeyFrames
-                    Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
-                    Storyboard.TargetName="CallButton">
-                    <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.8" />
-                    <EasingDoubleKeyFrame KeyTime="0:0:2" Value="1" />
-                </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames
-                    Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
-                    Storyboard.TargetName="CallButton">
-                    <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.8" />
-                    <EasingDoubleKeyFrame KeyTime="0:0:2" Value="1" />
-                </DoubleAnimationUsingKeyFrames>
-            </Storyboard>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -66,21 +52,16 @@
                 Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
                 Value="Default">
                 <Core:GoToStateAction StateName="Default" />
-                <Media:ControlStoryboardAction ControlStoryboardOption="Stop"
-                                               Storyboard="{StaticResource CallingAnimation}" />
             </Core:DataTriggerBehavior>
             <Core:DataTriggerBehavior
                 Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
                 Value="DuringCall">
                 <Core:GoToStateAction StateName="DuringCall" />
-                <Media:ControlStoryboardAction Storyboard="{StaticResource CallingAnimation}"
-                                               ControlStoryboardOption="Stop" />
             </Core:DataTriggerBehavior>
             <Core:DataTriggerBehavior
                 Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
                 Value="Calling">
                 <Core:GoToStateAction StateName="Calling" />
-                <Media:ControlStoryboardAction Storyboard="{StaticResource CallingAnimation}" />
             </Core:DataTriggerBehavior>
         </Interactivity:Interaction.Behaviors>
 
