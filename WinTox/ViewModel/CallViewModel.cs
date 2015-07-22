@@ -18,7 +18,7 @@ namespace WinTox.ViewModel
     {
         Default,
         DuringCall,
-        Calling
+        OutgoingCall,
     }
 
     public class CallViewModel : ViewModelBase
@@ -173,7 +173,7 @@ namespace WinTox.ViewModel
                            Debug.WriteLine("Calling " + _friendNumber + " " + successfulCall);
 
                            IsMuted = false;
-                           State = CallState.Calling;
+                           State = CallState.OutgoingCall;
                        }));
             }
         }

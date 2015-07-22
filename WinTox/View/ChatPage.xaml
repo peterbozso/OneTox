@@ -60,8 +60,8 @@
             </Core:DataTriggerBehavior>
             <Core:DataTriggerBehavior
                 Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
-                Value="Calling">
-                <Core:GoToStateAction StateName="Calling" />
+                Value="OutgoingCall">
+                <Core:GoToStateAction StateName="OutgoingCall" />
             </Core:DataTriggerBehavior>
         </Interactivity:Interaction.Behaviors>
 
@@ -85,7 +85,7 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CallingGrid">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="OutgoingCallGrid">
                         	<DiscreteObjectKeyFrame KeyTime="0">
                         		<DiscreteObjectKeyFrame.Value>
                         			<Visibility>Collapsed</Visibility>
@@ -104,7 +104,7 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CallingGrid">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="OutgoingCallGrid">
                         	<DiscreteObjectKeyFrame KeyTime="0">
                         		<DiscreteObjectKeyFrame.Value>
                         			<Visibility>Collapsed</Visibility>
@@ -113,7 +113,7 @@
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
-                <VisualState x:Name="Calling">
+                <VisualState x:Name="OutgoingCall">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
                                                        Storyboard.TargetName="MuteButton">
@@ -193,7 +193,7 @@
                     FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.StopCallByUserCommand}"
                     IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
                     Height="71" />
-            <Grid x:Name="CallingGrid" Grid.Column="2" Margin="0,0,20,0">
+            <Grid x:Name="OutgoingCallGrid" Grid.Column="2" Margin="0,0,20,0">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
