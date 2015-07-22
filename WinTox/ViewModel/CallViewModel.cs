@@ -137,6 +137,13 @@ namespace WinTox.ViewModel
             {
                 TrySetupAudioReceiving();
             }
+
+            if (e.State.HasFlag(ToxAvFriendCallState.Finished) || e.State.HasFlag(ToxAvFriendCallState.Error))
+            {
+                StopRecording();
+                StopPlaying();
+                State = CallState.Default;
+            }
         }
 
         #region Audio sending
