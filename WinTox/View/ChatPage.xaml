@@ -104,6 +104,13 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CallingGrid">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Visibility>Collapsed</Visibility>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
                 <VisualState x:Name="DuringCall">
@@ -116,6 +123,13 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CallingGrid">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Visibility>Collapsed</Visibility>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
                 <VisualState x:Name="Calling">
@@ -127,6 +141,20 @@
                                     <Visibility>Collapsed</Visibility>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="HangUpButton">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Visibility>Collapsed</Visibility>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CallButton">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Visibility>Collapsed</Visibility>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -184,6 +212,16 @@
                     FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.StopCallByUserCommand}"
                     IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
                     Height="71" />
+            <Grid x:Name="CallingGrid" Grid.Column="2" Margin="0,0,20,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <TextBlock FontSize="30" Grid.Row="0" VerticalAlignment="Bottom">Calling...</TextBlock>
+                <Button Grid.Row="1" x:Name="AcceptButton" FontFamily="Segoe UI Symbol" Template="{StaticResource RoundButtonTemplate}"
+                        Height="35" Width="35" Content="&#xE10A;" Padding="0" HorizontalAlignment="Center" Command="{Binding Call.StopCallByUserCommand}" VerticalAlignment="Top"/>
+            </Grid>
 
             <Button x:Name="SendFileButton" Grid.Column="3" HorizontalAlignment="Center" Content="&#xE1A5;"
                     Margin="0,0,20,0" FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
