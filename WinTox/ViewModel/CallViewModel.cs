@@ -81,13 +81,7 @@ namespace WinTox.ViewModel
                         // This means that we weren't able to instantiate it due to missing microphone or access permission.
                     {
                         // So we give it another go, maybe the user enabled the microphone/plugged one in since then.
-                        var microphoneIsAvailabe = await IsMicrophoneAvailable();
-                        if (microphoneIsAvailabe)
-                        {
-                            StartRecording();
-                            IsMuted = false;
-                        }
-
+                        await TryStartRecording();
                         return;
                     }
 
@@ -148,20 +142,12 @@ namespace WinTox.ViewModel
 
             if (e.State.HasFlag(ToxAvFriendCallState.ReceivingAudio))
             {
-                var microphoneIsAvailabe = await IsMicrophoneAvailable();
-                if (!microphoneIsAvailabe)
-                {
-                    IsMuted = true;
-                }
-                else
-                {
-                    StartRecording();
-                }
+                await TryStartRecording();
             }
 
             if (e.State.HasFlag(ToxAvFriendCallState.SendingAudio))
             {
-                StartPlaying();
+                TryStartPlaying();
             }
 
             if (e.State.HasFlag(ToxAvFriendCallState.Finished) || e.State.HasFlag(ToxAvFriendCallState.Error))
@@ -251,19 +237,29 @@ namespace WinTox.ViewModel
                 StartCallByUserFailed(this, errorMessage);
         }
 
-        private void StartRecording()
+        private async Task TryStartRecording()
         {
             if (_recorder == null)
             {
-                _sendBuffer = new List<short>();
-
-                _recorder = new WasapiCaptureRT
+                var microphoneIsAvailabe = await IsMicrophoneAvailable();
+                if (microphoneIsAvailabe)
                 {
-                    WaveFormat = new WaveFormat(_samplingRate, 16, 1)
-                };
-                _recorder.DataAvailable += DataAvailableHandler;
+                    _sendBuffer = new List<short>();
 
-                _recorder.StartRecording();
+                    _recorder = new WasapiCaptureRT
+                    {
+                        WaveFormat = new WaveFormat(_samplingRate, 16, 1)
+                    };
+                    _recorder.DataAvailable += DataAvailableHandler;
+
+                    _recorder.StartRecording();
+
+                    IsMuted = false;
+                }
+                else
+                {
+                    IsMuted = true;
+                }
             }
         }
 
@@ -302,7 +298,7 @@ namespace WinTox.ViewModel
 
         #region Audio receiving
 
-        private void StartPlaying()
+        private void TryStartPlaying()
         {
             if (_player == null)
             {
