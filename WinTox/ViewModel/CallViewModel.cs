@@ -19,14 +19,17 @@ namespace WinTox.ViewModel
         Default,
         DuringCall,
         OutgoingCall,
+        IncomingCall
     }
 
     public class CallViewModel : ViewModelBase
     {
         private const int KAudioLength = 20; // Based on measurements. Take it with a grain of salt!
         private readonly int _friendNumber;
+        private RelayCommand _acceptCallCommand;
         private int _audioFrameSize;
         private int _bitRate;
+        private RelayCommand _cancelCallCommand;
         private RelayCommand _changeMuteCommand;
         private bool _isMuted;
         private IWavePlayer _player;
@@ -43,6 +46,7 @@ namespace WinTox.ViewModel
             _friendNumber = friendNumber;
             ToxAvModel.Instance.CallStateChanged += CallStateChangedHandler;
             ToxAvModel.Instance.AudioFrameReceived += AudioFrameReceivedHandler;
+            ToxAvModel.Instance.CallRequestReceived += CallRequestReceivedHandler;
             SetAudioValues();
         }
 
@@ -99,6 +103,28 @@ namespace WinTox.ViewModel
             }
         }
 
+        public RelayCommand AcceptCallCommand
+        {
+            get
+            {
+                return _acceptCallCommand ??
+                       (_acceptCallCommand =
+                           new RelayCommand(async () => { ToxAvModel.Instance.Answer(_friendNumber, _bitRate, 0); }));
+            }
+        }
+
+        public RelayCommand CancelCallCommand
+        {
+            get
+            {
+                return _cancelCallCommand ?? (_cancelCallCommand = new RelayCommand(() =>
+                {
+                    ToxAvModel.Instance.SendControl(_friendNumber, ToxAvCallControl.Cancel);
+                    State = CallState.Default;
+                }));
+            }
+        }
+
         private void SetAudioValues()
         {
             // TODO: Set these based on app settings!
@@ -146,6 +172,13 @@ namespace WinTox.ViewModel
             }
         }
 
+        private async void CallRequestReceivedHandler(object sender, ToxAvEventArgs.CallRequestEventArgs e)
+        {
+            await
+                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { State = CallState.IncomingCall; });
+        }
+
         #region Audio sending
 
         private void DataAvailableHandler(object sender, WaveInEventArgs e)
@@ -174,7 +207,7 @@ namespace WinTox.ViewModel
             get
             {
                 return _startCallByUserCommand ??
-                       (_startCallByUserCommand = new RelayCommand(async () =>
+                       (_startCallByUserCommand = new RelayCommand(() =>
                        {
                            var successfulCall = ToxAvModel.Instance.Call(_friendNumber, _bitRate, 0);
                            Debug.WriteLine("Calling " + _friendNumber + " " + successfulCall);

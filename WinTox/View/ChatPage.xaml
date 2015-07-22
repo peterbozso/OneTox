@@ -63,6 +63,11 @@
                 Value="OutgoingCall">
                 <Core:GoToStateAction StateName="OutgoingCall" />
             </Core:DataTriggerBehavior>
+            <Core:DataTriggerBehavior
+                Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
+                Value="IncomingCall">
+                <Core:GoToStateAction StateName="IncomingCall" />
+            </Core:DataTriggerBehavior>
         </Interactivity:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>
@@ -92,6 +97,13 @@
                         		</DiscreteObjectKeyFrame.Value>
                         	</DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="IncomingCallGrid">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Visibility>Collapsed</Visibility>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
                 <VisualState x:Name="DuringCall">
@@ -105,6 +117,13 @@
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="OutgoingCallGrid">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Visibility>Collapsed</Visibility>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="IncomingCallGrid">
                         	<DiscreteObjectKeyFrame KeyTime="0">
                         		<DiscreteObjectKeyFrame.Value>
                         			<Visibility>Collapsed</Visibility>
@@ -137,7 +156,46 @@
                         		</DiscreteObjectKeyFrame.Value>
                         	</DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="IncomingCallGrid">
+                        	<DiscreteObjectKeyFrame KeyTime="0">
+                        		<DiscreteObjectKeyFrame.Value>
+                        			<Visibility>Collapsed</Visibility>
+                        		</DiscreteObjectKeyFrame.Value>
+                        	</DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
+                </VisualState>
+                <VisualState x:Name="IncomingCall">
+                	<Storyboard>
+                		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="OutgoingCallGrid">
+                			<DiscreteObjectKeyFrame KeyTime="0">
+                				<DiscreteObjectKeyFrame.Value>
+                					<Visibility>Collapsed</Visibility>
+                				</DiscreteObjectKeyFrame.Value>
+                			</DiscreteObjectKeyFrame>
+                		</ObjectAnimationUsingKeyFrames>
+                		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="HangUpButton">
+                			<DiscreteObjectKeyFrame KeyTime="0">
+                				<DiscreteObjectKeyFrame.Value>
+                					<Visibility>Collapsed</Visibility>
+                				</DiscreteObjectKeyFrame.Value>
+                			</DiscreteObjectKeyFrame>
+                		</ObjectAnimationUsingKeyFrames>
+                		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="MuteButton">
+                			<DiscreteObjectKeyFrame KeyTime="0">
+                				<DiscreteObjectKeyFrame.Value>
+                					<Visibility>Collapsed</Visibility>
+                				</DiscreteObjectKeyFrame.Value>
+                			</DiscreteObjectKeyFrame>
+                		</ObjectAnimationUsingKeyFrames>
+                		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CallButton">
+                			<DiscreteObjectKeyFrame KeyTime="0">
+                				<DiscreteObjectKeyFrame.Value>
+                					<Visibility>Collapsed</Visibility>
+                				</DiscreteObjectKeyFrame.Value>
+                			</DiscreteObjectKeyFrame>
+                		</ObjectAnimationUsingKeyFrames>
+                	</Storyboard>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
@@ -200,8 +258,22 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock FontSize="30" Grid.Row="0" VerticalAlignment="Bottom">Calling...</TextBlock>
-                <Button Grid.Row="1" x:Name="AcceptButton" FontFamily="Segoe UI Symbol" Template="{StaticResource RoundButtonTemplate}"
+                <Button Grid.Row="1" x:Name="CancelCallButton" FontFamily="Segoe UI Symbol" Template="{StaticResource RoundButtonTemplate}"
                         Height="35" Width="35" Content="&#xE10A;" Padding="0" HorizontalAlignment="Center" Command="{Binding Call.StopCallByUserCommand}" VerticalAlignment="Top"/>
+            </Grid>
+            <Grid x:Name="IncomingCallGrid" Grid.Column="2" Margin="0,0,20,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <TextBlock FontSize="30" Grid.Row="0" VerticalAlignment="Bottom">Incoming call!</TextBlock>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Button x:Name="AcceptButton" FontFamily="Segoe UI Symbol" Template="{StaticResource RoundButtonTemplate}"
+                    Height="35" Width="35" Content="&#xE10B;" Padding="0" Command="{Binding Call.AcceptCallCommand}"  />
+                    <Button x:Name="DeclineButton" FontFamily="Segoe UI Symbol" Template="{StaticResource RoundButtonTemplate}"
+                    Height="35" Width="35" Content="&#xE10A;" Padding="0" Command="{Binding Call.CancelCallCommand}"  />
+                </StackPanel>
             </Grid>
 
             <Button x:Name="SendFileButton" Grid.Column="3" HorizontalAlignment="Center" Content="&#xE1A5;"
