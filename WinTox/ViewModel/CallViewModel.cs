@@ -112,13 +112,16 @@ namespace WinTox.ViewModel
             if (e.FriendNumber != _friendNumber)
                 return;
 
-            if (e.State.HasFlag(ToxAvFriendCallState.ReceivingAudio))
+            if (e.State.HasFlag(ToxAvFriendCallState.ReceivingAudio) ||
+                e.State.HasFlag(ToxAvFriendCallState.SendingAudio))
             {
                 await
                     CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                         () => { State = CallState.DuringCall; });
+            }
 
-
+            if (e.State.HasFlag(ToxAvFriendCallState.ReceivingAudio))
+            {
                 var microphoneIsAvailabe = await IsMicrophoneAvailable();
                 if (!microphoneIsAvailabe)
                 {
@@ -132,10 +135,6 @@ namespace WinTox.ViewModel
 
             if (e.State.HasFlag(ToxAvFriendCallState.SendingAudio))
             {
-                await
-                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                        () => { State = CallState.DuringCall; });
-
                 TrySetupAudioReceiving();
             }
         }
