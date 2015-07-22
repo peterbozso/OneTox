@@ -81,7 +81,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Copy ID to clipboard" Click="CopyButtonClick" Width="170" />
+            <Button Grid.Column="0" Content="Copy ID to clipboard" Click="CopyButtonClick" Width="170" TabIndex="0" />
             <TextBlock Grid.Column="1" x:Name="ClipboardCopyConfirm" Text="" FontFamily="Segoe UI Symbol"
                        FontSize="16" VerticalAlignment="Center" Margin="5,0,0,0" Visibility="Collapsed" />
         </Grid>
