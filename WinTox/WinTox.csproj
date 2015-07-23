@@ -162,6 +162,9 @@
     <Compile Include="View\ProfileSettingsFlyout.xaml.cs">
       <DependentUpon>ProfileSettingsFlyout.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\UserControls\AudioCallBlock.xaml.cs">
+      <DependentUpon>AudioCallBlock.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\UserControls\FileTransfers\FileTransferRibbon.xaml.cs">
       <DependentUpon>FileTransferRibbon.xaml</DependentUpon>
     </Compile>
@@ -244,6 +247,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="View\ProfileSettingsFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\AudioCallBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

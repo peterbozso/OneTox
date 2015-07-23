@@ -47,159 +47,6 @@
     </Page.Resources>
 
     <Grid Background="{StaticResource ChatBackgroundColor}">
-        <Interactivity:Interaction.Behaviors>
-            <Core:DataTriggerBehavior
-                Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
-                Value="Default">
-                <Core:GoToStateAction StateName="Default" />
-            </Core:DataTriggerBehavior>
-            <Core:DataTriggerBehavior
-                Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
-                Value="DuringCall">
-                <Core:GoToStateAction StateName="DuringCall" />
-            </Core:DataTriggerBehavior>
-            <Core:DataTriggerBehavior
-                Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
-                Value="OutgoingCall">
-                <Core:GoToStateAction StateName="OutgoingCall" />
-            </Core:DataTriggerBehavior>
-            <Core:DataTriggerBehavior
-                Binding="{Binding Call.State, Converter={StaticResource CallStateToStringConverter}}"
-                Value="IncomingCall">
-                <Core:GoToStateAction StateName="IncomingCall" />
-            </Core:DataTriggerBehavior>
-        </Interactivity:Interaction.Behaviors>
-
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="VisualStateGroup">
-                <VisualState x:Name="Default">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="MuteButton">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="HangUpButton">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="OutgoingCallGrid">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<Visibility>Collapsed</Visibility>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="IncomingCallGrid">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<Visibility>Collapsed</Visibility>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-                <VisualState x:Name="DuringCall">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="CallButton">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="OutgoingCallGrid">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<Visibility>Collapsed</Visibility>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="IncomingCallGrid">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<Visibility>Collapsed</Visibility>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-                <VisualState x:Name="OutgoingCall">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="MuteButton">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="HangUpButton">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<Visibility>Collapsed</Visibility>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CallButton">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<Visibility>Collapsed</Visibility>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="IncomingCallGrid">
-                        	<DiscreteObjectKeyFrame KeyTime="0">
-                        		<DiscreteObjectKeyFrame.Value>
-                        			<Visibility>Collapsed</Visibility>
-                        		</DiscreteObjectKeyFrame.Value>
-                        	</DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-                <VisualState x:Name="IncomingCall">
-                	<Storyboard>
-                		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="OutgoingCallGrid">
-                			<DiscreteObjectKeyFrame KeyTime="0">
-                				<DiscreteObjectKeyFrame.Value>
-                					<Visibility>Collapsed</Visibility>
-                				</DiscreteObjectKeyFrame.Value>
-                			</DiscreteObjectKeyFrame>
-                		</ObjectAnimationUsingKeyFrames>
-                		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="HangUpButton">
-                			<DiscreteObjectKeyFrame KeyTime="0">
-                				<DiscreteObjectKeyFrame.Value>
-                					<Visibility>Collapsed</Visibility>
-                				</DiscreteObjectKeyFrame.Value>
-                			</DiscreteObjectKeyFrame>
-                		</ObjectAnimationUsingKeyFrames>
-                		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="MuteButton">
-                			<DiscreteObjectKeyFrame KeyTime="0">
-                				<DiscreteObjectKeyFrame.Value>
-                					<Visibility>Collapsed</Visibility>
-                				</DiscreteObjectKeyFrame.Value>
-                			</DiscreteObjectKeyFrame>
-                		</ObjectAnimationUsingKeyFrames>
-                		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CallButton">
-                			<DiscreteObjectKeyFrame KeyTime="0">
-                				<DiscreteObjectKeyFrame.Value>
-                					<Visibility>Collapsed</Visibility>
-                				</DiscreteObjectKeyFrame.Value>
-                			</DiscreteObjectKeyFrame>
-                		</ObjectAnimationUsingKeyFrames>
-                	</Storyboard>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -224,62 +71,20 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <friends:FriendInfo x:Name="FriendInfoControl" Grid.Column="0" HorizontalAlignment="Left"
                                 Margin="0,0,20,0" />
 
-            <Button x:Name="CallButton" Grid.Column="1" HorizontalAlignment="Center" Content="&#xE13A;"
-                    Margin="0,0,20,0"
-                    FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.StartCallByUserCommand}"
-                    IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
-                    Height="71" RenderTransformOrigin="0.5,0.5">
-                <Button.RenderTransform>
-                    <CompositeTransform />
-                </Button.RenderTransform>
-            </Button>
-            <Button x:Name="MuteButton" Grid.Column="1" HorizontalAlignment="Center" Content="&#xE1D6;"
-                    Margin="0,0,20,0"
-                    FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.ChangeMuteCommand}"
-                    IsEnabled="{Binding IsConnected}"
-                    Template="{StaticResource RoundButtonWithoutPointerOverBackgroundColorChangeTemplate}"
-                    Width="71" Height="71"
-                    Background="{Binding Call.IsMuted, Converter={StaticResource IsMutedToBackgroundColorConverter}}" />
-            <Button x:Name="HangUpButton" Grid.Column="2" HorizontalAlignment="Center" Content="&#xE137;"
-                    Margin="0,0,20,0"
-                    FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Call.StopCallByUserCommand}"
-                    IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
-                    Height="71" />
-            <Grid x:Name="OutgoingCallGrid" Grid.Column="2" Margin="0,0,20,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
+            <ContentControl x:Name="AudioCallControl" Grid.Column="1" IsEnabled="{Binding IsConnected}"
+                            VerticalAlignment="Center">
+                <userControls:AudioCallBlock DataContext="{Binding Call}" />
+            </ContentControl>
 
-                <TextBlock FontSize="30" Grid.Row="0" VerticalAlignment="Bottom">Calling...</TextBlock>
-                <Button Grid.Row="1" x:Name="CancelCallButton" FontFamily="Segoe UI Symbol" Template="{StaticResource RoundButtonTemplate}"
-                        Height="35" Width="35" Content="&#xE10A;" Padding="0" HorizontalAlignment="Center" Command="{Binding Call.StopCallByUserCommand}" VerticalAlignment="Top"/>
-            </Grid>
-            <Grid x:Name="IncomingCallGrid" Grid.Column="2" Margin="0,0,20,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-
-                <TextBlock FontSize="30" Grid.Row="0" VerticalAlignment="Bottom">Incoming call!</TextBlock>
-                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-                    <Button x:Name="AcceptButton" FontFamily="Segoe UI Symbol" Template="{StaticResource RoundButtonTemplate}"
-                    Height="35" Width="35" Content="&#xE10B;" Padding="0" Command="{Binding Call.AcceptCallCommand}" Margin="0,0,10,0"  />
-                    <Button x:Name="DeclineButton" FontFamily="Segoe UI Symbol" Template="{StaticResource RoundButtonTemplate}"
-                    Height="35" Width="35" Content="&#xE10A;" Padding="0" Command="{Binding Call.CancelCallCommand}" Margin="10,0,0,0"  />
-                </StackPanel>
-            </Grid>
-
-            <Button x:Name="SendFileButton" Grid.Column="3" HorizontalAlignment="Center" Content="&#xE1A5;"
+            <Button x:Name="SendFileButton" Grid.Column="2" HorizontalAlignment="Center" Content="&#xE1A5;"
                     Margin="0,0,20,0" FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
                     IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
-                    Height="71" />
+                    Height="71" VerticalAlignment="Center" />
         </Grid>
 
         <!-- Current file transfer(s) -->

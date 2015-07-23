@@ -10,7 +10,6 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
-using WinTox.Converters;
 using WinTox.ViewModel.Friends;
 using WinTox.ViewModel.Messaging;
 
@@ -342,45 +341,12 @@ namespace WinTox.View
             _scrollManager = new ScrollManager(MessagesListView, _friendViewModel.Conversation,
                 MessageAddedNotificationGrid, MessageAddedNotificationAnimation);
             _scrollManager.RegisterHandlers();
-
-            var stateString =
-                (string)
-                    new CallStateToStringConverter().Convert(_friendViewModel.Call.State, typeof (string), null, null);
-            VisualStateManager.GoToState(this, stateString, false);
-
-            _friendViewModel.Call.StartCallByUserFailed += StartCallByUserFailedHandler;
         }
 
         private void TearDownView()
         {
             _inputPaneChangeHandler.DeregisterHandlers();
             _scrollManager.DeregisterHandlers();
-            _friendViewModel.Call.StartCallByUserFailed -= StartCallByUserFailedHandler;
-        }
-
-        #endregion
-
-        #region Call error handling
-
-        private void StartCallByUserFailedHandler(object sender, string errorMessage)
-        {
-            var contentGrid = GetCallByUserFailedFlyoutContent(errorMessage);
-            var flyout = new Flyout {Content = contentGrid};
-            flyout.ShowAt(CallButton);
-        }
-
-        private Grid GetCallByUserFailedFlyoutContent(string errorMessage)
-        {
-            var contentGrid = new Grid {Width = 300};
-
-            contentGrid.Children.Add(new TextBlock
-            {
-                Text = errorMessage,
-                FontSize = 15,
-                TextWrapping = TextWrapping.WrapWholeWords
-            });
-
-            return contentGrid;
         }
 
         #endregion
