@@ -256,25 +256,25 @@ namespace WinTox.ViewModel
             }
             catch (UnauthorizedAccessException)
             {
-                RaiseStartCallByUserFailed(
+                RaiseMicrophoneIsNotAvailable(
                     "Your microphone is currently turned off. To change your microphone setting, open the settings charm and tap permissions. " +
                     "Then tap the mute button to start using microphone again.");
                 return false;
             }
             catch (Exception)
             {
-                RaiseStartCallByUserFailed(
+                RaiseMicrophoneIsNotAvailable(
                     "You do not have the required microphone present on your system.");
                 return false;
             }
         }
 
-        private async void RaiseStartCallByUserFailed(string errorMessage)
+        private async void RaiseMicrophoneIsNotAvailable(string errorMessage)
         {
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (StartCallByUserFailed != null)
-                    StartCallByUserFailed(this, errorMessage);
+                if (MicrophoneIsNotAvailable != null)
+                    MicrophoneIsNotAvailable(this, errorMessage);
             });
         }
 
@@ -306,7 +306,7 @@ namespace WinTox.ViewModel
             }
         }
 
-        public event EventHandler<string> StartCallByUserFailed;
+        public event EventHandler<string> MicrophoneIsNotAvailable;
 
         #endregion
 

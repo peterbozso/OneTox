@@ -16,7 +16,7 @@ namespace WinTox.View.UserControls
         private void AudioCallBlockLoaded(object sender, RoutedEventArgs e)
         {
             var callViewModel = (CallViewModel) DataContext;
-            callViewModel.StartCallByUserFailed += StartCallByUserFailedHandler;
+            callViewModel.MicrophoneIsNotAvailable += MicrophoneIsNotAvailableHandler;
             callViewModel.StartRinging += StartRingingHandler;
             callViewModel.StopRinging += StopRingingHandler;
 
@@ -28,7 +28,7 @@ namespace WinTox.View.UserControls
         private void AudioCallBlockUnloaded(object sender, RoutedEventArgs e)
         {
             var callViewModel = (CallViewModel) DataContext;
-            callViewModel.StartCallByUserFailed -= StartCallByUserFailedHandler;
+            callViewModel.MicrophoneIsNotAvailable -= MicrophoneIsNotAvailableHandler;
             callViewModel.StartRinging -= StartRingingHandler;
             callViewModel.StopRinging -= StopRingingHandler;
         }
@@ -43,14 +43,14 @@ namespace WinTox.View.UserControls
             RingPlayer.Stop();
         }
 
-        private void StartCallByUserFailedHandler(object sender, string errorMessage)
+        private void MicrophoneIsNotAvailableHandler(object sender, string errorMessage)
         {
-            var contentGrid = GetCallByUserFailedFlyoutContent(errorMessage);
+            var contentGrid = GetMicrophoneIsNotAvailableFlyoutContent(errorMessage);
             var flyout = new Flyout {Content = contentGrid};
             flyout.ShowAt(CallButton);
         }
 
-        private Grid GetCallByUserFailedFlyoutContent(string errorMessage)
+        private Grid GetMicrophoneIsNotAvailableFlyoutContent(string errorMessage)
         {
             var contentGrid = new Grid {Width = 300};
 
