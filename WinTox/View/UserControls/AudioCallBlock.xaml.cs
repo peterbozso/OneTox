@@ -62,8 +62,11 @@ namespace WinTox.View.UserControls
 
         private void MicrophoneIsNotAvailableHandler(object sender, string errorMessage)
         {
-            var contentGrid = GetMicrophoneIsNotAvailableFlyoutContent(errorMessage);
-            _microphoneIsNotAvailableFylout = new Flyout {Content = contentGrid};
+            if (_microphoneIsNotAvailableFylout == null)
+            {
+                var contentGrid = GetMicrophoneIsNotAvailableFlyoutContent(errorMessage);
+                _microphoneIsNotAvailableFylout = new Flyout {Content = contentGrid};
+            }
             _microphoneIsNotAvailableFylout.ShowAt(MuteButton);
         }
 
