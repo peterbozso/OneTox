@@ -67,7 +67,7 @@
                    Tapped="UserAvatarTapped" />
             <Button Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe UI Symbol"
                     Background="Transparent"
-                    Content="" Click="RemoveAvatarButtonClick"
+                    Content="" Command="{Binding RemoveAvatarCommand}"
                     Visibility="{Binding IsAvatarSet, Converter={StaticResource BoolToVisibilityConverter}}"
                     Padding="0" />
         </Grid>
@@ -94,7 +94,7 @@
                 </Flyout>
             </Button.Flyout>
         </Button>
-        <Button Content="Randomize nospam" Click="NospamButtonClick" Width="170"
+        <Button Content="Randomize nospam" Command="{Binding RandomizeNoSpamCommand}" Width="170"
                 ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." />
 
         <!-- Profile management -->

@@ -1,22 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
-using Windows.Storage.Pickers;
 using Windows.System;
 using Windows.UI.Core;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
 using WinTox.ViewModel.ProfileSettings;
-using ZXing;
-using ZXing.Common;
 
 namespace WinTox.View
 {
@@ -34,22 +26,15 @@ namespace WinTox.View
 
         private void NameTextBoxLostFocus(object sender, RoutedEventArgs e)
         {
-            var textBox = sender as TextBox;
-            if (textBox.Text == String.Empty)
-                textBox.Text = _viewModel.Name;
+            var nameTextBox = sender as TextBox;
+            if (nameTextBox.Text == String.Empty)
+                nameTextBox.Text = _viewModel.Name;
         }
 
         private void CopyButtonClick(object sender, RoutedEventArgs e)
         {
-            CopyToxIdToClipboard();
+            _viewModel.CopyToxIdToClipboard();
             ShowCopyConfirm();
-        }
-
-        private void CopyToxIdToClipboard()
-        {
-            var dataPackage = new DataPackage {RequestedOperation = DataPackageOperation.Copy};
-            dataPackage.SetText(_viewModel.Id.ToString());
-            Clipboard.SetContent(dataPackage);
         }
 
         private void ShowCopyConfirm()
@@ -73,22 +58,7 @@ namespace WinTox.View
 
         private void QrCodeButtonClick(object sender, RoutedEventArgs e)
         {
-            var writer = new BarcodeWriter
-            {
-                Format = BarcodeFormat.QR_CODE,
-                Options = new EncodingOptions
-                {
-                    Height = 200,
-                    Width = 200
-                }
-            };
-            var qrCode = writer.Write(_viewModel.Id.ToString()).ToBitmap() as WriteableBitmap;
-            QrCodeImage.Source = qrCode;
-        }
-
-        private void NospamButtonClick(object sender, RoutedEventArgs e)
-        {
-            _viewModel.RandomizeNospam();
+            QrCodeImage.Source = _viewModel.GetQrCodeForToxId();
         }
 
         private async void ProfileSettingsFlyoutLostFocus(object sender, RoutedEventArgs e)
@@ -98,39 +68,17 @@ namespace WinTox.View
 
         private async void UserAvatarTapped(object sender, TappedRoutedEventArgs e)
         {
-            var newAvatarFile = await PickUserAvatar();
-            if (newAvatarFile != null)
-            {
-                var errorMessage = await _viewModel.LoadUserAvatar(newAvatarFile);
-                if (errorMessage != String.Empty)
-                {
-                    var msgDialog = new MessageDialog(errorMessage, "Unsuccesfull loading");
-                    await msgDialog.ShowAsync();
-                }
-            }
+            await _viewModel.ChangeAvatar();
 
-            // Show the settings again when we return, in case the user want to do more than just changing the picture.
+            // Show the settings again when we return, in case the user want to do more than just changing his/her avatar.
             App.ShowProfileSettingsFlyout();
-        }
-
-        private async Task<StorageFile> PickUserAvatar()
-        {
-            var openPicker = new FileOpenPicker();
-            openPicker.FileTypeFilter.Add(".png");
-            return await openPicker.PickSingleFileAsync();
-        }
-
-        private async void RemoveAvatarButtonClick(object sender, RoutedEventArgs e)
-        {
-            await _viewModel.RemoveAvatar();
         }
 
         private void NameTextBoxKeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == VirtualKey.Enter && NameTextBox.Text != String.Empty)
             {
-                // See MessageInputKeyDown()!
-                if (e.KeyStatus.RepeatCount != 1)
+                if (e.KeyStatus.RepeatCount != 1) // See MessageInputKeyDown()!
                     return;
 
                 _viewModel.Name = NameTextBox.Text;
@@ -142,8 +90,7 @@ namespace WinTox.View
         {
             if (e.Key == VirtualKey.Enter && StatusMessageTextBox.Text != String.Empty)
             {
-                // See MessageInputKeyDown()!
-                if (e.KeyStatus.RepeatCount != 1)
+                if (e.KeyStatus.RepeatCount != 1) // See MessageInputKeyDown()!
                     return;
 
                 _viewModel.StatusMessage = StatusMessageTextBox.Text;
