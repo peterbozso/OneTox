@@ -1,4 +1,5 @@
 ﻿using Windows.Storage;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using WinTox.ViewModel.ProfileSettings;
@@ -25,10 +26,19 @@ namespace WinTox.View.UserControls
 
         private async void ImportButtonClick(object sender, RoutedEventArgs e)
         {
-            await _viewModel.ImportProfile();
+            try
+            {
+                await _viewModel.ImportProfile();
 
-            // Show the settings again when we return, in case the user want to do more than just exporting once.
-            App.ShowProfileSettingsFlyout();
+                // Show the settings again when we return, in case the user want to do more than just exporting once.
+                App.ShowProfileSettingsFlyout();
+            }
+            catch
+            {
+                var msgDialog = new MessageDialog("Importing profile failed because of corrupted .tox file.",
+                    "Error occurred");
+                msgDialog.ShowAsync();
+            }
         }
 
         private async void ProfileNameListItemClick(object sender, ItemClickEventArgs e)
