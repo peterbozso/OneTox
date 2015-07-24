@@ -309,7 +309,7 @@
             <Button Grid.Row="1" x:Name="EndCallButton" FontFamily="Segoe UI Symbol"
                     Template="{StaticResource RoundButtonTemplate}"
                     Height="35" Width="35" Content="&#xE10A;" Padding="0" HorizontalAlignment="Center"
-                    Command="{Binding StopCallByUserCommand}" VerticalAlignment="Top" />
+                    Command="{Binding StopCallCommand}" VerticalAlignment="Top" />
         </Grid>
         <Grid x:Name="IncomingCallGrid" Grid.Column="1" Margin="0,0,20,0">
             <Grid.RowDefinitions>
