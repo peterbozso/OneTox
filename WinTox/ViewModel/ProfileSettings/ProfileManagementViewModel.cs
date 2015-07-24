@@ -139,7 +139,6 @@ namespace WinTox.ViewModel.ProfileSettings
             return await openPicker.PickSingleFileAsync();
         }
 
-
         public async Task SetCurrentProfile(StorageFile file)
         {
             var data = (await FileIO.ReadBufferAsync(file)).ToArray();
