@@ -8,7 +8,7 @@ namespace WinTox.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var state = (CallState) value;
+            var state = (CallViewModel.CallState) value;
             return state.ToString();
         }
 

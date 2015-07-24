@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Media.Capture;
@@ -14,35 +13,15 @@ using WinTox.Model;
 
 namespace WinTox.ViewModel
 {
-    public enum CallState
-    {
-        Default,
-        DuringCall,
-        OutgoingCall,
-        IncomingCall
-    }
-
     public class CallViewModel : ViewModelBase
     {
-        private const int KAudioLength = 20; // Based on measurements. Take it with a grain of salt!
-        private const string KRingInFileName = "ring-in.wav";
-        private const string KRingOutFileName = "ring-out.wav";
-        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
-        private readonly int _friendNumber;
-        private RelayCommand _acceptCallCommand;
-        private int _audioFrameSize;
-        private int _bitRate;
-        private RelayCommand _cancelCallCommand;
-        private RelayCommand _changeMuteCommand;
-        private bool _isMuted;
-        private IWavePlayer _player;
-        private IWaveIn _recorder;
-        private int _samplingRate;
-        private List<short> _sendBuffer;
-        private RelayCommand _startCallByUserCommand;
-        private CallState _state;
-        private RelayCommand _stopCallByUserCommand;
-        private BufferedWaveProvider _waveProvider;
+        public enum CallState
+        {
+            Default,
+            DuringCall,
+            OutgoingCall,
+            IncomingCall
+        }
 
         public CallViewModel(int friendNumber)
         {
@@ -52,6 +31,16 @@ namespace WinTox.ViewModel
             ToxAvModel.Instance.CallRequestReceived += CallRequestReceivedHandler;
             SetAudioValues();
         }
+
+        private void SetAudioValues()
+        {
+            // TODO: Set these based on app settings!
+            _bitRate = 48;
+            _samplingRate = _bitRate*1000;
+            _audioFrameSize = _samplingRate*KAudioLength/1000;
+        }
+
+        #region Properties
 
         public bool IsMuted
         {
@@ -87,6 +76,53 @@ namespace WinTox.ViewModel
                 RaisePropertyChanged();
             }
         }
+
+        #endregion
+
+        #region Fields
+
+        private const int KAudioLength = 20; // Based on measurements. Take it with a grain of salt!
+        private const string KRingInFileName = "ring-in.wav";
+        private const string KRingOutFileName = "ring-out.wav";
+        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+        private readonly int _friendNumber;
+        private RelayCommand _acceptCallCommand;
+        private int _audioFrameSize;
+        private int _bitRate;
+        private RelayCommand _cancelCallCommand;
+        private RelayCommand _changeMuteCommand;
+        private bool _isMuted;
+        private IWavePlayer _player;
+        private IWaveIn _recorder;
+        private int _samplingRate;
+        private List<short> _sendBuffer;
+        private RelayCommand _startCallByUserCommand;
+        private CallState _state;
+        private RelayCommand _stopCallByUserCommand;
+        private BufferedWaveProvider _waveProvider;
+
+        #endregion
+
+        #region Ringing events
+
+        public event EventHandler<string> StartRinging;
+        public event EventHandler StopRinging;
+
+        private void RaiseStartRinging(string ringFileName)
+        {
+            if (StartRinging != null)
+                StartRinging(this, ringFileName);
+        }
+
+        private void RaiseStopRinging()
+        {
+            if (StopRinging != null)
+                StopRinging(this, EventArgs.Empty);
+        }
+
+        #endregion
+
+        #region Commands
 
         public RelayCommand ChangeMuteCommand
         {
@@ -131,7 +167,7 @@ namespace WinTox.ViewModel
             }
         }
 
-        public RelayCommand CancelCallCommand
+        public RelayCommand DeclineCallCommand
         {
             get
             {
@@ -143,13 +179,38 @@ namespace WinTox.ViewModel
             }
         }
 
-        private void SetAudioValues()
+        public RelayCommand StartCallCommand
         {
-            // TODO: Set these based on app settings!
-            _bitRate = 48;
-            _samplingRate = _bitRate*1000;
-            _audioFrameSize = _samplingRate*KAudioLength/1000;
+            get
+            {
+                return _startCallByUserCommand ??
+                       (_startCallByUserCommand = new RelayCommand(() =>
+                       {
+                           ToxAvModel.Instance.Call(_friendNumber, _bitRate, 0);
+                           IsMuted = false;
+                           State = CallState.OutgoingCall;
+                       }));
+            }
         }
+
+        public RelayCommand StopCallCommand
+        {
+            get
+            {
+                return _stopCallByUserCommand ??
+                       (_stopCallByUserCommand = new RelayCommand(() =>
+                       {
+                           StopRecording();
+                           StopPlaying();
+                           ToxAvModel.Instance.SendControl(_friendNumber, ToxAvCallControl.Cancel);
+                           State = CallState.Default;
+                       }));
+            }
+        }
+
+        #endregion
+
+        #region Events handlers
 
         private async void CallStateChangedHandler(object sender, ToxAvEventArgs.CallStateEventArgs e)
         {
@@ -188,57 +249,35 @@ namespace WinTox.ViewModel
                 () => { State = CallState.IncomingCall; });
         }
 
-        private void RaiseStartRinging(string ringFileName)
-        {
-            if (StartRinging != null)
-                StartRinging(this, ringFileName);
-        }
-
-        private void RaiseStopRinging()
-        {
-            if (StopRinging != null)
-                StopRinging(this, EventArgs.Empty);
-        }
-
-        public event EventHandler<string> StartRinging;
-        public event EventHandler StopRinging;
+        #endregion
 
         #region Audio sending
 
-        private void DataAvailableHandler(object sender, WaveInEventArgs e)
+        private async Task TryStartRecording()
         {
-            // It doesn't make much sense, but WaveInEventArgs.Buffer.Length != WaveInEventArgs.BytesRecorded.
-            // Let's just call that a feature of NAudio... ;)
-            var shorts = new short[e.BytesRecorded/2];
-            Buffer.BlockCopy(e.Buffer, 0, shorts, 0, e.BytesRecorded);
-
-            _sendBuffer.AddRange(shorts);
-
-            if (_sendBuffer.Count == _audioFrameSize)
+            if (_recorder == null)
             {
-                ToxAvModel.Instance.SendAudioFrame(_friendNumber,
-                    new ToxAvAudioFrame(_sendBuffer.ToArray(), _samplingRate, 1));
-                _sendBuffer.Clear();
-            }
-        }
+                var microphoneIsAvailabe = await IsMicrophoneAvailable();
+                if (microphoneIsAvailabe)
+                {
+                    _sendBuffer = new List<short>();
 
-        #endregion
+                    _recorder = new WasapiCaptureRT
+                    {
+                        WaveFormat = new WaveFormat(_samplingRate, 16, 1)
+                    };
+                    _recorder.DataAvailable += DataAvailableHandler;
 
-        #region Starting a call by the user
+                    _recorder.StartRecording();
 
-        public RelayCommand StartCallByUserCommand
-        {
-            get
-            {
-                return _startCallByUserCommand ??
-                       (_startCallByUserCommand = new RelayCommand(() =>
-                       {
-                           var successfulCall = ToxAvModel.Instance.Call(_friendNumber, _bitRate, 0);
-                           Debug.WriteLine("Calling " + _friendNumber + " " + successfulCall);
-
-                           IsMuted = false;
-                           State = CallState.OutgoingCall;
-                       }));
+                    await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                        () => { IsMuted = false; });
+                }
+                else
+                {
+                    await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                        () => { IsMuted = true; });
+                }
             }
         }
 
@@ -278,52 +317,22 @@ namespace WinTox.ViewModel
             });
         }
 
-        private async Task TryStartRecording()
-        {
-            if (_recorder == null)
-            {
-                var microphoneIsAvailabe = await IsMicrophoneAvailable();
-                if (microphoneIsAvailabe)
-                {
-                    _sendBuffer = new List<short>();
-
-                    _recorder = new WasapiCaptureRT
-                    {
-                        WaveFormat = new WaveFormat(_samplingRate, 16, 1)
-                    };
-                    _recorder.DataAvailable += DataAvailableHandler;
-
-                    _recorder.StartRecording();
-
-                    await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                        () => { IsMuted = false; });
-                }
-                else
-                {
-                    await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                        () => { IsMuted = true; });
-                }
-            }
-        }
-
         public event EventHandler<string> MicrophoneIsNotAvailable;
 
-        #endregion
-
-        #region Stopping a call by the user
-
-        public RelayCommand StopCallByUserCommand
+        private void DataAvailableHandler(object sender, WaveInEventArgs e)
         {
-            get
+            // It doesn't make much sense, but WaveInEventArgs.Buffer.Length != WaveInEventArgs.BytesRecorded.
+            // Let's just call that a feature of NAudio... ;)
+            var shorts = new short[e.BytesRecorded/2];
+            Buffer.BlockCopy(e.Buffer, 0, shorts, 0, e.BytesRecorded);
+
+            _sendBuffer.AddRange(shorts);
+
+            if (_sendBuffer.Count == _audioFrameSize)
             {
-                return _stopCallByUserCommand ??
-                       (_stopCallByUserCommand = new RelayCommand(() =>
-                       {
-                           StopRecording();
-                           StopPlaying();
-                           ToxAvModel.Instance.SendControl(_friendNumber, ToxAvCallControl.Cancel);
-                           State = CallState.Default;
-                       }));
+                ToxAvModel.Instance.SendAudioFrame(_friendNumber,
+                    new ToxAvAudioFrame(_sendBuffer.ToArray(), _samplingRate, 1));
+                _sendBuffer.Clear();
             }
         }
 
