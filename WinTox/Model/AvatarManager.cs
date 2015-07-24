@@ -49,7 +49,7 @@ namespace WinTox.Model
             {
                 _isUserAvatarSet = value;
                 if (IsUserAvatarSetChanged != null)
-                    IsUserAvatarSetChanged(this, new EventArgs());
+                    IsUserAvatarSetChanged(this, EventArgs.Empty);
             }
         }
 
@@ -60,7 +60,7 @@ namespace WinTox.Model
             {
                 _userAvatar = value;
                 if (UserAvatarChanged != null)
-                    UserAvatarChanged(this, new EventArgs());
+                    UserAvatarChanged(this, EventArgs.Empty);
             }
         }
 
