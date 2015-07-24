@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using WinTox.Converters;
@@ -8,6 +9,9 @@ namespace WinTox.View.UserControls
 {
     public sealed partial class AudioCallBlock : UserControl
     {
+        private CallViewModel _callViewModel;
+        private Flyout _microphoneIsNotAvailableFylout;
+
         public AudioCallBlock()
         {
             InitializeComponent();
@@ -15,22 +19,24 @@ namespace WinTox.View.UserControls
 
         private void AudioCallBlockLoaded(object sender, RoutedEventArgs e)
         {
-            var callViewModel = (CallViewModel) DataContext;
-            callViewModel.MicrophoneIsNotAvailable += MicrophoneIsNotAvailableHandler;
-            callViewModel.StartRinging += StartRingingHandler;
-            callViewModel.StopRinging += StopRingingHandler;
+            _callViewModel = (CallViewModel) DataContext;
+            _callViewModel.MicrophoneIsNotAvailable += MicrophoneIsNotAvailableHandler;
+            _callViewModel.StartRinging += StartRingingHandler;
+            _callViewModel.StopRinging += StopRingingHandler;
+            _callViewModel.PropertyChanged += PropertyChangedHandler;
 
             var state =
-                (string) new CallStateToStringConverter().Convert(callViewModel.State, typeof (string), null, null);
+                (string) new CallStateToStringConverter().Convert(_callViewModel.State, typeof (string), null, null);
             VisualStateManager.GoToState(this, state, false);
         }
 
         private void AudioCallBlockUnloaded(object sender, RoutedEventArgs e)
         {
-            var callViewModel = (CallViewModel) DataContext;
-            callViewModel.MicrophoneIsNotAvailable -= MicrophoneIsNotAvailableHandler;
-            callViewModel.StartRinging -= StartRingingHandler;
-            callViewModel.StopRinging -= StopRingingHandler;
+            _callViewModel = (CallViewModel) DataContext;
+            _callViewModel.MicrophoneIsNotAvailable -= MicrophoneIsNotAvailableHandler;
+            _callViewModel.StartRinging -= StartRingingHandler;
+            _callViewModel.StopRinging -= StopRingingHandler;
+            _callViewModel.PropertyChanged -= PropertyChangedHandler;
         }
 
         private void StartRingingHandler(object sender, string ringFileName)
@@ -43,11 +49,22 @@ namespace WinTox.View.UserControls
             RingPlayer.Stop();
         }
 
+        private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "State" && _callViewModel.State == CallViewModel.CallState.Default)
+            {
+                if (_microphoneIsNotAvailableFylout != null)
+                {
+                    _microphoneIsNotAvailableFylout.Hide();
+                }
+            }
+        }
+
         private void MicrophoneIsNotAvailableHandler(object sender, string errorMessage)
         {
             var contentGrid = GetMicrophoneIsNotAvailableFlyoutContent(errorMessage);
-            var flyout = new Flyout {Content = contentGrid};
-            flyout.ShowAt(MuteButton);
+            _microphoneIsNotAvailableFylout = new Flyout {Content = contentGrid};
+            _microphoneIsNotAvailableFylout.ShowAt(MuteButton);
         }
 
         private Grid GetMicrophoneIsNotAvailableFlyoutContent(string errorMessage)
