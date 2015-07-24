@@ -144,7 +144,7 @@
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="HangUpButton">
+                                                       Storyboard.TargetName="StopCallButton">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
@@ -172,7 +172,7 @@
                 <VisualState x:Name="DuringCall">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="CallButton">
+                                                       Storyboard.TargetName="StartCallButton">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
@@ -208,7 +208,7 @@
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="HangUpButton">
+                                                       Storyboard.TargetName="StopCallButton">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
@@ -216,7 +216,7 @@
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="CallButton">
+                                                       Storyboard.TargetName="StartCallButton">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
@@ -244,7 +244,7 @@
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="HangUpButton">
+                                                       Storyboard.TargetName="StopCallButton">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
@@ -260,7 +260,7 @@
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                       Storyboard.TargetName="CallButton">
+                                                       Storyboard.TargetName="StartCallButton">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
@@ -279,9 +279,9 @@
 
         <MediaElement x:Name="RingPlayer" IsLooping="True" />
 
-        <Button x:Name="CallButton" Grid.Column="0" HorizontalAlignment="Center" Content="&#xE13A;"
+        <Button x:Name="StartCallButton" Grid.Column="0" HorizontalAlignment="Center" Content="&#xE13A;"
                 Margin="0,0,20,0"
-                FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding StartCallByUserCommand}"
+                FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding StartCallCommand}"
                 Template="{StaticResource RoundButtonTemplate}" Width="71"
                 Height="71" RenderTransformOrigin="0.5,0.5">
             <Button.RenderTransform>
@@ -294,9 +294,9 @@
                 Template="{StaticResource RoundButtonWithoutPointerOverBackgroundColorChangeTemplate}"
                 Width="71" Height="71"
                 Background="{Binding IsMuted, Converter={StaticResource IsMutedToBackgroundColorConverter}}" />
-        <Button x:Name="HangUpButton" Grid.Column="1" HorizontalAlignment="Center" Content="&#xE137;"
+        <Button x:Name="StopCallButton" Grid.Column="1" HorizontalAlignment="Center" Content="&#xE137;"
                 Margin="0,0,20,0"
-                FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding StopCallByUserCommand}"
+                FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding StopCallCommand}"
                 Template="{StaticResource RoundButtonTemplate}" Width="71"
                 Height="71" />
         <Grid x:Name="OutgoingCallGrid" Grid.Column="1" Margin="0,0,20,0">
@@ -306,7 +306,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock FontSize="30" Grid.Row="0" VerticalAlignment="Bottom">Calling...</TextBlock>
-            <Button Grid.Row="1" x:Name="CancelCallButton" FontFamily="Segoe UI Symbol"
+            <Button Grid.Row="1" x:Name="EndCallButton" FontFamily="Segoe UI Symbol"
                     Template="{StaticResource RoundButtonTemplate}"
                     Height="35" Width="35" Content="&#xE10A;" Padding="0" HorizontalAlignment="Center"
                     Command="{Binding StopCallByUserCommand}" VerticalAlignment="Top" />
@@ -319,13 +319,13 @@
 
             <TextBlock FontSize="30" Grid.Row="0" VerticalAlignment="Bottom">Incoming call!</TextBlock>
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-                <Button x:Name="AcceptButton" FontFamily="Segoe UI Symbol"
+                <Button x:Name="AcceptCallButton" FontFamily="Segoe UI Symbol"
                         Template="{StaticResource RoundButtonTemplate}"
                         Height="35" Width="35" Content="&#xE10B;" Padding="0" Command="{Binding AcceptCallCommand}"
                         Margin="0,0,10,0" />
-                <Button x:Name="DeclineButton" FontFamily="Segoe UI Symbol"
+                <Button x:Name="DeclineCallButton" FontFamily="Segoe UI Symbol"
                         Template="{StaticResource RoundButtonTemplate}"
-                        Height="35" Width="35" Content="&#xE10A;" Padding="0" Command="{Binding CancelCallCommand}"
+                        Height="35" Width="35" Content="&#xE10A;" Padding="0" Command="{Binding DeclineCallCommand}"
                         Margin="10,0,0,0" />
             </StackPanel>
         </Grid>

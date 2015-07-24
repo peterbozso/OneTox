@@ -47,7 +47,7 @@ namespace WinTox.View.UserControls
         {
             var contentGrid = GetMicrophoneIsNotAvailableFlyoutContent(errorMessage);
             var flyout = new Flyout {Content = contentGrid};
-            flyout.ShowAt(CallButton);
+            flyout.ShowAt(MuteButton);
         }
 
         private Grid GetMicrophoneIsNotAvailableFlyoutContent(string errorMessage)
