@@ -822,7 +822,7 @@
                        Margin="34,0,0,0" />
 
             <Button x:Name="AcceptButton" Width="90" Content="Accept"
-                    Click="AcceptButtonClick" Margin="30,0,0,0" />
+                    Command="{Binding AcceptTransferByUserCommand}" Margin="30,0,0,0" />
             <Button x:Name="PauseButton" Width="90" Content="Pause"
                     Command="{Binding PauseTransferByUserCommand}" Margin="30,0,0,0" />
             <Button x:Name="ResumeButton" Width="90" Content="Resume"
@@ -831,7 +831,7 @@
                     IsEnabled="False" Margin="30,0,0,0" />
         </Grid>
 
-        <Button Grid.Column="3" x:Name="DeclineButton" FontFamily="Segoe UI Symbol"
+        <Button Grid.Column="3" x:Name="CancelButton" FontFamily="Segoe UI Symbol"
                 Template="{StaticResource RoundButtonTemplate}"
                 Margin="22,0,38,0" Height="35" Width="35" Content="&#xE10A;" Padding="0"
                 Command="{Binding CancelTransferByUserCommand}" />

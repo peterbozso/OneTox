@@ -1,5 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
 using Windows.Storage;
+using Windows.Storage.Pickers;
 using WinTox.Common;
 using WinTox.Model;
 
@@ -37,9 +38,10 @@ namespace WinTox.ViewModel.FileTransfers
         private bool _isNotPlaceholder;
         private double _progress;
         private readonly TransferDirection _direction;
+        private RelayCommand _acceptTransferByUserCommand;
+        private RelayCommand _cancelTransferByUserCommand;
         private RelayCommand _pauseTransferByUserCommand;
         private RelayCommand _resumeTransferByUserCommand;
-        private RelayCommand _cancelTransferByUserCommand;
 
         #endregion
 
@@ -114,10 +116,24 @@ namespace WinTox.ViewModel.FileTransfers
 
         #region Changes coming from the View, being relayed to the Model
 
-        public async Task AcceptTransferByUser(StorageFile saveFile)
+        public RelayCommand AcceptTransferByUserCommand
         {
-            State = FileTransferState.Downloading;
-            await _fileTransfers.AcceptTransferByUser(FileNumber, saveFile);
+            get
+            {
+                return _acceptTransferByUserCommand ?? (_acceptTransferByUserCommand = new RelayCommand(async () =>
+                {
+                    var folderPicker = new FolderPicker();
+                    folderPicker.FileTypeFilter.Add("*");
+                    var saveFolder = await folderPicker.PickSingleFolderAsync();
+                    if (saveFolder == null)
+                        return;
+
+                    var saveFile = await saveFolder.CreateFileAsync(Name, CreationCollisionOption.GenerateUniqueName);
+                    await _fileTransfers.AcceptTransferByUser(FileNumber, saveFile);
+
+                    State = FileTransferState.Downloading;
+                }));
+            }
         }
 
         public RelayCommand CancelTransferByUserCommand
