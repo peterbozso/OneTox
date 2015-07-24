@@ -39,6 +39,8 @@ namespace WinTox.View.UserControls
             _callViewModel.PropertyChanged -= PropertyChangedHandler;
         }
 
+        #region Ring event handlers
+
         private void StartRingingHandler(object sender, string ringFileName)
         {
             RingPlayer.Source = new Uri("ms-appx:///Assets/" + ringFileName);
@@ -49,16 +51,9 @@ namespace WinTox.View.UserControls
             RingPlayer.Stop();
         }
 
-        private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "State" && _callViewModel.State == CallViewModel.CallState.Default)
-            {
-                if (_microphoneIsNotAvailableFylout != null)
-                {
-                    _microphoneIsNotAvailableFylout.Hide();
-                }
-            }
-        }
+        #endregion
+
+        #region Microphone availability error handling
 
         private void MicrophoneIsNotAvailableHandler(object sender, string errorMessage)
         {
@@ -83,5 +78,19 @@ namespace WinTox.View.UserControls
 
             return contentGrid;
         }
+
+        private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            // Hide the flyout when the call ends.
+            if (e.PropertyName == "State" && _callViewModel.State == CallViewModel.CallState.Default)
+            {
+                if (_microphoneIsNotAvailableFylout != null)
+                {
+                    _microphoneIsNotAvailableFylout.Hide();
+                }
+            }
+        }
+
+        #endregion
     }
 }
