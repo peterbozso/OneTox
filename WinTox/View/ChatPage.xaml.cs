@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using Windows.Storage.Pickers;
 using Windows.System;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -89,21 +88,6 @@ namespace WinTox.View
                 await _friendViewModel.Conversation.SendMessage(MessageInputTextBox.Text);
                 MessageInputTextBox.Text = String.Empty;
                 e.Handled = true;
-            }
-        }
-
-        private async void SendFileButtonClick(object sender, RoutedEventArgs e)
-        {
-            var openPicker = new FileOpenPicker();
-            openPicker.FileTypeFilter.Add("*");
-
-            var files = await openPicker.PickMultipleFilesAsync();
-            if (files.Count == 0)
-                return;
-
-            foreach (var file in files)
-            {
-                await _friendViewModel.FileTransfers.SendFile(file);
             }
         }
 

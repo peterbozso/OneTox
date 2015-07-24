@@ -82,7 +82,7 @@
             </ContentControl>
 
             <Button x:Name="SendFileButton" Grid.Column="2" HorizontalAlignment="Center" Content="&#xE1A5;"
-                    Margin="0,0,20,0" FontFamily="Segoe UI Symbol" FontSize="30" Click="SendFileButtonClick"
+                    Margin="0,0,20,0" FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding FileTransfers.SendFilesCommand}"
                     IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
                     Height="71" VerticalAlignment="Center" />
         </Grid>

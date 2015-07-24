@@ -5,9 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using SharpTox.Core;
+using WinTox.Common;
 using WinTox.Model;
 
 namespace WinTox.ViewModel.FileTransfers
@@ -208,7 +210,30 @@ namespace WinTox.ViewModel.FileTransfers
 
         #region Changes coming from the View, being relayed to the Model
 
-        public async Task SendFile(StorageFile file)
+        private RelayCommand _sendFilesCommand;
+
+        public RelayCommand SendFilesCommand
+        {
+            get
+            {
+                return _sendFilesCommand ?? (_sendFilesCommand = new RelayCommand(async () =>
+                {
+                    var openPicker = new FileOpenPicker();
+                    openPicker.FileTypeFilter.Add("*");
+
+                    var files = await openPicker.PickMultipleFilesAsync();
+                    if (files.Count == 0)
+                        return;
+
+                    foreach (var file in files)
+                    {
+                        await SendFile(file);
+                    }
+                }));
+            }
+        }
+
+        private async Task SendFile(StorageFile file)
         {
             var stream = (await file.OpenReadAsync()).AsStreamForRead();
             int fileNumber;
