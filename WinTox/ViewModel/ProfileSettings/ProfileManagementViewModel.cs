@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Provider;
+using Windows.Storage.Pickers;
 using SharpTox.Core;
 using SharpTox.Encryption;
 using WinTox.Common;
@@ -79,18 +80,35 @@ namespace WinTox.ViewModel.ProfileSettings
             }
         }
 
+        public async Task SwitchProfile(StorageFile file)
+        {
+            await SetCurrentProfile(file);
+            IsSwitchProfileFlyoutClosed = true;
+        }
+
+        #region Export profile
+
         /// <summary>
         ///     Exports the current profile to the selected file.
         /// </summary>
-        /// <param name="file">The selected file.</param>
         /// <param name="password">Password (optional) to encrypt the profile with.</param>
-        /// <returns>Return true on success, false otherwise.</returns>
-        public async Task<bool> ExportProfile(StorageFile file, string password)
+        /// <returns></returns>
+        public async Task ExportProfile(string password)
         {
-            CachedFileManager.DeferUpdates(file);
-            await FileIO.WriteBytesAsync(file, GetData(password));
-            var status = await CachedFileManager.CompleteUpdatesAsync(file);
-            return status == FileUpdateStatus.Complete;
+            var file = await PickDestinationFile();
+            if (file != null)
+            {
+                await FileIO.WriteBytesAsync(file, GetData(password));
+            }
+        }
+
+        private async Task<StorageFile> PickDestinationFile()
+        {
+            var savePicker = new FileSavePicker();
+            savePicker.FileTypeChoices.Add("Tox save file", new List<string> {".tox"});
+            savePicker.SuggestedFileName = Name;
+            var file = await savePicker.PickSaveFileAsync();
+            return file;
         }
 
         private byte[] GetData(string password)
@@ -101,6 +119,27 @@ namespace WinTox.ViewModel.ProfileSettings
             return ToxModel.Instance.GetData(encryptionKey).Bytes;
         }
 
+        #endregion
+
+        #region Import profile
+
+        public async Task ImportProfile()
+        {
+            var file = await PickSourceFile();
+            if (file != null)
+            {
+                await SetCurrentProfile(file);
+            }
+        }
+
+        private async Task<StorageFile> PickSourceFile()
+        {
+            var openPicker = new FileOpenPicker();
+            openPicker.FileTypeFilter.Add(".tox");
+            return await openPicker.PickSingleFileAsync();
+        }
+
+
         public async Task SetCurrentProfile(StorageFile file)
         {
             var data = (await FileIO.ReadBufferAsync(file)).ToArray();
@@ -109,10 +148,6 @@ namespace WinTox.ViewModel.ProfileSettings
             ToxModel.Instance.Start();
         }
 
-        public async Task SwitchProfile(StorageFile file)
-        {
-            await SetCurrentProfile(file);
-            IsSwitchProfileFlyoutClosed = true;
-        }
+        #endregion
     }
 }
