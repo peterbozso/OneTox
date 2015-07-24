@@ -216,6 +216,8 @@
     </AppxManifest>
     <None Include="Common\ReadMe.txt" />
     <Content Include="Assets\default-profile-picture.png" />
+    <Content Include="Assets\ring-in.wav" />
+    <Content Include="Assets\ring-out.wav" />
     <Content Include="Assets\tox-logo.jpg" />
     <None Include="packages.config" />
     <None Include="WinTox_TemporaryKey.pfx" />

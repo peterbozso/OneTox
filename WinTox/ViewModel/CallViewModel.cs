@@ -25,6 +25,8 @@ namespace WinTox.ViewModel
     public class CallViewModel : ViewModelBase
     {
         private const int KAudioLength = 20; // Based on measurements. Take it with a grain of salt!
+        private const string KRingInFileName = "ring-in.wav";
+        private const string KRingOutFileName = "ring-out.wav";
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly int _friendNumber;
         private RelayCommand _acceptCallCommand;
@@ -66,6 +68,21 @@ namespace WinTox.ViewModel
             get { return _state; }
             set
             {
+                switch (value)
+                {
+                    case CallState.Default:
+                        RaiseStopRinging();
+                        break;
+                    case CallState.DuringCall:
+                        RaiseStopRinging();
+                        break;
+                    case CallState.IncomingCall:
+                        RaiseStartRinging(KRingInFileName);
+                        break;
+                    case CallState.OutgoingCall:
+                        RaiseStartRinging(KRingOutFileName);
+                        break;
+                }
                 _state = value;
                 RaisePropertyChanged();
             }
@@ -170,6 +187,21 @@ namespace WinTox.ViewModel
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () => { State = CallState.IncomingCall; });
         }
+
+        private void RaiseStartRinging(string ringFileName)
+        {
+            if (StartRinging != null)
+                StartRinging(this, ringFileName);
+        }
+
+        private void RaiseStopRinging()
+        {
+            if (StopRinging != null)
+                StopRinging(this, EventArgs.Empty);
+        }
+
+        public event EventHandler<string> StartRinging;
+        public event EventHandler StopRinging;
 
         #region Audio sending
 

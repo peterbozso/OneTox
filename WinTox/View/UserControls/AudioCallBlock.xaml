@@ -277,6 +277,8 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
+        <MediaElement x:Name="RingPlayer" IsLooping="True" />
+
         <Button x:Name="CallButton" Grid.Column="0" HorizontalAlignment="Center" Content="&#xE13A;"
                 Margin="0,0,20,0"
                 FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding StartCallByUserCommand}"

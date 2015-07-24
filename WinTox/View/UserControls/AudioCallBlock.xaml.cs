@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using WinTox.Converters;
 using WinTox.ViewModel;
@@ -16,6 +17,8 @@ namespace WinTox.View.UserControls
         {
             var callViewModel = (CallViewModel) DataContext;
             callViewModel.StartCallByUserFailed += StartCallByUserFailedHandler;
+            callViewModel.StartRinging += StartRingingHandler;
+            callViewModel.StopRinging += StopRingingHandler;
 
             var state =
                 (string) new CallStateToStringConverter().Convert(callViewModel.State, typeof (string), null, null);
@@ -26,6 +29,18 @@ namespace WinTox.View.UserControls
         {
             var callViewModel = (CallViewModel) DataContext;
             callViewModel.StartCallByUserFailed -= StartCallByUserFailedHandler;
+            callViewModel.StartRinging -= StartRingingHandler;
+            callViewModel.StopRinging -= StopRingingHandler;
+        }
+
+        private void StartRingingHandler(object sender, string ringFileName)
+        {
+            RingPlayer.Source = new Uri("ms-appx:///Assets/" + ringFileName);
+        }
+
+        private void StopRingingHandler(object sender, EventArgs e)
+        {
+            RingPlayer.Stop();
         }
 
         private void StartCallByUserFailedHandler(object sender, string errorMessage)
