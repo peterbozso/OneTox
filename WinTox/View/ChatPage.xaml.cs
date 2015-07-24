@@ -322,7 +322,7 @@ namespace WinTox.View
             else
             {
                 throw new ArgumentException(
-                    "Navigated to ChatPage with wrong type of parameter or with null! An object with the type of FirendViewModel is expected.");
+                    "Navigated to ChatPage with wrong type of parameter or with null! An object with the type of FriendViewModel is expected.");
             }
         }
 
