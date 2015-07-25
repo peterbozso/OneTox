@@ -187,7 +187,7 @@
                        Margin="10,0" VerticalAlignment="Center" Tapped="ShowTransfersIconTapped" Text="" />
         </Grid>
 
-        <Grid x:Name="OpenContentGrid" Grid.Row="1">
+        <Grid x:Name="OpenContentGrid" Grid.Row="1" Height="{Binding VisualStates.OpenContentGridHeight}">
             <ScrollViewer x:Name="TransferRibbonsScrollViewer" VerticalScrollBarVisibility="Auto">
                 <ItemsControl x:Name="TransferRibbons" ItemsSource="{Binding Transfers}" Margin="0,0,0,10">
                     <ItemsControl.Transitions>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -23,21 +22,16 @@ namespace WinTox.View.UserControls.FileTransfers
         {
             _viewModel = DataContext as FileTransfersViewModel;
             VisualStateManager.GoToState(this, _viewModel.VisualStates.BlockState.ToString(), true);
-            _viewModel.VisualStates.PropertyChanged += VisualStatesPropertyChangedHandler;
             _viewModel.Transfers.CollectionChanged += TransfersCollectionChangedHandler;
             await SetAddDeleteThemeTransitionForTransferRibbons();
-        }
-
-        private void VisualStatesPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "OpenContentGridHeight")
-                OpenContentGrid.Height = _viewModel.VisualStates.OpenContentGridHeight;
         }
 
         private void TransfersCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
+            {
                 ScrollTransferRibbonsToBottom();
+            }
         }
 
         private void ScrollTransferRibbonsToBottom()
