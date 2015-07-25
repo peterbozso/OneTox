@@ -1,16 +1,15 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
+using WinTox.ViewModel.Messaging;
 
-namespace WinTox.Converters
+namespace WinTox.View.Converters
 {
-    public class BoolToOpacityConverter : IValueConverter
+    internal class DeliveryStateToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var isTrue = (bool) value;
-            if (isTrue)
-                return 1;
-            return 0.5;
+            var state = (MessageDeliveryState) value;
+            return state.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

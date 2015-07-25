@@ -1,14 +1,17 @@
 ﻿using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-namespace WinTox.Converters
+namespace WinTox.View.Converters
 {
-    public class DateTimeConverter : IValueConverter
+    public class BoolToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var dateTime = (DateTime) value;
-            return dateTime.ToString("HH:mm");
+            var isTrue = (bool) value;
+            if (isTrue)
+                return Visibility.Visible;
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

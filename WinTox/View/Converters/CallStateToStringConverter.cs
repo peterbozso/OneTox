@@ -1,17 +1,15 @@
 ﻿using System;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
+using WinTox.ViewModel;
 
-namespace WinTox.Converters
+namespace WinTox.View.Converters
 {
-    public class BoolToVisibilityConverter : IValueConverter
+    internal class CallStateToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var isTrue = (bool) value;
-            if (isTrue)
-                return Visibility.Visible;
-            return Visibility.Collapsed;
+            var state = (CallViewModel.CallState) value;
+            return state.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

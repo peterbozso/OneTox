@@ -10,8 +10,8 @@
     xmlns:fileTransfers="using:WinTox.View.UserControls.FileTransfers"
     xmlns:recentMessages="using:WinTox.View.UserControls.Messaging.RecentMessages"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:converters="using:WinTox.Converters"
     xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:converters="using:WinTox.View.Converters"
     x:Name="PageRoot"
     x:Class="WinTox.View.ChatPage"
     mc:Ignorable="d">

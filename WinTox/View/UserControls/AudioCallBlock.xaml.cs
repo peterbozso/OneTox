@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using WinTox.Converters;
+using WinTox.View.Converters;
 using WinTox.ViewModel;
 
 namespace WinTox.View.UserControls

@@ -1,15 +1,14 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
-using WinTox.ViewModel;
 
-namespace WinTox.Converters
+namespace WinTox.View.Converters
 {
-    internal class CallStateToStringConverter : IValueConverter
+    public class DateTimeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var state = (CallViewModel.CallState) value;
-            return state.ToString();
+            var dateTime = (DateTime) value;
+            return dateTime.ToString("HH:mm");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

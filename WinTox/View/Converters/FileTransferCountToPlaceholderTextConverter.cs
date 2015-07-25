@@ -1,7 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
 
-namespace WinTox.Converters
+namespace WinTox.View.Converters
 {
     internal class FileTransferCountToPlaceholderTextConverter : IValueConverter
     {

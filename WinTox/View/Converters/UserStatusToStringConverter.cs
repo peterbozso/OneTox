@@ -2,7 +2,7 @@
 using Windows.UI.Xaml.Data;
 using SharpTox.Core;
 
-namespace WinTox.Converters
+namespace WinTox.View.Converters
 {
     internal class UserStatusToStringConverter : IValueConverter
     {

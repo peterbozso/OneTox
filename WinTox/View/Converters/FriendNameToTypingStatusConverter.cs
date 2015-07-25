@@ -1,15 +1,13 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
-using WinTox.ViewModel.FileTransfers;
 
-namespace WinTox.Converters
+namespace WinTox.View.Converters
 {
-    internal class TransfersBlockStateToStringConverter : IValueConverter
+    internal class FriendNameToTypingStatusConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var state = (FileTransfersViewModel.FileTransfersVisualStates.TransfersBlockState) value;
-            return state.ToString();
+            return (value as string) + " is typing...";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

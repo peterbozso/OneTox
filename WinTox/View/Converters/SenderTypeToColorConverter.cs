@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Media;
 using WinTox.ViewModel;
 using WinTox.ViewModel.Friends;
 
-namespace WinTox.Converters
+namespace WinTox.View.Converters
 {
     public class SenderTypeToColorConverter : IValueConverter
     {

@@ -3,7 +3,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using WinTox.ViewModel;
 
-namespace WinTox.Converters
+namespace WinTox.View.Converters
 {
     public class StatusToColorConverter : IValueConverter
     {

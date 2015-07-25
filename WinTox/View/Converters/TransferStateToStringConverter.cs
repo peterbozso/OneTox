@@ -2,7 +2,7 @@
 using Windows.UI.Xaml.Data;
 using WinTox.ViewModel.FileTransfers;
 
-namespace WinTox.Converters
+namespace WinTox.View.Converters
 {
     internal class TransferStateToStringConverter : IValueConverter
     {

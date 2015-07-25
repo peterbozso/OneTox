@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using SharpTox.Core;
 
-namespace WinTox.Converters
+namespace WinTox.View.Converters
 {
     public class MessageTypeToColorConverter : IValueConverter
     {

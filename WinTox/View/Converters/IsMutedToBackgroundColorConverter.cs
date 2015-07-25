@@ -3,7 +3,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
-namespace WinTox.Converters
+namespace WinTox.View.Converters
 {
     internal class IsMutedToBackgroundColorConverter : IValueConverter
     {
