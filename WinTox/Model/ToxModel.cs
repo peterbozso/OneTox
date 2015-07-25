@@ -188,11 +188,7 @@ namespace WinTox.Model
 
         private void RaiseAllPropertiesChanged()
         {
-            var properties = typeof (ToxModel).GetRuntimeProperties();
-            foreach (var property in properties)
-            {
-                RaisePropertyChanged(property.Name);
-            }
+            RaisePropertyChanged(String.Empty);
         }
 
         public void Start()
