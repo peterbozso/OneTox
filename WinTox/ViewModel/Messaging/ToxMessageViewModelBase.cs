@@ -41,6 +41,8 @@ namespace WinTox.ViewModel.Messaging
             get { return _state; }
             protected set
             {
+                if (value == _state)
+                    return;
                 _state = value;
                 RaisePropertyChanged();
             }

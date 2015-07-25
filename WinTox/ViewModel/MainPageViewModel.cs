@@ -28,6 +28,8 @@ namespace WinTox.ViewModel
             get { return _recentMessagesListVisibility; }
             set
             {
+                if (value == _recentMessagesListVisibility)
+                    return;
                 _recentMessagesListVisibility = value;
                 RaisePropertyChanged();
             }
@@ -38,6 +40,8 @@ namespace WinTox.ViewModel
             get { return _friendRequestsListVisibility; }
             set
             {
+                if (value == _friendRequestsListVisibility)
+                    return;
                 _friendRequestsListVisibility = value;
                 RaisePropertyChanged();
             }

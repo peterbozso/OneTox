@@ -19,6 +19,8 @@ namespace WinTox.ViewModel.Friends
             get { return _isFlyoutClosed; }
             set
             {
+                if (value == _isFlyoutClosed)
+                    return;
                 _isFlyoutClosed = value;
                 RaisePropertyChanged();
                 if (value)
@@ -31,6 +33,8 @@ namespace WinTox.ViewModel.Friends
             get { return _friendId; }
             set
             {
+                if (value == _friendId)
+                    return;
                 _friendId = value.Trim();
                 RaisePropertyChanged();
             }
@@ -41,6 +45,8 @@ namespace WinTox.ViewModel.Friends
             get { return _friendIdPlaceholder; }
             private set
             {
+                if (value == _friendIdPlaceholder)
+                    return;
                 _friendIdPlaceholder = value;
                 RaisePropertyChanged();
             }
@@ -51,6 +57,8 @@ namespace WinTox.ViewModel.Friends
             get { return _invitationMessage; }
             set
             {
+                if (value == _invitationMessage)
+                    return;
                 _invitationMessage = value;
                 RaisePropertyChanged();
             }

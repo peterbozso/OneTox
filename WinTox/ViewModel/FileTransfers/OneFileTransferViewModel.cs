@@ -56,6 +56,8 @@ namespace WinTox.ViewModel.FileTransfers
             get { return _state; }
             private set
             {
+                if (value == _state)
+                    return;
                 _state = value;
                 RaisePropertyChanged();
                 IsNotPlaceholder = _state != FileTransferState.Finished && _state != FileTransferState.Cancelled;
@@ -67,6 +69,8 @@ namespace WinTox.ViewModel.FileTransfers
             get { return _isNotPlaceholder; }
             set
             {
+                if (value == _isNotPlaceholder)
+                    return;
                 _isNotPlaceholder = value;
                 RaisePropertyChanged();
             }
@@ -77,6 +81,8 @@ namespace WinTox.ViewModel.FileTransfers
             get { return _progress; }
             set
             {
+                if (value.Equals(_progress))
+                    return;
                 _progress = value;
                 RaisePropertyChanged();
             }

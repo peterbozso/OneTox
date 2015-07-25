@@ -47,6 +47,8 @@ namespace WinTox.ViewModel
             get { return _isMuted; }
             set
             {
+                if (value == _isMuted)
+                    return;
                 _isMuted = value;
                 RaisePropertyChanged();
             }
@@ -57,6 +59,9 @@ namespace WinTox.ViewModel
             get { return _state; }
             set
             {
+                if (value == _state)
+                    return;
+
                 switch (value)
                 {
                     case CallState.Default:
@@ -72,6 +77,7 @@ namespace WinTox.ViewModel
                         RaiseStartRinging(KRingOutFileName);
                         break;
                 }
+
                 _state = value;
                 RaisePropertyChanged();
             }

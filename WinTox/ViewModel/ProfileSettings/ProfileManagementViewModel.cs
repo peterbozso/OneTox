@@ -35,6 +35,8 @@ namespace WinTox.ViewModel.ProfileSettings
             get { return _isSwitchProfileFlyoutClosed; }
             set
             {
+                if (value == _isSwitchProfileFlyoutClosed)
+                    return;
                 _isSwitchProfileFlyoutClosed = value;
                 RaisePropertyChanged();
                 if (value)

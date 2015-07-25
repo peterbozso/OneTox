@@ -98,6 +98,8 @@ namespace WinTox.ViewModel.Friends
             get { return _name; }
             private set
             {
+                if (value == _name)
+                    return;
                 _name = value;
                 RaisePropertyChanged();
             }
@@ -108,6 +110,8 @@ namespace WinTox.ViewModel.Friends
             get { return _statusMessage; }
             private set
             {
+                if (value == _statusMessage)
+                    return;
                 _statusMessage = value;
                 RaisePropertyChanged();
             }
@@ -118,6 +122,8 @@ namespace WinTox.ViewModel.Friends
             get { return _status; }
             private set
             {
+                if (value == _status)
+                    return;
                 _status = value;
                 RaisePropertyChanged();
             }
@@ -128,6 +134,8 @@ namespace WinTox.ViewModel.Friends
             get { return _isConnected; }
             private set
             {
+                if (value == _isConnected)
+                    return;
                 _isConnected = value;
                 RaisePropertyChanged();
             }

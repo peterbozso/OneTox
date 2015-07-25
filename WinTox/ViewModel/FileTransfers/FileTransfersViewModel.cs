@@ -14,7 +14,7 @@ using WinTox.Model;
 
 namespace WinTox.ViewModel.FileTransfers
 {
-    public class FileTransfersViewModel : ViewModelBase
+    public class FileTransfersViewModel
     {
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly ProgressUpdater _progressUpdater;
@@ -142,6 +142,8 @@ namespace WinTox.ViewModel.FileTransfers
                 get { return _blockState; }
                 set
                 {
+                    if (value == _blockState)
+                        return;
                     _blockState = value;
                     RaisePropertyChanged();
                 }
@@ -157,6 +159,8 @@ namespace WinTox.ViewModel.FileTransfers
                 get { return _openContentGridHeight; }
                 private set
                 {
+                    if (value.Equals(_openContentGridHeight))
+                        return;
                     _openContentGridHeight = value;
                     RaisePropertyChanged();
                 }

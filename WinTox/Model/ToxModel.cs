@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,9 +13,9 @@ namespace WinTox.Model
     /// <summary>
     ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
     /// </summary>
-    public class ToxModel
+    public class ToxModel : ViewModelBase
     {
-        private static readonly ToxNode[] _nodes =
+        private static readonly ToxNode[] Nodes =
         {
             new ToxNode("192.254.75.102", 33445,
                 new ToxKey(ToxKeyType.Public, "951C88B7E75C867418ACDB5D273821372BB5BD652740BCDF623A4FA293E75D2F")),
@@ -108,6 +105,8 @@ namespace WinTox.Model
             get { return _tox.Name; }
             set
             {
+                if (value == _tox.Name)
+                    return;
                 _tox.Name = value;
                 RaisePropertyChanged();
             }
@@ -118,6 +117,8 @@ namespace WinTox.Model
             get { return _tox.StatusMessage; }
             set
             {
+                if (value == _tox.StatusMessage)
+                    return;
                 _tox.StatusMessage = value;
                 RaisePropertyChanged();
             }
@@ -128,6 +129,8 @@ namespace WinTox.Model
             get { return _tox.Status; }
             set
             {
+                if (value == _tox.Status)
+                    return;
                 _tox.Status = value;
                 RaisePropertyChanged();
             }
@@ -210,8 +213,8 @@ namespace WinTox.Model
             {
                 for (var i = 0; i < 4; i++)
                 {
-                    var randomIndex = random.Next(_nodes.Length);
-                    _tox.Bootstrap(_nodes[randomIndex]);
+                    var randomIndex = random.Next(Nodes.Length);
+                    _tox.Bootstrap(Nodes[randomIndex]);
                 }
 
                 if (!_tox.IsConnected)
@@ -386,11 +389,6 @@ namespace WinTox.Model
             return _lastConnectionStatusRegistry.GetLast(friendNumber);
         }
 
-        private void RaisePropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         private void RaiseFriendListReseted()
         {
@@ -402,8 +400,6 @@ namespace WinTox.Model
         #endregion
 
         #region Events
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public event EventHandler<FriendListChangedEventArgs> FriendListChanged;
 

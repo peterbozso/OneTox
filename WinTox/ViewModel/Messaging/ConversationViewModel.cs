@@ -222,6 +222,8 @@ namespace WinTox.ViewModel.Messaging
             get { return _isFriendTyping; }
             set
             {
+                if (value == _isFriendTyping)
+                    return;
                 _isFriendTyping = value;
                 RaisePropertyChanged();
             }

@@ -161,8 +161,8 @@ namespace WinTox.ViewModel.ProfileSettings
             set
             {
                 var lengthInBytes = Encoding.Unicode.GetBytes(value).Length;
-                if (value == String.Empty || lengthInBytes > ToxConstants.MaxNameLength ||
-                    ToxModel.Instance.Name == value)
+                if (ToxModel.Instance.Name == value || value == String.Empty ||
+                    lengthInBytes > ToxConstants.MaxNameLength)
                     return;
                 ToxModel.Instance.Name = value;
                 RaisePropertyChanged();
@@ -175,7 +175,8 @@ namespace WinTox.ViewModel.ProfileSettings
             set
             {
                 var lengthInBytes = Encoding.Unicode.GetBytes(value).Length;
-                if (lengthInBytes > ToxConstants.MaxStatusMessageLength)
+                if (ToxModel.Instance.StatusMessage == value || value == String.Empty ||
+                    lengthInBytes > ToxConstants.MaxStatusMessageLength)
                     return;
                 ToxModel.Instance.StatusMessage = value;
                 RaisePropertyChanged();
@@ -187,6 +188,8 @@ namespace WinTox.ViewModel.ProfileSettings
             get { return ToxModel.Instance.Status; }
             set
             {
+                if (value == ToxModel.Instance.Status)
+                    return;
                 ToxModel.Instance.Status = value;
                 RaisePropertyChanged();
             }
