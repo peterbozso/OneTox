@@ -29,13 +29,14 @@ namespace WinTox.ViewModel.FileTransfers
             Progress = 0;
             _direction = direction;
             SetInitialStateBasedOnDirection();
+            IsPlaceholder = false;
         }
 
         #region Fields
 
         private readonly FileTransfersViewModel _fileTransfers;
         private FileTransferState _state;
-        private bool _isNotPlaceholder;
+        private bool _isPlaceholder;
         private double _progress;
         private readonly TransferDirection _direction;
         private RelayCommand _acceptTransferByUserCommand;
@@ -60,18 +61,19 @@ namespace WinTox.ViewModel.FileTransfers
                     return;
                 _state = value;
                 RaisePropertyChanged();
-                IsNotPlaceholder = _state != FileTransferState.Finished && _state != FileTransferState.Cancelled;
+
+                IsPlaceholder = value == FileTransferState.Finished || value == FileTransferState.Cancelled;
             }
         }
 
-        public bool IsNotPlaceholder
+        public bool IsPlaceholder
         {
-            get { return _isNotPlaceholder; }
-            set
+            get { return _isPlaceholder; }
+            private set
             {
-                if (value == _isNotPlaceholder)
+                if (value == _isPlaceholder)
                     return;
-                _isNotPlaceholder = value;
+                _isPlaceholder = value;
                 RaisePropertyChanged();
             }
         }

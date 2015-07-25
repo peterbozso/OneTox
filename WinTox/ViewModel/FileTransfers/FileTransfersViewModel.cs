@@ -95,7 +95,7 @@ namespace WinTox.ViewModel.FileTransfers
 
             private int GetActiveTransfersCount()
             {
-                return _fileTransfers.Transfers.Count(transfer => transfer.IsNotPlaceholder &&
+                return _fileTransfers.Transfers.Count(transfer => !transfer.IsPlaceholder &&
                                                                   transfer.State != FileTransferState.PausedByFriend &&
                                                                   transfer.State != FileTransferState.PausedByUser);
             }
@@ -186,8 +186,8 @@ namespace WinTox.ViewModel.FileTransfers
 
         private OneFileTransferViewModel FindNotPlaceHolderTransferViewModel(int fileNumber)
         {
-            return Transfers.FirstOrDefault(transfer => transfer.FileNumber == fileNumber && transfer.IsNotPlaceholder);
             // There can be multiple transfers with the same file number, but there's always only one that's not a placeholder.
+            return Transfers.FirstOrDefault(transfer => transfer.FileNumber == fileNumber && !transfer.IsPlaceholder);
         }
 
         private void AddTransfer(int fileNumber, string fileName, TransferDirection direction)
