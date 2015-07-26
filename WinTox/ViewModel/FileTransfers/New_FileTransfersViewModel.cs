@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using Windows.ApplicationModel.Core;
 using Windows.Storage.Pickers;
+using Windows.UI.Core;
 using WinTox.Common;
 using WinTox.Model;
 
@@ -17,12 +19,20 @@ namespace WinTox.ViewModel.FileTransfers
         {
             _friendNumber = friendNumber;
             _transfersModel = new FileTransfersModel(friendNumber);
+            _transfersModel.FileSendRequestReceived += FileSendRequestReceivedHandler;
             Transfers = new ObservableCollection<New_OneFileTransferViewModel>();
             VisualStates = new FileTransfersVisualStates(Transfers);
         }
 
         public ObservableCollection<New_OneFileTransferViewModel> Transfers { get; private set; }
         public FileTransfersVisualStates VisualStates { get; private set; }
+
+        private async void FileSendRequestReceivedHandler(object sender, OneFileTransferModel e)
+        {
+            await
+                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { AddTransfer(e); });
+        }
 
         #region Visual states
 
@@ -145,7 +155,12 @@ namespace WinTox.ViewModel.FileTransfers
 
         private void AddTransfer(OneFileTransferModel fileTransferModel)
         {
-            Transfers.Add(new New_OneFileTransferViewModel(this, fileTransferModel));
+            var fileTransferViewModel = new New_OneFileTransferViewModel(this, fileTransferModel);
+
+            if (Transfers.Contains(fileTransferViewModel))
+                return;
+
+            Transfers.Add(fileTransferViewModel);
 
             if (VisualStates.BlockState == FileTransfersVisualStates.TransfersBlockState.Invisible)
             {

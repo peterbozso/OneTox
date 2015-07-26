@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using Windows.ApplicationModel.Core;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using WinTox.Common;
@@ -13,6 +15,7 @@ namespace WinTox.ViewModel.FileTransfers
         private readonly New_FileTransfersViewModel _fileTransfersViewModel;
         private readonly ProgressUpdater _progressUpdater;
         private readonly OneFileTransferModel _transferModel;
+        private RelayCommand _acceptTransferCommand;
         private RelayCommand _cancelTransferCommand;
         private double _progress;
 
@@ -50,6 +53,13 @@ namespace WinTox.ViewModel.FileTransfers
             get { return _transferModel.State; }
         }
 
+        private async void ModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            await
+                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { RaisePropertyChanged(e.PropertyName); });
+        }
+
         #region Commands
 
         public RelayCommand CancelTransferCommand
@@ -68,14 +78,27 @@ namespace WinTox.ViewModel.FileTransfers
             }
         }
 
-        #endregion
-
-        private async void ModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        public RelayCommand AcceptTransferCommand
         {
-            await
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    () => { RaisePropertyChanged(e.PropertyName); });
+            get
+            {
+                return _acceptTransferCommand ?? (_acceptTransferCommand = new RelayCommand(
+                    async () =>
+                    {
+                        var folderPicker = new FolderPicker();
+                        folderPicker.FileTypeFilter.Add("*");
+                        var saveFolder = await folderPicker.PickSingleFolderAsync();
+                        if (saveFolder == null)
+                            return;
+
+                        var saveFile =
+                            await saveFolder.CreateFileAsync(Name, CreationCollisionOption.GenerateUniqueName);
+                        await _transferModel.AcceptTransfer(saveFile);
+                    }));
+            }
         }
+
+        #endregion
 
         #region Progress updater
 

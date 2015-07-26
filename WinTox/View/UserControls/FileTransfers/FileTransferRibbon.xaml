@@ -822,11 +822,11 @@
                        Margin="34,0,0,0" />
 
             <Button x:Name="AcceptButton" Width="90" Content="Accept"
-                    Command="{Binding AcceptTransferByUserCommand}" Margin="30,0,0,0" />
+                    Command="{Binding AcceptTransferCommand}" Margin="30,0,0,0" />
             <Button x:Name="PauseButton" Width="90" Content="Pause"
-                    Command="{Binding PauseTransferByUserCommand}" Margin="30,0,0,0" />
+                    Command="{Binding PauseTransferCommand}" Margin="30,0,0,0" />
             <Button x:Name="ResumeButton" Width="90" Content="Resume"
-                    Command="{Binding ResumeTransferByUserCommand}" Margin="30,0,0,0" />
+                    Command="{Binding ResumeTransferCommand}" Margin="30,0,0,0" />
             <Button x:Name="PausedByFriendButton" Width="90" Content="Paused"
                     IsEnabled="False" Margin="30,0,0,0" />
         </Grid>

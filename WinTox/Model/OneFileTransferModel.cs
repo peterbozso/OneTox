@@ -1,7 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using Windows.Storage;
 using SharpTox.Core;
 using WinTox.Annotations;
 using WinTox.ViewModel.FileTransfers;
@@ -12,6 +15,7 @@ namespace WinTox.Model
     {
         private readonly TransferDirection _direction;
         private readonly int _fileNumber;
+        private readonly long _fileSizeInBytes;
         private readonly FileTransfersModel _fileTransfersModel;
         private readonly int _friendNumber;
         private bool _isPlaceholder;
@@ -34,7 +38,10 @@ namespace WinTox.Model
 
                 _stream.Position = transferredBytes;
             }
+            _fileSizeInBytes = fileSizeInBytes;
+
             _direction = direction;
+            SetInitialStateBasedOnDirection(direction);
 
             Name = name;
 
@@ -80,6 +87,28 @@ namespace WinTox.Model
                     Dispose();
                 }
             }
+        }
+
+        private void SetInitialStateBasedOnDirection(TransferDirection direction)
+        {
+            switch (direction)
+            {
+                case TransferDirection.Up:
+                    State = FileTransferState.BeforeUpload;
+                    break;
+                case TransferDirection.Down:
+                    State = FileTransferState.BeforeDownload;
+                    break;
+            }
+        }
+
+        private void ReplaceStream(Stream newStream)
+        {
+            if (_stream != null) // We only allow replacement of a dummy stream.
+                return;
+
+            newStream.SetLength(_fileSizeInBytes);
+            _stream = newStream;
         }
 
         private void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
@@ -181,6 +210,8 @@ namespace WinTox.Model
 
         #endregion
 
+        #region Control methods
+
         public bool CancelTransfer()
         {
             var successfulSend = ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Cancel);
@@ -192,6 +223,23 @@ namespace WinTox.Model
 
             return successfulSend;
         }
+
+        public async Task AcceptTransfer(StorageFile saveFile)
+        {
+            var saveStream = (await saveFile.OpenAsync(FileAccessMode.ReadWrite)).AsStream();
+
+            // Replace the dummy stream set previously in FileSendRequestReceivedHandler():
+            ReplaceStream(saveStream);
+
+            ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Resume);
+
+            // FileTransferResumer.Instance.RecordTransfer(saveFile, FriendNumber, fileNumber, TransferDirection.Down); TODO!
+            Debug.WriteLine("STUB: AcceptTransfer()!");
+
+            State = FileTransferState.Downloading;
+        }
+
+        #endregion
 
         #region Common transfer logic
 

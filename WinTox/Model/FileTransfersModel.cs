@@ -22,9 +22,19 @@ namespace WinTox.Model
             ToxModel.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
         }
 
-        private async void FileSendRequestReceivedHandler(object sender,
+        private void FileSendRequestReceivedHandler(object sender,
             ToxEventArgs.FileSendRequestEventArgs e)
         {
+            if (e.FileKind != ToxFileKind.Data || e.FriendNumber != _friendNumber)
+                return;
+
+            var transferModel = new OneFileTransferModel(this, e.FriendNumber, e.FileNumber, e.FileName,
+                e.FileSize, TransferDirection.Down, null);
+            Transfers.Add(transferModel);
+
+            if (FileSendRequestReceived != null)
+                FileSendRequestReceived(this, transferModel);
+
             Debug.WriteLine("STUB: FileSendRequestReceivedHandler()!");
 
             /*
@@ -46,6 +56,8 @@ namespace WinTox.Model
             }
             */
         }
+
+        public event EventHandler<OneFileTransferModel> FileSendRequestReceived;
 
         public async Task<OneFileTransferModel> SendFile(StorageFile file)
         {
