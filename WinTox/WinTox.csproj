@@ -107,6 +107,10 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\FileTransfersModel.cs" />
+    <Compile Include="Model\OneFileTransferModel.cs" />
+    <Compile Include="ViewModel\FileTransfers\New_FileTransfersViewModel.cs" />
+    <Compile Include="ViewModel\FileTransfers\New_OneFileTransferViewModel.cs" />
     <Compile Include="View\Converters\CallStateToStringConverter.cs" />
     <Compile Include="View\Converters\IsMutedToBackgroundColorConverter.cs" />
     <Compile Include="View\Converters\TransfersBlockStateToStringConverter.cs" />

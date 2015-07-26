@@ -13,7 +13,7 @@ namespace WinTox.View.UserControls.FileTransfers
 
         private void FileTransferRibbonLoaded(object sender, RoutedEventArgs e)
         {
-            var transferViewModel = (OneFileTransferViewModel) DataContext;
+            var transferViewModel = (New_OneFileTransferViewModel) DataContext;
             VisualStateManager.GoToState(this, transferViewModel.State.ToString(), true);
         }
     }

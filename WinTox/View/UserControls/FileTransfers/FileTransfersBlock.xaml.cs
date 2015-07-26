@@ -11,7 +11,7 @@ namespace WinTox.View.UserControls.FileTransfers
 {
     public sealed partial class FileTransfersBlock : UserControl
     {
-        private FileTransfersViewModel _viewModel;
+        private New_FileTransfersViewModel _viewModel;
 
         public FileTransfersBlock()
         {
@@ -20,7 +20,7 @@ namespace WinTox.View.UserControls.FileTransfers
 
         private async void FileTransferBlockLoaded(object sender, RoutedEventArgs e)
         {
-            _viewModel = DataContext as FileTransfersViewModel;
+            _viewModel = DataContext as New_FileTransfersViewModel;
             VisualStateManager.GoToState(this, _viewModel.VisualStates.BlockState.ToString(), true);
             _viewModel.Transfers.CollectionChanged += TransfersCollectionChangedHandler;
             await SetAddDeleteThemeTransitionForTransferRibbons();
@@ -51,13 +51,13 @@ namespace WinTox.View.UserControls.FileTransfers
         private void ShowTransfersIconTapped(object sender, TappedRoutedEventArgs e)
         {
             _viewModel.VisualStates.BlockState =
-                FileTransfersViewModel.FileTransfersVisualStates.TransfersBlockState.Open;
+                New_FileTransfersViewModel.FileTransfersVisualStates.TransfersBlockState.Open;
         }
 
         private void HideTransfersIconTapped(object sender, TappedRoutedEventArgs e)
         {
             _viewModel.VisualStates.BlockState =
-                FileTransfersViewModel.FileTransfersVisualStates.TransfersBlockState.Collapsed;
+                New_FileTransfersViewModel.FileTransfersVisualStates.TransfersBlockState.Collapsed;
         }
     }
 }
