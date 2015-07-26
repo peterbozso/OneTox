@@ -5,13 +5,12 @@ using System.Runtime.CompilerServices;
 using SharpTox.Core;
 using WinTox.Annotations;
 using WinTox.ViewModel.FileTransfers;
-using System;
-using Windows.UI.Core;
 
 namespace WinTox.Model
 {
     public class OneFileTransferModel : INotifyPropertyChanged
     {
+        private readonly TransferDirection _direction;
         private readonly int _fileNumber;
         private readonly int _friendNumber;
         private bool _isPlaceholder;
@@ -31,7 +30,7 @@ namespace WinTox.Model
 
                 _stream.Position = transferredBytes;
             }
-            Direction = direction;
+            _direction = direction;
 
             Name = name;
 
@@ -46,7 +45,6 @@ namespace WinTox.Model
         }
 
         public string Name { get; private set; }
-        public TransferDirection Direction { get; private set; }
 
         public double Progress
         {
@@ -94,33 +92,34 @@ namespace WinTox.Model
                     State = FileTransferState.Cancelled;
                     return;
                 case ToxFileControl.Pause:
-                    if (State != FileTransferState.Uploading && State != FileTransferState.Downloading)
-                        return;
-
-                    State = FileTransferState.PausedByFriend;
+                    TryPauseTransfer();
                     return;
                 case ToxFileControl.Resume:
-                    switch (State)
-                    {
-                        case FileTransferState.BeforeUpload:
-                            State = FileTransferState.Uploading;
-                            break;
-                        case FileTransferState.BeforeDownload:
-                            State = FileTransferState.Downloading;
-                            break;
-                    }
-
-                    if (State != FileTransferState.PausedByFriend)
-                        return;
-
-                    SetResumingStateBasedOnDirection();
+                    TryResumeTransfer();
                     return;
             }
         }
 
+        private void TryPauseTransfer()
+        {
+            if (State != FileTransferState.Uploading && State != FileTransferState.Downloading)
+                return;
+
+            State = FileTransferState.PausedByFriend;
+        }
+
+        private void TryResumeTransfer()
+        {
+            if (State != FileTransferState.PausedByFriend || State != FileTransferState.BeforeUpload ||
+                State != FileTransferState.BeforeDownload)
+                return;
+
+            SetResumingStateBasedOnDirection();
+        }
+
         private void SetResumingStateBasedOnDirection()
         {
-            switch (Direction)
+            switch (_direction)
             {
                 case TransferDirection.Up:
                     State = FileTransferState.Uploading;

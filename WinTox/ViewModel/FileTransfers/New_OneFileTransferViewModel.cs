@@ -25,11 +25,9 @@ namespace WinTox.ViewModel.FileTransfers
             get { return _transferModel.Name; }
         }
 
-        public TransferDirection Direction
-        {
-            get { return _transferModel.Direction; }
-        }
-
+        /// <summary>
+        ///     See ProgressUpdater.
+        /// </summary>
         public double Progress
         {
             get { return _progress; }

@@ -11,9 +11,8 @@ namespace WinTox.Model
     public class FileTransfersModel
     {
         private readonly int _friendNumber;
-
         public ObservableCollection<OneFileTransferModel> Transfers;
-            // TODO: Subscirbe to this in the viewmodel to see added new received transfers!
+        // TODO: Subscirbe to this in the viewmodel to see added new received transfers!
 
         public FileTransfersModel(int friendNumber)
         {
