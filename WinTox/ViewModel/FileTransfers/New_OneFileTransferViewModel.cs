@@ -3,18 +3,23 @@ using System.ComponentModel;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using WinTox.Common;
 using WinTox.Model;
 
 namespace WinTox.ViewModel.FileTransfers
 {
     public class New_OneFileTransferViewModel : ViewModelBase
     {
+        private readonly New_FileTransfersViewModel _fileTransfersViewModel;
         private readonly ProgressUpdater _progressUpdater;
         private readonly OneFileTransferModel _transferModel;
+        private RelayCommand _cancelTransferCommand;
         private double _progress;
 
-        public New_OneFileTransferViewModel(OneFileTransferModel fileTransferModel)
+        public New_OneFileTransferViewModel(New_FileTransfersViewModel fileTransfersViewModel,
+            OneFileTransferModel fileTransferModel)
         {
+            _fileTransfersViewModel = fileTransfersViewModel;
             _transferModel = fileTransferModel;
             _transferModel.PropertyChanged += ModelPropertyChangedHandler;
             _progressUpdater = new ProgressUpdater(this);
@@ -45,6 +50,26 @@ namespace WinTox.ViewModel.FileTransfers
             get { return _transferModel.State; }
         }
 
+        #region Commands
+
+        public RelayCommand CancelTransferCommand
+        {
+            get
+            {
+                return _cancelTransferCommand ?? (_cancelTransferCommand = new RelayCommand(() =>
+                {
+                    var successFulCancel = _transferModel.CancelTransfer();
+
+                    if (successFulCancel)
+                    {
+                        _fileTransfersViewModel.Transfers.Remove(this);
+                    }
+                }));
+            }
+        }
+
+        #endregion
+
         private async void ModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             await
@@ -52,12 +77,12 @@ namespace WinTox.ViewModel.FileTransfers
                     () => { RaisePropertyChanged(e.PropertyName); });
         }
 
+        #region Progress updater
+
         public void UpDateProgress()
         {
             Progress = _transferModel.Progress;
         }
-
-        #region Progress updater
 
         /// <summary>
         ///     This class's purpose is to update the progress bars' progress on FileTransfersBlock.

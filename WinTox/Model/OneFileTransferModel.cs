@@ -12,14 +12,18 @@ namespace WinTox.Model
     {
         private readonly TransferDirection _direction;
         private readonly int _fileNumber;
+        private readonly FileTransfersModel _fileTransfersModel;
         private readonly int _friendNumber;
         private bool _isPlaceholder;
         private FileTransferState _state;
         private Stream _stream;
 
-        public OneFileTransferModel(int friendNumber, int fileNumber, string name, long fileSizeInBytes,
+        public OneFileTransferModel(FileTransfersModel fileTransfersModel, int friendNumber, int fileNumber, string name,
+            long fileSizeInBytes,
             TransferDirection direction, Stream stream, long transferredBytes = 0)
         {
+            _fileTransfersModel = fileTransfersModel;
+
             _stream = stream;
             if (_stream != null)
             {
@@ -110,7 +114,7 @@ namespace WinTox.Model
 
         private void TryResumeTransfer()
         {
-            if (State != FileTransferState.PausedByFriend || State != FileTransferState.BeforeUpload ||
+            if (State != FileTransferState.PausedByFriend && State != FileTransferState.BeforeUpload &&
                 State != FileTransferState.BeforeDownload)
                 return;
 
@@ -176,6 +180,18 @@ namespace WinTox.Model
         }
 
         #endregion
+
+        public bool CancelTransfer()
+        {
+            var successfulSend = ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Cancel);
+
+            if (successfulSend)
+            {
+                _fileTransfersModel.Transfers.Remove(this);
+            }
+
+            return successfulSend;
+        }
 
         #region Common transfer logic
 

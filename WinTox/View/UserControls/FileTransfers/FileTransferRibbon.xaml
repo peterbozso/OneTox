@@ -834,6 +834,6 @@
         <Button Grid.Column="3" x:Name="CancelButton" FontFamily="Segoe UI Symbol"
                 Template="{StaticResource RoundButtonTemplate}"
                 Margin="22,0,38,0" Height="35" Width="35" Content="&#xE10A;" Padding="0"
-                Command="{Binding CancelTransferByUserCommand}" />
+                Command="{Binding CancelTransferCommand}" />
     </Grid>
 </UserControl>

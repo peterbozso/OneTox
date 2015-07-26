@@ -12,7 +12,6 @@ namespace WinTox.Model
     {
         private readonly int _friendNumber;
         public ObservableCollection<OneFileTransferModel> Transfers;
-        // TODO: Subscirbe to this in the viewmodel to see added new received transfers!
 
         public FileTransfersModel(int friendNumber)
         {
@@ -26,6 +25,9 @@ namespace WinTox.Model
         private async void FileSendRequestReceivedHandler(object sender,
             ToxEventArgs.FileSendRequestEventArgs e)
         {
+            Debug.WriteLine("STUB: FileSendRequestReceivedHandler()!");
+
+            /*
             if (e.FileKind != ToxFileKind.Data)
                 return;
 
@@ -33,8 +35,7 @@ namespace WinTox.Model
             var resumeData = await FileTransferResumer.Instance.GetDownloadData(fileId);
             if (resumeData != null)
             {
-                // ResumeBrokenDownload(e, resumeData);
-                Debug.WriteLine("STUB: FileSendRequestReceivedHandler()!");
+                ResumeBrokenDownload(e, resumeData);
             }
             else
             {
@@ -43,6 +44,7 @@ namespace WinTox.Model
                 Transfers.Add(new OneFileTransferModel(e.FriendNumber, e.FileNumber, e.FileName, e.FileSize,
                     TransferDirection.Down, null));
             }
+            */
         }
 
         public async Task<OneFileTransferModel> SendFile(StorageFile file)
@@ -58,7 +60,7 @@ namespace WinTox.Model
                 // FileTransferResumer.Instance.RecordTransfer(file, _friendNumber, fileNumber, TransferDirection.Up);
                 Debug.WriteLine("STUB: SendFile()!");
 
-                var transferModel = new OneFileTransferModel(_friendNumber, fileInfo.Number, file.Name,
+                var transferModel = new OneFileTransferModel(this, _friendNumber, fileInfo.Number, file.Name,
                     fileStream.Length, TransferDirection.Up, fileStream);
                 Transfers.Add(transferModel);
                 return transferModel;

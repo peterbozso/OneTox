@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using Windows.Storage.Pickers;
 using WinTox.Common;
 using WinTox.Model;
@@ -17,7 +18,7 @@ namespace WinTox.ViewModel.FileTransfers
             _friendNumber = friendNumber;
             _transfersModel = new FileTransfersModel(friendNumber);
             Transfers = new ObservableCollection<New_OneFileTransferViewModel>();
-            VisualStates = new FileTransfersVisualStates();
+            VisualStates = new FileTransfersVisualStates(Transfers);
         }
 
         public ObservableCollection<New_OneFileTransferViewModel> Transfers { get; private set; }
@@ -49,12 +50,15 @@ namespace WinTox.ViewModel.FileTransfers
 
             private const int KHideArrowTextBlockHeight = 10;
             private const int KFileTransferRibbonHeight = 60;
+            private readonly ObservableCollection<New_OneFileTransferViewModel> _transferViewModels;
             private TransfersBlockState _blockState;
             private double _openContentGridHeight;
 
-            public FileTransfersVisualStates()
+            public FileTransfersVisualStates(ObservableCollection<New_OneFileTransferViewModel> transferViewModels)
             {
                 BlockState = TransfersBlockState.Invisible;
+                _transferViewModels = transferViewModels;
+                _transferViewModels.CollectionChanged += CollectionChangedHandler;
             }
 
             public TransfersBlockState BlockState
@@ -86,13 +90,23 @@ namespace WinTox.ViewModel.FileTransfers
                 }
             }
 
+            private void CollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
+            {
+                if (_transferViewModels.Count == 0)
+                {
+                    BlockState = TransfersBlockState.Invisible;
+                    return; // No need to recompute Gird Height if we can't see the Grid itself.
+                }
+
+                UpdateOpenContentGridHeight(_transferViewModels.Count);
+            }
+
             /// <summary>
-            ///     Called from FileTransfersViewModel whenever we add or remove a OneFileTransferViewModel (and a FileTransferRibbon
-            ///     to/from FileTransfersBlock through data binding) to update OpenContentGridHeight according to the current number of
-            ///     file transfers.
+            ///     Whenever we add or remove a OneFileTransferViewModel (and a FileTransferRibbon to/from FileTransfersBlock through
+            ///     data binding) we also update OpenContentGridHeight according to the current number of file transfers.
             /// </summary>
             /// <param name="transfersCount">The current number of file transfers.</param>
-            public void UpdateOpenContentGridHeight(int transfersCount)
+            private void UpdateOpenContentGridHeight(int transfersCount)
             {
                 // We don't show more than 4 items in the list at once, but use a scroll bar in that case.
                 var itemsToDisplay = transfersCount > 4 ? 4 : transfersCount;
@@ -131,14 +145,12 @@ namespace WinTox.ViewModel.FileTransfers
 
         private void AddTransfer(OneFileTransferModel fileTransferModel)
         {
-            Transfers.Add(new New_OneFileTransferViewModel(fileTransferModel));
+            Transfers.Add(new New_OneFileTransferViewModel(this, fileTransferModel));
 
             if (VisualStates.BlockState == FileTransfersVisualStates.TransfersBlockState.Invisible)
             {
                 VisualStates.BlockState = FileTransfersVisualStates.TransfersBlockState.Open;
             }
-
-            VisualStates.UpdateOpenContentGridHeight(Transfers.Count);
         }
 
         #endregion
