@@ -13,11 +13,11 @@ namespace WinTox.ViewModel.FileTransfers
     public class New_OneFileTransferViewModel : ViewModelBase
     {
         public New_OneFileTransferViewModel(New_FileTransfersViewModel fileTransfersViewModel,
-            OneFileTransferModel fileTransferModel)
+            OneFileTransferModel oneFileTransferModel)
         {
             _fileTransfersViewModel = fileTransfersViewModel;
-            _transferModel = fileTransferModel;
-            _transferModel.PropertyChanged += ModelPropertyChangedHandler;
+            _oneFileTransferModel = oneFileTransferModel;
+            _oneFileTransferModel.PropertyChanged += ModelPropertyChangedHandler;
             _progressUpdater = new ProgressUpdater(this);
         }
 
@@ -25,7 +25,7 @@ namespace WinTox.ViewModel.FileTransfers
 
         private readonly New_FileTransfersViewModel _fileTransfersViewModel;
         private readonly ProgressUpdater _progressUpdater;
-        private readonly OneFileTransferModel _transferModel;
+        private readonly OneFileTransferModel _oneFileTransferModel;
         private RelayCommand _acceptTransferCommand;
         private RelayCommand _cancelTransferCommand;
         private RelayCommand _pauseTransferCommand;
@@ -38,7 +38,7 @@ namespace WinTox.ViewModel.FileTransfers
 
         public string Name
         {
-            get { return _transferModel.Name; }
+            get { return _oneFileTransferModel.Name; }
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace WinTox.ViewModel.FileTransfers
 
         public FileTransferState State
         {
-            get { return _transferModel.State; }
+            get { return _oneFileTransferModel.State; }
         }
 
         private async void ModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
@@ -78,7 +78,7 @@ namespace WinTox.ViewModel.FileTransfers
             {
                 return _cancelTransferCommand ?? (_cancelTransferCommand = new RelayCommand(() =>
                 {
-                    var successFulCancel = _transferModel.CancelTransfer();
+                    var successFulCancel = _oneFileTransferModel.CancelTransfer();
 
                     if (successFulCancel)
                     {
@@ -103,7 +103,7 @@ namespace WinTox.ViewModel.FileTransfers
 
                         var saveFile =
                             await saveFolder.CreateFileAsync(Name, CreationCollisionOption.GenerateUniqueName);
-                        await _transferModel.AcceptTransfer(saveFile);
+                        await _oneFileTransferModel.AcceptTransfer(saveFile);
                     }));
             }
         }
@@ -113,7 +113,7 @@ namespace WinTox.ViewModel.FileTransfers
             get
             {
                 return _pauseTransferCommand ??
-                       (_pauseTransferCommand = new RelayCommand(() => { _transferModel.PauseTransfer(); }));
+                       (_pauseTransferCommand = new RelayCommand(() => { _oneFileTransferModel.PauseTransfer(); }));
             }
         }
 
@@ -122,7 +122,7 @@ namespace WinTox.ViewModel.FileTransfers
             get
             {
                 return _resumeTransferCommand ??
-                       (_resumeTransferCommand = new RelayCommand(() => { _transferModel.ResumeTransfer(); }));
+                       (_resumeTransferCommand = new RelayCommand(() => { _oneFileTransferModel.ResumeTransfer(); }));
             }
         }
 
@@ -132,7 +132,7 @@ namespace WinTox.ViewModel.FileTransfers
 
         public void UpDateProgress()
         {
-            Progress = _transferModel.Progress;
+            Progress = _oneFileTransferModel.Progress;
         }
 
         /// <summary>

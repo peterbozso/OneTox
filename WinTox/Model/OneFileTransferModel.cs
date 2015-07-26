@@ -25,8 +25,7 @@ namespace WinTox.Model
         #region Constructor
 
         public OneFileTransferModel(FileTransfersModel fileTransfersModel, int friendNumber, int fileNumber, string name,
-            long fileSizeInBytes,
-            TransferDirection direction, Stream stream, long transferredBytes = 0)
+            long fileSizeInBytes, TransferDirection direction, Stream stream, long transferredBytes = 0)
         {
             _fileTransfersModel = fileTransfersModel;
 
