@@ -224,19 +224,26 @@ namespace WinTox.Model
             return successfulSend;
         }
 
-        public async Task AcceptTransfer(StorageFile saveFile)
+        public async Task AcceptTransfer(StorageFile file)
         {
-            var saveStream = (await saveFile.OpenAsync(FileAccessMode.ReadWrite)).AsStream();
+            var fileStream = (await file.OpenAsync(FileAccessMode.ReadWrite)).AsStream();
 
             // Replace the dummy stream set previously in FileSendRequestReceivedHandler():
-            ReplaceStream(saveStream);
+            ReplaceStream(fileStream);
 
-            ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Resume);
+            var successfulSend = ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Resume);
 
-            // FileTransferResumer.Instance.RecordTransfer(saveFile, FriendNumber, fileNumber, TransferDirection.Down); TODO!
-            Debug.WriteLine("STUB: AcceptTransfer()!");
+            if (successfulSend)
+            {
+                // FileTransferResumer.Instance.RecordTransfer(file, FriendNumber, fileNumber, TransferDirection.Down); TODO!
+                Debug.WriteLine("STUB: AcceptTransfer()!");
 
-            State = FileTransferState.Downloading;
+                State = FileTransferState.Downloading;
+                return;
+            }
+
+            ReplaceStream(null);
+            fileStream.Dispose();
         }
 
         #endregion
