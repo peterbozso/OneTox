@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -11,13 +11,13 @@ namespace WinTox.Model
     public class FileTransfersModel
     {
         private readonly int _friendNumber;
-        public ObservableCollection<OneFileTransferModel> Transfers;
+        public List<OneFileTransferModel> Transfers;
 
         public FileTransfersModel(int friendNumber)
         {
             _friendNumber = friendNumber;
 
-            Transfers = new ObservableCollection<OneFileTransferModel>();
+            Transfers = new List<OneFileTransferModel>();
 
             ToxModel.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
         }
