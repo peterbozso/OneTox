@@ -12,6 +12,17 @@ namespace WinTox.ViewModel.FileTransfers
 {
     public class New_OneFileTransferViewModel : ViewModelBase
     {
+        public New_OneFileTransferViewModel(New_FileTransfersViewModel fileTransfersViewModel,
+            OneFileTransferModel fileTransferModel)
+        {
+            _fileTransfersViewModel = fileTransfersViewModel;
+            _transferModel = fileTransferModel;
+            _transferModel.PropertyChanged += ModelPropertyChangedHandler;
+            _progressUpdater = new ProgressUpdater(this);
+        }
+
+        #region Fields
+
         private readonly New_FileTransfersViewModel _fileTransfersViewModel;
         private readonly ProgressUpdater _progressUpdater;
         private readonly OneFileTransferModel _transferModel;
@@ -21,14 +32,9 @@ namespace WinTox.ViewModel.FileTransfers
         private double _progress;
         private RelayCommand _resumeTransferCommand;
 
-        public New_OneFileTransferViewModel(New_FileTransfersViewModel fileTransfersViewModel,
-            OneFileTransferModel fileTransferModel)
-        {
-            _fileTransfersViewModel = fileTransfersViewModel;
-            _transferModel = fileTransferModel;
-            _transferModel.PropertyChanged += ModelPropertyChangedHandler;
-            _progressUpdater = new ProgressUpdater(this);
-        }
+        #endregion
+
+        #region Properties
 
         public string Name
         {
@@ -61,6 +67,8 @@ namespace WinTox.ViewModel.FileTransfers
                 CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                     () => { RaisePropertyChanged(e.PropertyName); });
         }
+
+        #endregion
 
         #region Commands
 

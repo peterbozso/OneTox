@@ -13,14 +13,16 @@ namespace WinTox.Model
 {
     public class OneFileTransferModel : INotifyPropertyChanged
     {
-        private readonly TransferDirection _direction;
-        private readonly int _fileNumber;
-        private readonly long _fileSizeInBytes;
-        private readonly FileTransfersModel _fileTransfersModel;
-        private readonly int _friendNumber;
-        private bool _isPlaceholder;
-        private FileTransferState _state;
-        private Stream _stream;
+        #region Helpers
+
+        private bool IsThisTransfer(ToxEventArgs.FileBaseEventArgs e)
+        {
+            return (e.FriendNumber == _friendNumber && e.FileNumber == _fileNumber);
+        }
+
+        #endregion
+
+        #region Constructor
 
         public OneFileTransferModel(FileTransfersModel fileTransfersModel, int friendNumber, int fileNumber, string name,
             long fileSizeInBytes,
@@ -54,6 +56,36 @@ namespace WinTox.Model
             ToxModel.Instance.FileChunkRequested += FileChunkRequestedHandler;
             ToxModel.Instance.FileChunkReceived += FileChunkReceivedHandler;
         }
+
+        private void SetInitialStateBasedOnDirection(TransferDirection direction)
+        {
+            switch (direction)
+            {
+                case TransferDirection.Up:
+                    State = FileTransferState.BeforeUpload;
+                    break;
+                case TransferDirection.Down:
+                    State = FileTransferState.BeforeDownload;
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region Fields
+
+        private readonly TransferDirection _direction;
+        private readonly int _fileNumber;
+        private readonly long _fileSizeInBytes;
+        private readonly FileTransfersModel _fileTransfersModel;
+        private readonly int _friendNumber;
+        private bool _isPlaceholder;
+        private FileTransferState _state;
+        private Stream _stream;
+
+        #endregion
+
+        #region Properties
 
         public string Name { get; private set; }
 
@@ -89,27 +121,9 @@ namespace WinTox.Model
             }
         }
 
-        private void SetInitialStateBasedOnDirection(TransferDirection direction)
-        {
-            switch (direction)
-            {
-                case TransferDirection.Up:
-                    State = FileTransferState.BeforeUpload;
-                    break;
-                case TransferDirection.Down:
-                    State = FileTransferState.BeforeDownload;
-                    break;
-            }
-        }
+        #endregion
 
-        private void ReplaceStream(Stream newStream)
-        {
-            if (_stream != null) // We only allow replacement of a dummy stream.
-                return;
-
-            newStream.SetLength(_fileSizeInBytes);
-            _stream = newStream;
-        }
+        #region Received file control handling
 
         private void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
         {
@@ -150,18 +164,7 @@ namespace WinTox.Model
             SetResumingStateBasedOnDirection();
         }
 
-        private void SetResumingStateBasedOnDirection()
-        {
-            switch (_direction)
-            {
-                case TransferDirection.Up:
-                    State = FileTransferState.Uploading;
-                    break;
-                case TransferDirection.Down:
-                    State = FileTransferState.Downloading;
-                    break;
-            }
-        }
+        #endregion
 
         #region Sending
 
@@ -182,6 +185,22 @@ namespace WinTox.Model
             }
         }
 
+        private byte[] GetNextChunk(ToxEventArgs.FileRequestChunkEventArgs e)
+        {
+            lock (_stream)
+            {
+                if (_stream.Position != e.Position)
+                {
+                    _stream.Seek(e.Position, SeekOrigin.Begin);
+                }
+
+                var chunk = new byte[e.Length];
+                _stream.Read(chunk, 0, e.Length);
+
+                return chunk;
+            }
+        }
+
         #endregion
 
         #region Receiving
@@ -199,13 +218,17 @@ namespace WinTox.Model
             }
         }
 
-        #endregion
-
-        #region Helpers
-
-        private bool IsThisTransfer(ToxEventArgs.FileBaseEventArgs e)
+        private void PutNextChunk(ToxEventArgs.FileChunkEventArgs e)
         {
-            return (e.FriendNumber == _friendNumber && e.FileNumber == _fileNumber);
+            lock (_stream)
+            {
+                if (_stream.Position != e.Position)
+                {
+                    _stream.Seek(e.Position, SeekOrigin.Begin);
+                }
+
+                _stream.Write(e.Data, 0, e.Data.Length);
+            }
         }
 
         #endregion
@@ -274,7 +297,7 @@ namespace WinTox.Model
 
         #endregion
 
-        #region Common transfer logic
+        #region Common
 
         private long TransferredBytes
         {
@@ -292,35 +315,6 @@ namespace WinTox.Model
             }
         }
 
-        private byte[] GetNextChunk(ToxEventArgs.FileRequestChunkEventArgs e)
-        {
-            lock (_stream)
-            {
-                if (_stream.Position != e.Position)
-                {
-                    _stream.Seek(e.Position, SeekOrigin.Begin);
-                }
-
-                var chunk = new byte[e.Length];
-                _stream.Read(chunk, 0, e.Length);
-
-                return chunk;
-            }
-        }
-
-        private void PutNextChunk(ToxEventArgs.FileChunkEventArgs e)
-        {
-            lock (_stream)
-            {
-                if (_stream.Position != e.Position)
-                {
-                    _stream.Seek(e.Position, SeekOrigin.Begin);
-                }
-
-                _stream.Write(e.Data, 0, e.Data.Length);
-            }
-        }
-
         private void Dispose()
         {
             if (_stream != null) // It could be a dummy transfer waiting for accept from the user!
@@ -330,6 +324,28 @@ namespace WinTox.Model
 
                 _isPlaceholder = true;
             }
+        }
+
+        private void SetResumingStateBasedOnDirection()
+        {
+            switch (_direction)
+            {
+                case TransferDirection.Up:
+                    State = FileTransferState.Uploading;
+                    break;
+                case TransferDirection.Down:
+                    State = FileTransferState.Downloading;
+                    break;
+            }
+        }
+
+        private void ReplaceStream(Stream newStream)
+        {
+            if (_stream != null) // We only allow replacement of a dummy stream.
+                return;
+
+            newStream.SetLength(_fileSizeInBytes);
+            _stream = newStream;
         }
 
         #endregion

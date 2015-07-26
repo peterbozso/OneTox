@@ -11,10 +11,6 @@ namespace WinTox.ViewModel.FileTransfers
 {
     public class New_FileTransfersViewModel
     {
-        private readonly int _friendNumber;
-        private readonly FileTransfersModel _transfersModel;
-        private RelayCommand _sendFilesCommand;
-
         public New_FileTransfersViewModel(int friendNumber)
         {
             _friendNumber = friendNumber;
@@ -22,16 +18,6 @@ namespace WinTox.ViewModel.FileTransfers
             _transfersModel.FileSendRequestReceived += FileSendRequestReceivedHandler;
             Transfers = new ObservableCollection<New_OneFileTransferViewModel>();
             VisualStates = new FileTransfersVisualStates(Transfers);
-        }
-
-        public ObservableCollection<New_OneFileTransferViewModel> Transfers { get; private set; }
-        public FileTransfersVisualStates VisualStates { get; private set; }
-
-        private async void FileSendRequestReceivedHandler(object sender, OneFileTransferModel e)
-        {
-            await
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    () => { AddTransfer(e); });
         }
 
         #region Visual states
@@ -126,7 +112,22 @@ namespace WinTox.ViewModel.FileTransfers
 
         #endregion
 
-        #region Send file
+        #region Fields
+
+        private readonly int _friendNumber;
+        private readonly FileTransfersModel _transfersModel;
+        private RelayCommand _sendFilesCommand;
+
+        #endregion
+
+        #region Properties
+
+        public ObservableCollection<New_OneFileTransferViewModel> Transfers { get; private set; }
+        public FileTransfersVisualStates VisualStates { get; private set; }
+
+        #endregion
+
+        #region File sending/receiving
 
         public RelayCommand SendFilesCommand
         {
@@ -151,6 +152,13 @@ namespace WinTox.ViewModel.FileTransfers
                     }
                 }));
             }
+        }
+
+        private async void FileSendRequestReceivedHandler(object sender, OneFileTransferModel e)
+        {
+            await
+                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { AddTransfer(e); });
         }
 
         private void AddTransfer(OneFileTransferModel fileTransferModel)
