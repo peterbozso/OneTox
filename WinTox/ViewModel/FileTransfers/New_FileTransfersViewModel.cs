@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Storage.Pickers;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
 using WinTox.Common;
 using WinTox.Model;
 
