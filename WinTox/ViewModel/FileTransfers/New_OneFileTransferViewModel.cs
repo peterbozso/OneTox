@@ -17,7 +17,9 @@ namespace WinTox.ViewModel.FileTransfers
         private readonly OneFileTransferModel _transferModel;
         private RelayCommand _acceptTransferCommand;
         private RelayCommand _cancelTransferCommand;
+        private RelayCommand _pauseTransferCommand;
         private double _progress;
+        private RelayCommand _resumeTransferCommand;
 
         public New_OneFileTransferViewModel(New_FileTransfersViewModel fileTransfersViewModel,
             OneFileTransferModel fileTransferModel)
@@ -95,6 +97,24 @@ namespace WinTox.ViewModel.FileTransfers
                             await saveFolder.CreateFileAsync(Name, CreationCollisionOption.GenerateUniqueName);
                         await _transferModel.AcceptTransfer(saveFile);
                     }));
+            }
+        }
+
+        public RelayCommand PauseTransferCommand
+        {
+            get
+            {
+                return _pauseTransferCommand ??
+                       (_pauseTransferCommand = new RelayCommand(() => { _transferModel.PauseTransfer(); }));
+            }
+        }
+
+        public RelayCommand ResumeTransferCommand
+        {
+            get
+            {
+                return _resumeTransferCommand ??
+                       (_resumeTransferCommand = new RelayCommand(() => { _transferModel.ResumeTransfer(); }));
             }
         }
 

@@ -246,6 +246,32 @@ namespace WinTox.Model
             fileStream.Dispose();
         }
 
+        public void PauseTransfer()
+        {
+            if (State != FileTransferState.Downloading && State != FileTransferState.Uploading)
+                return;
+
+            var successfulSend = ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Pause);
+
+            if (successfulSend)
+            {
+                State = FileTransferState.PausedByUser;
+            }
+        }
+
+        public void ResumeTransfer()
+        {
+            if (State != FileTransferState.PausedByUser)
+                return;
+
+            var successfulSend = ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Resume);
+
+            if (successfulSend)
+            {
+                SetResumingStateBasedOnDirection();
+            }
+        }
+
         #endregion
 
         #region Common transfer logic
