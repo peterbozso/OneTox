@@ -11,14 +11,10 @@ namespace WinTox.Model
     public class FileTransfersModel
     {
         private readonly int _friendNumber;
-        public List<OneFileTransferModel> Transfers;
 
         public FileTransfersModel(int friendNumber)
         {
             _friendNumber = friendNumber;
-
-            Transfers = new List<OneFileTransferModel>();
-
             ToxModel.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
         }
 
@@ -28,9 +24,8 @@ namespace WinTox.Model
             if (e.FileKind != ToxFileKind.Data || e.FriendNumber != _friendNumber)
                 return;
 
-            var transferModel = new OneFileTransferModel(this, e.FriendNumber, e.FileNumber, e.FileName,
+            var transferModel = new OneFileTransferModel(e.FriendNumber, e.FileNumber, e.FileName,
                 e.FileSize, TransferDirection.Down, null);
-            Transfers.Add(transferModel);
 
             if (FileSendRequestReceived != null)
                 FileSendRequestReceived(this, transferModel);
@@ -72,9 +67,8 @@ namespace WinTox.Model
                 // FileTransferResumer.Instance.RecordTransfer(file, _friendNumber, fileNumber, TransferDirection.Up);
                 Debug.WriteLine("STUB: SendFile()!");
 
-                var transferModel = new OneFileTransferModel(this, _friendNumber, fileInfo.Number, file.Name,
+                var transferModel = new OneFileTransferModel(_friendNumber, fileInfo.Number, file.Name,
                     fileStream.Length, TransferDirection.Up, fileStream);
-                Transfers.Add(transferModel);
                 return transferModel;
             }
 

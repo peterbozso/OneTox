@@ -24,11 +24,9 @@ namespace WinTox.Model
 
         #region Constructor
 
-        public OneFileTransferModel(FileTransfersModel fileTransfersModel, int friendNumber, int fileNumber, string name,
+        public OneFileTransferModel(int friendNumber, int fileNumber, string name,
             long fileSizeInBytes, TransferDirection direction, Stream stream, long transferredBytes = 0)
         {
-            _fileTransfersModel = fileTransfersModel;
-
             _stream = stream;
             if (_stream != null)
             {
@@ -76,7 +74,6 @@ namespace WinTox.Model
         private readonly TransferDirection _direction;
         private readonly int _fileNumber;
         private readonly long _fileSizeInBytes;
-        private readonly FileTransfersModel _fileTransfersModel;
         private readonly int _friendNumber;
         private bool _isPlaceholder;
         private FileTransferState _state;
@@ -242,8 +239,6 @@ namespace WinTox.Model
         {
             if (!IsPlaceholder)
                 ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Cancel);
-
-            _fileTransfersModel.Transfers.Remove(this);
         }
 
         public async Task AcceptTransfer(StorageFile file)
