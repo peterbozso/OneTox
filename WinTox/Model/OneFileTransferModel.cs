@@ -92,7 +92,7 @@ namespace WinTox.Model
         {
             get
             {
-                if (State == FileTransferState.Finished || State == FileTransferState.Cancelled)
+                if (IsPlaceholder)
                     return 100.0;
 
                 lock (_stream)
@@ -112,12 +112,16 @@ namespace WinTox.Model
                 _state = value;
                 RaisePropertyChanged();
 
-                //IsPlaceholder = value == FileTransferState.Finished || value == FileTransferState.Cancelled; TODO: Remove maybe?
-                if (value == FileTransferState.Finished || value == FileTransferState.Cancelled)
+                if (IsPlaceholder)
                 {
                     Dispose();
                 }
             }
+        }
+
+        private bool IsPlaceholder
+        {
+            get { return State == FileTransferState.Finished || State == FileTransferState.Cancelled; }
         }
 
         #endregion
@@ -234,16 +238,12 @@ namespace WinTox.Model
 
         #region Control methods
 
-        public bool CancelTransfer()
+        public void CancelTransfer()
         {
-            var successfulSend = ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Cancel);
+            if (!IsPlaceholder)
+                ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Cancel);
 
-            if (successfulSend)
-            {
-                _fileTransfersModel.Transfers.Remove(this);
-            }
-
-            return successfulSend;
+            _fileTransfersModel.Transfers.Remove(this);
         }
 
         public async Task AcceptTransfer(StorageFile file)

@@ -78,12 +78,8 @@ namespace WinTox.ViewModel.FileTransfers
             {
                 return _cancelTransferCommand ?? (_cancelTransferCommand = new RelayCommand(() =>
                 {
-                    var successFulCancel = _oneFileTransferModel.CancelTransfer();
-
-                    if (successFulCancel)
-                    {
-                        _fileTransfersViewModel.Transfers.Remove(this);
-                    }
+                    _oneFileTransferModel.CancelTransfer();
+                    _fileTransfersViewModel.Transfers.Remove(this);
                 }));
             }
         }
