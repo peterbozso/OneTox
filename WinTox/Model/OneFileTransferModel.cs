@@ -44,8 +44,6 @@ namespace WinTox.Model
 
             Name = name;
 
-            _isPlaceholder = false;
-
             _friendNumber = friendNumber;
             _fileNumber = fileNumber;
 
@@ -75,7 +73,6 @@ namespace WinTox.Model
         private readonly int _fileNumber;
         private readonly long _fileSizeInBytes;
         private readonly int _friendNumber;
-        private bool _isPlaceholder;
         private FileTransferState _state;
         private Stream _stream;
 
@@ -127,7 +124,7 @@ namespace WinTox.Model
 
         private void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
         {
-            if (_isPlaceholder || !IsThisTransfer(e))
+            if (IsPlaceholder || !IsThisTransfer(e))
                 return;
 
             Debug.WriteLine("File control received \t friend number: {0}, \t file number: {1}, \t control: {2}",
@@ -170,7 +167,7 @@ namespace WinTox.Model
 
         private void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
         {
-            if (_isPlaceholder || !IsThisTransfer(e))
+            if (IsPlaceholder || !IsThisTransfer(e))
                 return;
 
             var chunk = GetNextChunk(e);
@@ -207,7 +204,7 @@ namespace WinTox.Model
 
         private void FileChunkReceivedHandler(object sender, ToxEventArgs.FileChunkEventArgs e)
         {
-            if (_isPlaceholder || !IsThisTransfer(e))
+            if (IsPlaceholder || !IsThisTransfer(e))
                 return;
 
             PutNextChunk(e);
@@ -315,8 +312,6 @@ namespace WinTox.Model
             {
                 _stream.Dispose();
                 _stream = null;
-
-                _isPlaceholder = true;
             }
         }
 
