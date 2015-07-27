@@ -63,9 +63,6 @@ namespace WinTox.Model.FileTransfers
 
             if (successfulFileSend)
             {
-                // FileTransferResumer.Instance.RecordTransfer(file, _friendNumber, fileNumber, TransferDirection.Up);
-                Debug.WriteLine("STUB: SendFile()!");
-
                 var transferModel = await OneFileTransferModel.CreateInstance(_friendNumber, fileInfo.Number, file.Name,
                     fileSizeInBytes, TransferDirection.Up, file);
                 return transferModel;
