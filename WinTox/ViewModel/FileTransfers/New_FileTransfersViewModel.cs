@@ -91,7 +91,7 @@ namespace WinTox.ViewModel.FileTransfers
                 if (_transferViewModels.Count == 0)
                 {
                     BlockState = TransfersBlockState.Invisible;
-                    return; // No need to recompute Gird Height if we can't see the Grid itself.
+                    return; // No need to recompute the grid's height if we can't see the grid itself.
                 }
 
                 UpdateOpenContentGridHeight(_transferViewModels.Count);
