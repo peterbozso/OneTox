@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SharpTox.Core;
 
-namespace WinTox.Model
+namespace WinTox.Model.Avatars
 {
     /// <summary>
     ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)

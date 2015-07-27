@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using SharpTox.Core;
 using WinTox.Annotations;
-using WinTox.ViewModel.FileTransfers;
+using WinTox.Model.Avatars;
 
-namespace WinTox.Model
+namespace WinTox.Model.FileTransfers
 {
     public class OneFileTransferModel : INotifyPropertyChanged
     {

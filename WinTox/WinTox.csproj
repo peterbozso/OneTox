@@ -107,10 +107,11 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\FileTransfersModel.cs" />
-    <Compile Include="Model\OneFileTransferModel.cs" />
-    <Compile Include="ViewModel\FileTransfers\New_FileTransfersViewModel.cs" />
-    <Compile Include="ViewModel\FileTransfers\New_OneFileTransferViewModel.cs" />
+    <Compile Include="Model\FileTransfers\FileTransfersModel.cs" />
+    <Compile Include="Model\FileTransfers\FileTransferState.cs" />
+    <Compile Include="Model\FileTransfers\OneFileTransferModel.cs" />
+    <Compile Include="ViewModel\FileTransfers\FileTransfersViewModel.cs" />
+    <Compile Include="ViewModel\FileTransfers\OneFileTransferViewModel.cs" />
     <Compile Include="View\Converters\CallStateToStringConverter.cs" />
     <Compile Include="View\Converters\IsMutedToBackgroundColorConverter.cs" />
     <Compile Include="View\Converters\TransfersBlockStateToStringConverter.cs" />
@@ -126,20 +127,17 @@
     <Compile Include="View\Converters\StatusToColorConverter.cs" />
     <Compile Include="View\Converters\UserStatusToStringConverter.cs" />
     <Compile Include="Helpers\CloseFlyoutAction.cs" />
-    <Compile Include="Model\AvatarManager.cs" />
-    <Compile Include="Model\DataTransferManager.cs" />
+    <Compile Include="Model\Avatars\AvatarManager.cs" />
+    <Compile Include="Model\Avatars\DataTransferManager.cs" />
     <Compile Include="Helpers\DnsTools.cs" />
     <Compile Include="Model\ExtendedTox.cs" />
-    <Compile Include="Model\AvatarTransferManager.cs" />
-    <Compile Include="Model\FileTransferManager.cs" />
-    <Compile Include="Model\FileTransferResumer.cs" />
+    <Compile Include="Model\Avatars\AvatarTransferManager.cs" />
+    <Compile Include="Model\FileTransfers\FileTransferResumer.cs" />
     <Compile Include="Model\FriendListChangedEventArgs.cs" />
     <Compile Include="Model\ToxAvModel.cs" />
     <Compile Include="Model\ToxModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModel\CallViewModel.cs" />
-    <Compile Include="ViewModel\FileTransfers\OneFileTransferViewModel.cs" />
-    <Compile Include="ViewModel\FileTransfers\FileTransfersViewModel.cs" />
     <Compile Include="ViewModel\FriendRequests\FriendRequestsViewModel.cs" />
     <Compile Include="ViewModel\FriendRequests\OneFriendRequestViewModel.cs" />
     <Compile Include="ViewModel\Friends\AddFriendFlyoutViewModel.cs" />

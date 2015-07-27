@@ -6,6 +6,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
 using WinTox.Common;
 using WinTox.Model;
+using WinTox.Model.Avatars;
 using WinTox.ViewModel.FileTransfers;
 using WinTox.ViewModel.Messaging;
 using WinTox.ViewModel.Messaging.RecentMessages;
@@ -27,7 +28,7 @@ namespace WinTox.ViewModel.Friends
             FriendNumber = friendNumber;
 
             Conversation = new ConversationViewModel(this);
-            FileTransfers = new New_FileTransfersViewModel(friendNumber);
+            FileTransfers = new FileTransfersViewModel(friendNumber);
             RecentMessages = new RecentMessagesPerUserViewModel(friendNumber);
             Call = new CallViewModel(friendNumber);
 
@@ -56,7 +57,7 @@ namespace WinTox.ViewModel.Friends
 
         public int FriendNumber { get; private set; }
         public ConversationViewModel Conversation { get; private set; }
-        public New_FileTransfersViewModel FileTransfers { get; private set; }
+        public FileTransfersViewModel FileTransfers { get; private set; }
         public RecentMessagesPerUserViewModel RecentMessages { get; private set; }
         public CallViewModel Call { get; private set; }
 

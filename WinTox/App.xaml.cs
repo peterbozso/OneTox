@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using WinTox.Common;
 using WinTox.Model;
+using WinTox.Model.Avatars;
 using WinTox.View;
 using WinTox.ViewModel;
 using WinTox.ViewModel.FriendRequests;
@@ -179,7 +180,7 @@ namespace WinTox
             // await SuspensionManager.SaveAsync();
 
             await ToxModel.Instance.SaveDataAsync();
-            await FileTransferManager.Instance.StoreBrokenTransfers();
+            // await FileTransferManager.Instance.StoreBrokenTransfers(); TODO
             deferral.Complete();
         }
 

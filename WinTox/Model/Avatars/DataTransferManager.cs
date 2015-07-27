@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using SharpTox.Core;
 
-namespace WinTox.Model
+namespace WinTox.Model.Avatars
 {
     public enum TransferDirection
     {

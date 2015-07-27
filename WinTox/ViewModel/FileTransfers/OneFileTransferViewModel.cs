@@ -1,83 +1,49 @@
 ﻿using System;
+using System.ComponentModel;
+using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
 using WinTox.Common;
-using WinTox.Model;
+using WinTox.Model.FileTransfers;
 
 namespace WinTox.ViewModel.FileTransfers
 {
-    public enum FileTransferState
-    {
-        BeforeUpload,
-        BeforeDownload,
-        Uploading,
-        Downloading,
-        PausedByUser,
-        PausedByFriend,
-        Finished,
-        Cancelled
-    }
-
     public class OneFileTransferViewModel : ViewModelBase
     {
-        public OneFileTransferViewModel(FileTransfersViewModel fileTransfers, int fileNumber, string name,
-            TransferDirection direction)
+        public OneFileTransferViewModel(FileTransfersViewModel fileTransfersViewModel,
+            OneFileTransferModel oneFileTransferModel)
         {
-            _fileTransfers = fileTransfers;
-            FileNumber = fileNumber;
-            Name = name;
-            Progress = 0;
-            _direction = direction;
-            SetInitialStateBasedOnDirection();
-            IsPlaceholder = false;
+            _fileTransfersViewModel = fileTransfersViewModel;
+            _oneFileTransferModel = oneFileTransferModel;
+            _oneFileTransferModel.PropertyChanged += ModelPropertyChangedHandler;
+            _progressUpdater = new ProgressUpdater(this);
         }
 
         #region Fields
 
-        private readonly FileTransfersViewModel _fileTransfers;
-        private FileTransferState _state;
-        private bool _isPlaceholder;
+        private readonly FileTransfersViewModel _fileTransfersViewModel;
+        private readonly ProgressUpdater _progressUpdater;
+        private readonly OneFileTransferModel _oneFileTransferModel;
+        private RelayCommand _acceptTransferCommand;
+        private RelayCommand _cancelTransferCommand;
+        private RelayCommand _pauseTransferCommand;
         private double _progress;
-        private readonly TransferDirection _direction;
-        private RelayCommand _acceptTransferByUserCommand;
-        private RelayCommand _cancelTransferByUserCommand;
-        private RelayCommand _pauseTransferByUserCommand;
-        private RelayCommand _resumeTransferByUserCommand;
+        private RelayCommand _resumeTransferCommand;
 
         #endregion
 
         #region Properties
 
-        public int FileNumber { get; private set; }
-
-        public string Name { get; private set; }
-
-        public FileTransferState State
+        public string Name
         {
-            get { return _state; }
-            private set
-            {
-                if (value == _state)
-                    return;
-                _state = value;
-                RaisePropertyChanged();
-
-                IsPlaceholder = value == FileTransferState.Finished || value == FileTransferState.Cancelled;
-            }
+            get { return _oneFileTransferModel.Name; }
         }
 
-        public bool IsPlaceholder
-        {
-            get { return _isPlaceholder; }
-            private set
-            {
-                if (value == _isPlaceholder)
-                    return;
-                _isPlaceholder = value;
-                RaisePropertyChanged();
-            }
-        }
-
+        /// <summary>
+        ///     See ProgressUpdater.
+        /// </summary>
         public double Progress
         {
             get { return _progress; }
@@ -90,141 +56,130 @@ namespace WinTox.ViewModel.FileTransfers
             }
         }
 
-        #endregion
-
-        #region Helper methods
-
-        private void SetInitialStateBasedOnDirection()
+        public FileTransferState State
         {
-            switch (_direction)
-            {
-                case TransferDirection.Up:
-                    State = FileTransferState.BeforeUpload;
-                    break;
-                case TransferDirection.Down:
-                    State = FileTransferState.BeforeDownload;
-                    break;
-            }
+            get { return _oneFileTransferModel.State; }
         }
 
-        private void SetResumingStateBasedOnDirection()
+        private async void ModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
-            switch (_direction)
-            {
-                case TransferDirection.Up:
-                    State = FileTransferState.Uploading;
-                    break;
-                case TransferDirection.Down:
-                    State = FileTransferState.Downloading;
-                    break;
-            }
+            await
+                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { RaisePropertyChanged(e.PropertyName); });
         }
 
         #endregion
 
-        #region Changes coming from the View, being relayed to the Model
+        #region Commands
 
-        public RelayCommand AcceptTransferByUserCommand
+        public RelayCommand CancelTransferCommand
         {
             get
             {
-                return _acceptTransferByUserCommand ?? (_acceptTransferByUserCommand = new RelayCommand(async () =>
+                return _cancelTransferCommand ?? (_cancelTransferCommand = new RelayCommand(() =>
                 {
-                    var folderPicker = new FolderPicker();
-                    folderPicker.FileTypeFilter.Add("*");
-                    var saveFolder = await folderPicker.PickSingleFolderAsync();
-                    if (saveFolder == null)
-                        return;
-
-                    var saveFile = await saveFolder.CreateFileAsync(Name, CreationCollisionOption.GenerateUniqueName);
-                    await _fileTransfers.AcceptTransferByUser(FileNumber, saveFile);
-
-                    State = FileTransferState.Downloading;
+                    _oneFileTransferModel.CancelTransfer();
+                    _fileTransfersViewModel.Transfers.Remove(this);
                 }));
             }
         }
 
-        public RelayCommand CancelTransferByUserCommand
+        public RelayCommand AcceptTransferCommand
         {
             get
             {
-                return _cancelTransferByUserCommand ?? (_cancelTransferByUserCommand = new RelayCommand(
-                    async () => { await _fileTransfers.CancelTransferByUser(this); }));
-            }
-        }
-
-        public RelayCommand PauseTransferByUserCommand
-        {
-            get
-            {
-                return _pauseTransferByUserCommand ?? (_pauseTransferByUserCommand = new RelayCommand(
+                return _acceptTransferCommand ?? (_acceptTransferCommand = new RelayCommand(
                     async () =>
                     {
-                        if (State == FileTransferState.Downloading || State == FileTransferState.Uploading)
-                        {
-                            State = FileTransferState.PausedByUser;
-                            await _fileTransfers.PauseTransferByUser(FileNumber);
-                        }
+                        var folderPicker = new FolderPicker();
+                        folderPicker.FileTypeFilter.Add("*");
+                        var saveFolder = await folderPicker.PickSingleFolderAsync();
+                        if (saveFolder == null)
+                            return;
+
+                        var saveFile =
+                            await saveFolder.CreateFileAsync(Name, CreationCollisionOption.GenerateUniqueName);
+                        await _oneFileTransferModel.AcceptTransfer(saveFile);
                     }));
             }
         }
 
-        public RelayCommand ResumeTransferByUserCommand
+        public RelayCommand PauseTransferCommand
         {
             get
             {
-                return _resumeTransferByUserCommand ?? (_resumeTransferByUserCommand = new RelayCommand(
-                    async () =>
-                    {
-                        if (State == FileTransferState.PausedByUser)
-                        {
-                            SetResumingStateBasedOnDirection();
-                            await _fileTransfers.ResumeTransferByUser(FileNumber);
-                        }
-                    }));
+                return _pauseTransferCommand ??
+                       (_pauseTransferCommand = new RelayCommand(() => { _oneFileTransferModel.PauseTransfer(); }));
+            }
+        }
+
+        public RelayCommand ResumeTransferCommand
+        {
+            get
+            {
+                return _resumeTransferCommand ??
+                       (_resumeTransferCommand = new RelayCommand(() => { _oneFileTransferModel.ResumeTransfer(); }));
             }
         }
 
         #endregion
 
-        #region Changes coming from the Model, being relayed to the View
+        #region Progress updater
 
-        public void FinishTransfer()
+        public void UpDateProgress()
         {
-            State = FileTransferState.Finished;
-            Progress = 100.0;
+            Progress = _oneFileTransferModel.Progress;
         }
 
-        public void CancelTransferByFriend()
+        /// <summary>
+        ///     This class's purpose is to update the progress bars' progress on FileTransfersBlock.
+        /// </summary>
+        private class ProgressUpdater
         {
-            State = FileTransferState.Cancelled;
-            Progress = 100.0;
-        }
+            private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+            private readonly OneFileTransferViewModel _fileTransferViewModel;
+            private readonly DispatcherTimer _progressDispatcherTimer;
 
-        public void PauseTransferByFriend()
-        {
-            if (State != FileTransferState.Uploading && State != FileTransferState.Downloading)
-                return;
-
-            State = FileTransferState.PausedByFriend;
-        }
-
-        public void ResumeTransferByFriend()
-        {
-            switch (State)
+            public ProgressUpdater(OneFileTransferViewModel fileTransferViewModel)
             {
-                case FileTransferState.BeforeUpload:
-                    State = FileTransferState.Uploading;
-                    break;
-                case FileTransferState.BeforeDownload:
-                    State = FileTransferState.Downloading;
-                    break;
+                _fileTransferViewModel = fileTransferViewModel;
+                _fileTransferViewModel.PropertyChanged += StateChangedHandler;
+
+                _progressDispatcherTimer = new DispatcherTimer();
+                _progressDispatcherTimer.Tick += ProgressDispatcherTimerTickHandler;
+                _progressDispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
             }
 
-            if (State != FileTransferState.PausedByFriend)
-                return;
+            private async void StateChangedHandler(object sender, PropertyChangedEventArgs e)
+            {
+                if (e.PropertyName != "State")
+                    return;
 
-            SetResumingStateBasedOnDirection();
+                _fileTransferViewModel.UpDateProgress();
+
+                if (_fileTransferViewModel.State != FileTransferState.Uploading &&
+                    _fileTransferViewModel.State != FileTransferState.Downloading)
+                {
+                    await
+                        _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { _progressDispatcherTimer.Stop(); });
+                }
+                else
+                {
+                    await
+                        _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { _progressDispatcherTimer.Start(); });
+                }
+            }
+
+            /// <summary>
+            ///     On every tick, we update the progress of each OneFileTransferViewModel. We need to do this periodically to not to
+            ///     block the UI thread and maintain a fluid display of progress changes.
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
+            private void ProgressDispatcherTimerTickHandler(object sender, object e)
+            {
+                _fileTransferViewModel.UpDateProgress();
+            }
         }
 
         #endregion

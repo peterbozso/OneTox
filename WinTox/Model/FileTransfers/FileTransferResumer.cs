@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using WinTox.Model.Avatars;
 
-namespace WinTox.Model
+namespace WinTox.Model.FileTransfers
 {
     /// <summary>
     ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
@@ -26,7 +27,7 @@ namespace WinTox.Model
 
         private FileTransferResumer()
         {
-            FileTransferManager.Instance.TransferFinished += TransferFinishedHandler;
+            // FileTransferManager.Instance.TransferFinished += TransferFinishedHandler; TODO
             ToxModel.Instance.FriendListChanged += FriendListChangedHandler;
         }
 
@@ -184,10 +185,12 @@ namespace WinTox.Model
             return null;
         }
 
+        /* TODO
         private void TransferFinishedHandler(object sender, FileTransferManager.TransferFinishedEventArgs e)
         {
             RemoveTransfer(e.FriendNumber, e.FileNumber);
         }
+        */
 
         /// <summary>
         ///     In case a friend is removed from the friend list, we remove all broken transfers associated with him/her as well.

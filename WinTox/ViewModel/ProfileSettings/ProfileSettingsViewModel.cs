@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
 using WinTox.Common;
 using WinTox.Model;
+using WinTox.Model.Avatars;
 using ZXing;
 using ZXing.Common;
 

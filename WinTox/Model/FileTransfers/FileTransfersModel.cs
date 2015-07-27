@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SharpTox.Core;
+using WinTox.Model.Avatars;
 
-namespace WinTox.Model
+namespace WinTox.Model.FileTransfers
 {
     public class FileTransfersModel
     {

@@ -5,6 +5,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
 using WinTox.Model;
+using WinTox.Model.Avatars;
 
 namespace WinTox.ViewModel
 {
