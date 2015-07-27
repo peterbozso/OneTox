@@ -148,6 +148,12 @@ namespace WinTox.ViewModel.FileTransfers
                 _progressDispatcherTimer = new DispatcherTimer();
                 _progressDispatcherTimer.Tick += ProgressDispatcherTimerTickHandler;
                 _progressDispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
+
+                if (_fileTransferViewModel.State == FileTransferState.Uploading ||
+                    _fileTransferViewModel.State == FileTransferState.Downloading)
+                {
+                    _progressDispatcherTimer.Start();
+                }
             }
 
             private async void StateChangedHandler(object sender, PropertyChangedEventArgs e)

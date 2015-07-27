@@ -6,6 +6,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Globalization;
+using Windows.Storage.AccessCache;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.Core;
 using Windows.UI.Popups;
@@ -90,6 +91,8 @@ namespace WinTox
             }
             // Ensure the current window is active
             Window.Current.Activate();
+
+            StorageApplicationPermissions.FutureAccessList.Clear(); // TODO: Remove it!
         }
 
         private async Task InitializeSingletons()

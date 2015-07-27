@@ -107,8 +107,10 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\FileTransfers\FileTransferResumer.cs" />
     <Compile Include="Model\FileTransfers\FileTransfersModel.cs" />
     <Compile Include="Model\FileTransfers\FileTransferState.cs" />
+    <Compile Include="Model\FileTransfers\OneBrokenFileDownloadModel.cs" />
     <Compile Include="Model\FileTransfers\OneFileTransferModel.cs" />
     <Compile Include="ViewModel\FileTransfers\FileTransfersViewModel.cs" />
     <Compile Include="ViewModel\FileTransfers\OneFileTransferViewModel.cs" />
@@ -132,7 +134,6 @@
     <Compile Include="Helpers\DnsTools.cs" />
     <Compile Include="Model\ExtendedTox.cs" />
     <Compile Include="Model\Avatars\AvatarTransferManager.cs" />
-    <Compile Include="Model\FileTransfers\FileTransferResumer.cs" />
     <Compile Include="Model\FriendListChangedEventArgs.cs" />
     <Compile Include="Model\ToxAvModel.cs" />
     <Compile Include="Model\ToxModel.cs" />

@@ -24,7 +24,31 @@ namespace WinTox.Model.FileTransfers
 
         #region Constructor
 
-        public OneFileTransferModel(int friendNumber, int fileNumber, string name,
+        public static async Task<OneFileTransferModel> CreateInstance(int friendNumber, int fileNumber, string name,
+            long fileSizeInBytes, TransferDirection direction, StorageFile file, long transferredBytes = 0)
+        {
+            if (file != null)
+                FileTransferResumer.Instance.RecordTransfer(file, friendNumber, fileNumber, direction);
+
+            var fileStream = file == null ? null : await GetStreamBasedOnDirection(file, direction);
+
+            return new OneFileTransferModel(friendNumber, fileNumber, name, fileSizeInBytes, direction, fileStream,
+                transferredBytes);
+        }
+
+        protected static async Task<Stream> GetStreamBasedOnDirection(StorageFile file, TransferDirection direction)
+        {
+            switch (direction)
+            {
+                case TransferDirection.Up:
+                    return await file.OpenStreamForReadAsync();
+                case TransferDirection.Down:
+                    return await file.OpenStreamForWriteAsync();
+            }
+            return null;
+        }
+
+        protected OneFileTransferModel(int friendNumber, int fileNumber, string name,
             long fileSizeInBytes, TransferDirection direction, Stream stream, long transferredBytes = 0)
         {
             _stream = stream;
@@ -50,9 +74,33 @@ namespace WinTox.Model.FileTransfers
             ToxModel.Instance.FileControlReceived += FileControlReceivedHandler;
             ToxModel.Instance.FileChunkRequested += FileChunkRequestedHandler;
             ToxModel.Instance.FileChunkReceived += FileChunkReceivedHandler;
+            ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
         }
 
-        private void SetInitialStateBasedOnDirection(TransferDirection direction)
+        private async void FriendConnectionStatusChangedHandler(object sender,
+            ToxEventArgs.FriendConnectionStatusEventArgs e)
+        {
+            if (_friendNumber != e.FriendNumber || IsPlaceholder)
+                return;
+
+            if (!ToxModel.Instance.IsFriendOnline(e.FriendNumber))
+            {
+                await FileTransferResumer.Instance.UpdateTransfer(_friendNumber, _fileNumber, TransferredBytes);
+                State = FileTransferState.Cancelled;
+            }
+
+            /* TODO
+            else
+            {
+                if (ToxModel.Instance.LastConnectionStatusOfFriend(e.FriendNumber) != ToxConnectionStatus.None)
+                    return;
+
+                await ResumeBrokenUploadsForFriend(e.FriendNumber);
+            }
+            */
+        }
+
+        protected virtual void SetInitialStateBasedOnDirection(TransferDirection direction)
         {
             switch (direction)
             {
@@ -99,7 +147,7 @@ namespace WinTox.Model.FileTransfers
         public FileTransferState State
         {
             get { return _state; }
-            private set
+            protected set
             {
                 if (value == _state)
                     return;
@@ -133,6 +181,7 @@ namespace WinTox.Model.FileTransfers
             switch (e.Control)
             {
                 case ToxFileControl.Cancel:
+                    FileTransferResumer.Instance.RemoveTransfer(_friendNumber, _fileNumber);
                     State = FileTransferState.Cancelled;
                     return;
                 case ToxFileControl.Pause:
@@ -177,6 +226,7 @@ namespace WinTox.Model.FileTransfers
             {
                 if (IsFinished)
                 {
+                    FileTransferResumer.Instance.RemoveTransfer(_friendNumber, _fileNumber);
                     State = FileTransferState.Finished;
                 }
             }
@@ -211,6 +261,7 @@ namespace WinTox.Model.FileTransfers
 
             if (IsFinished)
             {
+                FileTransferResumer.Instance.RemoveTransfer(_friendNumber, _fileNumber);
                 State = FileTransferState.Finished;
             }
         }
@@ -234,6 +285,8 @@ namespace WinTox.Model.FileTransfers
 
         public void CancelTransfer()
         {
+            FileTransferResumer.Instance.RemoveTransfer(_friendNumber, _fileNumber);
+
             if (!IsPlaceholder)
                 ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Cancel);
         }
@@ -249,15 +302,14 @@ namespace WinTox.Model.FileTransfers
 
             if (successfulSend)
             {
-                // FileTransferResumer.Instance.RecordTransfer(file, FriendNumber, fileNumber, TransferDirection.Down); TODO!
-                Debug.WriteLine("STUB: AcceptTransfer()!");
-
+                FileTransferResumer.Instance.RecordTransfer(file, _friendNumber, _fileNumber, TransferDirection.Down);
                 State = FileTransferState.Downloading;
-                return;
             }
-
-            ReplaceStream(null);
-            fileStream.Dispose();
+            else
+            {
+                ReplaceStream(null);
+                fileStream.Dispose();
+            }
         }
 
         public void PauseTransfer()

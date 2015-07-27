@@ -27,7 +27,6 @@ namespace WinTox.Model.FileTransfers
 
         private FileTransferResumer()
         {
-            // FileTransferManager.Instance.TransferFinished += TransferFinishedHandler; TODO
             ToxModel.Instance.FriendListChanged += FriendListChangedHandler;
         }
 
@@ -153,16 +152,15 @@ namespace WinTox.Model.FileTransfers
             try
             {
                 var file = await _futureAccesList.GetFileAsync(token);
-                var stream = await GetStreamBasedOnDirection(file, metadata.Direction);
+                _futureAccesList.Remove(token);
+
                 var resumeData = new ResumeData
                 {
                     FriendNumber = metadata.FriendNumber,
-                    FileStream = stream,
-                    FileName = file.Name,
+                    File = file,
                     FileId = metadata.FileId,
                     TransferredBytes = metadata.TransferredBytes
                 };
-
                 return resumeData;
             }
             catch (FileNotFoundException)
@@ -172,25 +170,6 @@ namespace WinTox.Model.FileTransfers
             }
             return null;
         }
-
-        private async Task<Stream> GetStreamBasedOnDirection(StorageFile file, TransferDirection direction)
-        {
-            switch (direction)
-            {
-                case TransferDirection.Up:
-                    return await file.OpenStreamForReadAsync();
-                case TransferDirection.Down:
-                    return await file.OpenStreamForWriteAsync();
-            }
-            return null;
-        }
-
-        /* TODO
-        private void TransferFinishedHandler(object sender, FileTransferManager.TransferFinishedEventArgs e)
-        {
-            RemoveTransfer(e.FriendNumber, e.FileNumber);
-        }
-        */
 
         /// <summary>
         ///     In case a friend is removed from the friend list, we remove all broken transfers associated with him/her as well.
@@ -256,9 +235,8 @@ namespace WinTox.Model.FileTransfers
     /// </summary>
     public class ResumeData
     {
+        public StorageFile File;
         public byte[] FileId;
-        public string FileName;
-        public Stream FileStream;
         public int FriendNumber;
         public long TransferredBytes;
     }
