@@ -6,7 +6,6 @@ using Windows.Storage;
 using Windows.UI.Xaml;
 using SharpTox.Core;
 using WinTox.Helpers;
-using WinTox.Model.Avatars;
 
 namespace WinTox.Model.FileTransfers
 {

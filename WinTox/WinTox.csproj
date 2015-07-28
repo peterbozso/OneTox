@@ -107,6 +107,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\FileTransfers\TransferDirection.cs" />
     <Compile Include="Model\FileTransfers\FileTransferResumer.cs" />
     <Compile Include="Model\FileTransfers\FileTransfersModel.cs" />
     <Compile Include="Model\FileTransfers\FileTransferState.cs" />
@@ -130,7 +131,6 @@
     <Compile Include="View\Converters\UserStatusToStringConverter.cs" />
     <Compile Include="Helpers\CloseFlyoutAction.cs" />
     <Compile Include="Model\Avatars\AvatarManager.cs" />
-    <Compile Include="Model\Avatars\DataTransferManager.cs" />
     <Compile Include="Helpers\DnsTools.cs" />
     <Compile Include="Model\ExtendedTox.cs" />
     <Compile Include="Model\Avatars\AvatarTransferManager.cs" />

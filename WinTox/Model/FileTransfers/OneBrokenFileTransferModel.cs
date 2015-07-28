@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Windows.Storage;
 using SharpTox.Core;
-using WinTox.Model.Avatars;
 
 namespace WinTox.Model.FileTransfers
 {
