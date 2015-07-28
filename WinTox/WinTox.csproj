@@ -162,7 +162,6 @@
     <Compile Include="View\ChatPage.xaml.cs">
       <DependentUpon>ChatPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\FriendRequestView.cs" />
     <Compile Include="View\ProfileSettingsFlyout.xaml.cs">
       <DependentUpon>ProfileSettingsFlyout.xaml</DependentUpon>
     </Compile>

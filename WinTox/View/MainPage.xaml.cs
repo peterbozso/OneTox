@@ -65,9 +65,11 @@ namespace WinTox.View
         /// .
         /// The navigation parameter is available in the LoadState method
         /// in addition to page state preserved during an earlier session.
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             NavigationHelper.OnNavigatedTo(e);
+
+            await _viewModel.FriendRequests.RestoreDataIfNeededAsync();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

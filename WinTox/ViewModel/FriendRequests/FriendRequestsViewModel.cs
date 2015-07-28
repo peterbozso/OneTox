@@ -11,9 +11,6 @@ using WinTox.Model;
 
 namespace WinTox.ViewModel.FriendRequests
 {
-    /// <summary>
-    ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
-    /// </summary>
     public class FriendRequestsViewModel
     {
         public enum FriendRequestAnswer
@@ -24,23 +21,17 @@ namespace WinTox.ViewModel.FriendRequests
         }
 
         private const string KFileName = "FriendRequests";
-        private static FriendRequestsViewModel _instance;
         private readonly SemaphoreSlim _semaphore;
 
-        private FriendRequestsViewModel()
+        public FriendRequestsViewModel()
         {
-            FriendRequests = new ObservableCollection<OneFriendRequestViewModel>();
-            FriendRequests.CollectionChanged += FriendRequestsCollectionChangedHandler;
+            Items = new ObservableCollection<OneFriendRequestViewModel>();
+            Items.CollectionChanged += FriendRequestsCollectionChangedHandler;
             ToxModel.Instance.FriendRequestReceived += FriendRequestReceivedHandler;
             _semaphore = new SemaphoreSlim(1);
         }
 
-        public static FriendRequestsViewModel Instance
-        {
-            get { return _instance ?? (_instance = new FriendRequestsViewModel()); }
-        }
-
-        public ObservableCollection<OneFriendRequestViewModel> FriendRequests { get; private set; }
+        public ObservableCollection<OneFriendRequestViewModel> Items { get; private set; }
         public event EventHandler<ToxEventArgs.FriendRequestEventArgs> FriendRequestReceived;
 
         public void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e)
@@ -53,7 +44,7 @@ namespace WinTox.ViewModel.FriendRequests
                 case FriendRequestAnswer.Decline:
                     return;
                 case FriendRequestAnswer.Later:
-                    FriendRequests.Add(new OneFriendRequestViewModel(e.PublicKey, e.Message));
+                    Items.Add(new OneFriendRequestViewModel(this, e.PublicKey, e.Message));
                     return;
             }
         }
@@ -67,7 +58,7 @@ namespace WinTox.ViewModel.FriendRequests
                     KFileName, CreationCollisionOption.ReplaceExisting);
 
                 var requestStrings = new List<string>();
-                foreach (var friendRequest in FriendRequests)
+                foreach (var friendRequest in Items)
                 {
                     var oneRequestString = new string[2];
                     oneRequestString[0] = friendRequest.PublicKey;
@@ -83,8 +74,11 @@ namespace WinTox.ViewModel.FriendRequests
             }
         }
 
-        public async Task RestoreDataAsync()
+        public async Task RestoreDataIfNeededAsync()
         {
+            if (Items.Count != 0)
+                return;
+
             try
             {
                 var file = await ApplicationData.Current.RoamingFolder.GetFileAsync(KFileName);
@@ -95,7 +89,7 @@ namespace WinTox.ViewModel.FriendRequests
                 {
                     var publicKey = lines[i];
                     var message = lines[i + 1];
-                    FriendRequests.Add(new OneFriendRequestViewModel(new ToxKey(ToxKeyType.Public, publicKey), message));
+                    Items.Add(new OneFriendRequestViewModel(this, new ToxKey(ToxKeyType.Public, publicKey), message));
                 }
             }
             catch (FileNotFoundException)

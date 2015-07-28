@@ -1,5 +1,4 @@
 ﻿using Windows.UI.Xaml.Controls;
-using WinTox.ViewModel.FriendRequests;
 
 namespace WinTox.View.UserControls.FriendRequests
 {
@@ -8,8 +7,6 @@ namespace WinTox.View.UserControls.FriendRequests
         public FriendRequestsList()
         {
             InitializeComponent();
-
-            ContentControl.ItemsSource = FriendRequestsViewModel.Instance.FriendRequests;
         }
     }
 }

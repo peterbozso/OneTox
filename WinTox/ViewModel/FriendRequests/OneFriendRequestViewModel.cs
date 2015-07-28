@@ -6,12 +6,15 @@ namespace WinTox.ViewModel.FriendRequests
 {
     public class OneFriendRequestViewModel
     {
+        private readonly FriendRequestsViewModel _friendRequestsViewModel;
         private readonly ToxKey _publicKey;
         private RelayCommand _acceptCommand;
         private RelayCommand _declineCommand;
 
-        public OneFriendRequestViewModel(ToxKey publicKey, string message)
+        public OneFriendRequestViewModel(FriendRequestsViewModel friendRequestsViewModel, ToxKey publicKey,
+            string message)
         {
+            _friendRequestsViewModel = friendRequestsViewModel;
             _publicKey = publicKey;
             Message = message;
         }
@@ -35,7 +38,7 @@ namespace WinTox.ViewModel.FriendRequests
                 return _acceptCommand ?? (_acceptCommand = new RelayCommand(() =>
                 {
                     ToxModel.Instance.AddFriendNoRequest(_publicKey);
-                    FriendRequestsViewModel.Instance.FriendRequests.Remove(this);
+                    _friendRequestsViewModel.Items.Remove(this);
                 }));
             }
         }
@@ -46,7 +49,7 @@ namespace WinTox.ViewModel.FriendRequests
             {
                 return _declineCommand ??
                        (_declineCommand =
-                           new RelayCommand(() => { FriendRequestsViewModel.Instance.FriendRequests.Remove(this); }));
+                           new RelayCommand(() => { _friendRequestsViewModel.Items.Remove(this); }));
             }
         }
     }

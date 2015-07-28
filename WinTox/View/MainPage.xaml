@@ -83,7 +83,7 @@
 
             <HubSection Header="friend requests" Visibility="{Binding FriendRequestsListVisibility}">
                 <DataTemplate>
-                    <friendRequests:FriendRequestsList />
+                    <friendRequests:FriendRequestsList DataContext="{Binding FriendRequests}" />
                 </DataTemplate>
             </HubSection>
         </Hub>

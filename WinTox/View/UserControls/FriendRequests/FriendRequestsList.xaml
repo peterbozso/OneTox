@@ -11,7 +11,7 @@
 
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <ItemsControl x:Name="ContentControl" Width="300"> <!-- ItemsSource set in code-behind. -->
+            <ItemsControl x:Name="ContentControl" Width="300" ItemsSource="{Binding Items}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <local:FriendRequestsListItem />

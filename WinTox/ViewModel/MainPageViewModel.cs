@@ -1,5 +1,10 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
+using SharpTox.Core;
 using WinTox.Helpers;
 using WinTox.ViewModel.FriendRequests;
 using WinTox.ViewModel.Friends;
@@ -15,14 +20,20 @@ namespace WinTox.ViewModel
         public MainPageViewModel()
         {
             FriendList = new FriendListViewModel();
-            DecideFriendRequestsListVisibility();
-            DecideRecentMessagesListVisiblity();
+
+            FriendRequests = new FriendRequestsViewModel();
+            FriendRequests.FriendRequestReceived += FriendRequestReceivedHandler;
+            FriendRequests.Items.CollectionChanged += FriendRequestsCollectionChangedHandler;
+
             RecentMessagesGlobalViewModel.Instace.RecentMessages.CollectionChanged +=
                 RecentMessagesCollectionChangedHandler;
-            FriendRequestsViewModel.Instance.FriendRequests.CollectionChanged += FriendRequestsCollectionChangedHandler;
+
+            DecideFriendRequestsListVisibility();
+            DecideRecentMessagesListVisiblity();
         }
 
-        public FriendListViewModel FriendList { get; set; }
+        public FriendListViewModel FriendList { get; private set; }
+        public FriendRequestsViewModel FriendRequests { get; private set; }
 
         public Visibility RecentMessagesListVisibility
         {
@@ -48,6 +59,22 @@ namespace WinTox.ViewModel
             }
         }
 
+        private async void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
+        {
+            // TODO: Turn it into a toast notification.
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                var message = "From: " + e.PublicKey + "\n" + "Message: " + e.Message;
+                var msgDialog = new MessageDialog(message, "Friend request received");
+                msgDialog.Commands.Add(new UICommand("Accept", null, FriendRequestsViewModel.FriendRequestAnswer.Accept));
+                msgDialog.Commands.Add(new UICommand("Decline", null,
+                    FriendRequestsViewModel.FriendRequestAnswer.Decline));
+                msgDialog.Commands.Add(new UICommand("Later", null, FriendRequestsViewModel.FriendRequestAnswer.Later));
+                var answer = await msgDialog.ShowAsync();
+                FriendRequests.HandleFriendRequestAnswer((FriendRequestsViewModel.FriendRequestAnswer) answer.Id, e);
+            });
+        }
+
         private void FriendRequestsCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
         {
             DecideFriendRequestsListVisibility();
@@ -55,7 +82,7 @@ namespace WinTox.ViewModel
 
         private void DecideFriendRequestsListVisibility()
         {
-            FriendRequestsListVisibility = FriendRequestsViewModel.Instance.FriendRequests.Count > 0
+            FriendRequestsListVisibility = FriendRequests.Items.Count > 0
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }
