@@ -15,7 +15,7 @@ namespace WinTox.ViewModel.FileTransfers
         {
             _friendNumber = friendNumber;
             _transfersModel = new FileTransfersModel(friendNumber);
-            _transfersModel.FileSendRequestReceived += FileSendRequestReceivedHandler;
+            _transfersModel.FileTransferAdded += FileTransferAddedHandler;
             Transfers = new ObservableCollection<OneFileTransferViewModel>();
             VisualStates = new FileTransfersVisualStates(Transfers);
         }
@@ -154,7 +154,7 @@ namespace WinTox.ViewModel.FileTransfers
             }
         }
 
-        private async void FileSendRequestReceivedHandler(object sender, OneFileTransferModel e)
+        private async void FileTransferAddedHandler(object sender, OneFileTransferModel e)
         {
             await
                 CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,

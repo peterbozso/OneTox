@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.Storage;
+using Windows.UI.Xaml;
 using SharpTox.Core;
 using WinTox.Annotations;
 using WinTox.Model.Avatars;
@@ -75,29 +77,7 @@ namespace WinTox.Model.FileTransfers
             ToxModel.Instance.FileChunkRequested += FileChunkRequestedHandler;
             ToxModel.Instance.FileChunkReceived += FileChunkReceivedHandler;
             ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
-        }
-
-        private async void FriendConnectionStatusChangedHandler(object sender,
-            ToxEventArgs.FriendConnectionStatusEventArgs e)
-        {
-            if (_friendNumber != e.FriendNumber || IsPlaceholder)
-                return;
-
-            if (!ToxModel.Instance.IsFriendOnline(e.FriendNumber))
-            {
-                await FileTransferResumer.Instance.UpdateTransfer(_friendNumber, _fileNumber, TransferredBytes);
-                State = FileTransferState.Cancelled;
-            }
-
-            /* TODO
-            else
-            {
-                if (ToxModel.Instance.LastConnectionStatusOfFriend(e.FriendNumber) != ToxConnectionStatus.None)
-                    return;
-
-                await ResumeBrokenUploadsForFriend(e.FriendNumber);
-            }
-            */
+            Application.Current.Suspending += AppSuspendingHandler;
         }
 
         protected virtual void SetInitialStateBasedOnDirection(TransferDirection direction)
@@ -400,6 +380,33 @@ namespace WinTox.Model.FileTransfers
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+
+        #region File transfer resuming
+
+        private async void AppSuspendingHandler(object sender, SuspendingEventArgs e)
+        {
+            var deferral = e.SuspendingOperation.GetDeferral();
+
+            if (!IsPlaceholder)
+                await FileTransferResumer.Instance.UpdateTransfer(_friendNumber, _fileNumber, TransferredBytes);
+
+            deferral.Complete();
+        }
+
+        private async void FriendConnectionStatusChangedHandler(object sender,
+            ToxEventArgs.FriendConnectionStatusEventArgs e)
+        {
+            if (_friendNumber != e.FriendNumber || IsPlaceholder)
+                return;
+
+            if (!ToxModel.Instance.IsFriendOnline(e.FriendNumber))
+            {
+                await FileTransferResumer.Instance.UpdateTransfer(_friendNumber, _fileNumber, TransferredBytes);
+                State = FileTransferState.Cancelled;
+            }
         }
 
         #endregion

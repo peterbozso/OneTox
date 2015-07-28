@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SharpTox.Core;
@@ -15,6 +14,35 @@ namespace WinTox.Model.FileTransfers
         {
             _friendNumber = friendNumber;
             ToxModel.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
+            ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
+        }
+
+        public event EventHandler<OneFileTransferModel> FileTransferAdded;
+
+        private async Task<long> GetFileSizeInBytes(StorageFile file)
+        {
+            var fileProperties = await file.GetBasicPropertiesAsync();
+            return (long) fileProperties.Size;
+        }
+
+        #region Sending/receiving
+
+        public async Task<OneFileTransferModel> SendFile(StorageFile file)
+        {
+            var fileSizeInBytes = await GetFileSizeInBytes(file);
+
+            bool successfulFileSend;
+            var fileInfo = ToxModel.Instance.FileSend(_friendNumber, ToxFileKind.Data, fileSizeInBytes, file.Name,
+                out successfulFileSend);
+
+            if (successfulFileSend)
+            {
+                var transferModel = await OneFileTransferModel.CreateInstance(_friendNumber, fileInfo.Number, file.Name,
+                    fileSizeInBytes, TransferDirection.Up, file);
+                return transferModel;
+            }
+
+            return null;
         }
 
         private async void FileSendRequestReceivedHandler(object sender,
@@ -33,7 +61,7 @@ namespace WinTox.Model.FileTransfers
             {
                 oneFileTransferModel =
                     await
-                        OneBrokenFileDownloadModel.CreateInstance(e.FriendNumber, e.FileNumber, resumeData.File.Name,
+                        OneBrokenFileTransferModel.CreateInstance(e.FriendNumber, e.FileNumber, resumeData.File.Name,
                             e.FileSize, TransferDirection.Down, resumeData.File, resumeData.TransferredBytes);
             }
             else
@@ -46,29 +74,54 @@ namespace WinTox.Model.FileTransfers
                             TransferDirection.Down, null);
             }
 
-            if (FileSendRequestReceived != null)
-                FileSendRequestReceived(this, oneFileTransferModel);
+            if (FileTransferAdded != null)
+                FileTransferAdded(this, oneFileTransferModel);
         }
 
-        public event EventHandler<OneFileTransferModel> FileSendRequestReceived;
+        #endregion
 
-        public async Task<OneFileTransferModel> SendFile(StorageFile file)
+        #region File transfer resuming
+
+        private async void FriendConnectionStatusChangedHandler(object sender,
+            ToxEventArgs.FriendConnectionStatusEventArgs e)
         {
-            var fileProperties = await file.GetBasicPropertiesAsync();
-            var fileSizeInBytes = (long) fileProperties.Size;
+            if (_friendNumber != e.FriendNumber)
+                return;
 
-            bool successfulFileSend;
-            var fileInfo = ToxModel.Instance.FileSend(_friendNumber, ToxFileKind.Data, fileSizeInBytes, file.Name,
-                out successfulFileSend);
-
-            if (successfulFileSend)
+            if (ToxModel.Instance.IsFriendOnline(e.FriendNumber) &&
+                ToxModel.Instance.LastConnectionStatusOfFriend(e.FriendNumber) == ToxConnectionStatus.None)
             {
-                var transferModel = await OneFileTransferModel.CreateInstance(_friendNumber, fileInfo.Number, file.Name,
-                    fileSizeInBytes, TransferDirection.Up, file);
-                return transferModel;
+                // The given friend just came online... let's restart all of our previously broken uploads towards him/her!
+                await ResumeBrokenUploadsForFriend(e.FriendNumber);
             }
-
-            return null;
         }
+
+        private async Task ResumeBrokenUploadsForFriend(int friendNumber)
+        {
+            var resumeDataOfBrokenUploads = await FileTransferResumer.Instance.GetUploadData(friendNumber);
+
+            foreach (var resumeData in resumeDataOfBrokenUploads)
+            {
+                var fileSizeInBytes = await GetFileSizeInBytes(resumeData.File);
+
+                bool successfulFileSend;
+                var fileInfo = ToxModel.Instance.FileSend(resumeData.FriendNumber, ToxFileKind.Data,
+                    fileSizeInBytes, resumeData.File.Name, resumeData.FileId, out successfulFileSend);
+
+                if (successfulFileSend)
+                {
+                    var oneFileTransferModel =
+                        await
+                            OneBrokenFileTransferModel.CreateInstance(resumeData.FriendNumber, fileInfo.Number,
+                                resumeData.File.Name, fileSizeInBytes, TransferDirection.Up, resumeData.File,
+                                resumeData.TransferredBytes);
+
+                    if (FileTransferAdded != null)
+                        FileTransferAdded(this, oneFileTransferModel);
+                }
+            }
+        }
+
+        #endregion
     }
 }
