@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using SharpTox.Core;
+using WinTox.Helpers;
 using WinTox.Model;
 using WinTox.ViewModel.Friends;
 using WinTox.ViewModel.Messaging.RecentMessages;
 
 namespace WinTox.ViewModel.Messaging
 {
-    public class ConversationViewModel : ViewModelBase
+    public class ConversationViewModel : ObservableObject
     {
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly FriendViewModel _friendViewModel;

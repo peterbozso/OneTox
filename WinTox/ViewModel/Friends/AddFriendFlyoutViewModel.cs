@@ -6,7 +6,7 @@ using WinTox.Model;
 
 namespace WinTox.ViewModel.Friends
 {
-    public class AddFriendFlyoutViewModel : ViewModelBase
+    public class AddFriendFlyoutViewModel : ObservableObject
     {
         private RelayCommand _addFriendCommand;
         private string _friendId;

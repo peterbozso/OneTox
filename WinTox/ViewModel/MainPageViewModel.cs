@@ -1,12 +1,13 @@
 ﻿using System.Collections.Specialized;
 using Windows.UI.Xaml;
+using WinTox.Helpers;
 using WinTox.ViewModel.FriendRequests;
 using WinTox.ViewModel.Friends;
 using WinTox.ViewModel.Messaging.RecentMessages;
 
 namespace WinTox.ViewModel
 {
-    public class MainPageViewModel : ViewModelBase
+    public class MainPageViewModel : ObservableObject
     {
         private Visibility _friendRequestsListVisibility;
         private Visibility _recentMessagesListVisibility;

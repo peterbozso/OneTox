@@ -6,11 +6,12 @@ using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using WinTox.Common;
+using WinTox.Helpers;
 using WinTox.Model.FileTransfers;
 
 namespace WinTox.ViewModel.FileTransfers
 {
-    public class OneFileTransferViewModel : ViewModelBase
+    public class OneFileTransferViewModel : ObservableObject
     {
         public OneFileTransferViewModel(FileTransfersViewModel fileTransfersViewModel,
             OneFileTransferModel oneFileTransferModel)

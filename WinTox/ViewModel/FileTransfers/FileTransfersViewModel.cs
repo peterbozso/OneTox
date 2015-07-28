@@ -5,6 +5,7 @@ using Windows.ApplicationModel.Core;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using WinTox.Common;
+using WinTox.Helpers;
 using WinTox.Model.FileTransfers;
 
 namespace WinTox.ViewModel.FileTransfers
@@ -26,7 +27,7 @@ namespace WinTox.ViewModel.FileTransfers
         ///     This class's purpose is to supply (trough data binding) the current visual state of FileTransfersBlock and height
         ///     of OpenContentGrid.
         /// </summary>
-        public class FileTransfersVisualStates : ViewModelBase
+        public class FileTransfersVisualStates : ObservableObject
         {
             /// <summary>
             ///     Open: we have one or more file transfers for the current friend an we show "all" (4 max at once) of them.

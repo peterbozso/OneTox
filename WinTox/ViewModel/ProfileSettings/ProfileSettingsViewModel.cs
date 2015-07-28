@@ -11,6 +11,7 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
 using WinTox.Common;
+using WinTox.Helpers;
 using WinTox.Model;
 using WinTox.Model.Avatars;
 using ZXing;
@@ -18,7 +19,7 @@ using ZXing.Common;
 
 namespace WinTox.ViewModel.ProfileSettings
 {
-    internal class ProfileSettingsViewModel : ViewModelBase
+    internal class ProfileSettingsViewModel : ObservableObject
     {
         public ProfileSettingsViewModel()
         {

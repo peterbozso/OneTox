@@ -8,11 +8,12 @@ using Windows.Storage.Pickers;
 using SharpTox.Core;
 using SharpTox.Encryption;
 using WinTox.Common;
+using WinTox.Helpers;
 using WinTox.Model;
 
 namespace WinTox.ViewModel.ProfileSettings
 {
-    internal class ProfileManagementViewModel : ViewModelBase
+    internal class ProfileManagementViewModel : ObservableObject
     {
         private RelayCommand _createNewProfileCommand;
         private bool _isSwitchProfileFlyoutClosed;

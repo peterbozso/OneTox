@@ -2,9 +2,9 @@
 using System.Runtime.CompilerServices;
 using WinTox.Annotations;
 
-namespace WinTox.ViewModel
+namespace WinTox.Helpers
 {
-    public class ViewModelBase : INotifyPropertyChanged
+    public class ObservableObject : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -5,6 +5,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
 using WinTox.Common;
+using WinTox.Helpers;
 using WinTox.Model;
 using WinTox.Model.Avatars;
 using WinTox.ViewModel.FileTransfers;
@@ -13,7 +14,7 @@ using WinTox.ViewModel.Messaging.RecentMessages;
 
 namespace WinTox.ViewModel.Friends
 {
-    public class FriendViewModel : ViewModelBase, IToxUserViewModel
+    public class FriendViewModel : ObservableObject, IToxUserViewModel
     {
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private RelayCommand _copyIdCommand;

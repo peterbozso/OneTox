@@ -4,12 +4,13 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using SharpTox.Core;
+using WinTox.Helpers;
 using WinTox.Model;
 using WinTox.Model.Avatars;
 
 namespace WinTox.ViewModel
 {
-    public class UserViewModel : ViewModelBase, IToxUserViewModel
+    public class UserViewModel : ObservableObject, IToxUserViewModel
     {
         public UserViewModel()
         {

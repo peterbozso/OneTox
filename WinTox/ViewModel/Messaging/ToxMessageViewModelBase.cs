@@ -1,5 +1,6 @@
 ﻿using System;
 using SharpTox.Core;
+using WinTox.Helpers;
 
 namespace WinTox.ViewModel.Messaging
 {
@@ -10,7 +11,7 @@ namespace WinTox.ViewModel.Messaging
         Failed
     }
 
-    public class ToxMessageViewModelBase : ViewModelBase
+    public class ToxMessageViewModelBase : ObservableObject
     {
         private MessageDeliveryState _state;
         private string _text;

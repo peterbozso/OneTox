@@ -158,7 +158,7 @@
     <Compile Include="ViewModel\ProfileSettings\ProfileSettingsViewModel.cs" />
     <Compile Include="ViewModel\ToxErrorViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="Helpers\ObservableObject.cs" />
     <Compile Include="View\ChatPage.xaml.cs">
       <DependentUpon>ChatPage.xaml</DependentUpon>
     </Compile>

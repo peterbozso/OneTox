@@ -9,11 +9,12 @@ using NAudio.Wave;
 using NAudio.Win8.Wave.WaveOutputs;
 using SharpTox.Av;
 using WinTox.Common;
+using WinTox.Helpers;
 using WinTox.Model;
 
 namespace WinTox.ViewModel
 {
-    public class CallViewModel : ViewModelBase
+    public class CallViewModel : ObservableObject
     {
         public enum CallState
         {

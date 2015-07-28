@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using SharpTox.Core;
 using SharpTox.Encryption;
+using WinTox.Helpers;
 using WinTox.ViewModel;
 
 namespace WinTox.Model
@@ -13,7 +14,7 @@ namespace WinTox.Model
     /// <summary>
     ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
     /// </summary>
-    public class ToxModel : ViewModelBase
+    public class ToxModel : ObservableObject
     {
         private static readonly ToxNode[] Nodes =
         {

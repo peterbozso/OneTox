@@ -1,19 +1,18 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using SharpTox.Core;
-using WinTox.Annotations;
+using WinTox.Helpers;
 using WinTox.Model.Avatars;
+using WinTox.ViewModel;
 
 namespace WinTox.Model.FileTransfers
 {
-    public class OneFileTransferModel : INotifyPropertyChanged
+    public class OneFileTransferModel : ObservableObject
     {
         #region Helpers
 
@@ -367,19 +366,6 @@ namespace WinTox.Model.FileTransfers
 
             newStream.SetLength(_fileSizeInBytes);
             _stream = newStream;
-        }
-
-        #endregion
-
-        #region Property changed event
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion
