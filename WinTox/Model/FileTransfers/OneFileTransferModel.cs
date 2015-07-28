@@ -8,7 +8,6 @@ using Windows.UI.Xaml;
 using SharpTox.Core;
 using WinTox.Helpers;
 using WinTox.Model.Avatars;
-using WinTox.ViewModel;
 
 namespace WinTox.Model.FileTransfers
 {
