@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -152,9 +151,6 @@ namespace WinTox.Model.FileTransfers
         {
             if (IsPlaceholder || !IsThisTransfer(e))
                 return;
-
-            Debug.WriteLine("File control received \t friend number: {0}, \t file number: {1}, \t control: {2}",
-                e.FriendNumber, e.FileNumber, e.Control);
 
             switch (e.Control)
             {
