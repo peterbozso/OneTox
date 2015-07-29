@@ -103,9 +103,9 @@ namespace WinTox.ViewModel
         private IWaveIn _recorder;
         private int _samplingRate;
         private List<short> _sendBuffer;
-        private RelayCommand _startCallByUserCommand;
+        private RelayCommand _startCallCommand;
         private CallState _state;
-        private RelayCommand _stopCallByUserCommand;
+        private RelayCommand _stopCallCommand;
         private BufferedWaveProvider _waveProvider;
 
         #endregion
@@ -190,8 +190,8 @@ namespace WinTox.ViewModel
         {
             get
             {
-                return _startCallByUserCommand ??
-                       (_startCallByUserCommand = new RelayCommand(() =>
+                return _startCallCommand ??
+                       (_startCallCommand = new RelayCommand(() =>
                        {
                            ToxAvModel.Instance.Call(_friendNumber, _bitRate, 0);
                            IsMuted = false;
@@ -204,8 +204,8 @@ namespace WinTox.ViewModel
         {
             get
             {
-                return _stopCallByUserCommand ??
-                       (_stopCallByUserCommand = new RelayCommand(() =>
+                return _stopCallCommand ??
+                       (_stopCallCommand = new RelayCommand(() =>
                        {
                            StopRecording();
                            StopPlaying();
