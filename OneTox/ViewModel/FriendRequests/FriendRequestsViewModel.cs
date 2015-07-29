@@ -74,6 +74,7 @@ namespace OneTox.ViewModel.FriendRequests
             }
         }
 
+        // TODO: Don't call it on every navigation!!!
         public async Task RestoreDataIfNeededAsync()
         {
             if (Items.Count != 0)

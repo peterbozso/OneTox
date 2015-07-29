@@ -113,6 +113,8 @@
     <Compile Include="Model\FileTransfers\FileTransferState.cs" />
     <Compile Include="Model\FileTransfers\OneBrokenFileTransferModel.cs" />
     <Compile Include="Model\FileTransfers\OneFileTransferModel.cs" />
+    <Compile Include="ViewModel\Calls\CallViewModel.cs" />
+    <Compile Include="ViewModel\Calls\VideoCallViewModel.cs" />
     <Compile Include="ViewModel\FileTransfers\FileTransfersViewModel.cs" />
     <Compile Include="ViewModel\FileTransfers\OneFileTransferViewModel.cs" />
     <Compile Include="View\Converters\CallStateToStringConverter.cs" />
@@ -138,7 +140,7 @@
     <Compile Include="Model\ToxAvModel.cs" />
     <Compile Include="Model\ToxModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="ViewModel\CallViewModel.cs" />
+    <Compile Include="ViewModel\Calls\AudioCallViewModel.cs" />
     <Compile Include="ViewModel\FriendRequests\FriendRequestsViewModel.cs" />
     <Compile Include="ViewModel\FriendRequests\OneFriendRequestViewModel.cs" />
     <Compile Include="ViewModel\Friends\AddFriendFlyoutViewModel.cs" />
@@ -165,8 +167,8 @@
     <Compile Include="View\ProfileSettingsFlyout.xaml.cs">
       <DependentUpon>ProfileSettingsFlyout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\AudioCallBlock.xaml.cs">
-      <DependentUpon>AudioCallBlock.xaml</DependentUpon>
+    <Compile Include="View\UserControls\CallBlock.xaml.cs">
+      <DependentUpon>CallBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserControls\FileTransfers\FileTransferRibbon.xaml.cs">
       <DependentUpon>FileTransferRibbon.xaml</DependentUpon>
@@ -255,7 +257,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\UserControls\AudioCallBlock.xaml">
+    <Page Include="View\UserControls\CallBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

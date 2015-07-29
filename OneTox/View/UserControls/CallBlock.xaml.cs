@@ -3,40 +3,40 @@ using System.ComponentModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using OneTox.View.Converters;
-using OneTox.ViewModel;
+using OneTox.ViewModel.Calls;
 
 namespace OneTox.View.UserControls
 {
-    public sealed partial class AudioCallBlock : UserControl
+    public sealed partial class CallBlock : UserControl
     {
-        private CallViewModel _callViewModel;
+        private AudioCallViewModel _audioCallViewModel;
         private Flyout _microphoneIsNotAvailableFylout;
 
-        public AudioCallBlock()
+        public CallBlock()
         {
             InitializeComponent();
         }
 
         private void AudioCallBlockLoaded(object sender, RoutedEventArgs e)
         {
-            _callViewModel = (CallViewModel) DataContext;
-            _callViewModel.MicrophoneIsNotAvailable += MicrophoneIsNotAvailableHandler;
-            _callViewModel.StartRinging += StartRingingHandler;
-            _callViewModel.StopRinging += StopRingingHandler;
-            _callViewModel.PropertyChanged += PropertyChangedHandler;
+            _audioCallViewModel = ((CallViewModel) DataContext).Audio;
+            _audioCallViewModel.MicrophoneIsNotAvailable += MicrophoneIsNotAvailableHandler;
+            _audioCallViewModel.StartRinging += StartRingingHandler;
+            _audioCallViewModel.StopRinging += StopRingingHandler;
+            _audioCallViewModel.PropertyChanged += PropertyChangedHandler;
 
             var state =
-                (string) new CallStateToStringConverter().Convert(_callViewModel.State, typeof (string), null, null);
+                (string)
+                    new CallStateToStringConverter().Convert(_audioCallViewModel.State, typeof (string), null, null);
             VisualStateManager.GoToState(this, state, false);
         }
 
         private void AudioCallBlockUnloaded(object sender, RoutedEventArgs e)
         {
-            _callViewModel = (CallViewModel) DataContext;
-            _callViewModel.MicrophoneIsNotAvailable -= MicrophoneIsNotAvailableHandler;
-            _callViewModel.StartRinging -= StartRingingHandler;
-            _callViewModel.StopRinging -= StopRingingHandler;
-            _callViewModel.PropertyChanged -= PropertyChangedHandler;
+            _audioCallViewModel.MicrophoneIsNotAvailable -= MicrophoneIsNotAvailableHandler;
+            _audioCallViewModel.StartRinging -= StartRingingHandler;
+            _audioCallViewModel.StopRinging -= StopRingingHandler;
+            _audioCallViewModel.PropertyChanged -= PropertyChangedHandler;
         }
 
         #region Ring event handlers
@@ -82,7 +82,7 @@ namespace OneTox.View.UserControls
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             // Hide the flyout when the call ends.
-            if (e.PropertyName == "State" && _callViewModel.State == CallViewModel.CallState.Default)
+            if (e.PropertyName == "State" && _audioCallViewModel.State == AudioCallViewModel.CallState.Default)
             {
                 if (_microphoneIsNotAvailableFylout != null)
                 {

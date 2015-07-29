@@ -7,6 +7,7 @@ using OneTox.Common;
 using OneTox.Helpers;
 using OneTox.Model;
 using OneTox.Model.Avatars;
+using OneTox.ViewModel.Calls;
 using OneTox.ViewModel.FileTransfers;
 using OneTox.ViewModel.Messaging;
 using OneTox.ViewModel.Messaging.RecentMessages;

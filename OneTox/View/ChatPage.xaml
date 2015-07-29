@@ -78,7 +78,7 @@
 
             <ContentControl x:Name="AudioCallControl" Grid.Column="1" IsEnabled="{Binding IsConnected}"
                             VerticalAlignment="Center">
-                <userControls:AudioCallBlock DataContext="{Binding Call}" />
+                <userControls:CallBlock DataContext="{Binding Call}" />
             </ContentControl>
 
             <Button x:Name="SendFileButton" Grid.Column="2" HorizontalAlignment="Center" Content="&#xE1A5;"

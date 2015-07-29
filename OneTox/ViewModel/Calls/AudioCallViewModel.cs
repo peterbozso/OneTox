@@ -12,9 +12,9 @@ using OneTox.Helpers;
 using OneTox.Model;
 using SharpTox.Av;
 
-namespace OneTox.ViewModel
+namespace OneTox.ViewModel.Calls
 {
-    public class CallViewModel : ObservableObject
+    public class AudioCallViewModel : ObservableObject
     {
         public enum CallState
         {
@@ -24,7 +24,7 @@ namespace OneTox.ViewModel
             IncomingCall
         }
 
-        public CallViewModel(int friendNumber)
+        public AudioCallViewModel(int friendNumber)
         {
             _friendNumber = friendNumber;
             ToxAvModel.Instance.CallStateChanged += CallStateChangedHandler;
