@@ -369,13 +369,19 @@ namespace WinTox.ViewModel
 
         private IWaveProvider CreateReader()
         {
-            return _waveProvider ?? (_waveProvider = new BufferedWaveProvider(new WaveFormat(_samplingRate, 16, 1)));
-            // TODO: Replace it with actual values received from friend!
+            if (_waveProvider == null)
+            {
+                // TODO: Replace it with actual values received from friend!
+                _waveProvider = new BufferedWaveProvider(new WaveFormat(_samplingRate, 16, 1));
+                _waveProvider.DiscardOnBufferOverflow = true;
+            }
+
+            return _waveProvider;
         }
 
         private void AudioFrameReceivedHandler(object sender, ToxAvEventArgs.AudioFrameEventArgs e)
         {
-            if (_player == null)
+            if (_player == null || _waveProvider == null)
                 return;
 
             var bytes = new byte[e.Frame.Data.Length*2];
