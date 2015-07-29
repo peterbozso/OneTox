@@ -1,0 +1,350 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1D23C3DF-86D2-4AA4-A134-29524BCF689A}</ProjectGuid>
+    <OutputType>AppContainerExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OneTox</RootNamespace>
+    <AssemblyName>OneTox</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PackageCertificateKeyFile>OneTox_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <ExpressionBlendVersion>12.0.51020.0</ExpressionBlendVersion>
+    <PackageCertificateThumbprint>BA0938B0A787B03B596F7DCF53B6524E4E83E8A1</PackageCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_APP</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_APP</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_APP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <OutputPath>bin\ARM\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_APP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_APP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_APP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_APP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_APP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\FileTransfers\TransferDirection.cs" />
+    <Compile Include="Model\FileTransfers\FileTransferResumer.cs" />
+    <Compile Include="Model\FileTransfers\FileTransfersModel.cs" />
+    <Compile Include="Model\FileTransfers\FileTransferState.cs" />
+    <Compile Include="Model\FileTransfers\OneBrokenFileTransferModel.cs" />
+    <Compile Include="Model\FileTransfers\OneFileTransferModel.cs" />
+    <Compile Include="ViewModel\FileTransfers\FileTransfersViewModel.cs" />
+    <Compile Include="ViewModel\FileTransfers\OneFileTransferViewModel.cs" />
+    <Compile Include="View\Converters\CallStateToStringConverter.cs" />
+    <Compile Include="View\Converters\IsMutedToBackgroundColorConverter.cs" />
+    <Compile Include="View\Converters\TransfersBlockStateToStringConverter.cs" />
+    <Compile Include="View\Converters\DateTimeConverter.cs" />
+    <Compile Include="View\Converters\DeliveryStateToStringConverter.cs" />
+    <Compile Include="View\Converters\FileTransferCountToPlaceholderTextConverter.cs" />
+    <Compile Include="View\Converters\TransferStateToStringConverter.cs" />
+    <Compile Include="View\Converters\FriendNameToTypingStatusConverter.cs" />
+    <Compile Include="View\Converters\BoolToOpacityConverter.cs" />
+    <Compile Include="View\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="View\Converters\MessageTypeToColorConverter.cs" />
+    <Compile Include="View\Converters\SenderTypeToColorConverter.cs" />
+    <Compile Include="View\Converters\StatusToColorConverter.cs" />
+    <Compile Include="View\Converters\UserStatusToStringConverter.cs" />
+    <Compile Include="Helpers\CloseFlyoutAction.cs" />
+    <Compile Include="Model\Avatars\AvatarManager.cs" />
+    <Compile Include="Helpers\DnsTools.cs" />
+    <Compile Include="Model\ExtendedTox.cs" />
+    <Compile Include="Model\Avatars\AvatarTransferManager.cs" />
+    <Compile Include="Model\FriendListChangedEventArgs.cs" />
+    <Compile Include="Model\ToxAvModel.cs" />
+    <Compile Include="Model\ToxModel.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="ViewModel\CallViewModel.cs" />
+    <Compile Include="ViewModel\FriendRequests\FriendRequestsViewModel.cs" />
+    <Compile Include="ViewModel\FriendRequests\OneFriendRequestViewModel.cs" />
+    <Compile Include="ViewModel\Friends\AddFriendFlyoutViewModel.cs" />
+    <Compile Include="ViewModel\Friends\FriendListViewModel.cs" />
+    <Compile Include="ViewModel\Friends\FriendViewModel.cs" />
+    <Compile Include="ViewModel\IToxUserViewModel.cs" />
+    <Compile Include="ViewModel\MainPageViewModel.cs" />
+    <Compile Include="ViewModel\Messaging\ConversationViewModel.cs" />
+    <Compile Include="ViewModel\Messaging\RecentMessages\RecentMessagesGlobalViewModel.cs" />
+    <Compile Include="ViewModel\Messaging\RecentMessages\RecentMessagesPerUserViewModel.cs" />
+    <Compile Include="ViewModel\Messaging\RecentMessages\RecentMessagesViewModelBase.cs" />
+    <Compile Include="ViewModel\Messaging\ToxMessageViewModelBase.cs" />
+    <Compile Include="ViewModel\Messaging\MessageGroupViewModel.cs" />
+    <Compile Include="ViewModel\Messaging\ReceivedMessageViewModel.cs" />
+    <Compile Include="ViewModel\Messaging\SentMessageViewModel.cs" />
+    <Compile Include="ViewModel\ProfileSettings\ProfileManagementViewModel.cs" />
+    <Compile Include="ViewModel\ProfileSettings\ProfileSettingsViewModel.cs" />
+    <Compile Include="ViewModel\ToxErrorViewModel.cs" />
+    <Compile Include="ViewModel\UserViewModel.cs" />
+    <Compile Include="Helpers\ObservableObject.cs" />
+    <Compile Include="View\ChatPage.xaml.cs">
+      <DependentUpon>ChatPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ProfileSettingsFlyout.xaml.cs">
+      <DependentUpon>ProfileSettingsFlyout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\AudioCallBlock.xaml.cs">
+      <DependentUpon>AudioCallBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\FileTransfers\FileTransferRibbon.xaml.cs">
+      <DependentUpon>FileTransferRibbon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\FileTransfers\FileTransfersBlock.xaml.cs">
+      <DependentUpon>FileTransfersBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\FriendRequests\FriendRequestsList.xaml.cs">
+      <DependentUpon>FriendRequestsList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\FriendRequests\FriendRequestsListItem.xaml.cs">
+      <DependentUpon>FriendRequestsListItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\Friends\FriendInfo.xaml.cs">
+      <DependentUpon>FriendInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\Friends\FriendTile.xaml.cs">
+      <DependentUpon>FriendTile.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="Common\NavigationHelper.cs" />
+    <Compile Include="Common\RelayCommand.cs" />
+    <Compile Include="Common\ObservableDictionary.cs" />
+    <Compile Include="View\UserControls\Messaging\MessageBlock.xaml.cs">
+      <DependentUpon>MessageBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\Messaging\MessageRibbon.xaml.cs">
+      <DependentUpon>MessageRibbon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\ProfileManagementBlock.xaml.cs">
+      <DependentUpon>ProfileManagementBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\Messaging\RecentMessages\RecentMessagesList.xaml.cs">
+      <DependentUpon>RecentMessagesList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\Messaging\RecentMessages\RecentMessagesListItem.xaml.cs">
+      <DependentUpon>RecentMessagesListItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\UserTile.xaml.cs">
+      <DependentUpon>UserTile.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+    <None Include="Common\ReadMe.txt" />
+    <Content Include="Assets\default-profile-picture.png" />
+    <Content Include="Assets\ring-in.wav" />
+    <Content Include="Assets\ring-out.wav" />
+    <Content Include="Assets\tox-logo.jpg" />
+    <None Include="packages.config" />
+    <None Include="OneTox_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Logo.scale-100.png" />
+    <Content Include="Assets\SmallLogo.scale-100.png" />
+    <Content Include="Assets\SplashScreen.scale-100.png" />
+    <Content Include="Assets\StoreLogo.scale-100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\libs\libtox.dll">
+      <Link>libtox.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="View\ChatPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ResourceDictionaries\ChatPageDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="View\ProfileSettingsFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\AudioCallBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\FileTransfers\FileTransferRibbon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\FileTransfers\FileTransfersBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\FriendRequests\FriendRequestsList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\FriendRequests\FriendRequestsListItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\Friends\FriendInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\Friends\FriendTile.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ResourceDictionaries\MainPageDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="View\UserControls\Messaging\MessageBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\Messaging\MessageRibbon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\ProfileManagementBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\Messaging\RecentMessages\RecentMessagesList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\Messaging\RecentMessages\RecentMessagesListItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\UserTile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="NAudio.Win8">
+      <HintPath>..\packages\NAudio.1.7.3\lib\windows8\NAudio.Win8.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpTox Portable, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\SharpTox Portable.dll</HintPath>
+    </Reference>
+    <Reference Include="WriteableBitmapEx.WinRT">
+      <HintPath>..\packages\WriteableBitmapEx.1.5.0.0\lib\NetCore45\WriteableBitmapEx.WinRT.dll</HintPath>
+    </Reference>
+    <Reference Include="ZXing">
+      <HintPath>..\packages\ZXing.Net.0.14.0.1\lib\windows8\ZXing.winmd</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0" />
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
+    <VisualStudioVersion>12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

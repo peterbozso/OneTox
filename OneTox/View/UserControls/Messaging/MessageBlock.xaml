@@ -1,0 +1,49 @@
+﻿<UserControl
+    x:Class="OneTox.View.UserControls.Messaging.MessageBlock"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:OneTox.View.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:messaging="using:OneTox.View.UserControls.Messaging"
+    xmlns:converters="using:OneTox.View.Converters"
+    mc:Ignorable="d"
+    d:DesignHeight="75"
+    d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <converters:SenderTypeToColorConverter x:Key="SenderTypeToColorConverter" />
+    </UserControl.Resources>
+
+    <Grid Background="{Binding Path=Sender, Converter={StaticResource SenderTypeToColorConverter}}">
+        <Grid Margin="20,10,30,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="55" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Image Grid.RowSpan="2" Source="{Binding Sender.Avatar}" MaxHeight="55" MaxWidth="55"
+                   Stretch="UniformToFill"
+                   VerticalAlignment="Top" />
+
+            <TextBlock Grid.Row="0" Grid.Column="1" Foreground="{StaticResource MainColor}"
+                       Margin="10,-3,0,0"
+                       FontSize="20" Text="{Binding Sender.Name}" TextTrimming="CharacterEllipsis"
+                       VerticalAlignment="Top" />
+
+            <ItemsControl Grid.Row="1" Grid.Column="1"
+                          ItemsSource="{Binding Messages}"
+                          HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <messaging:MessageRibbon />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </Grid>
+</UserControl>
