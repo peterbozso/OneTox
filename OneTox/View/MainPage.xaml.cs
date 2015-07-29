@@ -69,7 +69,8 @@ namespace OneTox.View
         {
             NavigationHelper.OnNavigatedTo(e);
 
-            await _viewModel.FriendRequests.RestoreDataIfNeededAsync();
+            if (e.NavigationMode == NavigationMode.New)
+                await _viewModel.FriendRequests.RestoreData();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

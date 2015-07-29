@@ -74,12 +74,8 @@ namespace OneTox.ViewModel.FriendRequests
             }
         }
 
-        // TODO: Don't call it on every navigation!!!
-        public async Task RestoreDataIfNeededAsync()
+        public async Task RestoreData()
         {
-            if (Items.Count != 0)
-                return;
-
             try
             {
                 var file = await ApplicationData.Current.RoamingFolder.GetFileAsync(KFileName);

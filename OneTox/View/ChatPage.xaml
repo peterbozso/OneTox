@@ -68,20 +68,27 @@
             </Grid.ChildrenTransitions>
 
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="85" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <friends:FriendInfo x:Name="FriendInfoControl" Grid.Column="0" HorizontalAlignment="Left"
+            <Button x:Name="BackButton" Grid.Column="0" Margin="20,0,10,0"
+                    Style="{StaticResource NavigationBackButtonNormalStyle}"
+                    VerticalAlignment="Stretch" AutomationProperties.ItemType="Navigation Button"
+                    Command="{Binding ElementName=PageRoot, Path=NavigationHelper.GoBackCommand}"
+                    HorizontalAlignment="Center" />
+
+            <friends:FriendInfo x:Name="FriendInfoControl" Grid.Column="1" HorizontalAlignment="Left"
                                 Margin="0,0,20,0" />
 
-            <ContentControl x:Name="AudioCallControl" Grid.Column="1" IsEnabled="{Binding IsConnected}"
+            <ContentControl x:Name="AudioCallControl" Grid.Column="2" IsEnabled="{Binding IsConnected}"
                             VerticalAlignment="Center">
                 <userControls:CallBlock DataContext="{Binding Call}" />
             </ContentControl>
 
-            <Button x:Name="SendFileButton" Grid.Column="2" HorizontalAlignment="Center" Content="&#xE1A5;"
+            <Button x:Name="SendFileButton" Grid.Column="3" HorizontalAlignment="Center" Content="&#xE1A5;"
                     Margin="0,0,20,0" FontFamily="Segoe UI Symbol" FontSize="30"
                     Command="{Binding FileTransfers.SendFilesCommand}"
                     IsEnabled="{Binding IsConnected}" Template="{StaticResource RoundButtonTemplate}" Width="71"
