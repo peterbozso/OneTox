@@ -32,6 +32,6 @@ This client is under heavy development and it's very far from being complete. Pu
 ![Chat Page](http://i.imgur.com/NHqHykf.png)
 
 ## Compiling
-You'll need libtox.dll: https://jenkins.libtoxcore.so/view/Libs/job/toxcore_win32_dll/ (It's in the 'bin' folder of the zip.) You have to copy it to the 'libs' folder of OneTox.  
-You'll also need to build the SharpToxPortable project (https://github.com/Impyy/SharpTox/blob/master/SharpTox/SharpTox%20Portable.csproj) with x86 as target and put the result (SharpTox Portable.dll) into 'libs' as well. After that you should be able to compile OneTox (x86).  
+You'll need libtox.dll: https://jenkins.impy.me/job/toxcore-new-toxav-api/ (It's in the 'bin' folder of the zip.) You have to copy it to the 'libs' folder of OneTox.  
+You'll also need to build the SharpToxPortable project (https://github.com/Impyy/SharpTox/blob/new-api-toxav/SharpTox/SharpTox%20Portable.csproj - Note the new-api-toxav branch!) with x86 as target and put the result (SharpTox Portable.dll) into 'libs' as well. After that you should be able to compile OneTox (x86).  
 Of course we plan to add these dependencies to NuGet later.
