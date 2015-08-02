@@ -1,5 +1,5 @@
 # OneTox [![Build Status](https://jenkins.impy.me/buildStatus/icon?job=OneTox x86)](https://jenkins.impy.me/job/OneTox x86)
-Work in progress Tox (https://tox.im/) client for the Windows Store.
+Work in progress Tox (https://tox.chat/) client for the Windows Store.
 
 The project was started within the confines of Google Summer of Code (https://www.google-melange.com/) in 2015. It's primal aim is to produce a stable and feature-rich Tox client that follows all Modern UI best practices and conforms to the feel and styling of Windows 8+ applications.
 
