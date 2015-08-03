@@ -34,7 +34,7 @@ namespace OneTox.ViewModel.Calls
         public AudioCallViewModel(int friendNumber)
         {
             _friendNumber = friendNumber;
-            
+
             InitializeRates();
         }
 
@@ -125,6 +125,9 @@ namespace OneTox.ViewModel.Calls
                 uint capacityInBytes;
 
                 ((IMemoryBufferByteAccess) reference).GetBuffer(out dataInBytes, out capacityInBytes);
+
+                if (capacityInBytes == 0) // Don't send empty frames.
+                    return;
 
                 var bytes = new byte[capacityInBytes];
                 Marshal.Copy((IntPtr) dataInBytes, bytes, 0, (int) capacityInBytes);
