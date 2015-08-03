@@ -92,6 +92,12 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <None Include="project.json" />
   </ItemGroup>
+   <ItemGroup>
+    <Content Include="..\libs\libtox.dll">
+      <Link>libtox.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -216,7 +222,6 @@
     <Content Include="Assets\ring-out.wav" />
     <Content Include="Assets\tox-logo.jpg" />
     <Content Include="Common\ReadMe.txt" />
-    <Content Include="libtox.dll" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
