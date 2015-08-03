@@ -192,7 +192,7 @@ namespace OneTox.Model
 
         private void RaiseAllPropertiesChanged()
         {
-            RaisePropertyChanged(String.Empty);
+            RaisePropertyChanged(string.Empty);
         }
 
         public void Start()

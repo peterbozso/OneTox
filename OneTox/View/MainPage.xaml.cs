@@ -29,7 +29,7 @@ namespace OneTox.View
         ///     NavigationHelper is used on each page to aid in navigation and
         ///     process lifetime management
         /// </summary>
-        public NavigationHelper NavigationHelper { get; private set; }
+        public NavigationHelper NavigationHelper { get; }
 
         private void MainPageSizeChanged(object sender, SizeChangedEventArgs e)
         {

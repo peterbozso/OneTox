@@ -15,7 +15,7 @@ namespace OneTox.Helpers
             if (!domain.Contains("@"))
             {
                 success = false;
-                return String.Empty;
+                return string.Empty;
             }
 
             for (var tries = 0; tries < 3; tries++)
@@ -27,7 +27,7 @@ namespace OneTox.Helpers
                     if (string.IsNullOrEmpty(toxId))
                     {
                         success = false;
-                        return String.Empty;
+                        return string.Empty;
                     }
 
                     success = true;
@@ -39,7 +39,7 @@ namespace OneTox.Helpers
             }
 
             success = false;
-            return String.Empty;
+            return string.Empty;
         }
 
         [DllImport("dnsapi", EntryPoint = "DnsQuery_W", CharSet = CharSet.Unicode, SetLastError = true,
@@ -254,7 +254,7 @@ namespace OneTox.Helpers
             public readonly int flags;
             public readonly int dwTtl;
             public readonly int dwReserved;
-            public readonly Int32 dwStringCount;
+            public readonly int dwStringCount;
             public readonly IntPtr pStringArray;
         }
     }

@@ -43,8 +43,8 @@ namespace OneTox.Model.Avatars
                 FileNumber = fileNumber;
             }
 
-            public int FriendNumber { get; private set; }
-            public int FileNumber { get; private set; }
+            public int FriendNumber { get; }
+            public int FileNumber { get; }
 
             public bool Equals(TransferId other)
             {
@@ -75,7 +75,7 @@ namespace OneTox.Model.Avatars
                 Direction = direction;
             }
 
-            public TransferDirection Direction { get; private set; }
+            public TransferDirection Direction { get; }
 
             public bool IsFinished()
             {

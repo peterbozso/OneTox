@@ -35,13 +35,13 @@ namespace OneTox.ViewModel.Friends
             Call = new CallViewModel(friendNumber);
 
             Name = ToxModel.Instance.GetFriendName(friendNumber);
-            if (Name == String.Empty)
+            if (Name == string.Empty)
             {
                 Name = ToxModel.Instance.GetFriendPublicKey(friendNumber).ToString().Substring(0, 10);
             }
 
             StatusMessage = ToxModel.Instance.GetFriendStatusMessage(friendNumber);
-            if (StatusMessage == String.Empty)
+            if (StatusMessage == string.Empty)
             {
                 StatusMessage = "Friend request sent.";
             }
@@ -57,7 +57,7 @@ namespace OneTox.ViewModel.Friends
             ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
         }
 
-        public int FriendNumber { get; private set; }
+        public int FriendNumber { get; }
         public ConversationViewModel Conversation { get; private set; }
         public FileTransfersViewModel FileTransfers { get; private set; }
         public RecentMessagesPerUserViewModel RecentMessages { get; private set; }

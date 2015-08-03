@@ -33,7 +33,7 @@ namespace OneTox.ViewModel
         }
 
         public FriendListViewModel FriendList { get; private set; }
-        public FriendRequestsViewModel FriendRequests { get; private set; }
+        public FriendRequestsViewModel FriendRequests { get; }
 
         public Visibility RecentMessagesListVisibility
         {

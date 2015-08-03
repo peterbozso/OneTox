@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -37,7 +36,7 @@ namespace OneTox.View.UserControls.FileTransfers
         private void ScrollTransferRibbonsToBottom()
         {
             TransferRibbonsScrollViewer.UpdateLayout();
-            TransferRibbonsScrollViewer.ChangeView(null, Double.MaxValue, null, true);
+            TransferRibbonsScrollViewer.ChangeView(null, double.MaxValue, null, true);
         }
 
         private async Task SetAddDeleteThemeTransitionForTransferRibbons()

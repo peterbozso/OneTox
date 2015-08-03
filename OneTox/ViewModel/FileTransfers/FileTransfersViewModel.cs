@@ -123,8 +123,8 @@ namespace OneTox.ViewModel.FileTransfers
 
         #region Properties
 
-        public ObservableCollection<OneFileTransferViewModel> Transfers { get; private set; }
-        public FileTransfersVisualStates VisualStates { get; private set; }
+        public ObservableCollection<OneFileTransferViewModel> Transfers { get; }
+        public FileTransfersVisualStates VisualStates { get; }
 
         #endregion
 

@@ -14,7 +14,7 @@ namespace OneTox.ViewModel.Messaging.RecentMessages
             RecentMessages = new ObservableCollection<ReceivedMessageViewModel>();
         }
 
-        public ObservableCollection<ReceivedMessageViewModel> RecentMessages { get; private set; }
+        public ObservableCollection<ReceivedMessageViewModel> RecentMessages { get; }
 
         public async Task AddMessage(ReceivedMessageViewModel newMessage)
         {

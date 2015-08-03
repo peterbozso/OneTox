@@ -64,7 +64,7 @@ namespace OneTox.Model.Avatars
             }
         }
 
-        public Dictionary<int, BitmapImage> FriendAvatars { get; private set; }
+        public Dictionary<int, BitmapImage> FriendAvatars { get; }
 
         #endregion
 

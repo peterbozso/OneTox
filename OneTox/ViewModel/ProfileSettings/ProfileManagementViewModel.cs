@@ -116,7 +116,7 @@ namespace OneTox.ViewModel.ProfileSettings
 
         private byte[] GetData(string password)
         {
-            if (password == String.Empty)
+            if (password == string.Empty)
                 return ToxModel.Instance.GetData().Bytes;
             var encryptionKey = new ToxEncryptionKey(password);
             return ToxModel.Instance.GetData(encryptionKey).Bytes;

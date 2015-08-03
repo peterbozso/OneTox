@@ -27,7 +27,7 @@ namespace OneTox.View
         private void NameTextBoxLostFocus(object sender, RoutedEventArgs e)
         {
             var nameTextBox = sender as TextBox;
-            if (nameTextBox.Text == String.Empty)
+            if (nameTextBox.Text == string.Empty)
                 nameTextBox.Text = _viewModel.Name;
         }
 
@@ -76,7 +76,7 @@ namespace OneTox.View
 
         private void NameTextBoxKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == VirtualKey.Enter && NameTextBox.Text != String.Empty)
+            if (e.Key == VirtualKey.Enter && NameTextBox.Text != string.Empty)
             {
                 if (e.KeyStatus.RepeatCount != 1) // See MessageInputKeyDown()!
                     return;
@@ -88,7 +88,7 @@ namespace OneTox.View
 
         private void StatusMessageTextBoxKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == VirtualKey.Enter && StatusMessageTextBox.Text != String.Empty)
+            if (e.Key == VirtualKey.Enter && StatusMessageTextBox.Text != string.Empty)
             {
                 if (e.KeyStatus.RepeatCount != 1) // See MessageInputKeyDown()!
                     return;

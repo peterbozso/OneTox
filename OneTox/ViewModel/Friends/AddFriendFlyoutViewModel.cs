@@ -1,5 +1,4 @@
-﻿using System;
-using OneTox.Common;
+﻿using OneTox.Common;
 using OneTox.Helpers;
 using OneTox.Model;
 using SharpTox.Core;
@@ -72,7 +71,7 @@ namespace OneTox.ViewModel.Friends
                        ?? (_addFriendCommand = new RelayCommand(
                            parameter =>
                            {
-                               if (String.IsNullOrEmpty(FriendId))
+                               if (string.IsNullOrEmpty(FriendId))
                                    return;
 
                                bool successfulDnsDiscovery;
@@ -86,7 +85,7 @@ namespace OneTox.ViewModel.Friends
                                {
                                    if (!ToxId.IsValid(FriendId))
                                    {
-                                       FriendId = String.Empty;
+                                       FriendId = string.Empty;
                                        FriendIdPlaceholder = "Invalid Tox ID, please enter it more carefully!";
                                        return;
                                    }
@@ -107,14 +106,14 @@ namespace OneTox.ViewModel.Friends
 
         public void ResetFlyout()
         {
-            FriendId = String.Empty;
-            FriendIdPlaceholder = String.Empty;
-            InvitationMessage = String.Empty;
+            FriendId = string.Empty;
+            FriendIdPlaceholder = string.Empty;
+            InvitationMessage = string.Empty;
         }
 
         private string GetInvitationMessage()
         {
-            if (String.IsNullOrEmpty(InvitationMessage))
+            if (string.IsNullOrEmpty(InvitationMessage))
                 return "Hello! I'd like to add you to my friends list.";
             return InvitationMessage;
         }

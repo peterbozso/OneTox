@@ -40,7 +40,7 @@ namespace OneTox.View
         ///     NavigationHelper is used on each page to aid in navigation and
         ///     process lifetime management
         /// </summary>
-        public NavigationHelper NavigationHelper { get; private set; }
+        public NavigationHelper NavigationHelper { get; }
 
         /// <summary>
         ///     Populates the page with content passed during navigation. Any saved state is also
@@ -78,7 +78,7 @@ namespace OneTox.View
             _chatTimer.Change(500, -1);
             _friendViewModel.Conversation.SetTypingStatus(true);
 
-            if (e.Key == VirtualKey.Enter && MessageInputTextBox.Text != String.Empty)
+            if (e.Key == VirtualKey.Enter && MessageInputTextBox.Text != string.Empty)
             {
                 // I don't even... 
                 // https://social.msdn.microsoft.com/Forums/windowsapps/en-US/734d6c7a-8da2-48c6-9b3d-fa868b4dfb1d/c-textbox-keydown-triggered-twice-in-metro-applications?forum=winappswithcsharp
@@ -86,7 +86,7 @@ namespace OneTox.View
                     return;
 
                 await _friendViewModel.Conversation.SendMessage(MessageInputTextBox.Text);
-                MessageInputTextBox.Text = String.Empty;
+                MessageInputTextBox.Text = string.Empty;
                 e.Handled = true;
             }
         }
@@ -261,7 +261,7 @@ namespace OneTox.View
             private void ScrollToBottom(bool disableAnimation)
             {
                 _messagesScrollViewer.UpdateLayout();
-                _messagesScrollViewer.ChangeView(null, Double.MaxValue, null, disableAnimation);
+                _messagesScrollViewer.ChangeView(null, double.MaxValue, null, disableAnimation);
             }
 
             private void MessagesScrollViewerViewChangedHandler(object sender, ScrollViewerViewChangedEventArgs e)

@@ -139,8 +139,8 @@ namespace OneTox.Common
                 Key = key;
             }
 
-            public CollectionChange CollectionChange { get; private set; }
-            public string Key { get; private set; }
+            public CollectionChange CollectionChange { get; }
+            public string Key { get; }
         }
     }
 }

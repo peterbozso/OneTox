@@ -61,7 +61,7 @@ namespace OneTox.ViewModel.ProfileSettings
             if (newAvatarFile != null)
             {
                 var errorMessage = await LoadUserAvatar(newAvatarFile);
-                if (errorMessage != String.Empty)
+                if (errorMessage != string.Empty)
                 {
                     var msgDialog = new MessageDialog(errorMessage, "Unsuccessful loading");
                     await msgDialog.ShowAsync();
@@ -90,7 +90,7 @@ namespace OneTox.ViewModel.ProfileSettings
             {
                 return "The picture is corrupted!";
             }
-            return String.Empty;
+            return string.Empty;
         }
 
         private RelayCommand _removeAvatarCommand;
@@ -163,7 +163,7 @@ namespace OneTox.ViewModel.ProfileSettings
             set
             {
                 var lengthInBytes = Encoding.Unicode.GetBytes(value).Length;
-                if (ToxModel.Instance.Name == value || value == String.Empty ||
+                if (ToxModel.Instance.Name == value || value == string.Empty ||
                     lengthInBytes > ToxConstants.MaxNameLength)
                     return;
                 ToxModel.Instance.Name = value;
@@ -177,7 +177,7 @@ namespace OneTox.ViewModel.ProfileSettings
             set
             {
                 var lengthInBytes = Encoding.Unicode.GetBytes(value).Length;
-                if (ToxModel.Instance.StatusMessage == value || value == String.Empty ||
+                if (ToxModel.Instance.StatusMessage == value || value == string.Empty ||
                     lengthInBytes > ToxConstants.MaxStatusMessageLength)
                     return;
                 ToxModel.Instance.StatusMessage = value;

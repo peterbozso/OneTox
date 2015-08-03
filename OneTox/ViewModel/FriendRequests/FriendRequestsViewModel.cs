@@ -31,7 +31,7 @@ namespace OneTox.ViewModel.FriendRequests
             _semaphore = new SemaphoreSlim(1);
         }
 
-        public ObservableCollection<OneFriendRequestViewModel> Items { get; private set; }
+        public ObservableCollection<OneFriendRequestViewModel> Items { get; }
         public event EventHandler<ToxEventArgs.FriendRequestEventArgs> FriendRequestReceived;
 
         public void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e)

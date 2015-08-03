@@ -6,7 +6,6 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Globalization;
-using Windows.UI.ApplicationSettings;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -17,8 +16,6 @@ using OneTox.Model;
 using OneTox.Model.Avatars;
 using OneTox.View;
 using OneTox.ViewModel;
-
-// The Hub App template is documented at http://go.microsoft.com/fwlink/?LinkId=321221
 
 namespace OneTox
 {
@@ -187,24 +184,9 @@ namespace OneTox
             ToxModel.Instance.Start();
         }
 
-        #region Profile settings flyout setup
-
-        protected override void OnWindowCreated(WindowCreatedEventArgs args)
-        {
-            SettingsPane.GetForCurrentView().CommandsRequested += OnCommandsRequested;
-        }
-
-        private static void OnCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
-        {
-            args.Request.ApplicationCommands.Add(new SettingsCommand(
-                "Profile settings", "Profile settings", handler => ShowProfileSettingsFlyout()));
-        }
-
         public static void ShowProfileSettingsFlyout()
         {
             new ProfileSettingsFlyout().Show();
         }
-
-        #endregion
     }
 }

@@ -19,19 +19,17 @@ namespace OneTox.Common
     public sealed class SuspensionManager
     {
         private const string sessionStateFilename = "_sessionState.xml";
-        private static Dictionary<string, object> _sessionState = new Dictionary<string, object>();
-        private static readonly List<Type> _knownTypes = new List<Type>();
 
         private static readonly DependencyProperty FrameSessionStateKeyProperty =
-            DependencyProperty.RegisterAttached("_FrameSessionStateKey", typeof (String), typeof (SuspensionManager),
+            DependencyProperty.RegisterAttached("_FrameSessionStateKey", typeof (string), typeof (SuspensionManager),
                 null);
 
         private static readonly DependencyProperty FrameSessionBaseKeyProperty =
-            DependencyProperty.RegisterAttached("_FrameSessionBaseKeyParams", typeof (String),
+            DependencyProperty.RegisterAttached("_FrameSessionBaseKeyParams", typeof (string),
                 typeof (SuspensionManager), null);
 
         private static readonly DependencyProperty FrameSessionStateProperty =
-            DependencyProperty.RegisterAttached("_FrameSessionState", typeof (Dictionary<String, Object>),
+            DependencyProperty.RegisterAttached("_FrameSessionState", typeof (Dictionary<string, object>),
                 typeof (SuspensionManager), null);
 
         private static readonly List<WeakReference<Frame>> _registeredFrames = new List<WeakReference<Frame>>();
@@ -43,20 +41,14 @@ namespace OneTox.Common
         ///     <see cref="DataContractSerializer" /> and should be as compact as possible.  Strings
         ///     and other self-contained data types are strongly recommended.
         /// </summary>
-        public static Dictionary<string, object> SessionState
-        {
-            get { return _sessionState; }
-        }
+        public static Dictionary<string, object> SessionState { get; private set; } = new Dictionary<string, object>();
 
         /// <summary>
         ///     List of custom types provided to the <see cref="DataContractSerializer" /> when
         ///     reading and writing session state.  Initially empty, additional types may be
         ///     added to customize the serialization process.
         /// </summary>
-        public static List<Type> KnownTypes
-        {
-            get { return _knownTypes; }
-        }
+        public static List<Type> KnownTypes { get; } = new List<Type>();
 
         /// <summary>
         ///     Save the current <see cref="SessionState" />.  Any <see cref="Frame" /> instances
@@ -83,8 +75,8 @@ namespace OneTox.Common
                 // state
                 var sessionData = new MemoryStream();
                 var serializer = new DataContractSerializer(typeof (Dictionary<string, object>),
-                    _knownTypes);
-                serializer.WriteObject(sessionData, _sessionState);
+                    KnownTypes);
+                serializer.WriteObject(sessionData, SessionState);
 
                 // Get an output stream for the SessionState file and write the state asynchronously
                 var file =
@@ -118,9 +110,9 @@ namespace OneTox.Common
         ///     content of <see cref="SessionState" /> should not be relied upon until this task
         ///     completes.
         /// </returns>
-        public static async Task RestoreAsync(String sessionBaseKey = null)
+        public static async Task RestoreAsync(string sessionBaseKey = null)
         {
-            _sessionState = new Dictionary<String, Object>();
+            SessionState = new Dictionary<string, object>();
 
             try
             {
@@ -130,8 +122,8 @@ namespace OneTox.Common
                 {
                     // Deserialize the Session State
                     var serializer = new DataContractSerializer(typeof (Dictionary<string, object>),
-                        _knownTypes);
-                    _sessionState = (Dictionary<string, object>) serializer.ReadObject(inStream.AsStreamForRead());
+                        KnownTypes);
+                    SessionState = (Dictionary<string, object>) serializer.ReadObject(inStream.AsStreamForRead());
                 }
 
                 // Restore any registered frames to their saved state
@@ -172,7 +164,7 @@ namespace OneTox.Common
         ///     An optional key that identifies the type of session.
         ///     This can be used to distinguish between multiple application launch scenarios.
         /// </param>
-        public static void RegisterFrame(Frame frame, String sessionStateKey, String sessionBaseKey = null)
+        public static void RegisterFrame(Frame frame, string sessionStateKey, string sessionBaseKey = null)
         {
             if (frame.GetValue(FrameSessionStateKeyProperty) != null)
             {
@@ -213,7 +205,7 @@ namespace OneTox.Common
         {
             // Remove session state and remove the frame from the list of frames whose navigation
             // state will be saved (along with any weak references that are no longer reachable)
-            SessionState.Remove((String) frame.GetValue(FrameSessionStateKeyProperty));
+            SessionState.Remove((string) frame.GetValue(FrameSessionStateKeyProperty));
             _registeredFrames.RemoveAll(weakFrameReference =>
             {
                 Frame testFrame;
@@ -238,26 +230,26 @@ namespace OneTox.Common
         ///     A collection of state subject to the same serialization mechanism as
         ///     <see cref="SessionState" />.
         /// </returns>
-        public static Dictionary<String, Object> SessionStateForFrame(Frame frame)
+        public static Dictionary<string, object> SessionStateForFrame(Frame frame)
         {
-            var frameState = (Dictionary<String, Object>) frame.GetValue(FrameSessionStateProperty);
+            var frameState = (Dictionary<string, object>) frame.GetValue(FrameSessionStateProperty);
 
             if (frameState == null)
             {
-                var frameSessionKey = (String) frame.GetValue(FrameSessionStateKeyProperty);
+                var frameSessionKey = (string) frame.GetValue(FrameSessionStateKeyProperty);
                 if (frameSessionKey != null)
                 {
                     // Registered frames reflect the corresponding session state
-                    if (!_sessionState.ContainsKey(frameSessionKey))
+                    if (!SessionState.ContainsKey(frameSessionKey))
                     {
-                        _sessionState[frameSessionKey] = new Dictionary<String, Object>();
+                        SessionState[frameSessionKey] = new Dictionary<string, object>();
                     }
-                    frameState = (Dictionary<String, Object>) _sessionState[frameSessionKey];
+                    frameState = (Dictionary<string, object>) SessionState[frameSessionKey];
                 }
                 else
                 {
                     // Frames that aren't registered have transient state
-                    frameState = new Dictionary<String, Object>();
+                    frameState = new Dictionary<string, object>();
                 }
                 frame.SetValue(FrameSessionStateProperty, frameState);
             }
@@ -269,7 +261,7 @@ namespace OneTox.Common
             var frameState = SessionStateForFrame(frame);
             if (frameState.ContainsKey("Navigation"))
             {
-                frame.SetNavigationState((String) frameState["Navigation"]);
+                frame.SetNavigationState((string) frameState["Navigation"]);
             }
         }
 
