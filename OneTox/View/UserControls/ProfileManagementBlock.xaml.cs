@@ -1,4 +1,5 @@
-﻿using Windows.Storage;
+﻿using System;
+using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -37,7 +38,7 @@ namespace OneTox.View.UserControls
             {
                 var msgDialog = new MessageDialog("Importing profile failed because of corrupted .tox file.",
                     "Error occurred");
-                msgDialog.ShowAsync();
+                await msgDialog.ShowAsync();
             }
         }
 
