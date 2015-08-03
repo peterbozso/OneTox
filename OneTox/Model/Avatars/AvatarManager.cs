@@ -48,8 +48,7 @@ namespace OneTox.Model.Avatars
             private set
             {
                 _isUserAvatarSet = value;
-                if (IsUserAvatarSetChanged != null)
-                    IsUserAvatarSetChanged(this, EventArgs.Empty);
+                IsUserAvatarSetChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -59,8 +58,7 @@ namespace OneTox.Model.Avatars
             private set
             {
                 _userAvatar = value;
-                if (UserAvatarChanged != null)
-                    UserAvatarChanged(this, EventArgs.Empty);
+                UserAvatarChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -164,8 +162,7 @@ namespace OneTox.Model.Avatars
 
         private void RaiseFriendAvatarChanged(int friendNumber)
         {
-            if (FriendAvatarChanged != null)
-                FriendAvatarChanged(this, friendNumber);
+            FriendAvatarChanged?.Invoke(this, friendNumber);
         }
 
         #endregion

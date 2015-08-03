@@ -26,8 +26,7 @@ namespace OneTox.ViewModel
 
         private void RaiseToxErrorOccured(string errorMessage)
         {
-            if (ToxErrorOccured != null)
-                ToxErrorOccured(this, errorMessage);
+            ToxErrorOccured?.Invoke(this, errorMessage);
         }
 
         #region Core errors

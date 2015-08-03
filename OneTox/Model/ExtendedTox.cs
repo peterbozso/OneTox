@@ -70,11 +70,8 @@ namespace OneTox.Model
 
         private void FriendListChanged(int friendNumber, FriendListChangedAction action)
         {
-            if (OnFriendListChanged != null)
-            {
-                OnFriendListChanged(this,
-                    new FriendListChangedEventArgs {FriendNumber = friendNumber, Action = action});
-            }
+            OnFriendListChanged?.Invoke(this,
+                new FriendListChangedEventArgs {FriendNumber = friendNumber, Action = action});
         }
     }
 }

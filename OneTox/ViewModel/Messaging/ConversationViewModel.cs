@@ -210,8 +210,7 @@ namespace OneTox.ViewModel.Messaging
 
         private void RaiseMessageAdded(ToxMessageViewModelBase message)
         {
-            if (MessageAdded != null)
-                MessageAdded(this, message);
+            MessageAdded?.Invoke(this, message);
         }
 
         #endregion

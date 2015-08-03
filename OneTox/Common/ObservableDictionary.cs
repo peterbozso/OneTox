@@ -125,10 +125,7 @@ namespace OneTox.Common
         private void InvokeMapChanged(CollectionChange change, string key)
         {
             var eventHandler = MapChanged;
-            if (eventHandler != null)
-            {
-                eventHandler(this, new ObservableDictionaryChangedEventArgs(change, key));
-            }
+            eventHandler?.Invoke(this, new ObservableDictionaryChangedEventArgs(change, key));
         }
 
         private class ObservableDictionaryChangedEventArgs : IMapChangedEventArgs<string>

@@ -116,8 +116,7 @@ namespace OneTox.Model.Avatars
 
             public void Dispose()
             {
-                if (_stream != null) // It could be a dummy transfer waiting for accept from the user!
-                    _stream.Dispose();
+                _stream?.Dispose();
             }
 
             public MemoryStream GetMemoryStream()

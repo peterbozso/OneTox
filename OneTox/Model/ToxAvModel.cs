@@ -21,10 +21,7 @@ namespace OneTox.Model
 
         public void SetCurrent(ExtendedTox tox)
         {
-            if (_toxAv != null)
-            {
-                _toxAv.Dispose();
-            }
+            _toxAv?.Dispose();
 
             _toxAv = new ToxAv(tox);
 
@@ -124,38 +121,32 @@ namespace OneTox.Model
 
         private void CallRequestReceivedHandler(object sender, ToxAvEventArgs.CallRequestEventArgs e)
         {
-            if (CallRequestReceived != null)
-                CallRequestReceived(this, e);
+            CallRequestReceived?.Invoke(this, e);
         }
 
         private void CallStateChangedHandler(object sender, ToxAvEventArgs.CallStateEventArgs e)
         {
-            if (CallStateChanged != null)
-                CallStateChanged(this, e);
+            CallStateChanged?.Invoke(this, e);
         }
 
         private void AudioBitrateChangedHandler(object sender, ToxAvEventArgs.BitrateStatusEventArgs e)
         {
-            if (AudioBitrateChanged != null)
-                AudioBitrateChanged(this, e);
+            AudioBitrateChanged?.Invoke(this, e);
         }
 
         private void VideoBitrateChangedHandler(object sender, ToxAvEventArgs.BitrateStatusEventArgs e)
         {
-            if (VideoBitrateChanged != null)
-                VideoBitrateChanged(this, e);
+            VideoBitrateChanged?.Invoke(this, e);
         }
 
         private void AudioFrameReceivedHandler(object sender, ToxAvEventArgs.AudioFrameEventArgs e)
         {
-            if (AudioFrameReceived != null)
-                AudioFrameReceived(this, e);
+            AudioFrameReceived?.Invoke(this, e);
         }
 
         private void VideoFrameReceivedHandler(object sender, ToxAvEventArgs.VideoFrameEventArgs e)
         {
-            if (VideoFrameReceived != null)
-                VideoFrameReceived(this, e);
+            VideoFrameReceived?.Invoke(this, e);
         }
 
         #endregion

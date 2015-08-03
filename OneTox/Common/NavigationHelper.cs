@@ -336,21 +336,15 @@ namespace OneTox.Common
                 }
 
                 // Pass the navigation parameter to the new page
-                if (LoadState != null)
-                {
-                    LoadState(this, new LoadStateEventArgs(e.Parameter, null));
-                }
+                LoadState?.Invoke(this, new LoadStateEventArgs(e.Parameter, null));
             }
             else
             {
                 // Pass the navigation parameter and preserved page state to the page, using
                 // the same strategy for loading suspended state and recreating pages discarded
                 // from cache
-                if (LoadState != null)
-                {
-                    LoadState(this,
-                        new LoadStateEventArgs(e.Parameter, (Dictionary<string, object>) frameState[_pageKey]));
-                }
+                LoadState?.Invoke(this,
+                    new LoadStateEventArgs(e.Parameter, (Dictionary<string, object>) frameState[_pageKey]));
             }
         }
 
@@ -367,10 +361,7 @@ namespace OneTox.Common
         {
             var frameState = SuspensionManager.SessionStateForFrame(Frame);
             var pageState = new Dictionary<string, object>();
-            if (SaveState != null)
-            {
-                SaveState(this, new SaveStateEventArgs(pageState));
-            }
+            SaveState?.Invoke(this, new SaveStateEventArgs(pageState));
             frameState[_pageKey] = pageState;
         }
 

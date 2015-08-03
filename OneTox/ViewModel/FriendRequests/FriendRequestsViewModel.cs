@@ -102,8 +102,7 @@ namespace OneTox.ViewModel.FriendRequests
 
         private void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
         {
-            if (FriendRequestReceived != null)
-                FriendRequestReceived(sender, e);
+            FriendRequestReceived?.Invoke(sender, e);
         }
     }
 }

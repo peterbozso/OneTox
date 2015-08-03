@@ -73,8 +73,7 @@ namespace OneTox.Model.FileTransfers
                             TransferDirection.Down, null);
             }
 
-            if (FileTransferAdded != null)
-                FileTransferAdded(this, oneFileTransferModel);
+            FileTransferAdded?.Invoke(this, oneFileTransferModel);
         }
 
         #endregion
@@ -115,8 +114,7 @@ namespace OneTox.Model.FileTransfers
                                 resumeData.File.Name, fileSizeInBytes, TransferDirection.Up, resumeData.File,
                                 resumeData.TransferredBytes);
 
-                    if (FileTransferAdded != null)
-                        FileTransferAdded(this, oneFileTransferModel);
+                    FileTransferAdded?.Invoke(this, oneFileTransferModel);
                 }
             }
         }

@@ -160,10 +160,7 @@ namespace OneTox.Model
         {
             ToxAvModel.Instance.SetCurrent(tox);
 
-            if (_tox != null)
-            {
-                _tox.Dispose();
-            }
+            _tox?.Dispose();
 
             _tox = tox;
             RegisterHandlers();
@@ -393,9 +390,8 @@ namespace OneTox.Model
 
         private void RaiseFriendListReseted()
         {
-            if (FriendListChanged != null)
-                FriendListChanged(this,
-                    new FriendListChangedEventArgs {FriendNumber = -1, Action = FriendListChangedAction.Reset});
+            FriendListChanged?.Invoke(this,
+                new FriendListChangedEventArgs {FriendNumber = -1, Action = FriendListChangedAction.Reset});
         }
 
         #endregion
@@ -436,22 +432,19 @@ namespace OneTox.Model
         {
             await SaveDataAsync();
 
-            if (FriendListChanged != null)
-                FriendListChanged(this, e);
+            FriendListChanged?.Invoke(this, e);
         }
 
         private void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
         {
-            if (FriendConnectionStatusChanged != null)
-                FriendConnectionStatusChanged(this, e);
+            FriendConnectionStatusChanged?.Invoke(this, e);
 
             _lastConnectionStatusRegistry.RegisterLast(e.FriendNumber, e.Status);
         }
 
         private void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
         {
-            if (FriendMessageReceived != null)
-                FriendMessageReceived(this, e);
+            FriendMessageReceived?.Invoke(this, e);
         }
 
         private void ConnectionStatusChangedHandler(object sender, ToxEventArgs.ConnectionStatusEventArgs e)
@@ -464,62 +457,52 @@ namespace OneTox.Model
 
         private void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
         {
-            if (FriendRequestReceived != null)
-                FriendRequestReceived(this, e);
+            FriendRequestReceived?.Invoke(this, e);
         }
 
         private void FriendNameChangedHandler(object sender, ToxEventArgs.NameChangeEventArgs e)
         {
-            if (FriendNameChanged != null)
-                FriendNameChanged(this, e);
+            FriendNameChanged?.Invoke(this, e);
         }
 
         private void FriendStatusMessageChangedHandler(object sender, ToxEventArgs.StatusMessageEventArgs e)
         {
-            if (FriendStatusMessageChanged != null)
-                FriendStatusMessageChanged(this, e);
+            FriendStatusMessageChanged?.Invoke(this, e);
         }
 
         private void FriendStatusChangedHandler(object sender, ToxEventArgs.StatusEventArgs e)
         {
-            if (FriendStatusChanged != null)
-                FriendStatusChanged(this, e);
+            FriendStatusChanged?.Invoke(this, e);
         }
 
         private void FriendTypingChangedHandler(object sender, ToxEventArgs.TypingStatusEventArgs e)
         {
-            if (FriendTypingChanged != null)
-                FriendTypingChanged(this, e);
+            FriendTypingChanged?.Invoke(this, e);
         }
 
         private void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
         {
-            if (FileControlReceived != null)
-                FileControlReceived(this, e);
+            FileControlReceived?.Invoke(this, e);
         }
 
         private void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
         {
-            if (FileChunkRequested != null)
-                FileChunkRequested(this, e);
+            FileChunkRequested?.Invoke(this, e);
         }
 
         private void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
         {
-            if (FileSendRequestReceived != null)
-                FileSendRequestReceived(this, e);
+            FileSendRequestReceived?.Invoke(this, e);
         }
 
         private void FileChunkReceivedHandler(object sender, ToxEventArgs.FileChunkEventArgs e)
         {
-            if (FileChunkReceived != null)
-                FileChunkReceived(this, e);
+            FileChunkReceived?.Invoke(this, e);
         }
 
         private void ReadReceiptReceivedHandler(object sender, ToxEventArgs.ReadReceiptEventArgs e)
         {
-            if (ReadReceiptReceived != null)
-                ReadReceiptReceived(this, e);
+            ReadReceiptReceived?.Invoke(this, e);
         }
 
         #endregion

@@ -84,10 +84,7 @@ namespace OneTox.View.UserControls
             // Hide the flyout when the call ends.
             if (e.PropertyName == "State" && _audioCallViewModel.State == AudioCallViewModel.CallState.Default)
             {
-                if (_microphoneIsNotAvailableFylout != null)
-                {
-                    _microphoneIsNotAvailableFylout.Hide();
-                }
+                _microphoneIsNotAvailableFylout?.Hide();
             }
         }
 
