@@ -11,6 +11,7 @@ namespace OneTox.View.UserControls
     {
         private AudioCallViewModel _audioCallViewModel;
         private Flyout _microphoneIsNotAvailableFylout;
+        private RingManager _ringManager;
 
         public CallBlock()
         {
@@ -21,9 +22,10 @@ namespace OneTox.View.UserControls
         {
             _audioCallViewModel = ((CallViewModel) DataContext).Audio;
             _audioCallViewModel.MicrophoneIsNotAvailable += MicrophoneIsNotAvailableHandler;
-            _audioCallViewModel.StartRinging += StartRingingHandler;
-            _audioCallViewModel.StopRinging += StopRingingHandler;
             _audioCallViewModel.PropertyChanged += PropertyChangedHandler;
+
+            _ringManager = new RingManager(RingPlayer);
+            _ringManager.RegisterEventHandlers(_audioCallViewModel);
 
             var state =
                 (string)
@@ -34,21 +36,63 @@ namespace OneTox.View.UserControls
         private void AudioCallBlockUnloaded(object sender, RoutedEventArgs e)
         {
             _audioCallViewModel.MicrophoneIsNotAvailable -= MicrophoneIsNotAvailableHandler;
-            _audioCallViewModel.StartRinging -= StartRingingHandler;
-            _audioCallViewModel.StopRinging -= StopRingingHandler;
             _audioCallViewModel.PropertyChanged -= PropertyChangedHandler;
+
+            _ringManager.DeregisterEventHandlers(_audioCallViewModel);
         }
 
-        #region Ring event handlers
+        #region RingManager
 
-        private void StartRingingHandler(object sender, string ringFileName)
+        private class RingManager
         {
-            RingPlayer.Source = new Uri("ms-appx:///Assets/" + ringFileName);
-        }
+            private readonly MediaElement _ringPlayer;
+            private bool _isRinging;
 
-        private void StopRingingHandler(object sender, EventArgs e)
-        {
-            RingPlayer.Stop();
+            public RingManager(MediaElement ringPlayer)
+            {
+                _ringPlayer = ringPlayer;
+                ringPlayer.MediaOpened += MediaOpenedHandler;
+            }
+
+            public void RegisterEventHandlers(AudioCallViewModel audioCallViewModel)
+            {
+                audioCallViewModel.StartRinging += StartRingingHandler;
+                audioCallViewModel.StopRinging += StopRingingHandler;
+            }
+
+            public void DeregisterEventHandlers(AudioCallViewModel audioCallViewModel)
+            {
+                audioCallViewModel.StartRinging -= StartRingingHandler;
+                audioCallViewModel.StopRinging -= StopRingingHandler;
+            }
+
+            private void StartRingingHandler(object sender, string ringFileName)
+            {
+                _isRinging = true;
+                _ringPlayer.Source = new Uri("ms-appx:///Assets/" + ringFileName);
+            }
+
+            private void StopRingingHandler(object sender, EventArgs e)
+            {
+                _isRinging = false;
+                _ringPlayer.Stop();
+            }
+
+            /// <summary>
+            ///     Sometimes (for example in case of an echobot) the friend answers our call so soon that the ringing sound gets stuck
+            ///     if RingPlayer is on autoplay mode.
+            ///     It's because it takes time to load the Source sound file and during that time our call gets answered. So the
+            ///     desired behavior for the app would be to doesn't even start(!) playing the ringing sound.
+            ///     To achieve that we do a double check: we don't start playing the ringing sound right after it's loaded. We first
+            ///     check if it's still desired to play it (_isRinging is true), and act based on that.
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
+            private void MediaOpenedHandler(object sender, RoutedEventArgs e)
+            {
+                if (_isRinging)
+                    _ringPlayer.Play();
+            }
         }
 
         #endregion

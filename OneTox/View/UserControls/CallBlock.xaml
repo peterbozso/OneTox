@@ -277,7 +277,7 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <MediaElement x:Name="RingPlayer" IsLooping="True" />
+        <MediaElement x:Name="RingPlayer" IsLooping="True" AutoPlay="False" />
 
         <Button x:Name="StartCallButton" Grid.Column="0" HorizontalAlignment="Center" Content="&#xE13A;"
                 Margin="0,0,20,0"
