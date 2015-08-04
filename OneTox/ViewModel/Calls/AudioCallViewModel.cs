@@ -321,14 +321,24 @@ namespace OneTox.ViewModel.Calls
 
         public RelayCommand ChangeMuteCommand
         {
-            get { return _changeMuteCommand ?? (_changeMuteCommand = new RelayCommand(() =>
+            get
             {
-                IsMuted = !IsMuted;
-                if (IsMuted)
-                    _microphoneInputNode.Stop();
-                else
-                    _microphoneInputNode.Start();
-            })); }
+                return _changeMuteCommand ?? (_changeMuteCommand = new RelayCommand(() =>
+                {
+                    IsMuted = !IsMuted;
+
+                    if (IsMuted)
+                    {
+                        _microphoneInputNode.Stop();
+                        _toxOutputNode.Stop();
+                    }
+                    else
+                    {
+                        _microphoneInputNode.Start();
+                        _toxOutputNode.Start();
+                    }
+                }));
+            }
         }
 
         public RelayCommand AcceptCallCommand
