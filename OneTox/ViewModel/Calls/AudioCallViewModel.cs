@@ -50,12 +50,16 @@ namespace OneTox.ViewModel.Calls
             _frameSize = _samplingRate*KQuantumSize/1000;
         }
 
+        #region Microphone availability error
+
         private void RaiseMicrophoneIsNotAvailable(string errorMessage)
         {
             MicrophoneIsNotAvailable?.Invoke(this, errorMessage);
         }
 
         public event EventHandler<string> MicrophoneIsNotAvailable;
+
+        #endregion
 
         #region ToxAv event handlers
 
