@@ -40,7 +40,22 @@ namespace OneTox.ViewModel.Calls
             InitializeRates();
 
             ToxAvModel.Instance.CallStateChanged += CallStateChangedHandler;
+            ToxAvModel.Instance.CallRequestReceived += CallRequestReceivedHandler;
         }
+
+        private void InitializeRates()
+        {
+            _bitRate = 48;
+            _samplingRate = 48*1000;
+            _frameSize = _samplingRate*KQuantumSize/1000;
+        }
+
+        private void RaiseMicrophoneIsNotAvailable(string errorMessage)
+        {
+            MicrophoneIsNotAvailable?.Invoke(this, errorMessage);
+        }
+
+        public event EventHandler<string> MicrophoneIsNotAvailable;
 
         #region ToxAv event handlers
 
@@ -66,21 +81,12 @@ namespace OneTox.ViewModel.Calls
             }
         }
 
+        private async void CallRequestReceivedHandler(object sender, ToxAvEventArgs.CallRequestEventArgs e)
+        {
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { State = CallState.IncomingCall; });
+        }
+
         #endregion
-
-        private void InitializeRates()
-        {
-            _bitRate = 48;
-            _samplingRate = 48*1000;
-            _frameSize = _samplingRate*KQuantumSize/1000;
-        }
-
-        private void RaiseMicrophoneIsNotAvailable(string errorMessage)
-        {
-            MicrophoneIsNotAvailable?.Invoke(this, errorMessage);
-        }
-
-        public event EventHandler<string> MicrophoneIsNotAvailable;
 
         #region Fields
 
