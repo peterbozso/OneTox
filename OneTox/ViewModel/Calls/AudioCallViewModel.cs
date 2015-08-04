@@ -129,14 +129,42 @@ namespace OneTox.ViewModel.Calls
                 if (capacityInBytes == 0) // Don't send empty frames.
                     return;
 
-                var bytes = new byte[capacityInBytes];
-                Marshal.Copy((IntPtr) dataInBytes, bytes, 0, (int) capacityInBytes);
+                var capacityInFloats = capacityInBytes/4;
+                var dataInFloats = (float*) dataInBytes;
+                var floats = new float[capacityInFloats];
+                Marshal.Copy((IntPtr) dataInFloats, floats, 0, (int) capacityInFloats);
 
-                var shorts = new short[capacityInBytes/2];
-                Buffer.BlockCopy(bytes, 0, shorts, 0, (int) capacityInBytes);
-
+                var shorts = ConvertFloatsToShorts(floats);
                 ToxAvModel.Instance.SendAudioFrame(_friendNumber, new ToxAvAudioFrame(shorts, _samplingRate, 1));
             }
+        }
+
+        private short[] ConvertFloatsToShorts(float[] inSamples)
+        {
+            var outSamples = new short[inSamples.Length];
+
+            for (var i = 0; i < inSamples.Length; i++)
+            {
+                float dtmp;
+                if (inSamples[i] >= 0)
+                {
+                    dtmp = inSamples[i] + 0.5f;
+                    if (dtmp > short.MaxValue)
+                    {
+                        dtmp = short.MaxValue;
+                    }
+                }
+                else
+                {
+                    dtmp = inSamples[i] - 0.5f;
+                    if (dtmp < short.MinValue)
+                    {
+                        dtmp = short.MinValue;
+                    }
+                }
+                outSamples[i] = (short) (dtmp);
+            }
+            return outSamples;
         }
 
         #endregion
