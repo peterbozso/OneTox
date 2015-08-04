@@ -50,8 +50,8 @@ namespace OneTox.ViewModel.Calls
 
         private readonly int _friendNumber;
         private AudioGraph _audioGraph;
-        private AudioDeviceInputNode _deviceInputNode;
-        private AudioFrameOutputNode _frameOutputNode;
+        private AudioDeviceInputNode _microphoneInputNode;
+        private AudioFrameOutputNode _toxOutputNode;
         private int _samplingRate;
         private int _bitRate;
 
@@ -62,8 +62,8 @@ namespace OneTox.ViewModel.Calls
         private async Task StartAudioGraph()
         {
             await InitAudioGraph();
-            await CreateDeviceInputNode();
-            CreateFrameOutputNode();
+            await CreateMicrophoneInputNode();
+            CreateToxOutputNode();
             _audioGraph.Start();
         }
 
@@ -87,7 +87,7 @@ namespace OneTox.ViewModel.Calls
             _audioGraph = result.Graph;
         }
 
-        private async Task CreateDeviceInputNode()
+        private async Task CreateMicrophoneInputNode()
         {
             // Create a device output node
             var result = await _audioGraph.CreateDeviceInputNodeAsync(MediaCategory.Communications);
@@ -100,19 +100,19 @@ namespace OneTox.ViewModel.Calls
                 return;
             }
 
-            _deviceInputNode = result.DeviceInputNode;
+            _microphoneInputNode = result.DeviceInputNode;
         }
 
-        private void CreateFrameOutputNode()
+        private void CreateToxOutputNode()
         {
-            _frameOutputNode = _audioGraph.CreateFrameOutputNode();
+            _toxOutputNode = _audioGraph.CreateFrameOutputNode();
             _audioGraph.QuantumProcessed += AudioGraphQuantumProcessed;
-            _deviceInputNode.AddOutgoingConnection(_frameOutputNode);
+            _microphoneInputNode.AddOutgoingConnection(_toxOutputNode);
         }
 
         private void AudioGraphQuantumProcessed(AudioGraph sender, object args)
         {
-            var frame = _frameOutputNode.GetFrame();
+            var frame = _toxOutputNode.GetFrame();
             ProcessFrameOutput(frame);
         }
 
