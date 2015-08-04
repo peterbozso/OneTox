@@ -15,14 +15,6 @@ using SharpTox.Av;
 
 namespace OneTox.ViewModel.Calls
 {
-    [ComImport]
-    [Guid("5B0D3235-4DBA-4D44-865E-8F1D0E4FD04D")]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    internal unsafe interface IMemoryBufferByteAccess
-    {
-        void GetBuffer(out byte* buffer, out uint capacity);
-    }
-
     public class AudioCallViewModel : ObservableObject
     {
         public enum CallState
@@ -32,6 +24,16 @@ namespace OneTox.ViewModel.Calls
             OutgoingCall,
             IncomingCall
         }
+
+        [ComImport]
+        [Guid("5B0D3235-4DBA-4D44-865E-8F1D0E4FD04D")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        internal unsafe interface IMemoryBufferByteAccess
+        {
+            void GetBuffer(out byte* buffer, out uint capacity);
+        }
+
+        #region Constructor
 
         public AudioCallViewModel(int friendNumber)
         {
@@ -45,10 +47,13 @@ namespace OneTox.ViewModel.Calls
 
         private void InitializeRates()
         {
+            // TODO: Set these based on app settings!
             _bitRate = 48;
-            _samplingRate = 48*1000;
+            _samplingRate = _bitRate*1000;
             _frameSize = _samplingRate*KQuantumSize/1000;
         }
+
+        #endregion
 
         #region Microphone availability error
 
