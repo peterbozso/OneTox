@@ -43,6 +43,14 @@ namespace OneTox.View.UserControls
 
         #region RingManager
 
+        /// <summary>
+        ///     Sometimes (for example in case of an echobot) the friend answers our call so soon that the ringing sound gets stuck
+        ///     if RingPlayer is on autoplay mode.
+        ///     It's because it takes time to load the Source sound file and during that time our call gets answered. So the
+        ///     desired behavior for the app would be to doesn't even start(!) playing the ringing sound.
+        ///     To achieve that we do a double check: we don't start playing the sound right after it's loaded. We firstcheck if
+        ///     it's still desired to play it (_isRinging is true), and act based on that.
+        /// </summary>
         private class RingManager
         {
             private readonly MediaElement _ringPlayer;
@@ -78,16 +86,6 @@ namespace OneTox.View.UserControls
                 _ringPlayer.Stop();
             }
 
-            /// <summary>
-            ///     Sometimes (for example in case of an echobot) the friend answers our call so soon that the ringing sound gets stuck
-            ///     if RingPlayer is on autoplay mode.
-            ///     It's because it takes time to load the Source sound file and during that time our call gets answered. So the
-            ///     desired behavior for the app would be to doesn't even start(!) playing the ringing sound.
-            ///     To achieve that we do a double check: we don't start playing the ringing sound right after it's loaded. We first
-            ///     check if it's still desired to play it (_isRinging is true), and act based on that.
-            /// </summary>
-            /// <param name="sender"></param>
-            /// <param name="e"></param>
             private void MediaOpenedHandler(object sender, RoutedEventArgs e)
             {
                 if (_isRinging)
