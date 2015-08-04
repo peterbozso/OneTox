@@ -44,6 +44,11 @@ namespace OneTox.ViewModel.Calls
             _samplingRate = 48*1000;
         }
 
+        private void RaiseMicrophoneIsNotAvailable(string errorMessage)
+        {
+            MicrophoneIsNotAvailable?.Invoke(this, errorMessage);
+        }
+
         public event EventHandler<string> MicrophoneIsNotAvailable;
 
         #region Fields
@@ -62,7 +67,14 @@ namespace OneTox.ViewModel.Calls
         private async Task StartAudioGraph()
         {
             await InitAudioGraph();
-            await CreateMicrophoneInputNode();
+
+            var success = await CreateMicrophoneInputNode();
+            if (!success)
+            {
+                IsMuted = true;
+                return;
+            }
+
             CreateToxOutputNode();
             _audioGraph.Start();
         }
@@ -79,39 +91,50 @@ namespace OneTox.ViewModel.Calls
             var result = await AudioGraph.CreateAsync(settings);
             if (result.Status != AudioGraphCreationStatus.Success)
             {
-                // TODO: Error handling!
-                // ShowErrorMessage("AudioGraph creation error: " + result.Status.ToString());
-                return;
+                throw new Exception(result.Status.ToString());
             }
 
             _audioGraph = result.Graph;
         }
 
-        private async Task CreateMicrophoneInputNode()
+        private async Task<bool> CreateMicrophoneInputNode()
         {
             // Create a device output node
             var result = await _audioGraph.CreateDeviceInputNodeAsync(MediaCategory.Communications);
 
             if (result.Status != AudioDeviceNodeCreationStatus.Success)
             {
-                // TODO: Error handling!
-                // Cannot create device output node
-                // ShowErrorMessage(result.Status.ToString());
-                return;
+                switch (result.Status)
+                {
+                    case AudioDeviceNodeCreationStatus.DeviceNotAvailable:
+                        RaiseMicrophoneIsNotAvailable("You do not have the required microphone present on your system.");
+                        return false;
+                    case AudioDeviceNodeCreationStatus.AccessDenied:
+                        RaiseMicrophoneIsNotAvailable(
+                            "OneTox doesn't have permission to use your microphone. To change this, please go to the Settings app's Privacy section. " +
+                            "Then click or tap the mute button to start using the microphone again.");
+                        return false;
+                    default:
+                        throw new Exception(result.Status.ToString());
+                }
             }
 
             _microphoneInputNode = result.DeviceInputNode;
+            return true;
         }
 
         private void CreateToxOutputNode()
         {
             _toxOutputNode = _audioGraph.CreateFrameOutputNode();
-            _audioGraph.QuantumProcessed += AudioGraphQuantumProcessed;
+            _audioGraph.QuantumProcessed += AudioGraphQuantumProcessedHandler;
             _microphoneInputNode.AddOutgoingConnection(_toxOutputNode);
         }
 
-        private void AudioGraphQuantumProcessed(AudioGraph sender, object args)
+        private void AudioGraphQuantumProcessedHandler(AudioGraph sender, object args)
         {
+            if (State != CallState.DuringCall)
+                return;
+
             var frame = _toxOutputNode.GetFrame();
             ProcessFrameOutput(frame);
         }
@@ -279,8 +302,9 @@ namespace OneTox.ViewModel.Calls
                 return _startCallCommand ??
                        (_startCallCommand = new RelayCommand(async () =>
                        {
-                           ToxAvModel.Instance.Call(_friendNumber, _bitRate, 0);
                            await StartAudioGraph();
+                           ToxAvModel.Instance.Call(_friendNumber, _bitRate, 0);
+                           State = CallState.OutgoingCall;
                        }));
             }
         }
