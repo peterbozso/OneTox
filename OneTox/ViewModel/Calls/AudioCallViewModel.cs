@@ -247,7 +247,7 @@ namespace OneTox.ViewModel.Calls
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private bool _isMuted;
         private CallState _state;
-        private RelayCommand _cancelCallCommand;
+        private RelayCommand _declineCallCommand;
         private RelayCommand _changeMuteCommand;
         private RelayCommand _stopCallCommand;
         private RelayCommand _startCallCommand;
@@ -345,15 +345,25 @@ namespace OneTox.ViewModel.Calls
         {
             get
             {
-                return _acceptCallCommand ??
-                       (_acceptCallCommand =
-                           new RelayCommand(() => { }));
+                return _acceptCallCommand ?? (_acceptCallCommand = new RelayCommand(async () =>
+                {
+                    await StartAudioGraph();
+                    ToxAvModel.Instance.Answer(_friendNumber, _bitRate, 0);
+                    State = CallState.DuringCall;
+                }));
             }
         }
 
         public RelayCommand DeclineCallCommand
         {
-            get { return _cancelCallCommand ?? (_cancelCallCommand = new RelayCommand(() => { })); }
+            get
+            {
+                return _declineCallCommand ?? (_declineCallCommand = new RelayCommand(() =>
+                {
+                    ToxAvModel.Instance.SendControl(_friendNumber, ToxAvCallControl.Cancel);
+                    State = CallState.Default;
+                }));
+            }
         }
 
         public RelayCommand StartCallCommand
