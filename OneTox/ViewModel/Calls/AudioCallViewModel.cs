@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
+using Windows.Foundation;
 using Windows.Media;
 using Windows.Media.Audio;
 using Windows.Media.Capture;
@@ -43,6 +44,7 @@ namespace OneTox.ViewModel.Calls
 
             ToxAvModel.Instance.CallStateChanged += CallStateChangedHandler;
             ToxAvModel.Instance.CallRequestReceived += CallRequestReceivedHandler;
+            ToxAvModel.Instance.AudioFrameReceived += AudioFrameReceivedHandler;
         }
 
         private void InitializeRates()
@@ -103,6 +105,8 @@ namespace OneTox.ViewModel.Calls
         private AudioGraph _audioGraph;
         private AudioDeviceInputNode _microphoneInputNode;
         private AudioFrameOutputNode _toxOutputNode;
+        private AudioDeviceOutputNode _speakerOutputNode;
+        AudioFrameInputNode _toxInputNode;
         private int _samplingRate;
         private int _bitRate;
         private int _frameSize;
@@ -110,7 +114,7 @@ namespace OneTox.ViewModel.Calls
 
         #endregion
 
-        #region Audio sending
+        #region AudioGraph
 
         private async Task StartAudioGraph()
         {
@@ -134,7 +138,7 @@ namespace OneTox.ViewModel.Calls
 
         private async Task InitAudioGraph()
         {
-            var encodingProperties = AudioEncodingProperties.CreatePcm((uint) _samplingRate, 1, 16);
+            var encodingProperties = AudioEncodingProperties.CreatePcm((uint)_samplingRate, 1, 16);
 
             // Don't modify DesiredSamplesPerQuantum! If you do, change KQuantumSize accordingly!
             var settings = new AudioGraphSettings(AudioRenderCategory.Communications)
@@ -150,6 +154,10 @@ namespace OneTox.ViewModel.Calls
 
             _audioGraph = result.Graph;
         }
+
+        #endregion
+
+        #region Audio sending
 
         private async Task<bool> CreateMicrophoneInputNode()
         {
@@ -243,6 +251,89 @@ namespace OneTox.ViewModel.Calls
                 outSamples[i] = (short) (dtmp);
             }
             return outSamples;
+        }
+
+        #endregion
+
+        #region Audio receiving
+
+        private async Task CreateSpeakerOutputNode()
+        {
+            CreateAudioDeviceOutputNodeResult result = await _audioGraph.CreateDeviceOutputNodeAsync();
+
+            if (result.Status != AudioDeviceNodeCreationStatus.Success)
+            {
+                // TODO: Error handling!
+                // Cannot create device output node
+                // ShowErrorMessage(result.Status.ToString());
+                return;
+            }
+
+            _speakerOutputNode = result.DeviceOutputNode;
+        }
+
+        private void CreateToxInputNode()
+        {
+            // Create the FrameInputNode at the same format as the graph, except explicitly set mono.
+            AudioEncodingProperties nodeEncodingProperties = _audioGraph.EncodingProperties;
+            nodeEncodingProperties.ChannelCount = 1;
+            _toxInputNode = _audioGraph.CreateFrameInputNode(nodeEncodingProperties);
+
+            // Initialize the Frame Input Node in the stopped state
+            _toxInputNode.Stop();
+
+            // Hook up an event handler so we can start generating samples when needed
+            // This event is triggered when the node is required to provide data
+            _toxInputNode.QuantumStarted += ToxInputNodeQuantumStartedHandler;
+            
+            _toxInputNode.AddOutgoingConnection(_speakerOutputNode);
+        }
+
+        private void ToxInputNodeQuantumStartedHandler(AudioFrameInputNode sender, FrameInputNodeQuantumStartedEventArgs args)
+        {
+            // GenerateAudioData can provide PCM audio data by directly synthesizing it or reading from a file.
+            // Need to know how many samples are required. In this case, the node is running at the same rate as the rest of the graph
+            // For minimum latency, only provide the required amount of samples. Extra samples will introduce additional latency.
+            uint numSamplesNeeded = (uint)args.RequiredSamples;
+
+            if (numSamplesNeeded != 0)
+            {
+                AudioFrame audioData = GenerateAudioData(numSamplesNeeded);
+                _toxInputNode.AddFrame(audioData);
+            }
+        }
+
+        unsafe private AudioFrame GenerateAudioData(uint samples)
+        {
+            // Buffer size is (number of samples) * (size of each sample)
+            // We choose to generate single channel (mono) audio. For multi-channel, multiply by number of channels
+            uint bufferSize = samples * sizeof(float);
+            AudioFrame frame = new AudioFrame(bufferSize);
+
+            using (AudioBuffer buffer = frame.LockBuffer(AudioBufferAccessMode.Write))
+            using (IMemoryBufferReference reference = buffer.CreateReference())
+            {
+                byte* dataInBytes;
+                uint capacityInBytes;
+
+                // Get the buffer from the AudioFrame
+                ((IMemoryBufferByteAccess)reference).GetBuffer(out dataInBytes, out capacityInBytes);
+
+                // Cast to float since the data we are generating is float
+                float* dataInFloat = (float*)dataInBytes;
+
+
+            }
+
+            return frame;
+        }
+
+        private void AudioFrameReceivedHandler(object sender, ToxAvEventArgs.AudioFrameEventArgs e)
+        {
+            if (e.FriendNumber != _friendNumber)
+                return;
+
+
         }
 
         #endregion
