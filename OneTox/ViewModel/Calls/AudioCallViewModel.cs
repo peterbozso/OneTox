@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Media;
 using Windows.Media.Audio;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Media.Render;
+using Windows.UI.Core;
 using OneTox.Common;
 using OneTox.Helpers;
 using OneTox.Model;
@@ -36,12 +38,41 @@ namespace OneTox.ViewModel.Calls
             _friendNumber = friendNumber;
 
             InitializeRates();
+
+            ToxAvModel.Instance.CallStateChanged += CallStateChangedHandler;
         }
+
+        #region ToxAv event handlers
+
+        private async void CallStateChangedHandler(object sender, ToxAvEventArgs.CallStateEventArgs e)
+        {
+            if (e.FriendNumber != _friendNumber)
+                return;
+
+            if (e.State.HasFlag(ToxAvFriendCallState.ReceivingAudio) ||
+                e.State.HasFlag(ToxAvFriendCallState.SendingAudio))
+            {
+                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { State = CallState.DuringCall; });
+            }
+
+            _friendIsReceivingAudio = e.State.HasFlag(ToxAvFriendCallState.ReceivingAudio);
+
+            if (e.State.HasFlag(ToxAvFriendCallState.Finished) || e.State.HasFlag(ToxAvFriendCallState.Error))
+            {
+                StopAudioGraph();
+                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { State = CallState.Default; });
+            }
+        }
+
+        #endregion
 
         private void InitializeRates()
         {
             _bitRate = 48;
             _samplingRate = 48*1000;
+            _frameSize = _samplingRate*KQuantumSize/1000;
         }
 
         private void RaiseMicrophoneIsNotAvailable(string errorMessage)
@@ -59,6 +90,8 @@ namespace OneTox.ViewModel.Calls
         private AudioFrameOutputNode _toxOutputNode;
         private int _samplingRate;
         private int _bitRate;
+        private int _frameSize;
+        private bool _friendIsReceivingAudio;
 
         #endregion
 
@@ -79,10 +112,16 @@ namespace OneTox.ViewModel.Calls
             _audioGraph.Start();
         }
 
+        private void StopAudioGraph()
+        {
+            _audioGraph?.Stop();
+        }
+
         private async Task InitAudioGraph()
         {
             var encodingProperties = AudioEncodingProperties.CreatePcm((uint) _samplingRate, 1, 16);
 
+            // Don't modify DesiredSamplesPerQuantum! If you do, change KQuantumSize accordingly!
             var settings = new AudioGraphSettings(AudioRenderCategory.Communications)
             {
                 EncodingProperties = encodingProperties
@@ -132,7 +171,7 @@ namespace OneTox.ViewModel.Calls
 
         private void AudioGraphQuantumProcessedHandler(AudioGraph sender, object args)
         {
-            if (State != CallState.DuringCall)
+            if (!_friendIsReceivingAudio)
                 return;
 
             var frame = _toxOutputNode.GetFrame();
@@ -149,15 +188,16 @@ namespace OneTox.ViewModel.Calls
 
                 ((IMemoryBufferByteAccess) reference).GetBuffer(out dataInBytes, out capacityInBytes);
 
-                if (capacityInBytes == 0) // Don't send empty frames.
+                var capacityInFloats = capacityInBytes/4;
+                if (capacityInFloats != _frameSize) // Only send frames with the correct size.
                     return;
 
-                var capacityInFloats = capacityInBytes/4;
                 var dataInFloats = (float*) dataInBytes;
                 var floats = new float[capacityInFloats];
                 Marshal.Copy((IntPtr) dataInFloats, floats, 0, (int) capacityInFloats);
 
                 var shorts = ConvertFloatsToShorts(floats);
+
                 ToxAvModel.Instance.SendAudioFrame(_friendNumber, new ToxAvAudioFrame(shorts, _samplingRate, 1));
             }
         }
@@ -194,6 +234,9 @@ namespace OneTox.ViewModel.Calls
 
         #region Constants
 
+        // By default it's 10 ms and we don't intend to modfiy it. See: https://msdn.microsoft.com/en-us/library/windows/apps/xaml/mt203787.aspx#audiograph_class
+        private const int KQuantumSize = 10;
+
         private const string KRingInFileName = "ring-in.wav";
         private const string KRingOutFileName = "ring-out.wav";
 
@@ -201,6 +244,7 @@ namespace OneTox.ViewModel.Calls
 
         #region Fields
 
+        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private bool _isMuted;
         private CallState _state;
         private RelayCommand _cancelCallCommand;
@@ -314,7 +358,13 @@ namespace OneTox.ViewModel.Calls
             get
             {
                 return _stopCallCommand ??
-                       (_stopCallCommand = new RelayCommand(() => { }));
+                       (_stopCallCommand = new RelayCommand(() =>
+                       {
+                           StopAudioGraph();
+                           ToxAvModel.Instance.SendControl(_friendNumber, ToxAvCallControl.Cancel);
+                           State = CallState.Default;
+                           _friendIsReceivingAudio = false;
+                       }));
             }
         }
 
