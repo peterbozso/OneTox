@@ -118,19 +118,35 @@ namespace OneTox.ViewModel.Calls
 
         private async Task StartAudioGraph()
         {
-            await InitAudioGraph();
-
-            var success = await CreateMicrophoneInputNode();
-            if (!success)
+            if (_audioGraph == null)
             {
-                IsMuted = true;
-                return;
+                await InitAudioGraph();
+
+                var success = await CreateMicrophoneInputNode();
+                if (!success)
+                {
+                    IsMuted = true;
+                    return;
+                }
+
+                CreateToxOutputNode();
+
+                CreateToxInputNode();
+                await CreateSpeakerOutputNode();
             }
-
-            CreateToxOutputNode();
-
-            CreateToxInputNode();
-            await CreateSpeakerOutputNode();
+            else
+            {
+                if (IsMuted)
+                {
+                    _microphoneInputNode.Stop();
+                    _toxOutputNode.Stop();
+                }
+                else
+                {
+                    _microphoneInputNode.Start();
+                    _toxOutputNode.Start();
+                }
+            }
 
             _audioGraph.Start();
         }
