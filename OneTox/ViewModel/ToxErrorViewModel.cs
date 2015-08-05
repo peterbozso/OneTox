@@ -16,12 +16,7 @@ namespace OneTox.ViewModel
     public class ToxErrorViewModel
     {
         private static ToxErrorViewModel _instance;
-
-        public static ToxErrorViewModel Instance
-        {
-            get { return _instance ?? (_instance = new ToxErrorViewModel()); }
-        }
-
+        public static ToxErrorViewModel Instance => _instance ?? (_instance = new ToxErrorViewModel());
         public event EventHandler<string> ToxErrorOccured;
 
         private void RaiseToxErrorOccured(string errorMessage)

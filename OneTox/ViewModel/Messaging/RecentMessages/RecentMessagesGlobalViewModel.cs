@@ -12,8 +12,6 @@
         }
 
         public static RecentMessagesGlobalViewModel Instace
-        {
-            get { return _instance ?? (_instance = new RecentMessagesGlobalViewModel()); }
-        }
+            => _instance ?? (_instance = new RecentMessagesGlobalViewModel());
     }
 }

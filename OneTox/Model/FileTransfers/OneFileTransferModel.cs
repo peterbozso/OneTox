@@ -137,10 +137,7 @@ namespace OneTox.Model.FileTransfers
             }
         }
 
-        private bool IsPlaceholder
-        {
-            get { return State == FileTransferState.Finished || State == FileTransferState.Cancelled; }
-        }
+        private bool IsPlaceholder => State == FileTransferState.Finished || State == FileTransferState.Cancelled;
 
         #endregion
 
@@ -315,10 +312,7 @@ namespace OneTox.Model.FileTransfers
 
         #region Common
 
-        private long TransferredBytes
-        {
-            get { return _stream.Position; }
-        }
+        private long TransferredBytes => _stream.Position;
 
         private bool IsFinished
         {

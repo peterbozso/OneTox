@@ -91,15 +91,9 @@ namespace OneTox.Model
 
         #region Properties
 
-        public static ToxModel Instance
-        {
-            get { return _instance ?? (_instance = new ToxModel()); }
-        }
+        public static ToxModel Instance => _instance ?? (_instance = new ToxModel());
 
-        public int[] Friends
-        {
-            get { return _tox.Friends; }
-        }
+        public int[] Friends => _tox.Friends;
 
         public string Name
         {
@@ -137,15 +131,9 @@ namespace OneTox.Model
             }
         }
 
-        public ToxId Id
-        {
-            get { return _tox.Id; }
-        }
+        public ToxId Id => _tox.Id;
 
-        public bool IsConnected
-        {
-            get { return _tox.IsConnected; }
-        }
+        public bool IsConnected => _tox.IsConnected;
 
         #endregion
 

@@ -37,10 +37,7 @@ namespace OneTox.ViewModel.FileTransfers
 
         #region Properties
 
-        public string Name
-        {
-            get { return _oneFileTransferModel.Name; }
-        }
+        public string Name => _oneFileTransferModel.Name;
 
         /// <summary>
         ///     See ProgressUpdater.
@@ -57,10 +54,7 @@ namespace OneTox.ViewModel.FileTransfers
             }
         }
 
-        public FileTransferState State
-        {
-            get { return _oneFileTransferModel.State; }
-        }
+        public FileTransferState State => _oneFileTransferModel.State;
 
         private async void ModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {

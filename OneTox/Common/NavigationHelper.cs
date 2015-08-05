@@ -56,10 +56,7 @@ namespace OneTox.Common
     {
         private Page Page { get; }
 
-        private Frame Frame
-        {
-            get { return Page.Frame; }
-        }
+        private Frame Frame => Page.Frame;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="NavigationHelper" /> class.

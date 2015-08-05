@@ -18,25 +18,11 @@ namespace OneTox.ViewModel
             AvatarManager.Instance.UserAvatarChanged += UserAvatarChangedHandler;
         }
 
-        public ToxId Id
-        {
-            get { return ToxModel.Instance.Id; }
-        }
-
-        public BitmapImage Avatar
-        {
-            get { return AvatarManager.Instance.UserAvatar; }
-        }
-
-        public string Name
-        {
-            get { return ToxModel.Instance.Name; }
-        }
-
-        public string StatusMessage
-        {
-            get { return ToxModel.Instance.StatusMessage; }
-        }
+        public ToxId Id => ToxModel.Instance.Id;
+        public BitmapImage Avatar => AvatarManager.Instance.UserAvatar;
+        public string Name => ToxModel.Instance.Name;
+        public string StatusMessage => ToxModel.Instance.StatusMessage;
+        public bool IsConnected => ToxModel.Instance.IsConnected;
 
         public ExtendedToxUserStatus Status
         {
@@ -49,11 +35,6 @@ namespace OneTox.ViewModel
 
                 return ExtendedToxUserStatus.Offline;
             }
-        }
-
-        public bool IsConnected
-        {
-            get { return ToxModel.Instance.IsConnected; }
         }
 
         private void UserAvatarChangedHandler(object sender, EventArgs eventArgs)

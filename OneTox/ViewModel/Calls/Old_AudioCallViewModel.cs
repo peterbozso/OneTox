@@ -315,10 +315,9 @@ namespace OneTox.ViewModel.Calls
 
         private async void RaiseMicrophoneIsNotAvailable(string errorMessage)
         {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                MicrophoneIsNotAvailable?.Invoke(this, errorMessage);
-            });
+            await
+                _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { MicrophoneIsNotAvailable?.Invoke(this, errorMessage); });
         }
 
         public event EventHandler<string> MicrophoneIsNotAvailable;

@@ -11,11 +11,7 @@ namespace OneTox.Model
     {
         private static ToxAvModel _instance;
         private ToxAv _toxAv;
-
-        public static ToxAvModel Instance
-        {
-            get { return _instance ?? (_instance = new ToxAvModel()); }
-        }
+        public static ToxAvModel Instance => _instance ?? (_instance = new ToxAvModel());
 
         #region Methods
 

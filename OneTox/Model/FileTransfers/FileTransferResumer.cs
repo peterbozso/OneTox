@@ -29,10 +29,7 @@ namespace OneTox.Model.FileTransfers
             ToxModel.Instance.FriendListChanged += FriendListChangedHandler;
         }
 
-        public static FileTransferResumer Instance
-        {
-            get { return _instace ?? (_instace = new FileTransferResumer()); }
-        }
+        public static FileTransferResumer Instance => _instace ?? (_instace = new FileTransferResumer());
 
         /// <summary>
         ///     Records a file transfer for future resuming between core restarts.

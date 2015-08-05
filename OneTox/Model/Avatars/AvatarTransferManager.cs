@@ -26,10 +26,7 @@ namespace OneTox.Model.Avatars
             ToxModel.Instance.FileChunkReceived += FileChunkReceivedHandler;
         }
 
-        public static AvatarTransferManager Instance
-        {
-            get { return _instance ?? (_instance = new AvatarTransferManager()); }
-        }
+        public static AvatarTransferManager Instance => _instance ?? (_instance = new AvatarTransferManager());
 
         #region Data model
 

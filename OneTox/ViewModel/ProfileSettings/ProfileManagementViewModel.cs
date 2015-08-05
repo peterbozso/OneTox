@@ -24,11 +24,7 @@ namespace OneTox.ViewModel.ProfileSettings
             ProfileFiles = new ObservableCollection<StorageFile>();
         }
 
-        public string Name
-        {
-            get { return ToxModel.Instance.Name; }
-        }
-
+        public string Name => ToxModel.Instance.Name;
         public ObservableCollection<StorageFile> ProfileFiles { get; set; }
 
         public bool IsSwitchProfileFlyoutClosed

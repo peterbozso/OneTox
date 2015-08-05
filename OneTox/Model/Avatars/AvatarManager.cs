@@ -37,10 +37,7 @@ namespace OneTox.Model.Avatars
 
         #region Properties
 
-        public static AvatarManager Instance
-        {
-            get { return _instance ?? (_instance = new AvatarManager()); }
-        }
+        public static AvatarManager Instance => _instance ?? (_instance = new AvatarManager());
 
         public bool IsUserAvatarSet
         {

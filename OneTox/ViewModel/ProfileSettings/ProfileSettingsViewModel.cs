@@ -35,15 +35,9 @@ namespace OneTox.ViewModel.ProfileSettings
 
         #region Avatar
 
-        public BitmapImage Avatar
-        {
-            get { return AvatarManager.Instance.UserAvatar; }
-        }
+        public BitmapImage Avatar => AvatarManager.Instance.UserAvatar;
 
-        public bool IsAvatarSet
-        {
-            get { return AvatarManager.Instance.IsUserAvatarSet; }
-        }
+        public bool IsAvatarSet => AvatarManager.Instance.IsUserAvatarSet;
 
         private void IsUserAvatarSetChangedHandler(object sender, EventArgs e)
         {
@@ -109,10 +103,7 @@ namespace OneTox.ViewModel.ProfileSettings
 
         #region Tox ID
 
-        public ToxId Id
-        {
-            get { return ToxModel.Instance.Id; }
-        }
+        public ToxId Id => ToxModel.Instance.Id;
 
         public void CopyToxIdToClipboard()
         {

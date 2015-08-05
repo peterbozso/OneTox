@@ -67,10 +67,7 @@ namespace OneTox.Common
             }
         }
 
-        public ICollection<string> Keys
-        {
-            get { return _dictionary.Keys; }
-        }
+        public ICollection<string> Keys => _dictionary.Keys;
 
         public bool ContainsKey(string key)
         {
@@ -82,25 +79,15 @@ namespace OneTox.Common
             return _dictionary.TryGetValue(key, out value);
         }
 
-        public ICollection<object> Values
-        {
-            get { return _dictionary.Values; }
-        }
+        public ICollection<object> Values => _dictionary.Values;
 
         public bool Contains(KeyValuePair<string, object> item)
         {
             return _dictionary.Contains(item);
         }
 
-        public int Count
-        {
-            get { return _dictionary.Count; }
-        }
-
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public int Count => _dictionary.Count;
+        public bool IsReadOnly => false;
 
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
