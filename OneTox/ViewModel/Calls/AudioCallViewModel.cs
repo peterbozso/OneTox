@@ -251,25 +251,20 @@ namespace OneTox.ViewModel.Calls
 
             for (var i = 0; i < inSamples.Length; i++)
             {
-                float dtmp;
-                if (inSamples[i] >= 0)
+                float temp = inSamples[i] * (short.MaxValue + 1);
+
+                if (temp > short.MaxValue)
                 {
-                    dtmp = inSamples[i] + 0.5f;
-                    if (dtmp > short.MaxValue)
-                    {
-                        dtmp = short.MaxValue;
-                    }
+                    temp = short.MaxValue;
                 }
-                else
+                else if (temp < short.MinValue)
                 {
-                    dtmp = inSamples[i] - 0.5f;
-                    if (dtmp < short.MinValue)
-                    {
-                        dtmp = short.MinValue;
-                    }
+                    temp =  short.MinValue;                    
                 }
-                outSamples[i] = (short) (dtmp);
+
+                outSamples[i] = (short) (temp);
             }
+
             return outSamples;
         }
 
