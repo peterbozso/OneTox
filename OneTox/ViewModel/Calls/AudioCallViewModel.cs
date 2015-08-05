@@ -251,7 +251,7 @@ namespace OneTox.ViewModel.Calls
 
             for (var i = 0; i < inSamples.Length; i++)
             {
-                float temp = inSamples[i] * (short.MaxValue + 1);
+                var temp = inSamples[i]*(short.MaxValue + 1);
 
                 if (temp > short.MaxValue)
                 {
@@ -259,7 +259,7 @@ namespace OneTox.ViewModel.Calls
                 }
                 else if (temp < short.MinValue)
                 {
-                    temp =  short.MinValue;                    
+                    temp = short.MinValue;
                 }
 
                 outSamples[i] = (short) (temp);
@@ -352,14 +352,25 @@ namespace OneTox.ViewModel.Calls
 
         private float[] ConvertShortsToFloats(short[] inSamples)
         {
-            var pdOut = new float[inSamples.Length];
+            var outSamples = new float[inSamples.Length];
 
             for (var i = 0; i < inSamples.Length; i++)
             {
-                pdOut[i] = inSamples[i];
+                var temp = inSamples[i]/(float) (short.MaxValue + 1);
+
+                if (temp > 1)
+                {
+                    temp = 1;
+                }
+                else if (temp < -1)
+                {
+                    temp = -1;
+                }
+
+                outSamples[i] = temp;
             }
 
-            return pdOut;
+            return outSamples;
         }
 
         private void AudioFrameReceivedHandler(object sender, ToxAvEventArgs.AudioFrameEventArgs e)
