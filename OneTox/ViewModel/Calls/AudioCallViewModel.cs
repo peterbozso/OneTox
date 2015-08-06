@@ -525,6 +525,7 @@ namespace OneTox.ViewModel.Calls
                 return _startCallCommand ??
                        (_startCallCommand = new RelayCommand(async () =>
                        {
+                           // TODO: Give opportunity to the user to cancel his/her ongoing call in order to initiate a new one with this friend.
                            if (!ToxAvModel.Instance.CanCall)
                                return;
 
