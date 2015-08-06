@@ -10,8 +10,16 @@ namespace OneTox.Model
     public class ToxAvModel
     {
         private static ToxAvModel _instance;
+
+        /// <summary>
+        ///     When equals to -1, then there's no ongoing call. Otherwise it contains the friend number of the friend who is
+        ///     currently in call with the user.
+        /// </summary>
+        private int _friendInCall = -1;
+
         private ToxAv _toxAv;
         public static ToxAvModel Instance => _instance ?? (_instance = new ToxAvModel());
+        public bool CanCall => _friendInCall == -1;
 
         #region Methods
 
@@ -41,6 +49,11 @@ namespace OneTox.Model
 
         public bool Call(int friendNumber, int audioBitrate, int videoBitrate)
         {
+            if (_friendInCall != -1)
+                return false;
+
+            _friendInCall = friendNumber;
+
             ToxAvErrorCall error;
             var retVal = _toxAv.Call(friendNumber, audioBitrate, videoBitrate, out error);
             ToxErrorViewModel.Instance.RelayError(error);
@@ -57,6 +70,9 @@ namespace OneTox.Model
 
         public bool SendControl(int friendNumber, ToxAvCallControl control)
         {
+            if (friendNumber == _friendInCall && control == ToxAvCallControl.Cancel)
+                _friendInCall = -1;
+
             ToxAvErrorCallControl error;
             var retVal = _toxAv.SendControl(friendNumber, control, out error);
             ToxErrorViewModel.Instance.RelayError(error);
@@ -117,11 +133,27 @@ namespace OneTox.Model
 
         private void CallRequestReceivedHandler(object sender, ToxAvEventArgs.CallRequestEventArgs e)
         {
+            // Automatically decline call request if we have an ongoing call.
+            // TODO: Instead of this, tell the user about the situation and let him/her decide if he/she want to hang up the current call and answer the new one!
+            if (_friendInCall != -1)
+            {
+                _toxAv.SendControl(e.FriendNumber, ToxAvCallControl.Cancel);
+                return;
+            }
+
+            _friendInCall = e.FriendNumber;
+
             CallRequestReceived?.Invoke(this, e);
         }
 
         private void CallStateChangedHandler(object sender, ToxAvEventArgs.CallStateEventArgs e)
         {
+            if ((e.FriendNumber == _friendInCall) &&
+                (e.State.HasFlag(ToxAvFriendCallState.Finished) || e.State.HasFlag(ToxAvFriendCallState.Error)))
+            {
+                _friendInCall = -1;
+            }
+
             CallStateChanged?.Invoke(this, e);
         }
 

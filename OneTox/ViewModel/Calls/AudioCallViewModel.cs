@@ -525,6 +525,9 @@ namespace OneTox.ViewModel.Calls
                 return _startCallCommand ??
                        (_startCallCommand = new RelayCommand(async () =>
                        {
+                           if (!ToxAvModel.Instance.CanCall)
+                               return;
+
                            await StartAudioGraph();
                            ToxAvModel.Instance.Call(_friendNumber, _bitRate, 0);
                            State = CallState.OutgoingCall;
