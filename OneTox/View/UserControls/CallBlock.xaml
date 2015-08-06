@@ -283,7 +283,8 @@
                 Margin="0,0,20,0"
                 FontFamily="Segoe UI Symbol" FontSize="30" Command="{Binding Audio.StartCallCommand}"
                 Template="{StaticResource RoundButtonTemplate}" Width="71"
-                Height="71" RenderTransformOrigin="0.5,0.5">
+                Height="71" RenderTransformOrigin="0.5,0.5"
+                IsEnabled="false"> <!-- TODO: Enable it when audio receiving works! -->
             <Button.RenderTransform>
                 <CompositeTransform />
             </Button.RenderTransform>

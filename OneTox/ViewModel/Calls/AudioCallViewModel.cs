@@ -322,6 +322,7 @@ namespace OneTox.ViewModel.Calls
             _toxInputNode.AddFrame(audioData);
         }
 
+        // TODO: Fix frame receiving!
         private unsafe AudioFrame GenerateAudioData(uint samples, short[] shorts)
         {
             // Buffer size is (number of samples) * (size of each sample)
