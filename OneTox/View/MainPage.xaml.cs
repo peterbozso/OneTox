@@ -1,4 +1,5 @@
 ﻿using Windows.UI.Xaml.Controls;
+using OneTox.ViewModel.Friends;
 
 namespace OneTox.View
 {
@@ -7,6 +8,11 @@ namespace OneTox.View
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        private void FriendListSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ChatBlock.SetDataContext(FriendList.SelectedItem as FriendViewModel);
         }
     }
 }

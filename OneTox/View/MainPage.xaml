@@ -7,15 +7,22 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:userControls="using:OneTox.View.UserControls"
     xmlns:viewModel="using:OneTox.ViewModel"
+    xmlns:messaging="using:OneTox.View.UserControls.Messaging"
     mc:Ignorable="d"
     d:DataContext="{d:DesignData /SampleData/MainPageViewModelSampleData.xaml}">
 
     <Page.DataContext>
-        <viewModel:MainPageViewModel />
+        <viewModel:MainViewModel />
     </Page.DataContext>
 
-    <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Orientation="Horizontal">
-        <ListView ItemsSource="{Binding FriendList.Friends}" Background="{ThemeResource AppBarBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <ListView x:Name="FriendList" Grid.Column="0" ItemsSource="{Binding FriendList.Friends}"
+                  Background="{ThemeResource AppBarBackgroundThemeBrush}" SelectionChanged="FriendListSelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <userControls:FriendListItem Margin="8,12" />
@@ -23,6 +30,7 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <Grid />
-    </StackPanel>
+        <userControls:ChatBlock x:Name="ChatBlock" Grid.Column="1" />
+
+    </Grid>
 </Page>

@@ -136,6 +136,7 @@
     <Compile Include="ViewModel\Friends\FriendViewModel.cs" />
     <Compile Include="ViewModel\IToxUserViewModel.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\Messaging\ConversationViewModel.cs" />
     <Compile Include="ViewModel\Messaging\MessageGroupViewModel.cs" />
     <Compile Include="ViewModel\Messaging\ReceivedMessageViewModel.cs" />
@@ -176,6 +177,9 @@
     </Compile>
     <Compile Include="View\UserControls\CallBlock.xaml.cs">
       <DependentUpon>CallBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\ChatBlock.xaml.cs">
+      <DependentUpon>ChatBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserControls\FileTransfers\FileTransferRibbon.xaml.cs">
       <DependentUpon>FileTransferRibbon.xaml</DependentUpon>
@@ -274,6 +278,10 @@
     <Page Include="View\UserControls\CallBlock.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UserControls\ChatBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\UserControls\FileTransfers\FileTransferRibbon.xaml">
       <Generator>MSBuild:Compile</Generator>
