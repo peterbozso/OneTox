@@ -7,8 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:messaging="using:OneTox.View.UserControls.Messaging"
     mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignHeight="800"
+    d:DesignWidth="600">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -19,17 +19,27 @@
     </UserControl.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
         <!-- List of messages -->
-        <ListView x:Name="MessagesListView"
+        <ListView x:Name="MessagesListView" Grid.Row="0"
                   ItemsSource="{Binding Conversation.MessageGroups}" SelectionMode="None"
                   HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                   IncrementalLoadingTrigger="None" ItemContainerStyle="{StaticResource ChatPageListViewItemStyle}">
-
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <messaging:MessageBlock />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
+        <TextBox x:Name="MessageInput" Grid.Row="1" FontSize="20" MinHeight="40" MaxHeight="250"
+                 Height="Auto" KeyDown="MessageInputKeyDown"
+                 TextWrapping="Wrap"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10,3,20,5"
+                 FontFamily="Global User Interface" Margin="12" />
     </Grid>
 </UserControl>
