@@ -1,4 +1,7 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
+using OneTox.ViewModel;
 using OneTox.ViewModel.Friends;
 
 namespace OneTox.View
@@ -13,6 +16,19 @@ namespace OneTox.View
         private void FriendListSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ChatBlock.SetDataContext(FriendList.SelectedItem as FriendViewModel);
+        }
+
+        private void MainPageLoaded(object sender, RoutedEventArgs e)
+        {
+            var mainViewModel = DataContext as MainViewModel;
+
+            // TODO: Remember which friend we talked to the last time before shutting down the app and resume with selecting him/her.
+            // TODO: Handle the case when the user doesn't have any friends yet with a splash screen or something like that!
+            if (mainViewModel.FriendList.Friends.Count > 0)
+            {
+                FriendList.SelectedItem = mainViewModel.FriendList.Friends[0];
+                ChatBlock.SetDataContext(mainViewModel.FriendList.Friends[0]);
+            }
         }
     }
 }

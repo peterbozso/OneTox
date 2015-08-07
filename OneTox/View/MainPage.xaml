@@ -9,6 +9,7 @@
     xmlns:viewModel="using:OneTox.ViewModel"
     xmlns:messaging="using:OneTox.View.UserControls.Messaging"
     mc:Ignorable="d"
+    Loaded="MainPageLoaded"
     d:DataContext="{d:DesignData /SampleData/MainPageViewModelSampleData.xaml}">
 
     <Page.DataContext>
