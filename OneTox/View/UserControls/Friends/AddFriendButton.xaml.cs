@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace OneTox.View.UserControls.FriendRequests
+namespace OneTox.View.UserControls.Friends
 {
     public sealed partial class AddFriendButton : UserControl
     {

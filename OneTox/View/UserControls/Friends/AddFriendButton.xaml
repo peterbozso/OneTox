@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="OneTox.View.UserControls.FriendRequests.AddFriendButton"
+    x:Class="OneTox.View.UserControls.Friends.AddFriendButton"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:OneTox.View.UserControls.FriendRequests"
@@ -18,7 +18,7 @@
     </UserControl.DataContext>
 
     <Grid>
-        <Button Background="Transparent" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontFamily="Segoe MDL2 Assets" Content="&#xE710;" FontSize="40">
+        <Button Background="Transparent" FontFamily="Segoe MDL2 Assets" Content="&#xE710;" FontSize="32">
             <Button.Flyout>
                 <Flyout>
                     <StackPanel Width="400" x:Name="AddFriendFlyoutContent">

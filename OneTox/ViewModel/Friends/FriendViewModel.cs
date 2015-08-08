@@ -37,7 +37,7 @@ namespace OneTox.ViewModel.Friends
             Name = ToxModel.Instance.GetFriendName(friendNumber);
             if (Name == string.Empty)
             {
-                Name = ToxModel.Instance.GetFriendPublicKey(friendNumber).ToString().Substring(0, 10);
+                Name = ToxModel.Instance.GetFriendPublicKey(friendNumber).ToString();
             }
 
             StatusMessage = ToxModel.Instance.GetFriendStatusMessage(friendNumber);

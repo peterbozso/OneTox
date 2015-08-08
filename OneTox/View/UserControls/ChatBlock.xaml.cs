@@ -26,6 +26,9 @@ namespace OneTox.View.UserControls
 
         public void SetDataContext(FriendViewModel friendViewModel)
         {
+            if (friendViewModel == null)
+                return;
+
             DataContext = friendViewModel;
             _friendViewModel = friendViewModel;
 

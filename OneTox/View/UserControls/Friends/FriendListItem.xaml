@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="OneTox.View.UserControls.FriendListItem"
+    x:Class="OneTox.View.UserControls.Friends.FriendListItem"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:OneTox.View.UserControls"
@@ -12,9 +12,14 @@
 
     <UserControl.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+
+        <MenuFlyout x:Key="FriendListItemFlyout">
+            <MenuFlyoutItem Text="remove" Command="{Binding RemoveFriendCommand}" />
+            <MenuFlyoutItem Text="copy public key" Command="{Binding CopyIdCommand}" />
+        </MenuFlyout>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid FlyoutBase.AttachedFlyout="{StaticResource FriendListItemFlyout}" RightTapped="MainGridRightTapped">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />

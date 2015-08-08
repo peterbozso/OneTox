@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:userControls="using:OneTox.View.UserControls"
     xmlns:viewModel="using:OneTox.ViewModel"
-    xmlns:friendRequests="using:OneTox.View.UserControls.FriendRequests"
+    xmlns:friends="using:OneTox.View.UserControls.Friends"
     mc:Ignorable="d"
     Loaded="MainPageLoaded"
     d:DataContext="{d:DesignData /SampleData/MainPageViewModelSampleData.xaml}">
@@ -32,18 +32,17 @@
                       SelectionChanged="FriendListSelectionChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <userControls:FriendListItem Margin="8" />
+                        <friends:FriendListItem Margin="8" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
 
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                <friendRequests:AddFriendButton x:Name="AddFriendButton" Margin="0,0,16,8"/>
-                <Button x:Name="SettingsButton" Background="Transparent" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="16,0,0,8" FontFamily="Segoe MDL2 Assets" Content="&#xE713;" FontSize="40"/>
+                <friends:AddFriendButton x:Name="AddFriendButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,16,8"/>
+                <Button x:Name="SettingsButton" Background="Transparent" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="16,0,0,8" FontFamily="Segoe MDL2 Assets" Content="&#xE713;" FontSize="32"/>
             </StackPanel>
         </Grid>
 
         <userControls:ChatBlock x:Name="ChatBlock" Grid.Column="1" />
-
     </Grid>
 </Page>
