@@ -22,15 +22,26 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ListView x:Name="FriendList" Grid.Column="0" ItemsSource="{Binding FriendList.Friends}"
-                  Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
-                  SelectionChanged="FriendListSelectionChanged">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <userControls:FriendListItem Margin="8" />
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <Grid Grid.Column="0" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <ListView x:Name="FriendList" Grid.Row="0" ItemsSource="{Binding FriendList.Friends}"
+                      SelectionChanged="FriendListSelectionChanged">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <userControls:FriendListItem Margin="8" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="AddFriendButton" Background="Transparent" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="8" FontFamily="Segoe MDL2 Assets" Content="&#xE710;" FontSize="40"/>
+                <Button x:Name="SettingsButton" Background="Transparent" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="8" FontFamily="Segoe MDL2 Assets" Content="&#xE713;" FontSize="40"/>
+            </StackPanel>
+        </Grid>
 
         <userControls:ChatBlock x:Name="ChatBlock" Grid.Column="1" />
 
