@@ -13,7 +13,7 @@ namespace OneTox.View
         }
 
         private void FriendListSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+        {            
             ChatBlock.SetDataContext(FriendList.SelectedItem as FriendViewModel);
         }
 
@@ -26,7 +26,6 @@ namespace OneTox.View
             if (mainViewModel.FriendList.Friends.Count > 0)
             {
                 FriendList.SelectedItem = mainViewModel.FriendList.Friends[0];
-                ChatBlock.SetDataContext(mainViewModel.FriendList.Friends[0]);
             }
         }
     }
