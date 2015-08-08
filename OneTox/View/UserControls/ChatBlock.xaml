@@ -31,7 +31,7 @@
                   IncrementalLoadingTrigger="None" ItemContainerStyle="{StaticResource ChatPageListViewItemStyle}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <messaging:MessageBlock />
+                    <messaging:MessageBlock Margin="0,0,0,24" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

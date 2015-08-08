@@ -23,7 +23,8 @@
         </Grid.ColumnDefinitions>
 
         <ListView x:Name="FriendList" Grid.Column="0" ItemsSource="{Binding FriendList.Friends}"
-                  Background="{ThemeResource AppBarBackgroundThemeBrush}" SelectionChanged="FriendListSelectionChanged">
+                  Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
+                  SelectionChanged="FriendListSelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <userControls:FriendListItem Margin="8,12" />

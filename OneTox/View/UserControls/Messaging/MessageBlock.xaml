@@ -12,20 +12,25 @@
     d:DesignWidth="400">
 
     <UserControl.Resources>
-        <converters:SenderTypeToColorConverter x:Key="SenderTypeToColorConverter" />
+        <converters:SenderTypeToMessageBackgroundColorConverter x:Key="SenderTypeToMessageBackgroundColorConverter" />
+        <converters:SenderTypeToHorizontalAlignmentConverter x:Key="SenderTypeToHorizontalAlignmentConverter" />
+        <converters:SenderTypeToTextAlignmentConverter x:Key="SenderTypeToTextAlignmentConverter" />
+        <converters:SenderTypeToMessageMarginConverter x:Key="SenderTypeToMessageMarginConverter" />
     </UserControl.Resources>
 
-    <Grid Background="{Binding Path=Sender, Converter={StaticResource SenderTypeToColorConverter}}">
-        <Grid Margin="20,10,30,5">
+    <Grid Background="{Binding Path=Sender, Converter={StaticResource SenderTypeToMessageBackgroundColorConverter}}"
+          HorizontalAlignment="{Binding Path=Sender, Converter={StaticResource SenderTypeToHorizontalAlignmentConverter}}"
+          Margin="{Binding Path=Sender, Converter={StaticResource SenderTypeToMessageMarginConverter}}">
+        <Grid Margin="12,4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Foreground="{StaticResource MainColor}"
-                       Margin="10,-3,0,0"
+            <!--<TextBlock Grid.Row="0" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"
+                       Margin="10,-3,0,0" TextAlignment="{Binding Path=Sender, Converter={StaticResource SenderTypeToTextAlignmentConverter}}"
                        FontSize="20" Text="{Binding Sender.Name}" TextTrimming="CharacterEllipsis"
-                       VerticalAlignment="Top" />
+                       VerticalAlignment="Top" />-->
 
             <ItemsControl Grid.Row="1"
                           ItemsSource="{Binding Messages}"

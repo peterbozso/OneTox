@@ -13,9 +13,10 @@
     d:DesignWidth="400" Loaded="MessageRibbonLoaded">
 
     <UserControl.Resources>
-        <converters:MessageTypeToColorConverter x:Key="MessageTypeToColorConverter" />
+        <converters:MessageToTextColorConverter x:Key="MessageToTextColorConverter" />
         <converters:DateTimeConverter x:Key="DateTimeConverter" />
         <converters:DeliveryStateToStringConverter x:Key="DeliveryStateToStringConverter" />
+        <converters:SenderTypeToTextAlignmentConverter x:Key="SenderTypeToTextAlignmentConverter" />
     </UserControl.Resources>
 
     <Grid>
@@ -46,16 +47,14 @@
                         </ObjectAnimationUsingKeyFrames>
                         <DoubleAnimation Duration="0" To="0.5" Storyboard.TargetProperty="(UIElement.Opacity)"
                                          Storyboard.TargetName="MessageText" d:IsOptimized="True" />
-                        <DoubleAnimation Duration="0" To="0.5" Storyboard.TargetProperty="(UIElement.Opacity)"
-                                         Storyboard.TargetName="Timestamp" d:IsOptimized="True" />
+
                     </Storyboard>
                 </VisualState>
                 <VisualState x:Name="Failed">
                     <Storyboard>
                         <DoubleAnimation Duration="0" To="0.5" Storyboard.TargetProperty="(UIElement.Opacity)"
                                          Storyboard.TargetName="MessageText" d:IsOptimized="True" />
-                        <DoubleAnimation Duration="0" To="0.5" Storyboard.TargetProperty="(UIElement.Opacity)"
-                                         Storyboard.TargetName="Timestamp" d:IsOptimized="True" />
+
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>
@@ -86,19 +85,21 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock x:Name="MessageText" Grid.Column="0"
-                       Foreground="{Binding MessageType, Converter={StaticResource MessageTypeToColorConverter}}"
-                       FontSize="20" Margin="10,0,0,0" TextWrapping="Wrap" Text="{Binding Text}" />
+                       Foreground="{Binding Converter={StaticResource MessageToTextColorConverter}}"
+                       FontSize="20" TextWrapping="Wrap" Text="{Binding Text}"
+                       TextAlignment="{Binding Path=Sender, Converter={StaticResource SenderTypeToTextAlignmentConverter}}" />
 
             <Button x:Name="ResendButton" Grid.Column="1" Foreground="{ThemeResource BackgroundColor}" FontSize="16"
                     FontFamily="Segoe UI Symbol" Padding="0" BorderThickness="0"
                     VerticalAlignment="Top" Content=""
                     ToolTipService.ToolTip="Failed to send your message. Click here to resend it!" />
 
-            <TextBlock x:Name="Timestamp" Grid.Column="2" FontSize="16" Margin="10,5,0,0"
+            <!-- <TextBlock x:Name="Timestamp" Grid.Column="2" FontSize="16" Margin="10,5,0,0"
                        Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"
                        HorizontalAlignment="Left"
                        Text="{Binding Timestamp, Converter={StaticResource DateTimeConverter}}"
                        VerticalAlignment="Top" />
+            -->
         </Grid>
     </Grid>
 </UserControl>

@@ -1,21 +1,20 @@
 ﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Media;
 using OneTox.ViewModel;
 using OneTox.ViewModel.Friends;
 
 namespace OneTox.View.Converters
 {
-    public class SenderTypeToColorConverter : IValueConverter
+    internal class SenderTypeToMessageMarginConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is FriendViewModel)
-                return Application.Current.Resources["TextColor"] as SolidColorBrush;
+                return new Thickness(0, 0, 120, 0);
 
             if (value is UserViewModel)
-                return Application.Current.Resources["ChatBackgroundColor"] as SolidColorBrush;
+                return new Thickness(120, 0, 0, 0);
 
             return null;
         }

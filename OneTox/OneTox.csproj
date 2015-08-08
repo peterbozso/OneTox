@@ -160,8 +160,11 @@
     <Compile Include="View\Converters\FileTransferCountToPlaceholderTextConverter.cs" />
     <Compile Include="View\Converters\FriendNameToTypingStatusConverter.cs" />
     <Compile Include="View\Converters\IsMutedToBackgroundColorConverter.cs" />
-    <Compile Include="View\Converters\MessageTypeToColorConverter.cs" />
-    <Compile Include="View\Converters\SenderTypeToColorConverter.cs" />
+    <Compile Include="View\Converters\MessageToTextColorConverter.cs" />
+    <Compile Include="View\Converters\SenderTypeToMessageBackgroundColorConverter.cs" />
+    <Compile Include="View\Converters\SenderTypeToHorizontalAlignmentConverter.cs" />
+    <Compile Include="View\Converters\SenderTypeToMessageMarginConverter.cs" />
+    <Compile Include="View\Converters\SenderTypeToTextAlignmentConverter.cs" />
     <Compile Include="View\Converters\StatusToColorConverter.cs" />
     <Compile Include="View\Converters\TransfersBlockStateToStringConverter.cs" />
     <Compile Include="View\Converters\TransferStateToStringConverter.cs" />
