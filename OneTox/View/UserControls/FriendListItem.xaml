@@ -7,8 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:OneTox.View.Converters"
     mc:Ignorable="d"
-    Height="68"
-    Width="400">
+    Height="60"
+    Width="360">
 
     <UserControl.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
@@ -20,7 +20,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Ellipse x:Name="FriendAvatarWithStatusColorBorder" Grid.Column="0" Width="68" Height="68" StrokeThickness="4"
+        <Ellipse x:Name="FriendAvatarWithStatusColorBorder" Grid.Column="0" Width="60" Height="60" StrokeThickness="3"
                  Stroke="{Binding Status, Converter={StaticResource StatusToColorConverter}}">
             <Ellipse.Fill>
                 <ImageBrush ImageSource="{Binding Avatar}" />

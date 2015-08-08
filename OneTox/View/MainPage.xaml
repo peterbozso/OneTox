@@ -27,7 +27,7 @@
                   SelectionChanged="FriendListSelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <userControls:FriendListItem Margin="8,12" />
+                    <userControls:FriendListItem Margin="8" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
