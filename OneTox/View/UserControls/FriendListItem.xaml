@@ -33,10 +33,10 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <TextBlock x:Name="FriendName" Grid.Row="0" Text="{Binding Name}" Margin="8,0,0,0" FontSize="24"
+            <TextBlock x:Name="FriendName" Grid.Row="0" Text="{Binding Name}" Margin="8,0,0,0" FontSize="20"
                        HorizontalAlignment="Left" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" />
             <TextBlock x:Name="FriendStatusMessage" Grid.Row="1" Text="{Binding StatusMessage}" Margin="8,0,0,0"
-                       FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" TextTrimming="WordEllipsis"
+                       FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" TextTrimming="WordEllipsis"
                        Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}" />
         </Grid>
     </Grid>

@@ -84,7 +84,7 @@
 
             <TextBlock x:Name="MessageText" Grid.Column="0"
                        Foreground="{Binding Converter={StaticResource MessageToTextColorConverter}}"
-                       FontSize="20" TextWrapping="Wrap" Text="{Binding Text}"
+                       FontSize="16" TextWrapping="Wrap" Text="{Binding Text}"
                        TextAlignment="{Binding Path=Sender, Converter={StaticResource SenderTypeToTextAlignmentConverter}}" />
 
             <Button x:Name="ResendButton" Grid.Column="1" Foreground="{ThemeResource BackgroundColor}" FontSize="16"
