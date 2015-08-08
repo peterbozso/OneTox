@@ -42,7 +42,7 @@
         </Grid>
 
         <TextBlock x:Name="Timestamp" Grid.Row="1" FontSize="12" Margin="4,0,4,0"
-                   Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"
+                   Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}"
                    Text="{Binding Timestamp, Converter={StaticResource DateTimeConverter}}"
                    VerticalAlignment="Top"
                    TextAlignment="{Binding Path=Sender, Converter={StaticResource SenderTypeToTextAlignmentConverter}}" />

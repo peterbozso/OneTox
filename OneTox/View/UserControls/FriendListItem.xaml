@@ -36,11 +36,8 @@
             <TextBlock x:Name="FriendName" Grid.Row="0" Text="{Binding Name}" Margin="8,0,0,0" FontSize="24"
                        HorizontalAlignment="Left" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" />
             <TextBlock x:Name="FriendStatusMessage" Grid.Row="1" Text="{Binding StatusMessage}" Margin="8,0,0,0"
-                       FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" TextTrimming="WordEllipsis">
-                <TextBlock.Foreground>
-                    <SolidColorBrush Color="{ThemeResource SystemBaseMediumColor}" />
-                </TextBlock.Foreground>
-            </TextBlock>
+                       FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" TextTrimming="WordEllipsis"
+                       Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}" />
         </Grid>
     </Grid>
 </UserControl>
