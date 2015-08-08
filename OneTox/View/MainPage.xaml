@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:userControls="using:OneTox.View.UserControls"
     xmlns:viewModel="using:OneTox.ViewModel"
-    xmlns:messaging="using:OneTox.View.UserControls.Messaging"
+    xmlns:friendRequests="using:OneTox.View.UserControls.FriendRequests"
     mc:Ignorable="d"
     Loaded="MainPageLoaded"
     d:DataContext="{d:DesignData /SampleData/MainPageViewModelSampleData.xaml}">
@@ -38,8 +38,8 @@
             </ListView>
 
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button x:Name="AddFriendButton" Background="Transparent" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="8" FontFamily="Segoe MDL2 Assets" Content="&#xE710;" FontSize="40"/>
-                <Button x:Name="SettingsButton" Background="Transparent" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="8" FontFamily="Segoe MDL2 Assets" Content="&#xE713;" FontSize="40"/>
+                <friendRequests:AddFriendButton x:Name="AddFriendButton" Margin="0,0,16,8"/>
+                <Button x:Name="SettingsButton" Background="Transparent" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="16,0,0,8" FontFamily="Segoe MDL2 Assets" Content="&#xE713;" FontSize="40"/>
             </StackPanel>
         </Grid>
 
