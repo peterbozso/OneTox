@@ -47,7 +47,7 @@
         <ListView x:Name="MessagesListView" Grid.Row="0"
                   ItemsSource="{Binding Conversation.MessageGroups}" SelectionMode="None"
                   HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                  IncrementalLoadingTrigger="None" ItemContainerStyle="{StaticResource ChatPageListViewItemStyle}" Loaded="MessagesListView_Loaded">
+                  IncrementalLoadingTrigger="None" ItemContainerStyle="{StaticResource ChatPageListViewItemStyle}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <messaging:MessageBlock Margin="0,0,0,24" />
@@ -57,30 +57,39 @@
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            
-            <Grid x:Name="MessageAddedNotificationGrid" Grid.Column="0" Margin="16,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid x:Name="MessageAddedNotificationGrid" Grid.Column="0" Margin="16,-12,0,0" Grid.Row="1">
                 <Ellipse x:Name="MessageAddedNotificationEllipse" Width="36" Height="36"
-                     Fill="{ThemeResource SystemControlBackgroundAccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"
-                     RenderTransformOrigin="0.5,0.5">
+                         Fill="{ThemeResource SystemControlBackgroundAccentBrush}"
+                         RenderTransformOrigin="0.5,0.5">
                     <Ellipse.RenderTransform>
                         <CompositeTransform />
                     </Ellipse.RenderTransform>
                 </Ellipse>
                 <TextBlock x:Name="MessageAddedNotificationIcon" FontFamily="Segoe UI Symbol"
-                       Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" VerticalAlignment="Center" FontSize="30"
-                       HorizontalAlignment="Center" Margin="0,0,0,6">
-                <Run Text="&#xE00D;" />
+                           Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" FontSize="30"
+                           Margin="0,0,0,6" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Run Text="&#xE00D;" />
                 </TextBlock>
             </Grid>
-            
-            <TextBox x:Name="MessageInput" Grid.Column="1" FontSize="20" MinHeight="40" MaxHeight="250"
-                 Height="Auto" KeyDown="MessageInputKeyDown"
-                 TextWrapping="Wrap"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10,3,20,5"
-                 FontFamily="Global User Interface" Margin="12" />
+
+            <TextBlock x:Name="FriendTypingIndicator" FontSize="12" Margin="12,0,0,4" Grid.Row="0" Grid.Column="1"
+                       Visibility="{Binding Conversation.IsFriendTyping, Converter={StaticResource BoolToVisibilityConverter}}"
+                       Text="{Binding Name, Converter={StaticResource FriendNameToTypingStatusConverter}}"
+                       VerticalAlignment="Bottom" />
+
+            <TextBox x:Name="MessageInput" Grid.Row="1" Grid.Column="1" FontSize="16" MaxHeight="260"
+                     Height="Auto" KeyDown="MessageInputKeyDown"
+                     TextWrapping="Wrap"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     FontFamily="Global User Interface" Margin="12,0,12,12" />
         </Grid>
     </Grid>
 </UserControl>
