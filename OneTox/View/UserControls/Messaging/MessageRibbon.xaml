@@ -14,13 +14,11 @@
 
     <UserControl.Resources>
         <converters:MessageToTextColorConverter x:Key="MessageToTextColorConverter" />
-        <converters:DateTimeConverter x:Key="DateTimeConverter" />
         <converters:DeliveryStateToStringConverter x:Key="DeliveryStateToStringConverter" />
         <converters:SenderTypeToTextAlignmentConverter x:Key="SenderTypeToTextAlignmentConverter" />
     </UserControl.Resources>
 
     <Grid>
-
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
                 <VisualState x:Name="Delivered">
@@ -93,13 +91,6 @@
                     FontFamily="Segoe UI Symbol" Padding="0" BorderThickness="0"
                     VerticalAlignment="Top" Content=""
                     ToolTipService.ToolTip="Failed to send your message. Click here to resend it!" />
-
-            <!-- <TextBlock x:Name="Timestamp" Grid.Column="2" FontSize="16" Margin="10,5,0,0"
-                       Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"
-                       HorizontalAlignment="Left"
-                       Text="{Binding Timestamp, Converter={StaticResource DateTimeConverter}}"
-                       VerticalAlignment="Top" />
-            -->
         </Grid>
     </Grid>
 </UserControl>

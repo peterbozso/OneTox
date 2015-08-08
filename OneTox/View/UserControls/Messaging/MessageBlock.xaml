@@ -16,23 +16,21 @@
         <converters:SenderTypeToHorizontalAlignmentConverter x:Key="SenderTypeToHorizontalAlignmentConverter" />
         <converters:SenderTypeToTextAlignmentConverter x:Key="SenderTypeToTextAlignmentConverter" />
         <converters:SenderTypeToMessageMarginConverter x:Key="SenderTypeToMessageMarginConverter" />
+        <converters:DateTimeConverter x:Key="DateTimeConverter" />
     </UserControl.Resources>
 
-    <Grid Background="{Binding Path=Sender, Converter={StaticResource SenderTypeToMessageBackgroundColorConverter}}"
-          HorizontalAlignment="{Binding Path=Sender, Converter={StaticResource SenderTypeToHorizontalAlignmentConverter}}"
-          Margin="{Binding Path=Sender, Converter={StaticResource SenderTypeToMessageMarginConverter}}">
-        <Grid Margin="12,4">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+    <Grid
+        HorizontalAlignment="{Binding Path=Sender, Converter={StaticResource SenderTypeToHorizontalAlignmentConverter}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-            <!--<TextBlock Grid.Row="0" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"
-                       Margin="10,-3,0,0" TextAlignment="{Binding Path=Sender, Converter={StaticResource SenderTypeToTextAlignmentConverter}}"
-                       FontSize="20" Text="{Binding Sender.Name}" TextTrimming="CharacterEllipsis"
-                       VerticalAlignment="Top" />-->
+        <Grid
+            Background="{Binding Path=Sender, Converter={StaticResource SenderTypeToMessageBackgroundColorConverter}}"
+            Margin="{Binding Path=Sender, Converter={StaticResource SenderTypeToMessageMarginConverter}}">
 
-            <ItemsControl Grid.Row="1"
+            <ItemsControl Grid.Row="0" Margin="12,4"
                           ItemsSource="{Binding Messages}"
                           HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <ItemsControl.ItemTemplate>
@@ -42,5 +40,12 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Grid>
+
+        <TextBlock x:Name="Timestamp" Grid.Row="1" FontSize="12" Margin="4,0,4,0"
+                   Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"
+                   Text="{Binding Timestamp, Converter={StaticResource DateTimeConverter}}"
+                   VerticalAlignment="Top"
+                   TextAlignment="{Binding Path=Sender, Converter={StaticResource SenderTypeToTextAlignmentConverter}}" />
+
     </Grid>
 </UserControl>
