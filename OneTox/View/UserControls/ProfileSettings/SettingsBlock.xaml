@@ -24,8 +24,8 @@
     <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <TextBlock x:Name="SettingsHeaderText" Margin="0,0,0,4" FontSize="28">Profile settings</TextBlock>
         <Rectangle x:Name="SettingsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}" Height="1"
-                   StrokeThickness="0.5" Margin="0,0,0,16" />
-        <Grid Width="480" HorizontalAlignment="Left">
+                   StrokeThickness="0.5" Margin="0,0,0,32" />
+        <Grid Width="488" HorizontalAlignment="Left">
             <Grid.RowDefinitions>
                 <RowDefinition Height="200" />
                 <RowDefinition Height="*" />
@@ -53,13 +53,13 @@
                         Padding="0" VerticalAlignment="Top" FontSize="20" BorderThickness="0" Margin="0,20,0,0" />
 
                 <StackPanel x:Name="UserProperties" Grid.Column="1" Width="300" HorizontalAlignment="Left"
-                            Margin="20,0,0,0">
+                            Margin="28,0,0,0">
                     <TextBox x:Name="NameTextBox" Header="Name" Text="{Binding Name, Mode=TwoWay}"
                              LostFocus="NameTextBoxLostFocus" />
-                    <TextBox x:Name="StatusMessageTextBox" Header="Status message"
+                    <TextBox x:Name="StatusMessageTextBox" Header="Status message" Margin="0,8,0,0"
                              Text="{Binding StatusMessage, Mode=TwoWay}"
                              LostFocus="StatusMessageTextBoxLostFocus" />
-                    <ComboBox x:Name="StatusComboBox" Header="Status" Width="300" Margin="0,4,0,0"
+                    <ComboBox x:Name="StatusComboBox" Header="Status" Width="300" Margin="0,8,0,0"
                               SelectedItem="{Binding Status, Mode=TwoWay}"
                               SelectionChanged="StatusComboBoxSelectionChanged">
                         <ComboBox.ItemTemplate>
@@ -74,8 +74,8 @@
                 </StackPanel>
             </Grid>
 
-            <StackPanel x:Name="ToxIdBlock" Grid.Row="1">
-                <TextBlock x:Name="ToxIdHeader" Text="Tox ID" Margin="0,20,0,0" />
+            <StackPanel x:Name="ToxIdBlock" Grid.Row="1" Margin="0,32,0,0">
+                <TextBlock x:Name="ToxIdHeader" Text="Tox ID"  />
 
                 <Grid>
                     <Grid.ColumnDefinitions>
