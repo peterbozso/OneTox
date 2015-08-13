@@ -21,85 +21,95 @@
         <profileSettings:ProfileSettingsViewModel />
     </UserControl.DataContext>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="200" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBlock x:Name="SettingsHeaderText" Margin="0,0,0,4" FontSize="28">Profile settings</TextBlock>
+        <Rectangle Stroke="{ThemeResource ApplicationForegroundThemeBrush}" Height="1" StrokeThickness="0.5" Margin="0,0,0,16"></Rectangle>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="200" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="12,12,12,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <Grid x:Name="UserAvatar" VerticalAlignment="Center">
+            <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Ellipse x:Name="FriendAvatarWithStatusColorBorder" Grid.Column="0" Width="{StaticResource DefaultAvatarSize}" Height="{StaticResource DefaultAvatarSize}" StrokeThickness="5"
-                 Stroke="{Binding Status, Converter={StaticResource StatusToColorConverter}}" Tapped="UserAvatarTapped">
-                    <Ellipse.Fill>
-                        <ImageBrush ImageSource="{Binding Avatar}" />
-                    </Ellipse.Fill>
-                </Ellipse>
-                <Button Grid.Column="1" HorizontalAlignment="Left" FontFamily="Segoe UI Symbol"
-                        Background="Transparent"
-                        Content="" Command="{Binding RemoveAvatarCommand}"
-                        Visibility="{Binding IsAvatarSet, Converter={StaticResource BoolToVisibilityConverter}}"
-                        Padding="0" VerticalAlignment="Top" /> <!-- TODO: Do somethings with this! It's ugly... -->
+                <Grid x:Name="UserAvatar" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Ellipse x:Name="FriendAvatarWithStatusColorBorder" Grid.Column="0"
+                             Width="{StaticResource DefaultAvatarSize}"
+                             Height="{StaticResource DefaultAvatarSize}" StrokeThickness="5"
+                             Stroke="{Binding Status, Converter={StaticResource StatusToColorConverter}}"
+                             Tapped="UserAvatarTapped">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="{Binding Avatar}" />
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <Button x:Name="RemoveAvatarButton" Grid.Column="1" HorizontalAlignment="Left"
+                            FontFamily="Segoe UI Symbol"
+                            Background="Transparent" Content="" Command="{Binding RemoveAvatarCommand}"
+                            Visibility="{Binding IsAvatarSet, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Padding="0" VerticalAlignment="Top" />
+                    <!-- TODO: Do something with this! It's ugly... -->
+                </Grid>
+
+                <StackPanel Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="12,0,0,0">
+                    <TextBox x:Name="NameTextBox" Header="Name" Text="{Binding Name, Mode=TwoWay}"
+                             LostFocus="NameTextBoxLostFocus" />
+                    <TextBox x:Name="StatusMessageTextBox" Header="Status message"
+                             Text="{Binding StatusMessage, Mode=TwoWay}"
+                             LostFocus="StatusMessageTextBoxLostFocus" />
+                    <ComboBox x:Name="StatusComboBox" Header="Status" Width="300" Margin="0,4,0,0"
+                              SelectedItem="{Binding Status, Mode=TwoWay}"
+                              SelectionChanged="StatusComboBoxSelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="{Binding Converter={StaticResource UserStatusToStringConverter}}"
+                                               FontSize="16" />
+                                </Grid>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
             </Grid>
 
-            <StackPanel Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="12,0,0,0">
-                <!-- Name, status message, status -->
-                <TextBox Header="Name" x:Name="NameTextBox" Text="{Binding Name, Mode=TwoWay}"
-                         LostFocus="NameTextBoxLostFocus" />
-                <TextBox Header="Status message" x:Name="StatusMessageTextBox"
-                         Text="{Binding StatusMessage, Mode=TwoWay}"
-                         LostFocus="StatusMessageTextBoxLostFocus" />
-                <ComboBox x:Name="StatusComboBox" Header="Status" Width="300" Margin="0,4,0,0"
-                            SelectedItem="{Binding Status, Mode=TwoWay}" SelectionChanged="StatusComboBoxSelectionChanged">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock Text="{Binding Converter={StaticResource UserStatusToStringConverter}}"
-                                            FontSize="16" />
-                            </Grid>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+            <StackPanel x:Name="ToxIdPanel" Grid.Row="1">
+                <TextBlock x:Name="ToxIdHeader" Text="Tox ID" Margin="0,20,0,0" />
+                <TextBlock x:Name="ToxIdTextBlock" TextWrapping="Wrap" Text="{Binding Id}" Margin="10,0,0,4" />
+                <Grid x:Name="CopyIdToClipboardBlock">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="ClipboardCopyButton" Grid.Column="0" Content="Copy ID to clipboard"
+                            Click="CopyButtonClick" Width="180" TabIndex="0" />
+                    <TextBlock x:Name="ClipboardCopyConfirmIcon" Grid.Column="1" Text="&#xE10B;"
+                               FontFamily="Segoe MDL2 Assets"
+                               FontSize="16" VerticalAlignment="Center" Margin="4,0,0,0" Visibility="Collapsed" />
+                </Grid>
+                <Button x:Name="QrCodeButton" Content="Show QR code for ID" Click="QrCodeButtonClick" Width="180">
+                    <Button.Flyout>
+                        <Flyout Placement="Left">
+                            <StackPanel>
+                                <Image x:Name="QrCodeImage" />
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+                <Button x:Name="RandomizeNoSpamButton" Content="Randomize nospam"
+                        Command="{Binding RandomizeNoSpamCommand}" Width="180"
+                        ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." />
+
+                <local:ProfileManagementBlock x:Name="ProfileManagementBlock" Width="360" HorizontalAlignment="Left"
+                                              Margin="0,20,0,0" />
             </StackPanel>
         </Grid>
-
-        <StackPanel Grid.Row="1" Margin="12,0,12,12">
-            <!-- Tox ID -->
-            <TextBlock Text="Tox ID" Margin="0,20,0,0" />
-            <TextBlock TextWrapping="Wrap" Text="{Binding Id}" Margin="10,0,0,4" />
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Copy ID to clipboard" Click="CopyButtonClick" Width="180" TabIndex="0" />
-                <TextBlock Grid.Column="1" x:Name="ClipboardCopyConfirm" Text="" FontFamily="Segoe UI Symbol"
-                           FontSize="16" VerticalAlignment="Center" Margin="4,0,0,0" Visibility="Collapsed" />
-            </Grid>
-            <Button Content="Show QR code for ID" Click="QrCodeButtonClick" Width="180">
-                <Button.Flyout>
-                    <Flyout Placement="Left">
-                        <StackPanel>
-                            <Image x:Name="QrCodeImage" />
-                        </StackPanel>
-                    </Flyout>
-                </Button.Flyout>
-            </Button>
-            <Button Content="Randomize nospam" Command="{Binding RandomizeNoSpamCommand}" Width="180"
-                    ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." />
-
-            <!-- Profile management -->
-            <local:ProfileManagementBlock Width="360" HorizontalAlignment="Left" Margin="0,20,0,0" />
-        </StackPanel>
-    </Grid>
+    </StackPanel>
 </UserControl>

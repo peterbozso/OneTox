@@ -61,7 +61,7 @@ namespace OneTox.View.UserControls.ProfileSettings
 
         private void ShowCopyConfirm()
         {
-            ClipboardCopyConfirm.Visibility = Visibility.Visible;
+            ClipboardCopyConfirmIcon.Visibility = Visibility.Visible;
 
             if (_copyClipboardTimer == null)
             {
@@ -69,7 +69,7 @@ namespace OneTox.View.UserControls.ProfileSettings
                     new Timer(
                         async state =>
                             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                                () => { ClipboardCopyConfirm.Visibility = Visibility.Collapsed; }),
+                                () => { ClipboardCopyConfirmIcon.Visibility = Visibility.Collapsed; }),
                         null, 3000, Timeout.Infinite);
             }
             else
