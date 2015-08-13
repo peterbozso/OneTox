@@ -23,8 +23,8 @@
 
     <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <TextBlock x:Name="SettingsHeaderText" Margin="0,0,0,4" FontSize="28">Profile settings</TextBlock>
-        <Rectangle x:Name="SettingsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}" Height="1" StrokeThickness="0.5" Margin="0,0,0,16"></Rectangle>
-        <Grid>
+        <Rectangle x:Name="SettingsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}" Height="1" StrokeThickness="0.5" Margin="0,0,0,16"/>
+        <Grid Width="480" HorizontalAlignment="Left">
             <Grid.RowDefinitions>
                 <RowDefinition Height="200" />
                 <RowDefinition Height="*" />
@@ -37,8 +37,8 @@
                 </Grid.ColumnDefinitions>
                 
                 <Ellipse x:Name="UserAvatarWithStatusColorBorder" Grid.Column="0"
-                            Width="{StaticResource DefaultAvatarSize}" VerticalAlignment="Center"
-                            Height="{StaticResource DefaultAvatarSize}" StrokeThickness="5"
+                            Width="160" VerticalAlignment="Center"
+                            Height="160" StrokeThickness="5"
                             Stroke="{Binding Status, Converter={StaticResource StatusToColorConverter}}"
                             Tapped="UserAvatarTapped">
                     <Ellipse.Fill>
@@ -49,7 +49,7 @@
                             FontFamily="Segoe MDL2 Assets" Template="{StaticResource RoundButtonTemplate}"
                             Background="Transparent" Content="&#xEB90;" Command="{Binding RemoveAvatarCommand}"
                             Visibility="{Binding IsAvatarSet, Converter={StaticResource BoolToVisibilityConverter}}"
-                            Padding="0" VerticalAlignment="Top" FontSize="20" BorderThickness="0" Margin="0,24,0,0" />
+                            Padding="0" VerticalAlignment="Top" FontSize="20" BorderThickness="0" Margin="0,20,0,0" />
                 
                 <StackPanel x:Name="UserProperties" Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="20,0,0,0">
                     <TextBox x:Name="NameTextBox" Header="Name" Text="{Binding Name, Mode=TwoWay}"
@@ -75,11 +75,21 @@
             <StackPanel x:Name="ToxIdPanel" Grid.Row="1">
                 <TextBlock x:Name="ToxIdHeader" Text="Tox ID" Margin="0,20,0,0" />
                 <TextBlock x:Name="ToxIdTextBlock" TextWrapping="Wrap" Text="{Binding Id}" Margin="10,0,0,4" />
-                <StackPanel Orientation="Horizontal">
-                    <Button x:Name="RandomizeNoSpamButton" Content="Randomize nospam"
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Button x:Name="RandomizeNoSpamButton" Grid.Column="0" Grid.Row="1" Content="Randomize nospam"
                         Command="{Binding RandomizeNoSpamCommand}" Width="180"
-                        ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." Margin="0,0,8,0" />
-                    <Button x:Name="QrCodeButton" Content="Show QR code for ID" Click="QrCodeButtonClick" Width="180" Margin="0,0,8,0">
+                        ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." />
+                    <Button x:Name="QrCodeButton" Grid.Column="0" Grid.Row="0" Content="Show QR code for ID" Click="QrCodeButtonClick" Width="180" Margin="0,0,8,8">
                         <Button.Flyout>
                             <Flyout Placement="Right">
                                 <StackPanel>
@@ -88,7 +98,7 @@
                             </Flyout>
                         </Button.Flyout>
                     </Button>
-                    <Grid x:Name="CopyIdToClipboardBlock">
+                    <Grid x:Name="CopyIdToClipboardBlock" Grid.Column="1" Grid.Row="0" VerticalAlignment="Top">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
@@ -99,7 +109,7 @@
                                FontFamily="Segoe MDL2 Assets"
                                FontSize="16" VerticalAlignment="Center" Margin="4,0,0,0" Visibility="Collapsed" />
                     </Grid>
-                </StackPanel>
+                </Grid>
                 
                 <local:ProfileManagementBlock x:Name="ProfileManagementBlock" Width="360" HorizontalAlignment="Left"
                                               Margin="0,20,0,0" />
