@@ -5,7 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using OneTox.ViewModel.ProfileSettings;
 
-namespace OneTox.View.UserControls
+namespace OneTox.View.UserControls.ProfileSettings
 {
     public sealed partial class ProfileManagementBlock : UserControl
     {

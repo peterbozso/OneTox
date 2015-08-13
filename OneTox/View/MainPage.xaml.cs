@@ -17,11 +17,17 @@ namespace OneTox.View
 
         private void FriendListSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (FriendList.SelectedItem == null)
+                return;
+
+            VisualStateManager.GoToState(this, "ChatState", true);
             ChatBlock.SetDataContext(FriendList.SelectedItem as FriendViewModel);
         }
 
         private void MainPageLoaded(object sender, RoutedEventArgs e)
         {
+            VisualStateManager.GoToState(this, "ChatState", false);
+
             _mainViewModel = DataContext as MainViewModel;
             _mainViewModel.FriendList.Friends.CollectionChanged += FriendsCollectionChangedHandler;
 
@@ -42,6 +48,12 @@ namespace OneTox.View
                     ? _mainViewModel.FriendList.Friends[e.OldStartingIndex - 1]
                     : _mainViewModel.FriendList.Friends[0];
             }
+        }
+
+        private void SettingsButtonClick(object sender, RoutedEventArgs e)
+        {
+            FriendList.SelectedItem = null;
+            VisualStateManager.GoToState(this, "SettingsState", true);
         }
     }
 }

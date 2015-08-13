@@ -10,6 +10,7 @@
     xmlns:userControls="using:OneTox.View.UserControls"
     xmlns:profileSettings="using:OneTox.ViewModel.ProfileSettings"
     xmlns:converters="using:OneTox.View.Converters"
+    xmlns:profileSettings1="using:OneTox.View.UserControls.ProfileSettings"
     mc:Ignorable="d"
     IconSource="Assets/SmallLogo.png"
     Title="Profile settings"
@@ -98,7 +99,7 @@
                 ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." />
 
         <!-- Profile management -->
-        <userControls:ProfileManagementBlock />
+        <profileSettings1:ProfileManagementBlock />
 
     </StackPanel>
 

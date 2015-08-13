@@ -14,7 +14,7 @@ namespace OneTox.View.UserControls.Friends
 
         private void MainGridRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement) sender);
             e.Handled = true;
         }
     }

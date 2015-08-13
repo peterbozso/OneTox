@@ -8,6 +8,7 @@
     xmlns:userControls="using:OneTox.View.UserControls"
     xmlns:viewModel="using:OneTox.ViewModel"
     xmlns:friends="using:OneTox.View.UserControls.Friends"
+    xmlns:profileSettings="using:OneTox.View.UserControls.ProfileSettings"
     mc:Ignorable="d"
     Loaded="MainPageLoaded"
     d:DataContext="{d:DesignData /SampleData/MainPageViewModelSampleData.xaml}">
@@ -17,6 +18,20 @@
     </Page.DataContext>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualState x:Name="ChatState">
+                    <VisualState.Setters>
+                        <Setter Target="SettingsBlock.(UIElement.Visibility)" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="SettingsState">
+                    <VisualState.Setters>
+                        <Setter Target="ChatBlock.(UIElement.Visibility)" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
@@ -24,8 +39,8 @@
 
         <Grid Grid.Column="0" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <ListView x:Name="FriendList" Grid.Row="0" ItemsSource="{Binding FriendList.Friends}"
@@ -38,11 +53,15 @@
             </ListView>
 
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                <friends:AddFriendButton x:Name="AddFriendButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,16,8"/>
-                <Button x:Name="SettingsButton" Background="Transparent" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="16,0,0,8" FontFamily="Segoe MDL2 Assets" Content="&#xE713;" FontSize="32"/>
+                <friends:AddFriendButton x:Name="AddFriendButton" VerticalAlignment="Bottom"
+                                         HorizontalAlignment="Right" Margin="0,0,16,8" />
+                <Button x:Name="SettingsButton" Background="Transparent" VerticalAlignment="Bottom"
+                        HorizontalAlignment="Left" Margin="16,0,0,8" FontFamily="Segoe MDL2 Assets" Content="&#xE713;"
+                        FontSize="32" Click="SettingsButtonClick" />
             </StackPanel>
         </Grid>
 
         <userControls:ChatBlock x:Name="ChatBlock" Grid.Column="1" />
+        <profileSettings:SettingsBlock x:Name="SettingsBlock" Grid.Column="1" />
     </Grid>
 </Page>

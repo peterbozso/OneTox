@@ -220,8 +220,11 @@
     <Compile Include="View\UserControls\Messaging\RecentMessages\RecentMessagesListItem.xaml.cs">
       <DependentUpon>RecentMessagesListItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\ProfileManagementBlock.xaml.cs">
+    <Compile Include="View\UserControls\ProfileSettings\ProfileManagementBlock.xaml.cs">
       <DependentUpon>ProfileManagementBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\ProfileSettings\SettingsBlock.xaml.cs">
+      <DependentUpon>SettingsBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserControls\UserTile.xaml.cs">
       <DependentUpon>UserTile.xaml</DependentUpon>
@@ -337,9 +340,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\UserControls\ProfileManagementBlock.xaml">
+    <Page Include="View\UserControls\ProfileSettings\ProfileManagementBlock.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UserControls\ProfileSettings\SettingsBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\UserControls\UserTile.xaml">
       <Generator>MSBuild:Compile</Generator>
