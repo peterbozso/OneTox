@@ -23,7 +23,7 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="200" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -33,15 +33,18 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Grid x:Name="UserAvatar" VerticalAlignment="Top">
+            <Grid x:Name="UserAvatar" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Width="{StaticResource DefaultAvatarSize}"
-                       Height="{StaticResource DefaultAvatarSize}" Source="{Binding Avatar}" Stretch="UniformToFill"
-                       Tapped="UserAvatarTapped" />
+                <Ellipse x:Name="FriendAvatarWithStatusColorBorder" Grid.Column="0" Width="{StaticResource DefaultAvatarSize}" Height="{StaticResource DefaultAvatarSize}" StrokeThickness="5"
+                 Stroke="{Binding Status, Converter={StaticResource StatusToColorConverter}}" Tapped="UserAvatarTapped">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="{Binding Avatar}" />
+                    </Ellipse.Fill>
+                </Ellipse>
                 <Button Grid.Column="1" HorizontalAlignment="Left" FontFamily="Segoe UI Symbol"
                         Background="Transparent"
                         Content="" Command="{Binding RemoveAvatarCommand}"
@@ -56,27 +59,17 @@
                 <TextBox Header="Status message" x:Name="StatusMessageTextBox"
                          Text="{Binding StatusMessage, Mode=TwoWay}"
                          LostFocus="StatusMessageTextBoxLostFocus" />
-                <Grid x:Name="StatusGrid" Margin="0,4,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <ComboBox x:Name="StatusComboBox" Grid.Column="0" Header="Status"
-                              SelectedItem="{Binding Status, Mode=TwoWay}" SelectionChanged="StatusComboBoxSelectionChanged">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <TextBlock Text="{Binding Converter={StaticResource UserStatusToStringConverter}}"
-                                               FontSize="16" />
-                                </Grid>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                    <Ellipse Grid.Column="1" Width="10" Height="10" VerticalAlignment="Center"
-                             Fill="{Binding Path=Status, Converter={StaticResource StatusToColorConverter}}"
-                             HorizontalAlignment="Left" Margin="10,25,0,0" />
-                </Grid>
+                <ComboBox x:Name="StatusComboBox" Header="Status" Width="300" Margin="0,4,0,0"
+                            SelectedItem="{Binding Status, Mode=TwoWay}" SelectionChanged="StatusComboBoxSelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock Text="{Binding Converter={StaticResource UserStatusToStringConverter}}"
+                                            FontSize="16" />
+                            </Grid>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
             </StackPanel>
         </Grid>
 
