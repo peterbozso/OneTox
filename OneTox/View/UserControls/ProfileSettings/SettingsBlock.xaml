@@ -35,6 +35,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
+                
                 <Ellipse x:Name="UserAvatarWithStatusColorBorder" Grid.Column="0"
                             Width="{StaticResource DefaultAvatarSize}" VerticalAlignment="Center"
                             Height="{StaticResource DefaultAvatarSize}" StrokeThickness="5"
@@ -49,6 +50,7 @@
                             Background="Transparent" Content="&#xEB90;" Command="{Binding RemoveAvatarCommand}"
                             Visibility="{Binding IsAvatarSet, Converter={StaticResource BoolToVisibilityConverter}}"
                             Padding="0" VerticalAlignment="Top" FontSize="20" BorderThickness="0" Margin="0,24,0,0" />
+                
                 <StackPanel x:Name="UserProperties" Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="20,0,0,0">
                     <TextBox x:Name="NameTextBox" Header="Name" Text="{Binding Name, Mode=TwoWay}"
                              LostFocus="NameTextBoxLostFocus" />
@@ -73,30 +75,32 @@
             <StackPanel x:Name="ToxIdPanel" Grid.Row="1">
                 <TextBlock x:Name="ToxIdHeader" Text="Tox ID" Margin="0,20,0,0" />
                 <TextBlock x:Name="ToxIdTextBlock" TextWrapping="Wrap" Text="{Binding Id}" Margin="10,0,0,4" />
-                <Grid x:Name="CopyIdToClipboardBlock">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Button x:Name="ClipboardCopyButton" Grid.Column="0" Content="Copy ID to clipboard"
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="RandomizeNoSpamButton" Content="Randomize nospam"
+                        Command="{Binding RandomizeNoSpamCommand}" Width="180"
+                        ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." Margin="0,0,8,0" />
+                    <Button x:Name="QrCodeButton" Content="Show QR code for ID" Click="QrCodeButtonClick" Width="180" Margin="0,0,8,0">
+                        <Button.Flyout>
+                            <Flyout Placement="Right">
+                                <StackPanel>
+                                    <Image x:Name="QrCodeImage" />
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                    <Grid x:Name="CopyIdToClipboardBlock">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="ClipboardCopyButton" Grid.Column="0" Content="Copy ID to clipboard"
                             Click="CopyButtonClick" Width="180" TabIndex="0" />
-                    <TextBlock x:Name="ClipboardCopyConfirmIcon" Grid.Column="1" Text="&#xE10B;"
+                        <TextBlock x:Name="ClipboardCopyConfirmIcon" Grid.Column="1" Text="&#xE10B;"
                                FontFamily="Segoe MDL2 Assets"
                                FontSize="16" VerticalAlignment="Center" Margin="4,0,0,0" Visibility="Collapsed" />
-                </Grid>
-                <Button x:Name="QrCodeButton" Content="Show QR code for ID" Click="QrCodeButtonClick" Width="180">
-                    <Button.Flyout>
-                        <Flyout Placement="Left">
-                            <StackPanel>
-                                <Image x:Name="QrCodeImage" />
-                            </StackPanel>
-                        </Flyout>
-                    </Button.Flyout>
-                </Button>
-                <Button x:Name="RandomizeNoSpamButton" Content="Randomize nospam"
-                        Command="{Binding RandomizeNoSpamCommand}" Width="180"
-                        ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." />
-
+                    </Grid>
+                </StackPanel>
+                
                 <local:ProfileManagementBlock x:Name="ProfileManagementBlock" Width="360" HorizontalAlignment="Left"
                                               Margin="0,20,0,0" />
             </StackPanel>
