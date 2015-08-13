@@ -59,7 +59,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Image x:Name="ToxLogo" Source="/Assets/tox-logo.jpg" Height="70" HorizontalAlignment="Left" />
-                    <userControls:UserTile Grid.Column="1" />
+                    <!--<userControls:UserTile Grid.Column="1" />-->
                 </Grid>
             </Hub.Header>
 

@@ -175,9 +175,6 @@
     <Compile Include="View\Old_MainPage.xaml.cs">
       <DependentUpon>Old_MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ProfileSettingsFlyout.xaml.cs">
-      <DependentUpon>ProfileSettingsFlyout.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\UserControls\CallBlock.xaml.cs">
       <DependentUpon>CallBlock.xaml</DependentUpon>
     </Compile>
@@ -226,9 +223,6 @@
     <Compile Include="View\UserControls\ProfileSettings\SettingsBlock.xaml.cs">
       <DependentUpon>SettingsBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\UserTile.xaml.cs">
-      <DependentUpon>UserTile.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -269,10 +263,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Old_MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\ProfileSettingsFlyout.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -347,10 +337,6 @@
     <Page Include="View\UserControls\ProfileSettings\SettingsBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\UserControls\UserTile.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

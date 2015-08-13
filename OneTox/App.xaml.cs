@@ -175,10 +175,5 @@ namespace OneTox
             await ToxModel.Instance.RestoreDataAsync();
             ToxModel.Instance.Start();
         }
-
-        public static void ShowProfileSettingsFlyout()
-        {
-            new ProfileSettingsFlyout().Show();
-        }
     }
 }
