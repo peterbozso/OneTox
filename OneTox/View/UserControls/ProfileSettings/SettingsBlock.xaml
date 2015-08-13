@@ -93,9 +93,9 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock x:Name="ToxIdTextBlock" Grid.Row="0" TextWrapping="Wrap" Text="{Binding TextId}"
-                                   Margin="0,0,0,4" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+                                   Margin="0,0,0,8" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
 
-                        <Grid x:Name="CopyIdToClipboardBlock" Grid.Row="1" VerticalAlignment="Top" Margin="0,0,0,4">
+                        <Grid x:Name="CopyIdToClipboardBlock" Grid.Row="1" VerticalAlignment="Top" Margin="0,0,0,8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />

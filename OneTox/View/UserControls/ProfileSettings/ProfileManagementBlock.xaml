@@ -19,7 +19,7 @@
     </UserControl.DataContext>
 
     <StackPanel>
-        <TextBlock Text="Profile management" Margin="0,0,0,4" />
+        <TextBlock Text="Profile management" Margin="0,0,0,12" />
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition />
@@ -31,7 +31,7 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Grid.Row="0" Content="Export" HorizontalAlignment="Stretch">
+            <Button x:Name="ExportButton" Grid.Column="0" Grid.Row="0" Content="Export" HorizontalAlignment="Stretch" Margin="0,0,4,4">
                 <Button.Flyout>
                     <Flyout Placement="Left">
                         <StackPanel>
@@ -45,13 +45,13 @@
                 </Button.Flyout>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="0" Content="Import" HorizontalAlignment="Stretch"
-                    Click="ImportButtonClick" />
+            <Button x:Name="ImportButton" Grid.Column="1" Grid.Row="0" Content="Import" HorizontalAlignment="Stretch"
+                    Click="ImportButtonClick" Margin="4,0,0,4" />
 
-            <Button Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Content="Switch"
-                    Command="{Binding RefreshProfileListCommand}" x:Name="SwitchButton">
+            <Button x:Name="SwitchButton" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Content="Switch"
+                    Command="{Binding RefreshProfileListCommand}" Margin="4,4,0,0">
                 <Button.Flyout>
-                    <Flyout Placement="Left">
+                    <Flyout Placement="Right">
                         <StackPanel>
                             <TextBlock Text="Select profile"
                                        Margin="0,0,0,10" Width="160" />
@@ -75,8 +75,8 @@
                 </Button.Flyout>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Content="New"
-                    Command="{Binding CreateNewProfileCommand}" />
+            <Button x:Name="NewButton" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Content="New"
+                    Command="{Binding CreateNewProfileCommand}" Margin="0,4,4,0" />
         </Grid>
     </StackPanel>
 </UserControl>

@@ -20,9 +20,6 @@ namespace OneTox.View.UserControls.ProfileSettings
         private async void ExportButtonClick(object sender, RoutedEventArgs e)
         {
             await _viewModel.ExportProfile(PasswordTextBox.Text);
-
-            // Show the settings again when we return, in case the user want to do more than just exporting once.
-            App.ShowProfileSettingsFlyout();
         }
 
         private async void ImportButtonClick(object sender, RoutedEventArgs e)
@@ -30,9 +27,6 @@ namespace OneTox.View.UserControls.ProfileSettings
             try
             {
                 await _viewModel.ImportProfile();
-
-                // Show the settings again when we return, in case the user want to do more than just exporting once.
-                App.ShowProfileSettingsFlyout();
             }
             catch
             {
