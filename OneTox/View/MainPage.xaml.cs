@@ -41,6 +41,9 @@ namespace OneTox.View
 
         private void FriendsCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
         {
+            if (e.OldStartingIndex == -1)
+                return;
+
             if (FriendList.SelectedItem == null) // It means that we just removed the currently selected friend.
             {
                 // So select the one right above it:
