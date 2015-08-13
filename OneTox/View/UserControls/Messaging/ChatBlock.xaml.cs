@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Media.Animation;
 using OneTox.ViewModel.Friends;
 using OneTox.ViewModel.Messaging;
 
-namespace OneTox.View.UserControls
+namespace OneTox.View.UserControls.Messaging
 {
     public sealed partial class ChatBlock : UserControl
     {

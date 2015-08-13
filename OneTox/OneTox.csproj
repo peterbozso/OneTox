@@ -181,7 +181,7 @@
     <Compile Include="View\UserControls\CallBlock.xaml.cs">
       <DependentUpon>CallBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\ChatBlock.xaml.cs">
+    <Compile Include="View\UserControls\Messaging\ChatBlock.xaml.cs">
       <DependentUpon>ChatBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserControls\FileTransfers\FileTransferRibbon.xaml.cs">
@@ -276,7 +276,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ResourceDictionaries\ChatPageDictionary.xaml">
+    <Page Include="View\ResourceDictionaries\ChatBlockDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -288,7 +288,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\UserControls\ChatBlock.xaml">
+    <Page Include="View\UserControls\Messaging\ChatBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

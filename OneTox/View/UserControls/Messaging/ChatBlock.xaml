@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="OneTox.View.UserControls.ChatBlock"
+    x:Class="OneTox.View.UserControls.Messaging.ChatBlock"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:OneTox.View.UserControls"
@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../ResourceDictionaries/ChatPageDictionary.xaml" />
+                <ResourceDictionary Source="../../ResourceDictionaries/ChatBlockDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Storyboard x:Name="MessageAddedNotificationAnimation">
