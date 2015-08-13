@@ -56,7 +56,7 @@
                          KeyDown="NameTextBoxKeyDown" />
                 <TextBox Header="Status message" x:Name="StatusMessageTextBox"
                          Text="{Binding StatusMessage, Mode=TwoWay}"
-                         KeyDown="StatusMessageTextBoxKeyDown" />
+                         KeyDown="StatusMessageTextBoxKeyDown" LostFocus="StatusMessageTextBoxLostFocus" />
                 <Grid x:Name="StatusGrid" Margin="0,3,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -64,7 +64,7 @@
                     </Grid.ColumnDefinitions>
 
                     <ComboBox x:Name="StatusComboBox" Grid.Column="0" Header="Status"
-                              SelectedItem="{Binding Status, Mode=TwoWay}">
+                              SelectedItem="{Binding Status, Mode=TwoWay}" SelectionChanged="StatusComboBoxSelectionChanged">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -83,9 +83,8 @@
 
         <StackPanel Grid.Row="1" Margin="12,0,12,12">
             <!-- Tox ID -->
-            <TextBlock Text="Tox ID" Style="{StaticResource BodyTextBlockStyle}" Margin="0,20,0,0" />
-            <TextBlock TextWrapping="Wrap" Text="{Binding Id}"
-                       Style="{StaticResource BodyTextBlockStyle}" Margin="10,0,0,4" />
+            <TextBlock Text="Tox ID" Margin="0,20,0,0" />
+            <TextBlock TextWrapping="Wrap" Text="{Binding Id}" Margin="10,0,0,4" />
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using Windows.ApplicationModel.Core;
-using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -24,12 +23,35 @@ namespace OneTox.View.UserControls.ProfileSettings
             StatusComboBox.ItemsSource = Enum.GetValues(typeof (ToxUserStatus)).Cast<ToxUserStatus>();
         }
 
-        private void NameTextBoxLostFocus(object sender, RoutedEventArgs e)
+        private async void UserAvatarTapped(object sender, TappedRoutedEventArgs e)
+        {
+            await _viewModel.ChangeAvatar();
+        }
+
+        private async void StatusComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            await _viewModel.SaveDataAsync();
+        }
+
+        private async void NameTextBoxLostFocus(object sender, RoutedEventArgs e)
         {
             var nameTextBox = sender as TextBox;
             if (nameTextBox.Text == string.Empty)
+            {
                 nameTextBox.Text = _viewModel.Name;
+            }
+            else
+            {
+                await _viewModel.SaveDataAsync();
+            }
         }
+
+        private async void StatusMessageTextBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            await _viewModel.SaveDataAsync();
+        }
+
+        #region Tox ID
 
         private void CopyButtonClick(object sender, RoutedEventArgs e)
         {
@@ -61,41 +83,6 @@ namespace OneTox.View.UserControls.ProfileSettings
             QrCodeImage.Source = _viewModel.GetQrCodeForToxId();
         }
 
-        private async void ProfileSettingsFlyoutLostFocus(object sender, RoutedEventArgs e)
-        {
-            await _viewModel.SaveDataAsync();
-        }
-
-        private async void UserAvatarTapped(object sender, TappedRoutedEventArgs e)
-        {
-            await _viewModel.ChangeAvatar();
-
-            // Show the settings again when we return, in case the user want to do more than just changing his/her avatar.
-            App.ShowProfileSettingsFlyout();
-        }
-
-        private void NameTextBoxKeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == VirtualKey.Enter && NameTextBox.Text != string.Empty)
-            {
-                if (e.KeyStatus.RepeatCount != 1) // See MessageInputKeyDown()!
-                    return;
-
-                _viewModel.Name = NameTextBox.Text;
-                e.Handled = true;
-            }
-        }
-
-        private void StatusMessageTextBoxKeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == VirtualKey.Enter && StatusMessageTextBox.Text != string.Empty)
-            {
-                if (e.KeyStatus.RepeatCount != 1) // See MessageInputKeyDown()!
-                    return;
-
-                _viewModel.StatusMessage = StatusMessageTextBox.Text;
-                e.Handled = true;
-            }
-        }
+        #endregion
     }
 }

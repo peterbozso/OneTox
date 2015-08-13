@@ -133,12 +133,13 @@ namespace OneTox.ViewModel.ProfileSettings
         {
             get
             {
-                return _randomizeNoSpamCommand ?? (_randomizeNoSpamCommand = new RelayCommand(() =>
+                return _randomizeNoSpamCommand ?? (_randomizeNoSpamCommand = new RelayCommand(async () =>
                 {
                     var rand = new Random();
                     var nospam = new byte[4];
                     rand.NextBytes(nospam);
                     ToxModel.Instance.SetNospam(BitConverter.ToUInt32(nospam, 0));
+                    await ToxModel.Instance.SaveDataAsync();
                     RaisePropertyChanged("Id");
                 }));
             }
