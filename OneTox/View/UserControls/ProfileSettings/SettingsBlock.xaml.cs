@@ -78,11 +78,6 @@ namespace OneTox.View.UserControls.ProfileSettings
             }
         }
 
-        private void QrCodeButtonClick(object sender, RoutedEventArgs e)
-        {
-            QrCodeImage.Source = _viewModel.GetQrCodeForToxId();
-        }
-
         #endregion
     }
 }

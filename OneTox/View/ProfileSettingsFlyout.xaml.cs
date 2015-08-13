@@ -58,7 +58,9 @@ namespace OneTox.View
 
         private void QrCodeButtonClick(object sender, RoutedEventArgs e)
         {
+            /*
             QrCodeImage.Source = _viewModel.GetQrCodeForToxId();
+            */
         }
 
         private async void ProfileSettingsFlyoutLostFocus(object sender, RoutedEventArgs e)

@@ -23,7 +23,8 @@
 
     <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <TextBlock x:Name="SettingsHeaderText" Margin="0,0,0,4" FontSize="28">Profile settings</TextBlock>
-        <Rectangle x:Name="SettingsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}" Height="1" StrokeThickness="0.5" Margin="0,0,0,16"/>
+        <Rectangle x:Name="SettingsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}" Height="1"
+                   StrokeThickness="0.5" Margin="0,0,0,16" />
         <Grid Width="480" HorizontalAlignment="Left">
             <Grid.RowDefinitions>
                 <RowDefinition Height="200" />
@@ -35,23 +36,24 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                
+
                 <Ellipse x:Name="UserAvatarWithStatusColorBorder" Grid.Column="0"
-                            Width="160" VerticalAlignment="Center"
-                            Height="160" StrokeThickness="5"
-                            Stroke="{Binding Status, Converter={StaticResource StatusToColorConverter}}"
-                            Tapped="UserAvatarTapped">
+                         Width="160" VerticalAlignment="Center"
+                         Height="160" StrokeThickness="5"
+                         Stroke="{Binding Status, Converter={StaticResource StatusToColorConverter}}"
+                         Tapped="UserAvatarTapped">
                     <Ellipse.Fill>
                         <ImageBrush ImageSource="{Binding Avatar}" />
                     </Ellipse.Fill>
                 </Ellipse>
                 <Button x:Name="RemoveAvatarButton" Grid.Column="0" HorizontalAlignment="Right"
-                            FontFamily="Segoe MDL2 Assets" Template="{StaticResource RoundButtonTemplate}"
-                            Background="Transparent" Content="&#xEB90;" Command="{Binding RemoveAvatarCommand}"
-                            Visibility="{Binding IsAvatarSet, Converter={StaticResource BoolToVisibilityConverter}}"
-                            Padding="0" VerticalAlignment="Top" FontSize="20" BorderThickness="0" Margin="0,20,0,0" />
-                
-                <StackPanel x:Name="UserProperties" Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="20,0,0,0">
+                        FontFamily="Segoe MDL2 Assets" Template="{StaticResource RoundButtonTemplate}"
+                        Background="Transparent" Content="&#xEB90;" Command="{Binding RemoveAvatarCommand}"
+                        Visibility="{Binding IsAvatarSet, Converter={StaticResource BoolToVisibilityConverter}}"
+                        Padding="0" VerticalAlignment="Top" FontSize="20" BorderThickness="0" Margin="0,20,0,0" />
+
+                <StackPanel x:Name="UserProperties" Grid.Column="1" Width="300" HorizontalAlignment="Left"
+                            Margin="20,0,0,0">
                     <TextBox x:Name="NameTextBox" Header="Name" Text="{Binding Name, Mode=TwoWay}"
                              LostFocus="NameTextBoxLostFocus" />
                     <TextBox x:Name="StatusMessageTextBox" Header="Status message"
@@ -72,45 +74,46 @@
                 </StackPanel>
             </Grid>
 
-            <StackPanel x:Name="ToxIdPanel" Grid.Row="1">
+            <StackPanel x:Name="ToxIdBlock" Grid.Row="1">
                 <TextBlock x:Name="ToxIdHeader" Text="Tox ID" Margin="0,20,0,0" />
-                <TextBlock x:Name="ToxIdTextBlock" TextWrapping="Wrap" Text="{Binding Id}" Margin="10,0,0,4" />
+
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
 
-                    <Button x:Name="RandomizeNoSpamButton" Grid.Column="0" Grid.Row="1" Content="Randomize nospam"
-                        Command="{Binding RandomizeNoSpamCommand}" Width="180"
-                        ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." />
-                    <Button x:Name="QrCodeButton" Grid.Column="0" Grid.Row="0" Content="Show QR code for ID" Click="QrCodeButtonClick" Width="180" Margin="0,0,8,8">
-                        <Button.Flyout>
-                            <Flyout Placement="Right">
-                                <StackPanel>
-                                    <Image x:Name="QrCodeImage" />
-                                </StackPanel>
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
-                    <Grid x:Name="CopyIdToClipboardBlock" Grid.Column="1" Grid.Row="0" VerticalAlignment="Top">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Button x:Name="ClipboardCopyButton" Grid.Column="0" Content="Copy ID to clipboard"
-                            Click="CopyButtonClick" Width="180" TabIndex="0" />
-                        <TextBlock x:Name="ClipboardCopyConfirmIcon" Grid.Column="1" Text="&#xE10B;"
-                               FontFamily="Segoe MDL2 Assets"
-                               FontSize="16" VerticalAlignment="Center" Margin="4,0,0,0" Visibility="Collapsed" />
+                    <Image x:Name="QrCodeImage" Grid.Column="0" Source="{Binding QrCodeId}" Height="160" Width="160" />
+
+                    <Grid Grid.Column="1" VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock x:Name="ToxIdTextBlock" Grid.Row="0" TextWrapping="Wrap" Text="{Binding TextId}"
+                                   Margin="0,0,0,4" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+
+                        <Grid x:Name="CopyIdToClipboardBlock" Grid.Row="1" VerticalAlignment="Top" Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button x:Name="ClipboardCopyButton" Grid.Column="0" Content="Copy ID to clipboard"
+                                    Click="CopyButtonClick" Width="180" VerticalAlignment="Top" />
+                            <TextBlock x:Name="ClipboardCopyConfirmIcon" Grid.Column="1" Text="&#xE10B;"
+                                       FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center"
+                                       Margin="8,0,0,0" Visibility="Collapsed" />
+                        </Grid>
+
+                        <Button x:Name="RandomizeNoSpamButton" Grid.Row="2" Content="Randomize nospam"
+                                Command="{Binding RandomizeNoSpamCommand}" Width="180"
+                                ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." />
                     </Grid>
                 </Grid>
-                
+
                 <local:ProfileManagementBlock x:Name="ProfileManagementBlock" Width="360" HorizontalAlignment="Left"
                                               Margin="0,20,0,0" />
             </StackPanel>

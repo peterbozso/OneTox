@@ -26,6 +26,7 @@ namespace OneTox.ViewModel.ProfileSettings
             ToxModel.Instance.PropertyChanged += ToxModelPropertyChangedHandler;
             AvatarManager.Instance.UserAvatarChanged += UserAvatarChangedHandler;
             AvatarManager.Instance.IsUserAvatarSetChanged += IsUserAvatarSetChangedHandler;
+            RefreshQrCodeId();
         }
 
         public async Task SaveDataAsync()
@@ -103,16 +104,9 @@ namespace OneTox.ViewModel.ProfileSettings
 
         #region Tox ID
 
-        public ToxId Id => ToxModel.Instance.Id;
+        public ToxId TextId => ToxModel.Instance.Id;
 
-        public void CopyToxIdToClipboard()
-        {
-            var dataPackage = new DataPackage {RequestedOperation = DataPackageOperation.Copy};
-            dataPackage.SetText(Id.ToString());
-            Clipboard.SetContent(dataPackage);
-        }
-
-        public WriteableBitmap GetQrCodeForToxId()
+        private void RefreshQrCodeId()
         {
             var writer = new BarcodeWriter
             {
@@ -124,7 +118,30 @@ namespace OneTox.ViewModel.ProfileSettings
                 }
             };
 
-            return writer.Write(Id.ToString()).ToBitmap() as WriteableBitmap;
+            QrCodeId = writer.Write(TextId.ToString()).ToBitmap() as WriteableBitmap;
+        }
+
+        private WriteableBitmap _qrCodeId;
+        public WriteableBitmap QrCodeId
+        {
+            get
+            {
+                return _qrCodeId;
+            }
+            set
+            {
+                if (value == _qrCodeId)
+                    return;
+                _qrCodeId = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public void CopyToxIdToClipboard()
+        {
+            var dataPackage = new DataPackage {RequestedOperation = DataPackageOperation.Copy};
+            dataPackage.SetText(TextId.ToString());
+            Clipboard.SetContent(dataPackage);
         }
 
         private RelayCommand _randomizeNoSpamCommand;
@@ -140,7 +157,8 @@ namespace OneTox.ViewModel.ProfileSettings
                     rand.NextBytes(nospam);
                     ToxModel.Instance.SetNospam(BitConverter.ToUInt32(nospam, 0));
                     await ToxModel.Instance.SaveDataAsync();
-                    RaisePropertyChanged("Id");
+                    RaisePropertyChanged("TextId");
+                    RefreshQrCodeId();
                 }));
             }
         }
