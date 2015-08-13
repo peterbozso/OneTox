@@ -73,11 +73,9 @@
                         <CompositeTransform />
                     </Ellipse.RenderTransform>
                 </Ellipse>
-                <TextBlock x:Name="MessageAddedNotificationIcon" FontFamily="Segoe UI Symbol"
-                           Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" FontSize="30"
-                           Margin="0,0,0,6" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Run Text="&#xE00D;" />
-                </TextBlock>
+                <TextBlock x:Name="MessageAddedNotificationIcon" FontFamily="Segoe MDL2 Assets"
+                           Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" FontSize="24"
+                           Margin="1,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="&#xE896;"/>
             </Grid>
 
             <TextBlock x:Name="FriendTypingIndicator" FontSize="12" Margin="12,0,0,4" Grid.Row="0" Grid.Column="1"
