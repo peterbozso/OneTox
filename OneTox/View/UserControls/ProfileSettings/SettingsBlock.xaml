@@ -52,12 +52,11 @@
             <StackPanel Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="12,0,0,0">
                 <!-- Name, status message, status -->
                 <TextBox Header="Name" x:Name="NameTextBox" Text="{Binding Name, Mode=TwoWay}"
-                         LostFocus="NameTextBoxLostFocus"
-                         KeyDown="NameTextBoxKeyDown" />
+                         LostFocus="NameTextBoxLostFocus" />
                 <TextBox Header="Status message" x:Name="StatusMessageTextBox"
                          Text="{Binding StatusMessage, Mode=TwoWay}"
-                         KeyDown="StatusMessageTextBoxKeyDown" LostFocus="StatusMessageTextBoxLostFocus" />
-                <Grid x:Name="StatusGrid" Margin="0,3,0,0">
+                         LostFocus="StatusMessageTextBoxLostFocus" />
+                <Grid x:Name="StatusGrid" Margin="0,4,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
