@@ -17,7 +17,7 @@
         <converters:TransferStateToStringConverter x:Key="TransferStateToStringConverter" />
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource MainColor}" Height="60">
+    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}" Height="60">
         <interactivity:Interaction.Behaviors>
             <core:DataTriggerBehavior
                 Binding="{Binding State, Converter={StaticResource TransferStateToStringConverter}}"
@@ -791,49 +791,47 @@
         </VisualStateManager.VisualStateGroups>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="85" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock x:Name="IconTextBlock" Grid.Column="0" FontFamily="Segoe UI Symbol" FontSize="30"
+        <TextBlock x:Name="IconTextBlock" Grid.Column="0" FontFamily="Segoe MDL2 Assets" FontSize="32"
                    VerticalAlignment="Center"
-                   HorizontalAlignment="Center" Margin="10,0,0,0" />
+                   HorizontalAlignment="Center" Margin="20,0,20,0" />
 
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="35" />
+                <RowDefinition Height="36" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock x:Name="TransferNameTextBlock" Grid.Column="0" FontSize="20" HorizontalAlignment="Left"
+            <TextBlock x:Name="TransferNameTextBlock" Grid.Column="0" FontSize="16" HorizontalAlignment="Left"
                        VerticalAlignment="Bottom" Grid.Row="0"
                        Text="{Binding Name}" />
             <ProgressBar x:Name="TransferProgressBar" Grid.Row="1"
-                         Foreground="{ThemeResource MessageColor}"
                          VerticalAlignment="Top"
-                         Value="{Binding Progress}" Margin="0,5,0,0" />
+                         Value="{Binding Progress}" Margin="0,4,0,0" />
         </Grid>
 
-        <Grid x:Name="ControlButtons" Grid.Column="2" Width="120">
-            <TextBlock x:Name="WaitingHintTextBlock" xml:space="preserve" Text="Waiting for feedback from friend..."
-                       VerticalAlignment="Center" FontSize="13" TextWrapping="Wrap" Height="46" Width="86"
-                       Margin="34,0,0,0" />
+        <Grid x:Name="ControlButtons" Grid.Column="2" Margin="28,0,0,0">
+            <TextBlock x:Name="WaitingHintTextBlock" Text="Waiting for feedback from friend..."
+                       VerticalAlignment="Center" FontSize="12" TextWrapping="Wrap" Height="52" Width="88" />
 
-            <Button x:Name="AcceptButton" Width="90" Content="Accept"
-                    Command="{Binding AcceptTransferCommand}" Margin="30,0,0,0" />
-            <Button x:Name="PauseButton" Width="90" Content="Pause"
-                    Command="{Binding PauseTransferCommand}" Margin="30,0,0,0" />
-            <Button x:Name="ResumeButton" Width="90" Content="Resume"
-                    Command="{Binding ResumeTransferCommand}" Margin="30,0,0,0" />
-            <Button x:Name="PausedByFriendButton" Width="90" Content="Paused"
-                    IsEnabled="False" Margin="30,0,0,0" />
+            <Button x:Name="AcceptButton" Width="88" Content="Accept"
+                    Command="{Binding AcceptTransferCommand}" />
+            <Button x:Name="PauseButton" Width="88" Content="Pause"
+                    Command="{Binding PauseTransferCommand}" />
+            <Button x:Name="ResumeButton" Width="88" Content="Resume"
+                    Command="{Binding ResumeTransferCommand}" />
+            <Button x:Name="PausedByFriendButton" Width="88" Content="Paused"
+                    IsEnabled="False" />
         </Grid>
 
-        <Button Grid.Column="3" x:Name="CancelButton" FontFamily="Segoe UI Symbol"
+        <Button Grid.Column="3" x:Name="CancelButton" FontFamily="Segoe MDL2 Assets"
                 Template="{StaticResource RoundButtonTemplate}"
-                Margin="22,0,38,0" Height="35" Width="35" Content="&#xE10A;" Padding="0"
+                Margin="20,0,20,0" Height="36" Width="36" Content="&#xE10A;" Padding="0"
                 Command="{Binding CancelTransferCommand}" />
     </Grid>
 </UserControl>

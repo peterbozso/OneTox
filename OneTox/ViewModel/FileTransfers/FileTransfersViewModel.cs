@@ -45,7 +45,7 @@ namespace OneTox.ViewModel.FileTransfers
                 Invisible
             }
 
-            private const int KHideArrowTextBlockHeight = 10;
+            private const int KHideArrowTextBlockHeight = 12;
             private const int KFileTransferRibbonHeight = 60;
             private readonly ObservableCollection<OneFileTransferViewModel> _transferViewModels;
             private TransfersBlockState _blockState;
@@ -105,8 +105,8 @@ namespace OneTox.ViewModel.FileTransfers
             /// <param name="transfersCount">The current number of file transfers.</param>
             private void UpdateOpenContentGridHeight(int transfersCount)
             {
-                // We don't show more than 4 items in the list at once, but use a scroll bar in that case.
-                var itemsToDisplay = transfersCount > 4 ? 4 : transfersCount;
+                // We don't show more than 3 items in the list at once, but use a scroll bar in that case.
+                var itemsToDisplay = transfersCount > 3 ? 3 : transfersCount;
                 OpenContentGridHeight = itemsToDisplay*KFileTransferRibbonHeight + KHideArrowTextBlockHeight;
             }
         }

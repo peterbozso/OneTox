@@ -41,13 +41,16 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <StackPanel x:Name="ControlButtonsBlock" Grid.Row="0" Margin="20,0">
-            <Button x:Name="SendFileButton" Template="{StaticResource RoundButtonTemplate}" IsEnabled="{Binding IsConnected}" Height="60" Width="60" FontSize="24" FontFamily="Segoe MDL2 Assets" Content="&#xE16C;" HorizontalAlignment="Right" Margin="8" Command="{Binding FileTransfers.SendFilesCommand}"/>
+            <Button x:Name="SendFileButton" Template="{StaticResource RoundButtonTemplate}"
+                    IsEnabled="{Binding IsConnected}" Height="60" Width="60" FontSize="24"
+                    FontFamily="Segoe MDL2 Assets" Content="&#xE16C;" HorizontalAlignment="Right" Margin="8"
+                    Command="{Binding FileTransfers.SendFilesCommand}" />
             <Rectangle x:Name="SettingsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}" Height="1"
                        StrokeThickness="0.5" />
             <fileTransfers:FileTransfersBlock x:Name="FileTransfersBlock" />

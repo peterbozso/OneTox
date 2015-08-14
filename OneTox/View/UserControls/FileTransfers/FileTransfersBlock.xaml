@@ -11,7 +11,7 @@
     x:Name="FileTransferBlockUserControl"
     x:Class="OneTox.View.UserControls.FileTransfers.FileTransfersBlock"
     mc:Ignorable="d"
-    d:DesignHeight="60"
+    d:DesignHeight="68"
     d:DesignWidth="800">
 
     <UserControl.Resources>
@@ -19,7 +19,7 @@
         <converters:TransfersBlockStateToStringConverter x:Key="TransfersBlockStateToStringConverter" />
     </UserControl.Resources>
 
-    <Grid x:Name="RootGrid" Background="{StaticResource MainColor}">
+    <Grid x:Name="RootGrid" Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
         <interactivity:Interaction.Behaviors>
             <core:DataTriggerBehavior
                 Binding="{Binding VisualStates.BlockState, Converter={StaticResource TransfersBlockStateToStringConverter}}"
@@ -174,23 +174,25 @@
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
 
-        <Grid x:Name="CollapsedContentGrid" Grid.Row="0" Height="30">
+        <Grid x:Name="CollapsedContentGrid" Grid.Row="0" Height="32">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="PlaceholderTextBlock" Grid.Column="0" FontSize="16" Margin="10,5,0,5"
+            <TextBlock x:Name="PlaceholderTextBlock" Grid.Column="0" FontSize="16" Margin="12,0,0,4"
                        Text="{Binding Transfers.Count, Converter={StaticResource FileTransferCountToPlaceholderTextConverter}}"
                        VerticalAlignment="Center" />
-            <TextBlock x:Name="ShowTransfersIcon" Grid.Column="1" FontFamily="Segoe UI Symbol" FontSize="16"
-                       Margin="10,0" VerticalAlignment="Center" Tapped="ShowTransfersIconTapped" Text="" />
+            <TextBlock x:Name="ShowTransfersIcon" Grid.Column="1" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                       Margin="12,0,30,6" Tapped="ShowTransfersIconTapped" Text="&#xE015;" VerticalAlignment="Bottom"
+                       HorizontalAlignment="Center" />
         </Grid>
 
         <Grid x:Name="OpenContentGrid" Grid.Row="1" Height="{Binding VisualStates.OpenContentGridHeight}">
             <ScrollViewer x:Name="TransferRibbonsScrollViewer" VerticalScrollBarVisibility="Auto">
-                <ItemsControl x:Name="TransferRibbons" ItemsSource="{Binding Transfers}" Margin="0,0,0,10">
+                <ItemsControl x:Name="TransferRibbons" ItemsSource="{Binding Transfers}" Margin="0,0,0,12">
                     <ItemsControl.Transitions>
                         <TransitionCollection>
                             <EntranceThemeTransition FromVerticalOffset="-100" FromHorizontalOffset="0" />
@@ -199,10 +201,10 @@
 
                     <ItemsControl.ItemContainerTransitions>
                         <TransitionCollection>
-                            <AddDeleteThemeTransition/>
+                            <AddDeleteThemeTransition />
                         </TransitionCollection>
                     </ItemsControl.ItemContainerTransitions>
-                    
+
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <fileTransfers:FileTransferRibbon />
@@ -210,9 +212,13 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-            <TextBlock x:Name="HideTransfersIcon" FontFamily="Segoe UI Symbol" FontSize="16"
-                       VerticalAlignment="Bottom" Text="" HorizontalAlignment="Center"
+
+            <TextBlock x:Name="HideTransfersIcon" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                       VerticalAlignment="Bottom" Text="&#xE014;" HorizontalAlignment="Center"
                        Tapped="HideTransfersIconTapped" />
         </Grid>
+
+        <Rectangle Grid.Row="2" Stroke="{ThemeResource ApplicationForegroundThemeBrush}" Height="1"
+                   StrokeThickness="0.5" />
     </Grid>
 </UserControl>
