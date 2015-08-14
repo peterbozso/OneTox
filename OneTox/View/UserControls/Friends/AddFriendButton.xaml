@@ -18,7 +18,7 @@
     </UserControl.DataContext>
 
     <Grid>
-        <Button Background="Transparent" FontFamily="Segoe MDL2 Assets" Content="&#xE710;" FontSize="32">
+        <Button Background="Transparent" FontFamily="Segoe MDL2 Assets" Content="&#xE710;" FontSize="32" HorizontalAlignment="Stretch">
             <Button.Flyout>
                 <Flyout>
                     <StackPanel Width="400" x:Name="AddFriendFlyoutContent">

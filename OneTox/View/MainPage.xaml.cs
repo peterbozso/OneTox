@@ -1,6 +1,7 @@
 ﻿using System.Collections.Specialized;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using OneTox.ViewModel;
 using OneTox.ViewModel.Friends;
 
@@ -20,7 +21,9 @@ namespace OneTox.View
             if (FriendList.SelectedItem == null)
                 return;
 
+            ActionIcons.SelectedItem = null;
             VisualStateManager.GoToState(this, "ChatState", true);
+
             ChatBlock.SetDataContext(FriendList.SelectedItem as FriendViewModel);
         }
 
@@ -53,7 +56,7 @@ namespace OneTox.View
             }
         }
 
-        private void SettingsButtonClick(object sender, RoutedEventArgs e)
+        private void SettingsIconTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             FriendList.SelectedItem = null;
             VisualStateManager.GoToState(this, "SettingsState", true);

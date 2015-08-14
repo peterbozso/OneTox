@@ -53,13 +53,16 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                <friends:AddFriendButton x:Name="AddFriendButton" VerticalAlignment="Bottom"
-                                         HorizontalAlignment="Right" Margin="0,0,16,8" />
-                <Button x:Name="SettingsButton" Background="Transparent" VerticalAlignment="Bottom"
-                        HorizontalAlignment="Left" Margin="16,0,0,8" FontFamily="Segoe MDL2 Assets" Content="&#xE713;"
-                        FontSize="32" Click="SettingsButtonClick" />
-            </StackPanel>
+            <ListView x:Name="ActionIcons" Grid.Row="1" VerticalAlignment="Bottom" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"></StackPanel>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+
+                <TextBlock x:Name="FriendRequestIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE710;" FontSize="32" HorizontalAlignment="Center"  Width="176" TextAlignment="Center" />
+                <TextBlock x:Name="SettingsIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE713;" FontSize="32" HorizontalAlignment="Center"  Width="176" TextAlignment="Center" Tapped="SettingsIconTapped" />
+            </ListView>
         </Grid>
 
         <messaging:ChatBlock x:Name="ChatBlock" Grid.Column="1" />
