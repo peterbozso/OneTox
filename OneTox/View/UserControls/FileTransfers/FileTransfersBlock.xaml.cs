@@ -10,19 +10,21 @@ namespace OneTox.View.UserControls.FileTransfers
 {
     public sealed partial class FileTransfersBlock : UserControl
     {
-        private FileTransfersViewModel _viewModel;
+        private FileTransfersViewModel _fileTransfersViewModel;
 
         public FileTransfersBlock()
         {
             InitializeComponent();
         }
 
-        private async void FileTransferBlockLoaded(object sender, RoutedEventArgs e)
+        public void SetDataContext(FileTransfersViewModel fileTransfersViewModel)
         {
-            _viewModel = DataContext as FileTransfersViewModel;
-            VisualStateManager.GoToState(this, _viewModel.VisualStates.BlockState.ToString(), true);
-            _viewModel.Transfers.CollectionChanged += TransfersCollectionChangedHandler;
-            await SetAddDeleteThemeTransitionForTransferRibbons();
+            if (fileTransfersViewModel == null)
+                return;
+
+            DataContext = _fileTransfersViewModel = fileTransfersViewModel;
+            VisualStateManager.GoToState(this, _fileTransfersViewModel.VisualStates.BlockState.ToString(), true);
+            _fileTransfersViewModel.Transfers.CollectionChanged += TransfersCollectionChangedHandler;
         }
 
         private void TransfersCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
@@ -49,13 +51,13 @@ namespace OneTox.View.UserControls.FileTransfers
 
         private void ShowTransfersIconTapped(object sender, TappedRoutedEventArgs e)
         {
-            _viewModel.VisualStates.BlockState =
+            _fileTransfersViewModel.VisualStates.BlockState =
                 FileTransfersViewModel.FileTransfersVisualStates.TransfersBlockState.Open;
         }
 
         private void HideTransfersIconTapped(object sender, TappedRoutedEventArgs e)
         {
-            _viewModel.VisualStates.BlockState =
+            _fileTransfersViewModel.VisualStates.BlockState =
                 FileTransfersViewModel.FileTransfersVisualStates.TransfersBlockState.Collapsed;
         }
     }

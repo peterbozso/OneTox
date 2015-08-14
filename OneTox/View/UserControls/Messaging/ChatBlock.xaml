@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:messaging="using:OneTox.View.UserControls.Messaging"
+    xmlns:fileTransfers="using:OneTox.View.UserControls.FileTransfers"
     mc:Ignorable="d"
     d:DesignHeight="800"
     d:DesignWidth="600">
@@ -40,11 +41,19 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ListView x:Name="MessagesListView" Grid.Row="0"
+        <StackPanel x:Name="ControlButtonsBlock" Grid.Row="0" Margin="20,0">
+            <Button x:Name="SendFileButton" Template="{StaticResource RoundButtonTemplate}" IsEnabled="{Binding IsConnected}" Height="60" Width="60" FontSize="24" FontFamily="Segoe MDL2 Assets" Content="&#xE16C;" HorizontalAlignment="Right" Margin="8" Command="{Binding FileTransfers.SendFilesCommand}"/>
+            <Rectangle x:Name="SettingsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}" Height="1"
+                       StrokeThickness="0.5" />
+            <fileTransfers:FileTransfersBlock x:Name="FileTransfersBlock" />
+        </StackPanel>
+
+        <ListView x:Name="MessagesListView" Grid.Row="1"
                   ItemsSource="{Binding Conversation.MessageGroups}" SelectionMode="None"
                   HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                   IncrementalLoadingTrigger="None" ItemContainerStyle="{StaticResource ChatPageListViewItemStyle}">
@@ -55,7 +64,7 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <Grid Grid.Row="1">
+        <Grid x:Name="MessageInputBlock" Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />

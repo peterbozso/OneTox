@@ -312,7 +312,7 @@ namespace OneTox.Model.FileTransfers
 
         #region Common
 
-        private long TransferredBytes => _stream.Position;
+        private long TransferredBytes => _stream?.Position ?? 0;
 
         private bool IsFinished
         {

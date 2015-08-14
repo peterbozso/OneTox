@@ -29,13 +29,14 @@ namespace OneTox.View.UserControls.Messaging
             if (friendViewModel == null)
                 return;
 
-            DataContext = friendViewModel;
-            _friendViewModel = friendViewModel;
+            DataContext = _friendViewModel = friendViewModel;
 
             _scrollManager?.DeregisterHandlers();
             _scrollManager = new ScrollManager(MessagesListView, _friendViewModel.Conversation,
                 MessageAddedNotificationGrid, MessageAddedNotificationAnimation);
             _scrollManager.RegisterHandlers();
+
+            FileTransfersBlock.SetDataContext(friendViewModel.FileTransfers);
         }
 
         private async void MessageInputKeyDown(object sender, KeyRoutedEventArgs e)
