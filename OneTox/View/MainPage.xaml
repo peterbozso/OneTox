@@ -68,8 +68,14 @@
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
 
-                <TextBlock x:Name="FriendRequestIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE710;" FontSize="32" HorizontalAlignment="Center"  Width="176" TextAlignment="Center" Tapped="FriendRequestIconTapped" />
-                <TextBlock x:Name="SettingsIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE713;" FontSize="32" HorizontalAlignment="Center"  Width="176" TextAlignment="Center" Tapped="SettingsIconTapped" />
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Padding" Value="0,0,0,0" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+
+                <TextBlock x:Name="FriendRequestIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE710;" FontSize="32" HorizontalAlignment="Center" Width="200" TextAlignment="Center" Tapped="FriendRequestIconTapped" />
+                <TextBlock x:Name="SettingsIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE713;" FontSize="32" HorizontalAlignment="Center" Width="200" TextAlignment="Center" Tapped="SettingsIconTapped" />
             </ListView>
         </Grid>
 
