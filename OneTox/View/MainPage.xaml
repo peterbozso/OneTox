@@ -13,6 +13,10 @@
     Loaded="MainPageLoaded"
     d:DataContext="{d:DesignData /SampleData/MainPageViewModelSampleData.xaml}">
 
+    <Page.Resources>
+       <ResourceDictionary Source="ResourceDictionaries/MainPageDictionary.xaml"/>
+    </Page.Resources>
+    
     <Page.DataContext>
         <viewModel:MainViewModel />
     </Page.DataContext>
@@ -53,7 +57,7 @@
             </Grid.RowDefinitions>
 
             <ListView x:Name="FriendList" Grid.Row="0" ItemsSource="{Binding FriendList.Friends}"
-                      SelectionChanged="FriendListSelectionChanged">
+                      SelectionChanged="FriendListSelectionChanged" ItemContainerStyle="{StaticResource ListViewItemWithoutPressedVisualStateStyle}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <friends:FriendListItem Margin="8" />
@@ -69,7 +73,7 @@
                 </ListView.ItemsPanel>
 
                 <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
+                    <Style TargetType="ListViewItem" BasedOn="{StaticResource ListViewItemWithoutPressedVisualStateStyle}">
                         <Setter Property="Padding" Value="0,0,0,0" />
                     </Style>
                 </ListView.ItemContainerStyle>
