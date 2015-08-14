@@ -131,7 +131,7 @@
     <Compile Include="ViewModel\FileTransfers\OneFileTransferViewModel.cs" />
     <Compile Include="ViewModel\FriendRequests\FriendRequestsViewModel.cs" />
     <Compile Include="ViewModel\FriendRequests\OneFriendRequestViewModel.cs" />
-    <Compile Include="ViewModel\Friends\AddFriendFlyoutViewModel.cs" />
+    <Compile Include="ViewModel\Friends\AddFriendViewModel.cs" />
     <Compile Include="ViewModel\Friends\FriendListViewModel.cs" />
     <Compile Include="ViewModel\Friends\FriendViewModel.cs" />
     <Compile Include="ViewModel\IToxUserViewModel.cs" />
@@ -178,6 +178,9 @@
     <Compile Include="View\UserControls\CallBlock.xaml.cs">
       <DependentUpon>CallBlock.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\UserControls\Friends\AddFriendBlock.xaml.cs">
+      <DependentUpon>AddFriendBlock.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\UserControls\Messaging\ChatBlock.xaml.cs">
       <DependentUpon>ChatBlock.xaml</DependentUpon>
     </Compile>
@@ -189,9 +192,6 @@
     </Compile>
     <Compile Include="View\UserControls\Friends\FriendListItem.xaml.cs">
       <DependentUpon>FriendListItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\UserControls\Friends\AddFriendButton.xaml.cs">
-      <DependentUpon>AddFriendButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserControls\FriendRequests\FriendRequestsList.xaml.cs">
       <DependentUpon>FriendRequestsList.xaml</DependentUpon>
@@ -278,6 +278,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\UserControls\Friends\AddFriendBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\UserControls\Messaging\ChatBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -291,10 +295,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\UserControls\Friends\FriendListItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\UserControls\Friends\AddFriendButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -61,5 +61,11 @@ namespace OneTox.View
             FriendList.SelectedItem = null;
             VisualStateManager.GoToState(this, "SettingsState", true);
         }
+
+        private void FriendRequestIconTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            FriendList.SelectedItem = null;
+            VisualStateManager.GoToState(this, "AddFriendState", true);
+        }
     }
 }

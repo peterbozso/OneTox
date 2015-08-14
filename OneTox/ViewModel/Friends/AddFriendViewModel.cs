@@ -5,27 +5,12 @@ using SharpTox.Core;
 
 namespace OneTox.ViewModel.Friends
 {
-    public class AddFriendFlyoutViewModel : ObservableObject
+    public class AddFriendViewModel : ObservableObject
     {
         private RelayCommand _addFriendCommand;
         private string _friendId;
         private string _friendIdPlaceholder;
         private string _invitationMessage;
-        private bool _isFlyoutClosed;
-
-        public bool IsFlyoutClosed
-        {
-            get { return _isFlyoutClosed; }
-            set
-            {
-                if (value == _isFlyoutClosed)
-                    return;
-                _isFlyoutClosed = value;
-                RaisePropertyChanged();
-                if (value)
-                    IsFlyoutClosed = false;
-            }
-        }
 
         public string FriendId
         {
@@ -94,11 +79,6 @@ namespace OneTox.ViewModel.Friends
 
                                    bool successFulAdd;
                                    ToxModel.Instance.AddFriend(new ToxId(FriendId), invitationMessage, out successFulAdd);
-
-                                   if (successFulAdd)
-                                   {
-                                       IsFlyoutClosed = true;
-                                   }
                                }
                            }));
             }

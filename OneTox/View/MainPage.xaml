@@ -23,11 +23,19 @@
                 <VisualState x:Name="ChatState">
                     <VisualState.Setters>
                         <Setter Target="SettingsBlock.(UIElement.Visibility)" Value="Collapsed" />
+                        <Setter Target="AddFriendBlock.(UIElement.Visibility)" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="SettingsState">
                     <VisualState.Setters>
                         <Setter Target="ChatBlock.(UIElement.Visibility)" Value="Collapsed" />
+                        <Setter Target="AddFriendBlock.(UIElement.Visibility)" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="AddFriendState">
+                    <VisualState.Setters>
+                        <Setter Target="ChatBlock.(UIElement.Visibility)" Value="Collapsed" />
+                        <Setter Target="SettingsBlock.(UIElement.Visibility)" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -60,12 +68,13 @@
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
 
-                <TextBlock x:Name="FriendRequestIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE710;" FontSize="32" HorizontalAlignment="Center"  Width="176" TextAlignment="Center" />
+                <TextBlock x:Name="FriendRequestIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE710;" FontSize="32" HorizontalAlignment="Center"  Width="176" TextAlignment="Center" Tapped="FriendRequestIconTapped" />
                 <TextBlock x:Name="SettingsIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE713;" FontSize="32" HorizontalAlignment="Center"  Width="176" TextAlignment="Center" Tapped="SettingsIconTapped" />
             </ListView>
         </Grid>
 
         <messaging:ChatBlock x:Name="ChatBlock" Grid.Column="1" />
         <profileSettings:SettingsBlock x:Name="SettingsBlock" Grid.Column="1" Margin="20,0,20,20" />
+        <friends:AddFriendBlock x:Name="AddFriendBlock" Grid.Column="1" Margin="20,0,20,20" />
     </Grid>
 </Page>
