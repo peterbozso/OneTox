@@ -93,7 +93,7 @@
         <CommandBar Background="{StaticResource MainColor}">
             <AppBarButton Label="add friend" Icon="AddFriend" x:Name="AddFriendButton">
                 <AppBarButton.DataContext>
-                   <!-- <friends:AddFriendFlyoutViewModel />-->
+                    <!-- <friends:AddFriendFlyoutViewModel />-->
                 </AppBarButton.DataContext>
                 <AppBarButton.Flyout>
                     <Flyout>

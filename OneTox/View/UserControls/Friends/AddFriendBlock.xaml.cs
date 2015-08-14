@@ -6,7 +6,7 @@ namespace OneTox.View.UserControls.Friends
     {
         public AddFriendBlock()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

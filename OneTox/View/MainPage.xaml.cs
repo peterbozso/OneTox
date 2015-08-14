@@ -1,7 +1,7 @@
 ﻿using System.Collections.Specialized;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Input;
 using OneTox.ViewModel;
 using OneTox.ViewModel.Friends;
 
@@ -56,13 +56,13 @@ namespace OneTox.View
             }
         }
 
-        private void SettingsIconTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private void SettingsIconTapped(object sender, TappedRoutedEventArgs e)
         {
             FriendList.SelectedItem = null;
             VisualStateManager.GoToState(this, "SettingsState", true);
         }
 
-        private void FriendRequestIconTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private void FriendRequestIconTapped(object sender, TappedRoutedEventArgs e)
         {
             FriendList.SelectedItem = null;
             VisualStateManager.GoToState(this, "AddFriendState", true);

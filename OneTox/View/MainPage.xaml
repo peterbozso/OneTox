@@ -14,9 +14,9 @@
     d:DataContext="{d:DesignData /SampleData/MainPageViewModelSampleData.xaml}">
 
     <Page.Resources>
-       <ResourceDictionary Source="ResourceDictionaries/MainPageDictionary.xaml"/>
+        <ResourceDictionary Source="ResourceDictionaries/MainPageDictionary.xaml" />
     </Page.Resources>
-    
+
     <Page.DataContext>
         <viewModel:MainViewModel />
     </Page.DataContext>
@@ -44,7 +44,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="400" />
             <ColumnDefinition Width="*" />
@@ -57,7 +57,8 @@
             </Grid.RowDefinitions>
 
             <ListView x:Name="FriendList" Grid.Row="0" ItemsSource="{Binding FriendList.Friends}"
-                      SelectionChanged="FriendListSelectionChanged" ItemContainerStyle="{StaticResource ListViewItemWithoutPressedVisualStateStyle}">
+                      SelectionChanged="FriendListSelectionChanged"
+                      ItemContainerStyle="{StaticResource ListViewItemWithoutPressedVisualStateStyle}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <friends:FriendListItem Margin="8" />
@@ -65,21 +66,26 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <ListView x:Name="ActionIcons" Grid.Row="1" VerticalAlignment="Bottom" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" Height="45">
+            <ListView x:Name="ActionIcons" Grid.Row="1" VerticalAlignment="Bottom"
+                      Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" Height="45">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal"></StackPanel>
+                        <StackPanel Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
 
                 <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem" BasedOn="{StaticResource ListViewItemWithoutPressedVisualStateStyle}">
+                    <Style TargetType="ListViewItem"
+                           BasedOn="{StaticResource ListViewItemWithoutPressedVisualStateStyle}">
                         <Setter Property="Padding" Value="0,0,0,0" />
                     </Style>
                 </ListView.ItemContainerStyle>
 
-                <TextBlock x:Name="FriendRequestIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE710;" FontSize="28" HorizontalAlignment="Center" Width="200" TextAlignment="Center" Tapped="FriendRequestIconTapped" />
-                <TextBlock x:Name="SettingsIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE713;" FontSize="28" HorizontalAlignment="Center" Width="200" TextAlignment="Center" Tapped="SettingsIconTapped" />
+                <TextBlock x:Name="FriendRequestIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE710;" FontSize="28"
+                           HorizontalAlignment="Center" Width="200" TextAlignment="Center"
+                           Tapped="FriendRequestIconTapped" />
+                <TextBlock x:Name="SettingsIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE713;" FontSize="28"
+                           HorizontalAlignment="Center" Width="200" TextAlignment="Center" Tapped="SettingsIconTapped" />
             </ListView>
         </Grid>
 

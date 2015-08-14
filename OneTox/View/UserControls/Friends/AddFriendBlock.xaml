@@ -16,27 +16,27 @@
 
     <Grid x:Name="AddFriendFlyoutContent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0">
             <TextBlock x:Name="SettingsHeaderText" Margin="0,0,0,4" FontSize="28">Add friend</TextBlock>
             <Rectangle x:Name="SettingsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}" Height="1"
-                   StrokeThickness="0.5" Margin="0,0,0,20" />
+                       StrokeThickness="0.5" Margin="0,0,0,20" />
         </StackPanel>
-        
+
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel Width="488" HorizontalAlignment="Left">
                 <TextBox x:Name="FriendId" Header="Your friend's ID" MaxLength="76" Height="80"
-                                     TextWrapping="Wrap" Text="{Binding FriendId, Mode=TwoWay}"
-                                     PlaceholderText="{Binding FriendIdPlaceholder}" />
+                         TextWrapping="Wrap" Text="{Binding FriendId, Mode=TwoWay}"
+                         PlaceholderText="{Binding FriendIdPlaceholder}" />
                 <TextBox x:Name="InvitationMessage" Header="Invitation message" Height="160"
-                                     TextWrapping="Wrap" Text="{Binding InvitationMessage, Mode=TwoWay}"
-                                     PlaceholderText="Hello! I'd like to add you to my friends list." Margin="0,4,0,0" />
+                         TextWrapping="Wrap" Text="{Binding InvitationMessage, Mode=TwoWay}"
+                         PlaceholderText="Hello! I'd like to add you to my friends list." Margin="0,4,0,0" />
                 <Button Margin="0,8,0,0" Content="Send friend request" Command="{Binding AddFriendCommand}"
-                                    CommandParameter="{Binding ElementName=AddFriendFlyoutContent}"
-                                    HorizontalAlignment="Left" />
+                        CommandParameter="{Binding ElementName=AddFriendFlyoutContent}"
+                        HorizontalAlignment="Left" />
             </StackPanel>
         </ScrollViewer>
     </Grid>

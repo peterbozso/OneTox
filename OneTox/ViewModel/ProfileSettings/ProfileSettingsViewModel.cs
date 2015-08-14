@@ -122,12 +122,10 @@ namespace OneTox.ViewModel.ProfileSettings
         }
 
         private WriteableBitmap _qrCodeId;
+
         public WriteableBitmap QrCodeId
         {
-            get
-            {
-                return _qrCodeId;
-            }
+            get { return _qrCodeId; }
             set
             {
                 if (value == _qrCodeId)
