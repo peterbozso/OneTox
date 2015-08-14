@@ -48,8 +48,8 @@
 
         <Grid Grid.Column="0" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <ListView x:Name="FriendList" Grid.Row="0" ItemsSource="{Binding FriendList.Friends}"
@@ -61,7 +61,7 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <ListView x:Name="ActionIcons" Grid.Row="1" VerticalAlignment="Bottom" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+            <ListView x:Name="ActionIcons" Grid.Row="1" VerticalAlignment="Bottom" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" Height="45">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal"></StackPanel>
@@ -74,8 +74,8 @@
                     </Style>
                 </ListView.ItemContainerStyle>
 
-                <TextBlock x:Name="FriendRequestIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE710;" FontSize="32" HorizontalAlignment="Center" Width="200" TextAlignment="Center" Tapped="FriendRequestIconTapped" />
-                <TextBlock x:Name="SettingsIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE713;" FontSize="32" HorizontalAlignment="Center" Width="200" TextAlignment="Center" Tapped="SettingsIconTapped" />
+                <TextBlock x:Name="FriendRequestIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE710;" FontSize="28" HorizontalAlignment="Center" Width="200" TextAlignment="Center" Tapped="FriendRequestIconTapped" />
+                <TextBlock x:Name="SettingsIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE713;" FontSize="28" HorizontalAlignment="Center" Width="200" TextAlignment="Center" Tapped="SettingsIconTapped" />
             </ListView>
         </Grid>
 
