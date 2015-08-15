@@ -12,7 +12,7 @@ namespace OneTox.View.UserControls.FriendRequests
             InitializeComponent();
         }
 
-        private void ContentGrid_Tapped(object sender, TappedRoutedEventArgs e)
+        private void PublicKeyTapped(object sender, TappedRoutedEventArgs e)
         {
             FlyoutBase.ShowAttachedFlyout((FrameworkElement) sender);
         }

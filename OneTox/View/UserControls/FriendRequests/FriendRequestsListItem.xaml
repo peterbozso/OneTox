@@ -6,8 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="55"
-    d:DesignWidth="400">
+    d:DesignHeight="28"
+    Width="360">
 
     <UserControl.Resources>
         <Flyout x:Key="FriendRequestInfoFlyout">
@@ -28,21 +28,25 @@
         </Flyout>
     </UserControl.Resources>
 
-    <Grid x:Name="ContentGrid" Height="55" Tapped="ContentGrid_Tapped"
-          FlyoutBase.AttachedFlyout="{StaticResource FriendRequestInfoFlyout}" Width="300">
+    <Grid x:Name="ContentGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock x:Name="FriendName" Grid.Column="0" Foreground="{StaticResource MainColor}" FontSize="25"
-                   Text="{Binding Name}" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <TextBlock x:Name="PublicKey" Grid.Column="0" FontSize="16" Height="28" Tapped="PublicKeyTapped"
+                   FlyoutBase.AttachedFlyout="{StaticResource FriendRequestInfoFlyout}"
+                   Foreground="{ThemeResource SystemControlForegroundAccentBrush}"
+                   Text="{Binding PublicKey}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
+                   VerticalAlignment="Center" />
 
         <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-            <Button x:Name="AcceptButton" FontFamily="Segoe UI Symbol" Template="{StaticResource RoundButtonTemplate}"
-                    Height="35" Width="35" Content="&#xE10B;" Padding="0" Command="{Binding AcceptCommand}" />
-            <Button x:Name="DeclineButton" FontFamily="Segoe UI Symbol" Template="{StaticResource RoundButtonTemplate}"
-                    Height="35" Width="35" Content="&#xE10A;" Padding="0" Command="{Binding DeclineCommand}" />
+            <Button x:Name="AcceptButton" FontFamily="Segoe MDL2 Assets"
+                    Template="{StaticResource RoundButtonTemplate}"
+                    Height="36" Width="36" Content="&#xE10B;" Padding="0" Command="{Binding AcceptCommand}" />
+            <Button x:Name="DeclineButton" FontFamily="Segoe MDL2 Assets"
+                    Template="{StaticResource RoundButtonTemplate}"
+                    Height="36" Width="36" Content="&#xE10A;" Padding="0" Command="{Binding DeclineCommand}" />
         </StackPanel>
     </Grid>
 </UserControl>

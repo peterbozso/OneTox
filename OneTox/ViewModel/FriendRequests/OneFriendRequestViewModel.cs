@@ -19,7 +19,6 @@ namespace OneTox.ViewModel.FriendRequests
             Message = message;
         }
 
-        public string Name => _publicKey.ToString().Substring(0, 15);
         public string PublicKey => _publicKey.ToString();
         public string Message { get; private set; }
 

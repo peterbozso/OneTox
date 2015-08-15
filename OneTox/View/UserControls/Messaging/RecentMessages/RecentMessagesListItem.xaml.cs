@@ -1,7 +1,6 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using OneTox.ViewModel.Messaging;
 
 namespace OneTox.View.UserControls.Messaging.RecentMessages
 {
@@ -14,7 +13,7 @@ namespace OneTox.View.UserControls.Messaging.RecentMessages
 
         private void RecentMessageListItemTapped(object sender, TappedRoutedEventArgs e)
         {
-           /* 
+            /* 
            (Window.Current.Content as Frame).Navigate(typeof (ChatPage),
                 (DataContext as ReceivedMessageViewModel).Sender);
             */
