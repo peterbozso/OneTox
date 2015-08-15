@@ -208,8 +208,8 @@
     <Compile Include="View\UserControls\ProfileSettings\ProfileManagementBlock.xaml.cs">
       <DependentUpon>ProfileManagementBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\ProfileSettings\SettingsBlock.xaml.cs">
-      <DependentUpon>SettingsBlock.xaml</DependentUpon>
+    <Compile Include="View\UserControls\ProfileSettings\ProfileSettingsBlock.xaml.cs">
+      <DependentUpon>ProfileSettingsBlock.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -307,7 +307,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\UserControls\ProfileSettings\SettingsBlock.xaml">
+    <Page Include="View\UserControls\ProfileSettings\ProfileSettingsBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

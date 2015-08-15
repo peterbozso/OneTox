@@ -26,7 +26,7 @@
             <VisualStateGroup x:Name="VisualStateGroup">
                 <VisualState x:Name="ChatState">
                     <VisualState.Setters>
-                        <Setter Target="SettingsBlock.(UIElement.Visibility)" Value="Collapsed" />
+                        <Setter Target="ProfileSettingsBlock.(UIElement.Visibility)" Value="Collapsed" />
                         <Setter Target="AddFriendBlock.(UIElement.Visibility)" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
@@ -39,7 +39,7 @@
                 <VisualState x:Name="AddFriendState">
                     <VisualState.Setters>
                         <Setter Target="ChatBlock.(UIElement.Visibility)" Value="Collapsed" />
-                        <Setter Target="SettingsBlock.(UIElement.Visibility)" Value="Collapsed" />
+                        <Setter Target="ProfileSettingsBlock.(UIElement.Visibility)" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -91,7 +91,7 @@
         </Grid>
 
         <messaging:ChatBlock x:Name="ChatBlock" Grid.Column="1" />
-        <profileSettings:SettingsBlock x:Name="SettingsBlock" Grid.Column="1" Margin="20,0,20,20" />
+        <profileSettings:ProfileSettingsBlock x:Name="ProfileSettingsBlock" Grid.Column="1" Margin="20,0,20,20" />
         <friends:AddFriendBlock x:Name="AddFriendBlock" Grid.Column="1" Margin="20,0,20,20" />
     </Grid>
 </Page>

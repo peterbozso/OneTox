@@ -11,12 +11,12 @@ using SharpTox.Core;
 
 namespace OneTox.View.UserControls.ProfileSettings
 {
-    public sealed partial class SettingsBlock : UserControl
+    public sealed partial class ProfileSettingsBlock : UserControl
     {
         private readonly ProfileSettingsViewModel _viewModel;
         private Timer _copyClipboardTimer;
 
-        public SettingsBlock()
+        public ProfileSettingsBlock()
         {
             InitializeComponent();
             _viewModel = DataContext as ProfileSettingsViewModel;
