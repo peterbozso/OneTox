@@ -12,7 +12,7 @@
     xmlns:friendRequests="using:OneTox.View.UserControls.FriendRequests"
     mc:Ignorable="d"
     Loaded="MainPageLoaded"
-    d:DataContext="{d:DesignData /SampleData/MainPageViewModelSampleData.xaml}">
+    d:DataContext="{d:DesignData /SampleData/MainViewModelSampleData.xaml}">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -24,7 +24,6 @@
 
     <Page.DataContext>
         <viewModel:MainViewModel />
-
     </Page.DataContext>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -70,7 +69,7 @@
                 <Rectangle x:Name="FriendRequestsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}"
                            Height="1" StrokeThickness="0.5" Margin="12,0,12,0" />
 
-                <ListView x:Name="FriendRequestsListView" ItemsSource="{Binding FriendRequests.Items}"
+                <ListView x:Name="FriendRequestsListView" ItemsSource="{Binding FriendRequests.Requests}"
                           SelectionMode="None" MaxHeight="360"
                           ItemContainerStyle="{StaticResource FriendRequestsListViewItemStyle}">
 

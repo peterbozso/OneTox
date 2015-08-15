@@ -25,13 +25,13 @@ namespace OneTox.ViewModel.FriendRequests
 
         public FriendRequestsViewModel()
         {
-            Items = new ObservableCollection<OneFriendRequestViewModel>();
-            Items.CollectionChanged += FriendRequestsCollectionChangedHandler;
+            Requests = new ObservableCollection<OneFriendRequestViewModel>();
+            Requests.CollectionChanged += FriendRequestsCollectionChangedHandler;
             ToxModel.Instance.FriendRequestReceived += FriendRequestReceivedHandler;
             _semaphore = new SemaphoreSlim(1);
         }
 
-        public ObservableCollection<OneFriendRequestViewModel> Items { get; }
+        public ObservableCollection<OneFriendRequestViewModel> Requests { get; }
         public event EventHandler<ToxEventArgs.FriendRequestEventArgs> FriendRequestReceived;
 
         public void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e)
@@ -44,7 +44,7 @@ namespace OneTox.ViewModel.FriendRequests
                 case FriendRequestAnswer.Decline:
                     return;
                 case FriendRequestAnswer.Later:
-                    Items.Add(new OneFriendRequestViewModel(this, e.PublicKey, e.Message));
+                    Requests.Add(new OneFriendRequestViewModel(this, e.PublicKey, e.Message));
                     return;
             }
         }
@@ -58,7 +58,7 @@ namespace OneTox.ViewModel.FriendRequests
                     KFileName, CreationCollisionOption.ReplaceExisting);
 
                 var requestStrings = new List<string>();
-                foreach (var friendRequest in Items)
+                foreach (var friendRequest in Requests)
                 {
                     var oneRequestString = new string[2];
                     oneRequestString[0] = friendRequest.PublicKey;
@@ -86,7 +86,7 @@ namespace OneTox.ViewModel.FriendRequests
                 {
                     var publicKey = lines[i];
                     var message = lines[i + 1];
-                    Items.Add(new OneFriendRequestViewModel(this, new ToxKey(ToxKeyType.Public, publicKey), message));
+                    Requests.Add(new OneFriendRequestViewModel(this, new ToxKey(ToxKeyType.Public, publicKey), message));
                 }
             }
             catch (FileNotFoundException)

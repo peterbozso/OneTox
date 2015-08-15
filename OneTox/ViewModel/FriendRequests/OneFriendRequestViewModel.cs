@@ -29,7 +29,7 @@ namespace OneTox.ViewModel.FriendRequests
                 return _acceptCommand ?? (_acceptCommand = new RelayCommand(() =>
                 {
                     ToxModel.Instance.AddFriendNoRequest(_publicKey);
-                    _friendRequestsViewModel.Items.Remove(this);
+                    _friendRequestsViewModel.Requests.Remove(this);
                 }));
             }
         }
@@ -40,7 +40,7 @@ namespace OneTox.ViewModel.FriendRequests
             {
                 return _declineCommand ??
                        (_declineCommand =
-                           new RelayCommand(() => { _friendRequestsViewModel.Items.Remove(this); }));
+                           new RelayCommand(() => { _friendRequestsViewModel.Requests.Remove(this); }));
             }
         }
     }

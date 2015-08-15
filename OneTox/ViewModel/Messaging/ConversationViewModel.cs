@@ -10,7 +10,6 @@ using Windows.UI.Core;
 using OneTox.Helpers;
 using OneTox.Model;
 using OneTox.ViewModel.Friends;
-using OneTox.ViewModel.Messaging.RecentMessages;
 using SharpTox.Core;
 
 namespace OneTox.ViewModel.Messaging
@@ -155,7 +154,6 @@ namespace OneTox.ViewModel.Messaging
             // Here we make a very benign assumption that message_id stay being uint32_t in toxcore.
             var receivedMessage = new ReceivedMessageViewModel(e.Message, DateTime.Now, e.MessageType, _friendViewModel);
             await StoreMessage(receivedMessage);
-            await RecentMessagesGlobalViewModel.Instace.AddMessage(receivedMessage);
         }
 
         #endregion

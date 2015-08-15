@@ -1,0 +1,294 @@
+﻿<viewModel:MainViewModel xmlns:viewModel="using:OneTox.ViewModel" xmlns:friends="using:OneTox.ViewModel.Friends" xmlns:imaging="using:Windows.UI.Xaml.Media.Imaging" xmlns:calls="using:OneTox.ViewModel.Calls" xmlns:messaging="using:OneTox.ViewModel.Messaging" xmlns:common="using:OneTox.Common" xmlns:fileTransfers="using:OneTox.ViewModel.FileTransfers" xmlns:friendRequests="using:OneTox.ViewModel.FriendRequests" FriendRequestsListVisibility="Visible">
+    <viewModel:MainViewModel.FriendList>
+        <friends:FriendListViewModel>
+            <friends:FriendListViewModel.Friends>
+                <friends:FriendViewModel FriendNumber="10" IsConnected="False" Name="Aaberg, Jesper" StatusMessage="Duis curae aliquam maecenas" Status="Busy">
+                    <friends:FriendViewModel.Avatar>
+                        <imaging:BitmapImage CreateOptions="None" DecodePixelHeight="83" DecodePixelWidth="69" DecodePixelType="Physical"/>
+                    </friends:FriendViewModel.Avatar>
+                    <friends:FriendViewModel.Call>
+                        <calls:CallViewModel/>
+                    </friends:FriendViewModel.Call>
+                    <friends:FriendViewModel.Conversation>
+                        <messaging:ConversationViewModel IsFriendTyping="True"/>
+                    </friends:FriendViewModel.Conversation>
+                    <friends:FriendViewModel.CopyIdCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.CopyIdCommand>
+                    <friends:FriendViewModel.FileTransfers>
+                        <fileTransfers:FileTransfersViewModel/>
+                    </friends:FriendViewModel.FileTransfers>
+                    <friends:FriendViewModel.RemoveFriendCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.RemoveFriendCommand>
+                </friends:FriendViewModel>
+                <friends:FriendViewModel FriendNumber="74" IsConnected="False" Name="Adams, Ellen" StatusMessage="Curabitur nunc dictumst vivamus eleifend" Status="Offline">
+                    <friends:FriendViewModel.Avatar>
+                        <imaging:BitmapImage CreateOptions="IgnoreImageCache" DecodePixelHeight="23" DecodePixelWidth="21" DecodePixelType="Physical"/>
+                    </friends:FriendViewModel.Avatar>
+                    <friends:FriendViewModel.Call>
+                        <calls:CallViewModel/>
+                    </friends:FriendViewModel.Call>
+                    <friends:FriendViewModel.Conversation>
+                        <messaging:ConversationViewModel IsFriendTyping="True"/>
+                    </friends:FriendViewModel.Conversation>
+                    <friends:FriendViewModel.CopyIdCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.CopyIdCommand>
+                    <friends:FriendViewModel.FileTransfers>
+                        <fileTransfers:FileTransfersViewModel/>
+                    </friends:FriendViewModel.FileTransfers>
+                    <friends:FriendViewModel.RemoveFriendCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.RemoveFriendCommand>
+                </friends:FriendViewModel>
+                <friends:FriendViewModel FriendNumber="39" IsConnected="False" Name="Adams, Terry" StatusMessage="Phasellus aliquam facilisi amet ante" Status="Available">
+                    <friends:FriendViewModel.Avatar>
+                        <imaging:BitmapImage CreateOptions="IgnoreImageCache" DecodePixelHeight="13" DecodePixelWidth="71" DecodePixelType="Physical"/>
+                    </friends:FriendViewModel.Avatar>
+                    <friends:FriendViewModel.Call>
+                        <calls:CallViewModel/>
+                    </friends:FriendViewModel.Call>
+                    <friends:FriendViewModel.Conversation>
+                        <messaging:ConversationViewModel IsFriendTyping="True"/>
+                    </friends:FriendViewModel.Conversation>
+                    <friends:FriendViewModel.CopyIdCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.CopyIdCommand>
+                    <friends:FriendViewModel.FileTransfers>
+                        <fileTransfers:FileTransfersViewModel/>
+                    </friends:FriendViewModel.FileTransfers>
+                    <friends:FriendViewModel.RemoveFriendCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.RemoveFriendCommand>
+                </friends:FriendViewModel>
+                <friends:FriendViewModel FriendNumber="20" IsConnected="False" Name="Adams, Terry" StatusMessage="Blandit nam convallis parturient" Status="Available">
+                    <friends:FriendViewModel.Avatar>
+                        <imaging:BitmapImage CreateOptions="None" DecodePixelHeight="50" DecodePixelWidth="86" DecodePixelType="Logical"/>
+                    </friends:FriendViewModel.Avatar>
+                    <friends:FriendViewModel.Call>
+                        <calls:CallViewModel/>
+                    </friends:FriendViewModel.Call>
+                    <friends:FriendViewModel.Conversation>
+                        <messaging:ConversationViewModel IsFriendTyping="True"/>
+                    </friends:FriendViewModel.Conversation>
+                    <friends:FriendViewModel.CopyIdCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.CopyIdCommand>
+                    <friends:FriendViewModel.FileTransfers>
+                        <fileTransfers:FileTransfersViewModel/>
+                    </friends:FriendViewModel.FileTransfers>
+                    <friends:FriendViewModel.RemoveFriendCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.RemoveFriendCommand>
+                </friends:FriendViewModel>
+                <friends:FriendViewModel FriendNumber="10" IsConnected="False" Name="Pfeiffer, Michael" StatusMessage="Sed mauris faucibus elementum conubia" Status="Away">
+                    <friends:FriendViewModel.Avatar>
+                        <imaging:BitmapImage CreateOptions="IgnoreImageCache" DecodePixelHeight="26" DecodePixelWidth="48" DecodePixelType="Logical"/>
+                    </friends:FriendViewModel.Avatar>
+                    <friends:FriendViewModel.Call>
+                        <calls:CallViewModel/>
+                    </friends:FriendViewModel.Call>
+                    <friends:FriendViewModel.Conversation>
+                        <messaging:ConversationViewModel IsFriendTyping="True"/>
+                    </friends:FriendViewModel.Conversation>
+                    <friends:FriendViewModel.CopyIdCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.CopyIdCommand>
+                    <friends:FriendViewModel.FileTransfers>
+                        <fileTransfers:FileTransfersViewModel/>
+                    </friends:FriendViewModel.FileTransfers>
+                    <friends:FriendViewModel.RemoveFriendCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.RemoveFriendCommand>
+                </friends:FriendViewModel>
+                <friends:FriendViewModel FriendNumber="28" IsConnected="False" Name="Philips, Carol" StatusMessage="Elit vestibulum dis" Status="Available">
+                    <friends:FriendViewModel.Avatar>
+                        <imaging:BitmapImage CreateOptions="None" DecodePixelHeight="56" DecodePixelWidth="31" DecodePixelType="Logical"/>
+                    </friends:FriendViewModel.Avatar>
+                    <friends:FriendViewModel.Call>
+                        <calls:CallViewModel/>
+                    </friends:FriendViewModel.Call>
+                    <friends:FriendViewModel.Conversation>
+                        <messaging:ConversationViewModel IsFriendTyping="True"/>
+                    </friends:FriendViewModel.Conversation>
+                    <friends:FriendViewModel.CopyIdCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.CopyIdCommand>
+                    <friends:FriendViewModel.FileTransfers>
+                        <fileTransfers:FileTransfersViewModel/>
+                    </friends:FriendViewModel.FileTransfers>
+                    <friends:FriendViewModel.RemoveFriendCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.RemoveFriendCommand>
+                </friends:FriendViewModel>
+                <friends:FriendViewModel FriendNumber="66" IsConnected="False" Name="Poe, Toni" StatusMessage="Nullam habitant fermentum inceptos" Status="Available">
+                    <friends:FriendViewModel.Avatar>
+                        <imaging:BitmapImage CreateOptions="IgnoreImageCache" DecodePixelHeight="29" DecodePixelWidth="86" DecodePixelType="Physical"/>
+                    </friends:FriendViewModel.Avatar>
+                    <friends:FriendViewModel.Call>
+                        <calls:CallViewModel/>
+                    </friends:FriendViewModel.Call>
+                    <friends:FriendViewModel.Conversation>
+                        <messaging:ConversationViewModel IsFriendTyping="True"/>
+                    </friends:FriendViewModel.Conversation>
+                    <friends:FriendViewModel.CopyIdCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.CopyIdCommand>
+                    <friends:FriendViewModel.FileTransfers>
+                        <fileTransfers:FileTransfersViewModel/>
+                    </friends:FriendViewModel.FileTransfers>
+                    <friends:FriendViewModel.RemoveFriendCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.RemoveFriendCommand>
+                </friends:FriendViewModel>
+                <friends:FriendViewModel FriendNumber="70" IsConnected="False" Name="Hicks, Cassie" StatusMessage="Hac auctor fringilla" Status="Away">
+                    <friends:FriendViewModel.Avatar>
+                        <imaging:BitmapImage CreateOptions="IgnoreImageCache" DecodePixelHeight="13" DecodePixelWidth="69" DecodePixelType="Physical"/>
+                    </friends:FriendViewModel.Avatar>
+                    <friends:FriendViewModel.Call>
+                        <calls:CallViewModel/>
+                    </friends:FriendViewModel.Call>
+                    <friends:FriendViewModel.Conversation>
+                        <messaging:ConversationViewModel IsFriendTyping="True"/>
+                    </friends:FriendViewModel.Conversation>
+                    <friends:FriendViewModel.CopyIdCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.CopyIdCommand>
+                    <friends:FriendViewModel.FileTransfers>
+                        <fileTransfers:FileTransfersViewModel/>
+                    </friends:FriendViewModel.FileTransfers>
+                    <friends:FriendViewModel.RemoveFriendCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.RemoveFriendCommand>
+                </friends:FriendViewModel>
+                <friends:FriendViewModel FriendNumber="10" IsConnected="False" Name="Argentiero, Luca" StatusMessage="Mus euismod vestibulum fusce" Status="Offline">
+                    <friends:FriendViewModel.Avatar>
+                        <imaging:BitmapImage CreateOptions="None" DecodePixelHeight="51" DecodePixelWidth="48" DecodePixelType="Logical"/>
+                    </friends:FriendViewModel.Avatar>
+                    <friends:FriendViewModel.Call>
+                        <calls:CallViewModel/>
+                    </friends:FriendViewModel.Call>
+                    <friends:FriendViewModel.Conversation>
+                        <messaging:ConversationViewModel IsFriendTyping="True"/>
+                    </friends:FriendViewModel.Conversation>
+                    <friends:FriendViewModel.CopyIdCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.CopyIdCommand>
+                    <friends:FriendViewModel.FileTransfers>
+                        <fileTransfers:FileTransfersViewModel/>
+                    </friends:FriendViewModel.FileTransfers>
+                    <friends:FriendViewModel.RemoveFriendCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.RemoveFriendCommand>
+                </friends:FriendViewModel>
+                <friends:FriendViewModel FriendNumber="23" IsConnected="False" Name="Perry, Brian" StatusMessage="Lorem interdum eros nec" Status="Away">
+                    <friends:FriendViewModel.Avatar>
+                        <imaging:BitmapImage CreateOptions="IgnoreImageCache" DecodePixelHeight="69" DecodePixelWidth="88" DecodePixelType="Logical"/>
+                    </friends:FriendViewModel.Avatar>
+                    <friends:FriendViewModel.Call>
+                        <calls:CallViewModel/>
+                    </friends:FriendViewModel.Call>
+                    <friends:FriendViewModel.Conversation>
+                        <messaging:ConversationViewModel IsFriendTyping="True"/>
+                    </friends:FriendViewModel.Conversation>
+                    <friends:FriendViewModel.CopyIdCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.CopyIdCommand>
+                    <friends:FriendViewModel.FileTransfers>
+                        <fileTransfers:FileTransfersViewModel/>
+                    </friends:FriendViewModel.FileTransfers>
+                    <friends:FriendViewModel.RemoveFriendCommand>
+                        <common:RelayCommand/>
+                    </friends:FriendViewModel.RemoveFriendCommand>
+                </friends:FriendViewModel>
+            </friends:FriendListViewModel.Friends>
+        </friends:FriendListViewModel>
+    </viewModel:MainViewModel.FriendList>
+    <viewModel:MainViewModel.FriendRequests>
+        <friendRequests:FriendRequestsViewModel>
+            <friendRequests:FriendRequestsViewModel.Requests>
+                <friendRequests:OneFriendRequestViewModel Message="Himenaeos sed" PublicKey="Class nam">
+                    <friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                    <friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                </friendRequests:OneFriendRequestViewModel>
+                <friendRequests:OneFriendRequestViewModel Message="Laoreet nisi sit nisl" PublicKey="Curae donec aliquam">
+                    <friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                    <friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                </friendRequests:OneFriendRequestViewModel>
+                <friendRequests:OneFriendRequestViewModel Message="Lobortis nam morbi odio natoque" PublicKey="Maecenas sed dis praesent">
+                    <friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                    <friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                </friendRequests:OneFriendRequestViewModel>
+                <friendRequests:OneFriendRequestViewModel Message="Sed posuere nulla" PublicKey="Aenean mauris nullam etiam">
+                    <friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                    <friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                </friendRequests:OneFriendRequestViewModel>
+                <friendRequests:OneFriendRequestViewModel Message="Nascetur pretium parturient vestibulum" PublicKey="Integer cras est">
+                    <friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                    <friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                </friendRequests:OneFriendRequestViewModel>
+                <friendRequests:OneFriendRequestViewModel Message="Pharetra dictum vestibulum porttitor" PublicKey="Duis accumsan hac nunc">
+                    <friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                    <friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                </friendRequests:OneFriendRequestViewModel>
+                <friendRequests:OneFriendRequestViewModel Message="Tincidunt tristique augue rhoncus lectus" PublicKey="Leo fusce quisque amet">
+                    <friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                    <friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                </friendRequests:OneFriendRequestViewModel>
+                <friendRequests:OneFriendRequestViewModel Message="Ultricies libero ligula dolor" PublicKey="Ante arcu vivamus lorem">
+                    <friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                    <friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                </friendRequests:OneFriendRequestViewModel>
+                <friendRequests:OneFriendRequestViewModel Message="Vulputate mus quam luctus" PublicKey="Mus bibendum">
+                    <friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                    <friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                </friendRequests:OneFriendRequestViewModel>
+                <friendRequests:OneFriendRequestViewModel Message="Sodales urna adipiscing nec" PublicKey="Dictumst diam morbi nec">
+                    <friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.AcceptCommand>
+                    <friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                        <common:RelayCommand/>
+                    </friendRequests:OneFriendRequestViewModel.DeclineCommand>
+                </friendRequests:OneFriendRequestViewModel>
+            </friendRequests:FriendRequestsViewModel.Requests>
+        </friendRequests:FriendRequestsViewModel>
+    </viewModel:MainViewModel.FriendRequests>
+</viewModel:MainViewModel>

@@ -135,14 +135,10 @@
     <Compile Include="ViewModel\Friends\FriendListViewModel.cs" />
     <Compile Include="ViewModel\Friends\FriendViewModel.cs" />
     <Compile Include="ViewModel\IToxUserViewModel.cs" />
-    <Compile Include="ViewModel\MainPageViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\Messaging\ConversationViewModel.cs" />
     <Compile Include="ViewModel\Messaging\MessageGroupViewModel.cs" />
     <Compile Include="ViewModel\Messaging\ReceivedMessageViewModel.cs" />
-    <Compile Include="ViewModel\Messaging\RecentMessages\RecentMessagesGlobalViewModel.cs" />
-    <Compile Include="ViewModel\Messaging\RecentMessages\RecentMessagesPerUserViewModel.cs" />
-    <Compile Include="ViewModel\Messaging\RecentMessages\RecentMessagesViewModelBase.cs" />
     <Compile Include="ViewModel\Messaging\SentMessageViewModel.cs" />
     <Compile Include="ViewModel\Messaging\ToxMessageViewModelBase.cs" />
     <Compile Include="ViewModel\ProfileSettings\ProfileManagementViewModel.cs" />
@@ -199,12 +195,6 @@
     <Compile Include="View\UserControls\Messaging\MessageRibbon.xaml.cs">
       <DependentUpon>MessageRibbon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\Messaging\RecentMessages\RecentMessagesList.xaml.cs">
-      <DependentUpon>RecentMessagesList.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\UserControls\Messaging\RecentMessages\RecentMessagesListItem.xaml.cs">
-      <DependentUpon>RecentMessagesListItem.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\UserControls\ProfileSettings\ProfileManagementBlock.xaml.cs">
       <DependentUpon>ProfileManagementBlock.xaml</DependentUpon>
     </Compile>
@@ -238,7 +228,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <DesignData Include="SampleData\MainPageViewModelSampleData.xaml">
+    <DesignData Include="SampleData\MainViewModelSampleData.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </DesignData>
@@ -295,14 +285,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\UserControls\Messaging\RecentMessages\RecentMessagesList.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\UserControls\Messaging\RecentMessages\RecentMessagesListItem.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="View\UserControls\ProfileSettings\ProfileManagementBlock.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -325,6 +307,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

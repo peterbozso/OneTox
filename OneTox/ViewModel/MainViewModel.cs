@@ -21,7 +21,7 @@ namespace OneTox.ViewModel
 
             FriendRequests = new FriendRequestsViewModel();
             FriendRequests.FriendRequestReceived += FriendRequestReceivedHandler;
-            FriendRequests.Items.CollectionChanged += FriendRequestsCollectionChangedHandler;
+            FriendRequests.Requests.CollectionChanged += FriendRequestsCollectionChangedHandler;
             DecideFriendRequestsListVisibility();
         }
 
@@ -63,7 +63,7 @@ namespace OneTox.ViewModel
 
         private void DecideFriendRequestsListVisibility()
         {
-            FriendRequestsListVisibility = FriendRequests.Items.Count > 0
+            FriendRequestsListVisibility = FriendRequests.Requests.Count > 0
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }

@@ -10,7 +10,6 @@ using OneTox.Model.Avatars;
 using OneTox.ViewModel.Calls;
 using OneTox.ViewModel.FileTransfers;
 using OneTox.ViewModel.Messaging;
-using OneTox.ViewModel.Messaging.RecentMessages;
 using SharpTox.Core;
 
 namespace OneTox.ViewModel.Friends
@@ -31,7 +30,6 @@ namespace OneTox.ViewModel.Friends
 
             Conversation = new ConversationViewModel(this);
             FileTransfers = new FileTransfersViewModel(friendNumber);
-            RecentMessages = new RecentMessagesPerUserViewModel(friendNumber);
             Call = new CallViewModel(friendNumber);
 
             Name = ToxModel.Instance.GetFriendName(friendNumber);
@@ -58,10 +56,9 @@ namespace OneTox.ViewModel.Friends
         }
 
         public int FriendNumber { get; }
-        public ConversationViewModel Conversation { get; private set; }
-        public FileTransfersViewModel FileTransfers { get; private set; }
-        public RecentMessagesPerUserViewModel RecentMessages { get; private set; }
-        public CallViewModel Call { get; private set; }
+        public ConversationViewModel Conversation { get; }
+        public FileTransfersViewModel FileTransfers { get; }
+        public CallViewModel Call { get; }
 
         public RelayCommand RemoveFriendCommand
         {
