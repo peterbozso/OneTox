@@ -8,10 +8,10 @@ This client is under heavy development and it's very far from being complete. Pu
 ## Features
 * 1-to-1 messaging
 * File trasnfers
-* DNS discovery
+* ~~DNS discovery~~ (currently not working due to obsolete API)
 * Faux offline messaging
 * Profile import/export
-* Save file encryption (currently disabled due to a bug)
+* ~~Save file encryption~~ (currently disabled due to a bug)
 * Multiprofile (in a very basic level)
 * Typing notification
 * Read receipts
