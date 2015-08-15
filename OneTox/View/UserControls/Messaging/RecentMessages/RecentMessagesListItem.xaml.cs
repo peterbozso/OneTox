@@ -14,8 +14,10 @@ namespace OneTox.View.UserControls.Messaging.RecentMessages
 
         private void RecentMessageListItemTapped(object sender, TappedRoutedEventArgs e)
         {
-            (Window.Current.Content as Frame).Navigate(typeof (ChatPage),
+           /* 
+           (Window.Current.Content as Frame).Navigate(typeof (ChatPage),
                 (DataContext as ReceivedMessageViewModel).Sender);
+            */
         }
 
         protected override void OnPointerPressed(PointerRoutedEventArgs e)

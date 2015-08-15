@@ -149,9 +149,6 @@
     <Compile Include="ViewModel\ProfileSettings\ProfileSettingsViewModel.cs" />
     <Compile Include="ViewModel\ToxErrorViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
-    <Compile Include="View\ChatPage.xaml.cs">
-      <DependentUpon>ChatPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\Converters\BoolToOpacityConverter.cs" />
     <Compile Include="View\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="View\Converters\CallStateToStringConverter.cs" />
@@ -171,9 +168,6 @@
     <Compile Include="View\Converters\UserStatusToStringConverter.cs" />
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\Old_MainPage.xaml.cs">
-      <DependentUpon>Old_MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserControls\CallBlock.xaml.cs">
       <DependentUpon>CallBlock.xaml</DependentUpon>
@@ -198,12 +192,6 @@
     </Compile>
     <Compile Include="View\UserControls\FriendRequests\FriendRequestsListItem.xaml.cs">
       <DependentUpon>FriendRequestsListItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\UserControls\Friends\FriendInfo.xaml.cs">
-      <DependentUpon>FriendInfo.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\UserControls\Friends\FriendTile.xaml.cs">
-      <DependentUpon>FriendTile.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserControls\Messaging\MessageBlock.xaml.cs">
       <DependentUpon>MessageBlock.xaml</DependentUpon>
@@ -254,17 +242,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </DesignData>
-    <Page Include="View\ChatPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="View\MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\Old_MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\ResourceDictionaries\ChatBlockDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -304,14 +284,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\UserControls\FriendRequests\FriendRequestsListItem.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\UserControls\Friends\FriendInfo.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\UserControls\Friends\FriendTile.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
