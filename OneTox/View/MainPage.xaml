@@ -81,11 +81,12 @@
                     </Style>
                 </ListView.ItemContainerStyle>
 
-                <TextBlock x:Name="FriendRequestIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE710;" FontSize="28"
+                <TextBlock x:Name="AddFriendIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE710;" FontSize="28"
                            HorizontalAlignment="Center" Width="200" TextAlignment="Center"
-                           Tapped="FriendRequestIconTapped" />
+                           Tapped="AddFriendIconTapped" Margin="0" Padding="0,9,0,0" Height="45" />
                 <TextBlock x:Name="SettingsIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE713;" FontSize="28"
-                           HorizontalAlignment="Center" Width="200" TextAlignment="Center" Tapped="SettingsIconTapped" />
+                           HorizontalAlignment="Center" Width="200" TextAlignment="Center" Tapped="SettingsIconTapped"
+                           Padding="0,9,0,0" Height="45" />
             </ListView>
         </Grid>
 
