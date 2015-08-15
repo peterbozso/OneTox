@@ -28,8 +28,8 @@ This client is under heavy development and it's very far from being complete. Pu
 * ...
 
 ## Screenshots
-![Main Page](http://i.imgur.com/HrqjSxn.png)
-![Chat Page](http://i.imgur.com/NHqHykf.png)
+![Chat View](http://i.imgur.com/my0cfLi.png)
+![ProfileSettings View](http://i.imgur.com/8BJTZJd.png)
 
 ## Compiling
 You'll need libtox.dll: https://jenkins.impy.me/job/toxcore-new-toxav-api/ (It's in the 'bin' folder of the zip.) You have to copy it to the 'libs' folder of OneTox.  
