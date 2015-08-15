@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -14,6 +15,8 @@ namespace OneTox.View
         public MainPage()
         {
             InitializeComponent();
+
+            ChangeLayoutBasedOnWindowWidth(Window.Current.Bounds.Width);
         }
 
         private void FriendListSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -29,6 +32,8 @@ namespace OneTox.View
 
         private void MainPageLoaded(object sender, RoutedEventArgs e)
         {
+            Window.Current.SizeChanged += WindowSizeChanged;
+
             VisualStateManager.GoToState(this, "ChatState", false);
 
             _mainViewModel = DataContext as MainViewModel;
@@ -39,6 +44,32 @@ namespace OneTox.View
             if (_mainViewModel.FriendList.Friends.Count > 0)
             {
                 FriendList.SelectedItem = _mainViewModel.FriendList.Friends[0];
+            }
+        }
+
+        private void MainPageUnloaded(object sender, RoutedEventArgs e)
+        {
+            Window.Current.SizeChanged -= WindowSizeChanged;
+        }
+
+        private void WindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
+        {
+            ChangeLayoutBasedOnWindowWidth(e.Size.Width);
+        }
+
+        private void ChangeLayoutBasedOnWindowWidth(double width)
+        {
+            if (width < 930)
+            {
+                LeftPanel.Visibility = Visibility.Collapsed;
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                    AppViewBackButtonVisibility.Visible;
+            }
+            else
+            {
+                LeftPanel.Visibility = Visibility.Visible;
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                    AppViewBackButtonVisibility.Collapsed;
             }
         }
 

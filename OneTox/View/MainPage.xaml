@@ -12,6 +12,7 @@
     xmlns:friendRequests="using:OneTox.View.UserControls.FriendRequests"
     mc:Ignorable="d"
     Loaded="MainPageLoaded"
+    Unloaded="MainPageUnloaded"
     d:DataContext="{d:DesignData /SampleData/MainViewModelSampleData.xaml}">
 
     <Page.Resources>
@@ -51,11 +52,11 @@
         </VisualStateManager.VisualStateGroups>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="400" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
+        <Grid x:Name="LeftPanel" Grid.Column="0" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" Width="400">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
