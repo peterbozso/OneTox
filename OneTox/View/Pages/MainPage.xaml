@@ -104,7 +104,7 @@
         </Grid>
 
         <messaging:ChatBlock x:Name="ChatBlock" Grid.Column="1" />
-        <profileSettings:ProfileSettingsBlock x:Name="ProfileSettingsBlock" Grid.Column="1" Margin="20,0,20,20" />
-        <friends:AddFriendBlock x:Name="AddFriendBlock" Grid.Column="1" Margin="20,0,20,20" />
+        <profileSettings:ProfileSettingsBlock x:Name="ProfileSettingsBlock" Grid.Column="1" Margin="20,0,20,20" Visibility="Collapsed" />
+        <friends:AddFriendBlock x:Name="AddFriendBlock" Grid.Column="1" Margin="20,0,20,20" Visibility="Collapsed" />
     </Grid>
 </Page>

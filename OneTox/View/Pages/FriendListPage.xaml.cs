@@ -38,24 +38,10 @@ namespace OneTox.View.Pages
 
         private void ChangeLayoutBasedOnWindowWidth(double width)
         {
-            /*
-            if (width < 930)
+            if (width >= 930)
             {
-                LeftPanel.Visibility = Visibility.Collapsed;
-                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-                    AppViewBackButtonVisibility.Visible;
-                VisualStateManager.GoToState(ChatBlock, "NarrowState", true);
-                VisualStateManager.GoToState(ProfileSettingsBlock, "NarrowState", true);
+                Frame.Navigate(typeof(MainPage));
             }
-            else
-            {
-                LeftPanel.Visibility = Visibility.Visible;
-                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-                    AppViewBackButtonVisibility.Collapsed;
-                VisualStateManager.GoToState(ChatBlock, "WideState", true);
-                VisualStateManager.GoToState(ProfileSettingsBlock, "WideState", true);
-            }
-            */
         }
 
         private void FriendListSelectionChanged(object sender, SelectionChangedEventArgs e)
