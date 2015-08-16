@@ -162,6 +162,9 @@
     <Compile Include="View\Converters\TransfersBlockStateToStringConverter.cs" />
     <Compile Include="View\Converters\TransferStateToStringConverter.cs" />
     <Compile Include="View\Converters\UserStatusToStringConverter.cs" />
+    <Compile Include="View\Pages\FriendListPage.xaml.cs">
+      <DependentUpon>FriendListPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -232,6 +235,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </DesignData>
+    <Page Include="View\Pages\FriendListPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Pages\MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

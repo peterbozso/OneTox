@@ -25,6 +25,7 @@ namespace OneTox
     sealed partial class App : Application
     {
         private IAsyncOperation<IUICommand> _showErrorDialogCommand;
+        public MainViewModel MainViewModel { get; private set; }
 
         /// <summary>
         ///     Initializes the singleton Application object.  This is the first line of authored code
@@ -72,6 +73,9 @@ namespace OneTox
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
+
+                MainViewModel = new MainViewModel();
+
                 rootFrame.Navigate(typeof (MainPage), e.Arguments);
             }
             // Ensure the current window is active

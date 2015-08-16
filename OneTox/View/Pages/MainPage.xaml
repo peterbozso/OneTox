@@ -23,10 +23,6 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <Page.DataContext>
-        <viewModel:MainViewModel />
-    </Page.DataContext>
-
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
@@ -97,7 +93,8 @@
             </ListView>
 
             <StackPanel Grid.Row="2">
-                <Line X2="400" Stroke="{ThemeResource SystemControlForegroundBaseLowBrush}" />
+                <Rectangle Stroke="{ThemeResource SystemControlForegroundBaseLowBrush}"
+                           Height="1" StrokeThickness="0.5" />
                 <CommandBar x:Name="ActionBar" Style="{StaticResource CommandBarWithoutMoreButtonStyle}"
                             Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
                     <AppBarButton x:Name="AddFriendButton" Icon="AddFriend" Click="AddFriendButtonClick" />

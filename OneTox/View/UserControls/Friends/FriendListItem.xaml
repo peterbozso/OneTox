@@ -8,7 +8,7 @@
     xmlns:converters="using:OneTox.View.Converters"
     mc:Ignorable="d"
     Height="60"
-    Width="360">
+    d:DesignWidth="360">
 
     <UserControl.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
