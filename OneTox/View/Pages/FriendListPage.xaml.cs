@@ -1,8 +1,7 @@
-﻿using System.Collections.Specialized;
-using Windows.UI.Core;
+﻿using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using OneTox.View.UserControls.Messaging;
+using OneTox.View.UserControls.Friends;
 using OneTox.View.UserControls.ProfileSettings;
 using OneTox.ViewModel;
 
@@ -10,8 +9,6 @@ namespace OneTox.View.Pages
 {
     public sealed partial class FriendListPage : Page
     {
-        private MainViewModel _mainViewModel;
-
         public FriendListPage()
         {
             InitializeComponent();
@@ -22,8 +19,7 @@ namespace OneTox.View.Pages
         private void FriendListPageLoaded(object sender, RoutedEventArgs e)
         {
             Window.Current.SizeChanged += WindowSizeChanged;
-            DataContext = _mainViewModel = (App.Current as App).MainViewModel;
-            _mainViewModel.FriendList.Friends.CollectionChanged += FriendsCollectionChangedHandler;
+            DataContext = (Application.Current as App).MainViewModel;
         }
 
         private void FriendListPageUnloaded(object sender, RoutedEventArgs e)
@@ -40,7 +36,7 @@ namespace OneTox.View.Pages
         {
             if (width >= 930)
             {
-                Frame.Navigate(typeof(MainPage));
+                Frame.Navigate(typeof (MainPage));
             }
         }
 
@@ -48,41 +44,18 @@ namespace OneTox.View.Pages
         {
             if (FriendList.SelectedItem == null)
                 return;
-            /*
-            VisualStateManager.GoToState(this, "ChatState", true);
 
-            ChatBlock.SetDataContext(FriendList.SelectedItem as FriendViewModel);
-            */
+            Frame.Navigate(typeof (MainPage), FriendList.SelectedItem);
         }
 
         private void AddFriendButtonClick(object sender, RoutedEventArgs e)
         {
-            /*
-            FriendList.SelectedItem = null;
-            VisualStateManager.GoToState(this, "AddFriendState", true);
-            */
+            Frame.Navigate(typeof (MainPage), typeof (AddFriendBlock));
         }
 
         private void SettingsButtonClick(object sender, RoutedEventArgs e)
         {
-            /*
-            FriendList.SelectedItem = null;
-            VisualStateManager.GoToState(this, "SettingsState", true);
-            */
-        }
-
-        private void FriendsCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.OldStartingIndex == -1)
-                return;
-
-            if (FriendList.SelectedItem == null) // It means that we just removed the currently selected friend.
-            {
-                // So select the one right above it:
-                FriendList.SelectedItem = (e.OldStartingIndex - 1) > 0
-                    ? _mainViewModel.FriendList.Friends[e.OldStartingIndex - 1]
-                    : _mainViewModel.FriendList.Friends[0];
-            }
+            Frame.Navigate(typeof (MainPage), typeof (ProfileSettingsBlock));
         }
     }
 }

@@ -25,7 +25,6 @@ namespace OneTox
     sealed partial class App : Application
     {
         private IAsyncOperation<IUICommand> _showErrorDialogCommand;
-        public MainViewModel MainViewModel { get; private set; }
 
         /// <summary>
         ///     Initializes the singleton Application object.  This is the first line of authored code
@@ -37,6 +36,8 @@ namespace OneTox
             Suspending += OnSuspending;
             Resuming += OnResuming;
         }
+
+        public MainViewModel MainViewModel { get; private set; }
 
         /// <summary>
         ///     Invoked when the application is launched normally by the end user.  Other entry points
@@ -76,7 +77,14 @@ namespace OneTox
 
                 MainViewModel = new MainViewModel();
 
-                rootFrame.Navigate(typeof (MainPage), e.Arguments);
+                if (Window.Current.Bounds.Width < 930)
+                {
+                    rootFrame.Navigate(typeof (FriendListPage));
+                }
+                else
+                {
+                    rootFrame.Navigate(typeof (MainPage));
+                }
             }
             // Ensure the current window is active
             Window.Current.Activate();

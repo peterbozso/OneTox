@@ -21,7 +21,7 @@
     </Page.Resources>
 
     <Grid x:Name="LeftPanel"
-              Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
+          Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -29,15 +29,15 @@
         </Grid.RowDefinitions>
 
         <StackPanel x:Name="FriendRequests" Grid.Row="0" Margin="0,12"
-                        Visibility="{Binding FriendRequestsListVisibility}">
+                    Visibility="{Binding FriendRequestsListVisibility}">
             <TextBlock x:Name="FriendRequestsHeaderText" Margin="16,0,0,8" FontSize="20">Received friend requests</TextBlock>
 
             <Rectangle x:Name="FriendRequestsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}"
-                           Height="1" StrokeThickness="0.5" Margin="12,0,12,0" />
+                       Height="1" StrokeThickness="0.5" Margin="12,0,12,0" />
 
             <ListView x:Name="FriendRequestsListView" ItemsSource="{Binding FriendRequests.Requests}"
-                          SelectionMode="None" MaxHeight="360"
-                          ItemContainerStyle="{StaticResource FriendRequestsListViewItemStyle}">
+                      SelectionMode="None" MaxHeight="360"
+                      ItemContainerStyle="{StaticResource FriendRequestsListViewItemStyle}">
 
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -47,12 +47,13 @@
             </ListView>
 
             <Rectangle x:Name="FriendRequestsFooterLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}"
-                           Height="1" StrokeThickness="0.5" Margin="12,0" />
+                       Height="1" StrokeThickness="0.5" Margin="12,0" />
         </StackPanel>
 
         <ListView x:Name="FriendList" Grid.Row="1" ItemsSource="{Binding FriendList.Friends}"
-                      SelectionChanged="FriendListSelectionChanged"
-                      ItemContainerStyle="{StaticResource ListViewItemWithoutPressedVisualStateStyle}" SelectionMode="None">
+                  SelectionChanged="FriendListSelectionChanged"
+                  ItemContainerStyle="{StaticResource ListViewItemWithoutPressedVisualStateStyle}"
+                  SelectionMode="Single">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <friends:FriendListItem Margin="8" />
@@ -64,7 +65,7 @@
             <Rectangle Stroke="{ThemeResource SystemControlForegroundBaseLowBrush}"
                        Height="1" StrokeThickness="0.5" />
             <CommandBar x:Name="ActionBar" Style="{StaticResource CommandBarWithoutMoreButtonStyle}"
-                            Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
+                        Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
                 <AppBarButton x:Name="AddFriendButton" Icon="AddFriend" Click="AddFriendButtonClick" />
                 <AppBarButton x:Name="SettingsButton" Icon="Setting" Click="SettingsButtonClick" />
             </CommandBar>
