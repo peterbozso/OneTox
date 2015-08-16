@@ -12,13 +12,14 @@ namespace OneTox.View.Pages
 {
     public sealed partial class MainPage : Page
     {
-        private FriendViewModel _friendToSelectOnLoaded;
+        private readonly PageStateInitializator _pageStateInitializator;
         private MainViewModel _mainViewModel;
-        private bool _selectFriendOnLoaded;
 
         public MainPage()
         {
             InitializeComponent();
+
+            _pageStateInitializator = new PageStateInitializator(this);
 
             ChangeLayoutBasedOnWindowWidth(Window.Current.Bounds.Width);
         }
@@ -27,36 +28,7 @@ namespace OneTox.View.Pages
         {
             base.OnNavigatedTo(e);
 
-            if (e.Parameter == null)
-            {
-                VisualStateManager.GoToState(this, "ChatState", false);
-                _selectFriendOnLoaded = true;
-                _friendToSelectOnLoaded = null;
-                return;
-            }
-
-            if (e.Parameter is FriendViewModel)
-            {
-                VisualStateManager.GoToState(this, "ChatState", false);
-                _selectFriendOnLoaded = true;
-                _friendToSelectOnLoaded = e.Parameter as FriendViewModel;
-                return;
-            }
-
-            if (Equals(e.Parameter, typeof (ProfileSettingsBlock)))
-            {
-                VisualStateManager.GoToState(this, "SettingsState", false);
-                _selectFriendOnLoaded = false;
-                _friendToSelectOnLoaded = null;
-                return;
-            }
-
-            if (Equals(e.Parameter, typeof (AddFriendBlock)))
-            {
-                VisualStateManager.GoToState(this, "AddFriendState", false);
-                _selectFriendOnLoaded = false;
-                _friendToSelectOnLoaded = null;
-            }
+            _pageStateInitializator.HandleOnNavigatedToParameter(e.Parameter);
         }
 
         private void MainPageLoaded(object sender, RoutedEventArgs e)
@@ -66,23 +38,7 @@ namespace OneTox.View.Pages
             DataContext = _mainViewModel = (Application.Current as App).MainViewModel;
             _mainViewModel.FriendList.Friends.CollectionChanged += FriendsCollectionChangedHandler;
 
-            SelectFriendOnLoadedIfNeeded();
-        }
-
-        private void SelectFriendOnLoadedIfNeeded()
-        {
-            // TODO: Remember which friend we talked to the last time before shutting down the app and resume with selecting him/her.
-            // TODO: Handle the case when the user doesn't have any friends yet with a splash screen or something like that!
-
-            if (!_selectFriendOnLoaded)
-                return;
-
-            FriendList.SelectedItem = _friendToSelectOnLoaded;
-
-            if (FriendList.SelectedItem == null && _mainViewModel.FriendList.Friends.Count > 0)
-            {
-                FriendList.SelectedItem = _mainViewModel.FriendList.Friends[0];
-            }
+            _pageStateInitializator.SelectFriendOnLoadedIfNeeded(FriendList, _mainViewModel);
         }
 
         private void MainPageUnloaded(object sender, RoutedEventArgs e)
@@ -165,5 +121,71 @@ namespace OneTox.View.Pages
                     : _mainViewModel.FriendList.Friends[0];
             }
         }
+
+        #region Page state initializator
+
+        private class PageStateInitializator
+        {
+            private readonly MainPage _mainPage;
+            private FriendViewModel _friendToSelectOnLoaded;
+            private bool _selectFriendOnLoaded;
+
+            public PageStateInitializator(MainPage mainPage)
+            {
+                _mainPage = mainPage;
+            }
+
+            public void HandleOnNavigatedToParameter(object parameter)
+            {
+                if (parameter == null)
+                {
+                    VisualStateManager.GoToState(_mainPage, "ChatState", false);
+                    _selectFriendOnLoaded = true;
+                    _friendToSelectOnLoaded = null;
+                    return;
+                }
+
+                if (parameter is FriendViewModel)
+                {
+                    VisualStateManager.GoToState(_mainPage, "ChatState", false);
+                    _selectFriendOnLoaded = true;
+                    _friendToSelectOnLoaded = parameter as FriendViewModel;
+                    return;
+                }
+
+                if (Equals(parameter, typeof (ProfileSettingsBlock)))
+                {
+                    VisualStateManager.GoToState(_mainPage, "SettingsState", false);
+                    _selectFriendOnLoaded = false;
+                    _friendToSelectOnLoaded = null;
+                    return;
+                }
+
+                if (Equals(parameter, typeof (AddFriendBlock)))
+                {
+                    VisualStateManager.GoToState(_mainPage, "AddFriendState", false);
+                    _selectFriendOnLoaded = false;
+                    _friendToSelectOnLoaded = null;
+                }
+            }
+
+            public void SelectFriendOnLoadedIfNeeded(ListView friendList, MainViewModel mainViewModel)
+            {
+                // TODO: Remember which friend we talked to the last time before shutting down the app and resume with selecting him/her.
+                // TODO: Handle the case when the user doesn't have any friends yet with a splash screen or something like that!
+
+                if (!_selectFriendOnLoaded)
+                    return;
+
+                friendList.SelectedItem = _friendToSelectOnLoaded;
+
+                if (friendList.SelectedItem == null && mainViewModel.FriendList.Friends.Count > 0)
+                {
+                    friendList.SelectedItem = mainViewModel.FriendList.Friends[0];
+                }
+            }
+        }
+
+        #endregion
     }
 }
