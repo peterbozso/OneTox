@@ -27,7 +27,7 @@
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel Width="488" HorizontalAlignment="Left">
+            <StackPanel Width="460" HorizontalAlignment="Left">
                 <TextBox x:Name="FriendId" Header="Your friend's ID" MaxLength="76" Height="80"
                          TextWrapping="Wrap" Text="{Binding FriendId, Mode=TwoWay}"
                          PlaceholderText="{Binding FriendIdPlaceholder}" />

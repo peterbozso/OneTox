@@ -7,6 +7,7 @@ using Windows.Foundation;
 using Windows.Globalization;
 using Windows.UI.Core;
 using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -76,7 +77,7 @@ namespace OneTox
             // Ensure the current window is active
             Window.Current.Activate();
 
-            Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size { Width = 500, Height = 500 });
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size {Width = 500, Height = 500});
         }
 
         private async Task InitializeSingletons()

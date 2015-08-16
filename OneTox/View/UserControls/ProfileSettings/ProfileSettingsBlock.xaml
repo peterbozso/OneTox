@@ -22,6 +22,19 @@
     </UserControl.DataContext>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualState x:Name="WideState" />
+                <VisualState x:Name="NarrowState">
+                    <VisualState.Setters>
+                        <Setter Target="UserAvatarWithStatusColorBorder.(FrameworkElement.Width)" Value="140" />
+                        <Setter Target="UserAvatarWithStatusColorBorder.(FrameworkElement.Height)" Value="140" />
+                        <Setter Target="StatusComboBox.(FrameworkElement.Width)" Value="280" />
+                        <Setter Target="ToxIdBlock.(FrameworkElement.Width)" Value="440" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -34,7 +47,7 @@
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel Width="488" HorizontalAlignment="Left">
+            <StackPanel HorizontalAlignment="Left">
                 <Grid Height="200">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -56,7 +69,7 @@
                             Visibility="{Binding IsAvatarSet, Converter={StaticResource BoolToVisibilityConverter}}"
                             Padding="0" VerticalAlignment="Top" FontSize="20" BorderThickness="0" Margin="0,20,0,0" />
 
-                    <StackPanel x:Name="UserProperties" Grid.Column="1" Width="300" HorizontalAlignment="Left"
+                    <StackPanel x:Name="UserProperties" Grid.Column="1" HorizontalAlignment="Left"
                                 Margin="28,0,0,0">
                         <TextBox x:Name="NameTextBox" Header="Name" Text="{Binding Name, Mode=TwoWay}"
                                  LostFocus="NameTextBoxLostFocus" />
@@ -79,7 +92,7 @@
                     </StackPanel>
                 </Grid>
 
-                <StackPanel x:Name="ToxIdBlock" Margin="0,32,0,0">
+                <StackPanel x:Name="ToxIdBlock" Margin="0,32,0,0" Width="488">
                     <TextBlock x:Name="ToxIdHeader" Text="Tox ID" />
 
                     <Grid>

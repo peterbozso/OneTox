@@ -65,6 +65,7 @@ namespace OneTox.View
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
                     AppViewBackButtonVisibility.Visible;
                 VisualStateManager.GoToState(ChatBlock, "NarrowState", true);
+                VisualStateManager.GoToState(ProfileSettingsBlock, "NarrowState", true);
             }
             else
             {
@@ -72,6 +73,7 @@ namespace OneTox.View
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
                     AppViewBackButtonVisibility.Collapsed;
                 VisualStateManager.GoToState(ChatBlock, "WideState", true);
+                VisualStateManager.GoToState(ProfileSettingsBlock, "WideState", true);
             }
         }
 
