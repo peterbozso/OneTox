@@ -100,15 +100,28 @@ namespace OneTox.View.UserControls.Messaging
             public void RegisterHandlers()
             {
                 _messagesListView.SizeChanged += MessagesListViewSizeChangedHandler;
-                _messagesListView.Loaded += (sender, args) =>
-                {
-                    // We need to do it this way because in some cases, if we'd get the ScrollViewer sooner,
-                    // the function would just return null.
-                    _messagesScrollViewer = GetScrollViewer(_messagesListView);
-                    _messagesScrollViewer.ViewChanged += MessagesScrollViewerViewChangedHandler;
-                };
+                RegsiterMessagesScrollViewerViewChangedHandler();
                 _conversationViewModel.MessageAdded += MessageAddedHandler;
                 _messageAddedNotificationGrid.Tapped += MessageAddedNotificationGridTapped;
+            }
+
+            private void RegsiterMessagesScrollViewerViewChangedHandler()
+            {
+                // We need to do it this way because in some cases, if we'd get the ScrollViewer sooner,
+                // the function would just return null.
+                _messagesScrollViewer = GetScrollViewer(_messagesListView);
+                if (_messagesScrollViewer == null)
+                {
+                    _messagesListView.Loaded += (sender, args) =>
+                    {
+                        _messagesScrollViewer = GetScrollViewer(_messagesListView);
+                        _messagesScrollViewer.ViewChanged += MessagesScrollViewerViewChangedHandler;
+                    };
+                }
+                else
+                {
+                    _messagesScrollViewer.ViewChanged += MessagesScrollViewerViewChangedHandler;
+                }
             }
 
             public void DeregisterHandlers()
