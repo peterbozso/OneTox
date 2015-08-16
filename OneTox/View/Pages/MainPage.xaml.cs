@@ -19,17 +19,6 @@ namespace OneTox.View.Pages
             ChangeLayoutBasedOnWindowWidth(Window.Current.Bounds.Width);
         }
 
-        private void FriendListSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (FriendList.SelectedItem == null)
-                return;
-
-            ActionIcons.SelectedItem = null;
-            VisualStateManager.GoToState(this, "ChatState", true);
-
-            ChatBlock.SetDataContext(FriendList.SelectedItem as FriendViewModel);
-        }
-
         private void MainPageLoaded(object sender, RoutedEventArgs e)
         {
             Window.Current.SizeChanged += WindowSizeChanged;
@@ -77,6 +66,28 @@ namespace OneTox.View.Pages
             }
         }
 
+        private void FriendListSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (FriendList.SelectedItem == null)
+                return;
+            
+            VisualStateManager.GoToState(this, "ChatState", true);
+
+            ChatBlock.SetDataContext(FriendList.SelectedItem as FriendViewModel);
+        }
+
+        private void AddFriendButtonClick(object sender, RoutedEventArgs e)
+        {
+            FriendList.SelectedItem = null;
+            VisualStateManager.GoToState(this, "AddFriendState", true);
+        }
+
+        private void SettingsButtonClick(object sender, RoutedEventArgs e)
+        {
+            FriendList.SelectedItem = null;
+            VisualStateManager.GoToState(this, "SettingsState", true);
+        } 
+
         private void FriendsCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.OldStartingIndex == -1)
@@ -89,18 +100,6 @@ namespace OneTox.View.Pages
                     ? _mainViewModel.FriendList.Friends[e.OldStartingIndex - 1]
                     : _mainViewModel.FriendList.Friends[0];
             }
-        }
-
-        private void SettingsIconTapped(object sender, TappedRoutedEventArgs e)
-        {
-            FriendList.SelectedItem = null;
-            VisualStateManager.GoToState(this, "SettingsState", true);
-        }
-
-        private void AddFriendIconTapped(object sender, TappedRoutedEventArgs e)
-        {
-            FriendList.SelectedItem = null;
-            VisualStateManager.GoToState(this, "AddFriendState", true);
         }
     }
 }
