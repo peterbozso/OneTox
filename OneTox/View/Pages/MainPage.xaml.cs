@@ -2,7 +2,6 @@
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 using OneTox.ViewModel;
 using OneTox.ViewModel.Friends;
 
@@ -70,7 +69,7 @@ namespace OneTox.View.Pages
         {
             if (FriendList.SelectedItem == null)
                 return;
-            
+
             VisualStateManager.GoToState(this, "ChatState", true);
 
             ChatBlock.SetDataContext(FriendList.SelectedItem as FriendViewModel);
@@ -86,7 +85,7 @@ namespace OneTox.View.Pages
         {
             FriendList.SelectedItem = null;
             VisualStateManager.GoToState(this, "SettingsState", true);
-        } 
+        }
 
         private void FriendsCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
         {

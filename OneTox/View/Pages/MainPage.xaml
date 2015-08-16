@@ -97,10 +97,11 @@
             </ListView>
 
             <StackPanel Grid.Row="2">
-                <Line X2="400" Stroke="{ThemeResource SystemControlForegroundBaseLowBrush}"/>
-                <CommandBar x:Name="ActionBar" Style="{StaticResource CommandBarWithoutMoreButtonStyle}" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
-                    <AppBarButton x:Name="AddFriendButton" Icon="AddFriend" Click="AddFriendButtonClick"/>
-                    <AppBarButton x:Name="SettingsButton" Icon="Setting" Click="SettingsButtonClick"/>
+                <Line X2="400" Stroke="{ThemeResource SystemControlForegroundBaseLowBrush}" />
+                <CommandBar x:Name="ActionBar" Style="{StaticResource CommandBarWithoutMoreButtonStyle}"
+                            Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
+                    <AppBarButton x:Name="AddFriendButton" Icon="AddFriend" Click="AddFriendButtonClick" />
+                    <AppBarButton x:Name="SettingsButton" Icon="Setting" Click="SettingsButtonClick" />
                 </CommandBar>
             </StackPanel>
         </Grid>

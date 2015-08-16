@@ -74,8 +74,8 @@
                     </Grid.ColumnDefinitions>
 
                     <Ellipse x:Name="FriendAvatarWithStatusColorBorder" Grid.Column="0" Width="60" Height="60"
-                                 StrokeThickness="3"
-                                 Stroke="{Binding Status, Converter={StaticResource StatusToColorConverter}}">
+                             StrokeThickness="3"
+                             Stroke="{Binding Status, Converter={StaticResource StatusToColorConverter}}">
                         <Ellipse.Fill>
                             <ImageBrush ImageSource="{Binding Avatar}" />
                         </Ellipse.Fill>
@@ -88,19 +88,20 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock x:Name="FriendName" Grid.Row="0" Text="{Binding Name}" Margin="8,0,0,0"
-                                       FontSize="20"
-                                       HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                                       TextTrimming="CharacterEllipsis" />
+                                   FontSize="20"
+                                   HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                   TextTrimming="CharacterEllipsis" />
                         <TextBlock x:Name="FriendStatusMessage" Grid.Row="1" Text="{Binding StatusMessage}"
-                                       Margin="8,0,0,0"
-                                       FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"
-                                       TextTrimming="WordEllipsis"
-                                       Foreground="{ThemeResource SystemControlForegroundAccentBrush}" />
+                                   Margin="8,0,0,0"
+                                   FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                   TextTrimming="WordEllipsis"
+                                   Foreground="{ThemeResource SystemControlForegroundAccentBrush}" />
                     </Grid>
                 </Grid>
-                
-                <Rectangle x:Name="SettingsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}" Height="1"
-                       StrokeThickness="0.5" />
+
+                <Rectangle x:Name="SettingsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}"
+                           Height="1"
+                           StrokeThickness="0.5" />
             </StackPanel>
 
             <fileTransfers:FileTransfersBlock x:Name="FileTransfersBlock" />
@@ -153,7 +154,7 @@
         </Grid>
 
         <CommandBar Grid.Row="3" ClosedDisplayMode="Minimal">
-            <AppBarButton Icon="Attach" Label="send file" Command="{Binding FileTransfers.SendFilesCommand}"/>
+            <AppBarButton Icon="Attach" Label="send file" Command="{Binding FileTransfers.SendFilesCommand}" />
         </CommandBar>
     </Grid>
 </UserControl>
