@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Input;
 using OneTox.ViewModel;
 using OneTox.ViewModel.Friends;
 
-namespace OneTox.View
+namespace OneTox.View.Pages
 {
     public sealed partial class MainPage : Page
     {

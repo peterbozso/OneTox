@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Navigation;
 using OneTox.Common;
 using OneTox.Model;
 using OneTox.Model.Avatars;
-using OneTox.View;
+using OneTox.View.Pages;
 using OneTox.ViewModel;
 
 namespace OneTox
