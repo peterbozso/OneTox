@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:messaging="using:OneTox.View.UserControls.Messaging"
     xmlns:fileTransfers="using:OneTox.View.UserControls.FileTransfers"
+    xmlns:converters="using:OneTox.View.Converters"
     mc:Ignorable="d"
     d:DesignHeight="800"
     d:DesignWidth="600">
@@ -16,6 +17,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../../ResourceDictionaries/ChatBlockDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
 
             <Storyboard x:Name="MessageAddedNotificationAnimation">
                 <DoubleAnimationUsingKeyFrames
@@ -40,6 +43,21 @@
     </UserControl.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualState x:Name="WideState">
+                    <VisualState.Setters>
+                        <Setter Target="FriendInfo.(UIElement.Visibility)" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="NarrowState">
+                    <VisualState.Setters>
+                        <Setter Target="FriendInfo.(UIElement.Visibility)" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -47,10 +65,49 @@
         </Grid.RowDefinitions>
 
         <StackPanel x:Name="ControlButtonsBlock" Grid.Row="0" Margin="20,0">
-            <Button x:Name="SendFileButton" Template="{StaticResource RoundButtonTemplate}"
-                    IsEnabled="{Binding IsConnected}" Height="60" Width="60" FontSize="24"
-                    FontFamily="Segoe MDL2 Assets" Content="&#xE16C;" HorizontalAlignment="Right" Margin="8"
-                    Command="{Binding FileTransfers.SendFilesCommand}" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Grid x:Name="FriendInfo" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Ellipse x:Name="FriendAvatarWithStatusColorBorder" Grid.Column="0" Width="60" Height="60"
+                             StrokeThickness="3"
+                             Stroke="{Binding Status, Converter={StaticResource StatusToColorConverter}}">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="{Binding Avatar}" />
+                        </Ellipse.Fill>
+                    </Ellipse>
+
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock x:Name="FriendName" Grid.Row="0" Text="{Binding Name}" Margin="8,0,0,0"
+                                   FontSize="20"
+                                   HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                   TextTrimming="CharacterEllipsis" />
+                        <TextBlock x:Name="FriendStatusMessage" Grid.Row="1" Text="{Binding StatusMessage}"
+                                   Margin="8,0,0,0"
+                                   FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                   TextTrimming="WordEllipsis"
+                                   Foreground="{ThemeResource SystemControlForegroundAccentBrush}" />
+                    </Grid>
+                </Grid>
+
+                <Button x:Name="SendFileButton" Grid.Column="1" Template="{StaticResource RoundButtonTemplate}"
+                        IsEnabled="{Binding IsConnected}" Height="60" Width="60" FontSize="24"
+                        FontFamily="Segoe MDL2 Assets" Content="&#xE16C;" HorizontalAlignment="Right" Margin="8"
+                        Command="{Binding FileTransfers.SendFilesCommand}" />
+            </Grid>
             <Rectangle x:Name="SettingsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}" Height="1"
                        StrokeThickness="0.5" />
             <fileTransfers:FileTransfersBlock x:Name="FileTransfersBlock" />

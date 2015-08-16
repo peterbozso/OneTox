@@ -64,12 +64,14 @@ namespace OneTox.View
                 LeftPanel.Visibility = Visibility.Collapsed;
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
                     AppViewBackButtonVisibility.Visible;
+                VisualStateManager.GoToState(ChatBlock, "NarrowState", true);
             }
             else
             {
                 LeftPanel.Visibility = Visibility.Visible;
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
                     AppViewBackButtonVisibility.Collapsed;
+                VisualStateManager.GoToState(ChatBlock, "WideState", true);
             }
         }
 

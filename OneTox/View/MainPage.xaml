@@ -56,7 +56,8 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Grid x:Name="LeftPanel" Grid.Column="0" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" Width="400">
+        <Grid x:Name="LeftPanel" Grid.Column="0"
+              Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" Width="400">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
