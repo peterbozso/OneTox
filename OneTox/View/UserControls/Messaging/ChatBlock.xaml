@@ -62,24 +62,20 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel x:Name="ControlButtonsBlock" Grid.Row="0" Margin="20,0">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <Grid x:Name="FriendInfo" Grid.Column="0">
+        <StackPanel x:Name="HeaderBlock" Grid.Row="0" Margin="20,0">
+            <StackPanel x:Name="FriendInfo" Margin="0,8,0,0">
+                <Grid Margin="8">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <Ellipse x:Name="FriendAvatarWithStatusColorBorder" Grid.Column="0" Width="60" Height="60"
-                             StrokeThickness="3"
-                             Stroke="{Binding Status, Converter={StaticResource StatusToColorConverter}}">
+                                 StrokeThickness="3"
+                                 Stroke="{Binding Status, Converter={StaticResource StatusToColorConverter}}">
                         <Ellipse.Fill>
                             <ImageBrush ImageSource="{Binding Avatar}" />
                         </Ellipse.Fill>
@@ -92,24 +88,21 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock x:Name="FriendName" Grid.Row="0" Text="{Binding Name}" Margin="8,0,0,0"
-                                   FontSize="20"
-                                   HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                                   TextTrimming="CharacterEllipsis" />
+                                       FontSize="20"
+                                       HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                       TextTrimming="CharacterEllipsis" />
                         <TextBlock x:Name="FriendStatusMessage" Grid.Row="1" Text="{Binding StatusMessage}"
-                                   Margin="8,0,0,0"
-                                   FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"
-                                   TextTrimming="WordEllipsis"
-                                   Foreground="{ThemeResource SystemControlForegroundAccentBrush}" />
+                                       Margin="8,0,0,0"
+                                       FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                       TextTrimming="WordEllipsis"
+                                       Foreground="{ThemeResource SystemControlForegroundAccentBrush}" />
                     </Grid>
                 </Grid>
-
-                <Button x:Name="SendFileButton" Grid.Column="1" Template="{StaticResource RoundButtonTemplate}"
-                        IsEnabled="{Binding IsConnected}" Height="60" Width="60" FontSize="24"
-                        FontFamily="Segoe MDL2 Assets" Content="&#xE16C;" HorizontalAlignment="Right" Margin="8"
-                        Command="{Binding FileTransfers.SendFilesCommand}" />
-            </Grid>
-            <Rectangle x:Name="SettingsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}" Height="1"
+                
+                <Rectangle x:Name="SettingsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}" Height="1"
                        StrokeThickness="0.5" />
+            </StackPanel>
+
             <fileTransfers:FileTransfersBlock x:Name="FileTransfersBlock" />
         </StackPanel>
 
@@ -158,5 +151,9 @@
                      ScrollViewer.VerticalScrollBarVisibility="Auto"
                      FontFamily="Global User Interface" Margin="12,0,12,12" />
         </Grid>
+
+        <CommandBar Grid.Row="3" ClosedDisplayMode="Minimal">
+            <AppBarButton Icon="Attach" Label="send file" Command="{Binding FileTransfers.SendFilesCommand}"/>
+        </CommandBar>
     </Grid>
 </UserControl>
