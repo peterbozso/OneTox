@@ -75,6 +75,8 @@ namespace OneTox
             }
             // Ensure the current window is active
             Window.Current.Activate();
+
+            Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size { Width = 500, Height = 500 });
         }
 
         private async Task InitializeSingletons()
