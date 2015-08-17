@@ -19,6 +19,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+            <converters:FileTransferCountToVisibilityConverter x:Key="FileTransferCountToVisibilityConverter" />
 
             <Storyboard x:Name="MessageAddedNotificationAnimation">
                 <DoubleAnimationUsingKeyFrames
@@ -48,11 +49,15 @@
                 <VisualState x:Name="WideState">
                     <VisualState.Setters>
                         <Setter Target="FriendInfo.(UIElement.Visibility)" Value="Collapsed" />
+                        <Setter Target="TopActionBar.(UIElement.Visibility)" Value="Visible" />
+                        <Setter Target="BottomActionBar.(UIElement.Visibility)" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="NarrowState">
                     <VisualState.Setters>
                         <Setter Target="FriendInfo.(UIElement.Visibility)" Value="Visible" />
+                        <Setter Target="TopActionBar.(UIElement.Visibility)" Value="Collapsed" />
+                        <Setter Target="BottomActionBar.(UIElement.Visibility)" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -60,12 +65,18 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel x:Name="HeaderBlock" Grid.Row="0" Margin="20,0">
+        <CommandBar x:Name="TopActionBar" Grid.Row="0" ClosedDisplayMode="Compact"
+                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <AppBarButton Icon="Attach" Label="send file" Command="{Binding FileTransfers.SendFilesCommand}" />
+        </CommandBar>
+
+        <StackPanel x:Name="HeaderBlock" Grid.Row="1" Margin="20,0">
             <StackPanel x:Name="FriendInfo" Margin="0,8,0,0">
                 <Grid Margin="8">
                     <Grid.ColumnDefinitions>
@@ -99,15 +110,16 @@
                     </Grid>
                 </Grid>
 
-                <Rectangle x:Name="SettingsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}"
+                <Rectangle x:Name="FriendInfoFooterLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}"
                            Height="1"
+                           Visibility="{Binding FileTransfers.Transfers.Count, Converter={StaticResource FileTransferCountToVisibilityConverter}}"
                            StrokeThickness="0.5" />
             </StackPanel>
 
             <fileTransfers:FileTransfersBlock x:Name="FileTransfersBlock" />
         </StackPanel>
 
-        <ListView x:Name="MessagesListView" Grid.Row="1"
+        <ListView x:Name="MessagesListView" Grid.Row="2"
                   ItemsSource="{Binding Conversation.MessageGroups}" SelectionMode="None"
                   HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                   IncrementalLoadingTrigger="None" ItemContainerStyle="{StaticResource ChatPageListViewItemStyle}">
@@ -118,7 +130,7 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <Grid x:Name="MessageInputBlock" Grid.Row="2">
+        <Grid x:Name="MessageInputBlock" Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -153,7 +165,7 @@
                      FontFamily="Global User Interface" Margin="12,0,12,12" />
         </Grid>
 
-        <CommandBar Grid.Row="3" ClosedDisplayMode="Minimal">
+        <CommandBar x:Name="BottomActionBar" Grid.Row="4" ClosedDisplayMode="Minimal">
             <AppBarButton Icon="Attach" Label="send file" Command="{Binding FileTransfers.SendFilesCommand}" />
         </CommandBar>
     </Grid>

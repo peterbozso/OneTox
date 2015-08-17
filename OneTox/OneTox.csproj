@@ -151,6 +151,7 @@
     <Compile Include="View\Converters\DateTimeConverter.cs" />
     <Compile Include="View\Converters\DeliveryStateToStringConverter.cs" />
     <Compile Include="View\Converters\FileTransferCountToPlaceholderTextConverter.cs" />
+    <Compile Include="View\Converters\FileTransferCountToVisibilityConverter.cs" />
     <Compile Include="View\Converters\FriendNameToTypingStatusConverter.cs" />
     <Compile Include="View\Converters\IsMutedToBackgroundColorConverter.cs" />
     <Compile Include="View\Converters\MessageToTextColorConverter.cs" />

@@ -3,7 +3,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using OneTox.View.UserControls.Friends;
 using OneTox.View.UserControls.ProfileSettings;
-using OneTox.ViewModel;
 
 namespace OneTox.View.Pages
 {

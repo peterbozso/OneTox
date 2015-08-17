@@ -23,6 +23,8 @@ namespace OneTox.ViewModel.FileTransfers
 
         #region Visual states
 
+        // TODO: Move this to FileTransfersBlock's code-behind!
+
         /// <summary>
         ///     This class's purpose is to supply (trough data binding) the current visual state of FileTransfersBlock and height
         ///     of OpenContentGrid.
