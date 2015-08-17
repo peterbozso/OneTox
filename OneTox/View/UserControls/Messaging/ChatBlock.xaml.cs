@@ -24,21 +24,6 @@ namespace OneTox.View.UserControls.Messaging
                 null, Timeout.Infinite, Timeout.Infinite);
         }
 
-        public void SetDataContext(FriendViewModel friendViewModel)
-        {
-            if (friendViewModel == null)
-                return;
-
-            DataContext = _friendViewModel = friendViewModel;
-
-            _scrollManager?.DeregisterHandlers();
-            _scrollManager = new ScrollManager(MessagesListView, _friendViewModel.Conversation,
-                MessageAddedNotificationGrid, MessageAddedNotificationAnimation);
-            _scrollManager.RegisterHandlers();
-
-            FileTransfersBlock.SetDataContext(friendViewModel.FileTransfers);
-        }
-
         private async void MessageInputKeyDown(object sender, KeyRoutedEventArgs e)
         {
             _chatTimer.Change(500, -1);
@@ -59,7 +44,7 @@ namespace OneTox.View.UserControls.Messaging
 
         #region Management of scrolling of MessagesListView
 
-        // TODO: Scroll to the bottom of the conversation when swithing between friends!
+        // TODO: Scroll to the bottom of the conversation when switching between friends!
 
         /// <summary>
         ///     This class's responsibility is to manage the following behavior(s):
@@ -222,6 +207,52 @@ namespace OneTox.View.UserControls.Messaging
                 if (_stickToBottom)
                     _messageAddedNotificationGrid.Visibility = Visibility.Collapsed;
             }
+        }
+
+        #endregion
+
+        #region Data Context changing
+
+        // Sometimes Data Context changes before the user control is loaded and vica verse.
+        // We have to handle both cases well:
+
+        private bool _isLoaded;
+
+        private void ChatBlockLoaded(object sender, RoutedEventArgs e)
+        {
+            _isLoaded = true;
+
+            // We can't initialize children if the ViewModel/DataContext is not set.
+            // In that case, we'll do this in the DataContextChanged event handler.
+            if (_friendViewModel == null)
+                return;
+
+            SetDataContextOfChildren();
+        }
+
+        private void ChatBlockDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+        {
+            if (!(args.NewValue is FriendViewModel))
+                return;
+
+            _friendViewModel = args.NewValue as FriendViewModel;
+
+            // We can't initialize children if the control is not yet loaded.
+            // In that case, we'll do this in the Loaded event handler.
+            if (!_isLoaded)
+                return;
+
+            SetDataContextOfChildren();
+        }
+
+        private void SetDataContextOfChildren()
+        {
+            _scrollManager?.DeregisterHandlers();
+            _scrollManager = new ScrollManager(MessagesListView, _friendViewModel.Conversation,
+                MessageAddedNotificationGrid, MessageAddedNotificationAnimation);
+            _scrollManager.RegisterHandlers();
+
+            FileTransfersBlock.DataContext = _friendViewModel.FileTransfers;
         }
 
         #endregion

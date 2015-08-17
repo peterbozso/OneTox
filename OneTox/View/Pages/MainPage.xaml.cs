@@ -93,7 +93,7 @@ namespace OneTox.View.Pages
 
             VisualStateManager.GoToState(this, "ChatState", true);
 
-            ChatBlock.SetDataContext(FriendList.SelectedItem as FriendViewModel);
+            ChatBlock.DataContext = FriendList.SelectedItem as FriendViewModel;
         }
 
         private void AddFriendButtonClick(object sender, RoutedEventArgs e)
