@@ -23,33 +23,7 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="VisualStateGroup">
-                <VisualState x:Name="ChatState">
-                    <VisualState.Setters>
-                        <Setter Target="ChatBlock.(UIElement.Visibility)" Value="Visible" />
-                        <Setter Target="AddFriendBlock.(UIElement.Visibility)" Value="Collapsed" />
-                        <Setter Target="ProfileSettingsBlock.(UIElement.Visibility)" Value="Collapsed" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="SettingsState">
-                    <VisualState.Setters>
-                        <Setter Target="ChatBlock.(UIElement.Visibility)" Value="Collapsed" />
-                        <Setter Target="AddFriendBlock.(UIElement.Visibility)" Value="Collapsed" />
-                        <Setter Target="ProfileSettingsBlock.(UIElement.Visibility)" Value="Visible" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="AddFriendState">
-                    <VisualState.Setters>
-                        <Setter Target="ChatBlock.(UIElement.Visibility)" Value="Collapsed" />
-                        <Setter Target="AddFriendBlock.(UIElement.Visibility)" Value="Visible" />
-                        <Setter Target="ProfileSettingsBlock.(UIElement.Visibility)" Value="Collapsed" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-
+    <Grid x:Name="RootGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
@@ -106,9 +80,6 @@
             </StackPanel>
         </Grid>
 
-        <messaging:ChatBlock x:Name="ChatBlock" Grid.Column="1" />
-        <friends:AddFriendBlock x:Name="AddFriendBlock" Grid.Column="1" Margin="20,0,20,20" Visibility="Collapsed" />
-        <profileSettings:ProfileSettingsBlock x:Name="ProfileSettingsBlock" Grid.Column="1" Margin="20,0,20,20"
-                                              Visibility="Collapsed" />
+        <Grid x:Name="RightPanel" Grid.Column="1" />
     </Grid>
 </Page>

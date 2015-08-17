@@ -1,8 +1,6 @@
 ﻿using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using OneTox.View.UserControls.Friends;
-using OneTox.View.UserControls.ProfileSettings;
 
 namespace OneTox.View.Pages
 {
@@ -44,17 +42,17 @@ namespace OneTox.View.Pages
             if (FriendList.SelectedItem == null)
                 return;
 
-            Frame.Navigate(typeof (MainPage), FriendList.SelectedItem);
+            Frame.Navigate(typeof (ChatPage), FriendList.SelectedItem);
         }
 
         private void AddFriendButtonClick(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof (MainPage), typeof (AddFriendBlock));
+            Frame.Navigate(typeof (AddFriendPage));
         }
 
         private void SettingsButtonClick(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof (MainPage), typeof (ProfileSettingsBlock));
+            Frame.Navigate(typeof (SettingsPage));
         }
     }
 }

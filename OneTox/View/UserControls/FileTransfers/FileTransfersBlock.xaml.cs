@@ -1,9 +1,8 @@
 ﻿using System.Collections.Specialized;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Animation;
 using OneTox.ViewModel.FileTransfers;
 
 namespace OneTox.View.UserControls.FileTransfers
@@ -17,16 +16,33 @@ namespace OneTox.View.UserControls.FileTransfers
             InitializeComponent();
         }
 
-        public void SetDataContext(FileTransfersViewModel fileTransfersViewModel)
+        private void FileTransferBlockDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
-            if (fileTransfersViewModel == null)
-                return;
+            _fileTransfersViewModel = DataContext as FileTransfersViewModel;
 
-            DataContext = _fileTransfersViewModel = fileTransfersViewModel;
-            VisualStateManager.GoToState(this, _fileTransfersViewModel.VisualStates.BlockState.ToString(), true);
+            AdjustOpenGridAnimationHeights();
+            _fileTransfersViewModel.VisualStates.PropertyChanged += VisualStatesPropertyChangedHandler;
+
+            VisualStateManager.GoToState(this, _fileTransfersViewModel.VisualStates.BlockState.ToString(), false);
             _fileTransfersViewModel.Transfers.CollectionChanged += TransfersCollectionChangedHandler;
         }
 
+        private void VisualStatesPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "OpenContentGridHeight")
+            {
+                AdjustOpenGridAnimationHeights();
+            }
+        }
+
+        private void AdjustOpenGridAnimationHeights()
+        {
+            // Storyboards don't really like data binded From and To values, so we have to do it this way, updating these manually.
+            var newHeight = _fileTransfersViewModel.VisualStates.OpenContentGridHeight;
+            ShowOpenContentGridAnimationEnd.Value = newHeight;
+            OpenContentGridHeight.Value = newHeight;
+        }
+        
         private void TransfersCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
@@ -41,6 +57,7 @@ namespace OneTox.View.UserControls.FileTransfers
             TransferRibbonsScrollViewer.ChangeView(null, double.MaxValue, null, true);
         }
 
+        /* TODO: Remove maybe?
         private async Task SetAddDeleteThemeTransitionForTransferRibbons()
         {
             // We need this ugly hack because otherwise every time we navigate to ChatPage
@@ -48,6 +65,7 @@ namespace OneTox.View.UserControls.FileTransfers
             await Task.Delay(1);
             TransferRibbons.ItemContainerTransitions = new TransitionCollection {new AddDeleteThemeTransition()};
         }
+        */
 
         private void ShowTransfersIconTapped(object sender, TappedRoutedEventArgs e)
         {

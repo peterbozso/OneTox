@@ -12,7 +12,7 @@
     x:Class="OneTox.View.UserControls.FileTransfers.FileTransfersBlock"
     mc:Ignorable="d"
     d:DesignHeight="68"
-    d:DesignWidth="800">
+    d:DesignWidth="800" DataContextChanged="FileTransferBlockDataContextChanged">
 
     <UserControl.Resources>
         <converters:FileTransferCountToPlaceholderTextConverter x:Key="FileTransferCountToPlaceholderTextConverter" />
@@ -73,7 +73,7 @@
                         </Storyboard>
                     </VisualTransition>
                     <VisualTransition From="Collapsed" To="Open" GeneratedDuration="0">
-                        <Storyboard>
+                        <Storyboard x:Name="CollapsedToOpenAnimation">
                             <!-- Hide placeholder text -->
                             <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True"
                                                            Storyboard.TargetProperty="(FrameworkElement.Height)"
@@ -96,8 +96,8 @@
                             <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True"
                                                            Storyboard.TargetProperty="(FrameworkElement.Height)"
                                                            Storyboard.TargetName="OpenContentGrid">
-                                <EasingDoubleKeyFrame KeyTime="0:0:0.5"
-                                                      Value="{Binding VisualStates.OpenContentGridHeight}" />
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.5" x:Name="ShowOpenContentGridAnimationEnd"
+                                                      Value="72" />
                             </DoubleAnimationUsingKeyFrames>
 
                             <FadeInThemeAnimation Storyboard.TargetName="OpenContentGrid" />
@@ -120,7 +120,7 @@
 
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)"
                                                        Storyboard.TargetName="OpenContentGrid">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding VisualStates.OpenContentGridHeight}" />
+                            <DiscreteObjectKeyFrame x:Name="OpenContentGridHeight" KeyTime="0" Value="72" />
                         </ObjectAnimationUsingKeyFrames>
 
                         <ObjectAnimationUsingKeyFrames
@@ -165,12 +165,6 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <Grid.Transitions>
-            <TransitionCollection>
-                <EntranceThemeTransition FromVerticalOffset="-100" FromHorizontalOffset="0" />
-            </TransitionCollection>
-        </Grid.Transitions>
-
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
@@ -197,12 +191,6 @@
         <Grid x:Name="OpenContentGrid" Grid.Row="2" Height="{Binding VisualStates.OpenContentGridHeight}">
             <ScrollViewer x:Name="TransferRibbonsScrollViewer" VerticalScrollBarVisibility="Auto">
                 <ItemsControl x:Name="TransferRibbons" ItemsSource="{Binding Transfers}" Margin="0,0,0,12">
-                    <ItemsControl.Transitions>
-                        <TransitionCollection>
-                            <EntranceThemeTransition FromVerticalOffset="-100" FromHorizontalOffset="0" />
-                        </TransitionCollection>
-                    </ItemsControl.Transitions>
-
                     <ItemsControl.ItemContainerTransitions>
                         <TransitionCollection>
                             <AddDeleteThemeTransition />

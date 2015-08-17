@@ -4,6 +4,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using OneTox.View.UserControls.Friends;
+using OneTox.View.UserControls.Messaging;
 using OneTox.View.UserControls.ProfileSettings;
 using OneTox.ViewModel;
 using OneTox.ViewModel.Friends;
@@ -12,78 +13,84 @@ namespace OneTox.View.Pages
 {
     public sealed partial class MainPage : Page
     {
-        private readonly PageStateInitializator _pageStateInitializator;
-        private MainViewModel _mainViewModel;
+        private readonly MainViewModel _mainViewModel;
+        private ChatBlock _chatBlock;
+        private UserControl _rightPanelContent;
 
         public MainPage()
         {
             InitializeComponent();
 
-            _pageStateInitializator = new PageStateInitializator(this);
+            DataContext = _mainViewModel = (Application.Current as App).MainViewModel;
+        }
 
-            ChangeLayoutBasedOnWindowWidth(Window.Current.Bounds.Width);
+        private void SetRightPanelContent(UserControl userControl)
+        {
+            RightPanel.Children.Clear();
+            RightPanel.Children.Add(userControl);
+            _rightPanelContent = userControl;
+            VisualStateManager.GoToState(_rightPanelContent, "WideState", false);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            _pageStateInitializator.HandleOnNavigatedToParameter(e.Parameter);
+            if (e.Parameter == null)
+            {
+                // TODO: Display a splash screen or something if the user doesn't have any friends!
+                if (_mainViewModel.FriendList.Friends.Count > 0)
+                {
+                    FriendList.SelectedItem = _mainViewModel.FriendList.Friends[0];
+                    _chatBlock = new ChatBlock {DataContext = _mainViewModel.FriendList.Friends[0]};
+                    SetRightPanelContent(_chatBlock);
+                }
+            }
+            else if (e.Parameter is FriendViewModel)
+            {
+                FriendList.SelectedItem = e.Parameter;
+                _chatBlock = new ChatBlock {DataContext = e.Parameter};
+                SetRightPanelContent(_chatBlock);
+            }
+            else if (Equals(e.Parameter, typeof (SettingsPage)))
+            {
+                SetRightPanelContent(new ProfileSettingsBlock());
+            }
+            else if (Equals(e.Parameter, typeof (AddFriendPage)))
+            {
+                SetRightPanelContent(new AddFriendBlock());
+            }
         }
 
         private void MainPageLoaded(object sender, RoutedEventArgs e)
         {
             Window.Current.SizeChanged += WindowSizeChanged;
-
-            DataContext = _mainViewModel = (Application.Current as App).MainViewModel;
             _mainViewModel.FriendList.Friends.CollectionChanged += FriendsCollectionChangedHandler;
-
-            _pageStateInitializator.SelectFriendOnLoadedIfNeeded(FriendList, _mainViewModel);
         }
 
         private void MainPageUnloaded(object sender, RoutedEventArgs e)
         {
             Window.Current.SizeChanged -= WindowSizeChanged;
+            _mainViewModel.FriendList.Friends.CollectionChanged -= FriendsCollectionChangedHandler;
         }
 
         private void WindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
-            ChangeLayoutBasedOnWindowWidth(e.Size.Width);
-        }
-
-        private void ChangeLayoutBasedOnWindowWidth(double width)
-        {
-            if (width < 930)
+            if (e.Size.Width < 930)
             {
-                LeftPanel.Visibility = Visibility.Collapsed;
-
-                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-                    AppViewBackButtonVisibility.Visible;
-                SystemNavigationManager.GetForCurrentView().BackRequested += MainPageBackRequestedHandler;
-
-                VisualStateManager.GoToState(ChatBlock, "NarrowState", true);
-                VisualStateManager.GoToState(ProfileSettingsBlock, "NarrowState", true);
+                if (_rightPanelContent is ChatBlock)
+                {
+                    Frame.Navigate(typeof (ChatPage), FriendList.SelectedItem);
+                }
+                else if (_rightPanelContent is ProfileSettingsBlock)
+                {
+                    Frame.Navigate(typeof (SettingsPage));
+                }
+                else if (_rightPanelContent is AddFriendBlock)
+                {
+                    Frame.Navigate(typeof (AddFriendPage));
+                }
             }
-            else
-            {
-                LeftPanel.Visibility = Visibility.Visible;
-
-                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-                    AppViewBackButtonVisibility.Collapsed;
-                SystemNavigationManager.GetForCurrentView().BackRequested -= MainPageBackRequestedHandler;
-
-                VisualStateManager.GoToState(ChatBlock, "WideState", true);
-                VisualStateManager.GoToState(ProfileSettingsBlock, "WideState", true);
-            }
-        }
-
-        private void MainPageBackRequestedHandler(object sender, BackRequestedEventArgs e)
-        {
-            Frame.Navigate(typeof (FriendListPage));
-
-            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-                AppViewBackButtonVisibility.Collapsed;
-            SystemNavigationManager.GetForCurrentView().BackRequested -= MainPageBackRequestedHandler;
         }
 
         private void FriendListSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -91,21 +98,27 @@ namespace OneTox.View.Pages
             if (FriendList.SelectedItem == null)
                 return;
 
-            VisualStateManager.GoToState(this, "ChatState", true);
-
-            ChatBlock.DataContext = FriendList.SelectedItem as FriendViewModel;
+            if (_chatBlock == null)
+            {
+                _chatBlock = new ChatBlock {DataContext = FriendList.SelectedItem};
+                SetRightPanelContent(_chatBlock);
+            }
+            else
+            {
+                _chatBlock.DataContext = FriendList.SelectedItem;
+            }
         }
 
         private void AddFriendButtonClick(object sender, RoutedEventArgs e)
         {
             FriendList.SelectedItem = null;
-            VisualStateManager.GoToState(this, "AddFriendState", true);
+            SetRightPanelContent(new AddFriendBlock());
         }
 
         private void SettingsButtonClick(object sender, RoutedEventArgs e)
         {
             FriendList.SelectedItem = null;
-            VisualStateManager.GoToState(this, "SettingsState", true);
+            SetRightPanelContent(new ProfileSettingsBlock());
         }
 
         private void FriendsCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
@@ -121,71 +134,5 @@ namespace OneTox.View.Pages
                     : _mainViewModel.FriendList.Friends[0];
             }
         }
-
-        #region Page state initializator
-
-        private class PageStateInitializator
-        {
-            private readonly MainPage _mainPage;
-            private FriendViewModel _friendToSelectOnLoaded;
-            private bool _selectFriendOnLoaded;
-
-            public PageStateInitializator(MainPage mainPage)
-            {
-                _mainPage = mainPage;
-            }
-
-            public void HandleOnNavigatedToParameter(object parameter)
-            {
-                if (parameter == null)
-                {
-                    VisualStateManager.GoToState(_mainPage, "ChatState", false);
-                    _selectFriendOnLoaded = true;
-                    _friendToSelectOnLoaded = null;
-                    return;
-                }
-
-                if (parameter is FriendViewModel)
-                {
-                    VisualStateManager.GoToState(_mainPage, "ChatState", false);
-                    _selectFriendOnLoaded = true;
-                    _friendToSelectOnLoaded = parameter as FriendViewModel;
-                    return;
-                }
-
-                if (Equals(parameter, typeof (ProfileSettingsBlock)))
-                {
-                    VisualStateManager.GoToState(_mainPage, "SettingsState", false);
-                    _selectFriendOnLoaded = false;
-                    _friendToSelectOnLoaded = null;
-                    return;
-                }
-
-                if (Equals(parameter, typeof (AddFriendBlock)))
-                {
-                    VisualStateManager.GoToState(_mainPage, "AddFriendState", false);
-                    _selectFriendOnLoaded = false;
-                    _friendToSelectOnLoaded = null;
-                }
-            }
-
-            public void SelectFriendOnLoadedIfNeeded(ListView friendList, MainViewModel mainViewModel)
-            {
-                // TODO: Remember which friend we talked to the last time before shutting down the app and resume with selecting him/her.
-                // TODO: Handle the case when the user doesn't have any friends yet with a splash screen or something like that!
-
-                if (!_selectFriendOnLoaded)
-                    return;
-
-                friendList.SelectedItem = _friendToSelectOnLoaded;
-
-                if (friendList.SelectedItem == null && mainViewModel.FriendList.Friends.Count > 0)
-                {
-                    friendList.SelectedItem = mainViewModel.FriendList.Friends[0];
-                }
-            }
-        }
-
-        #endregion
     }
 }

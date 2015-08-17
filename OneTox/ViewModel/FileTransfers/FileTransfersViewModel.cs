@@ -23,7 +23,7 @@ namespace OneTox.ViewModel.FileTransfers
 
         #region Visual states
 
-        // TODO: Move this to FileTransfersBlock's code-behind!
+        // TODO: Maybe move this to FileTransfersBlock's code-behind?
 
         /// <summary>
         ///     This class's purpose is to supply (trough data binding) the current visual state of FileTransfersBlock and height
@@ -95,6 +95,11 @@ namespace OneTox.ViewModel.FileTransfers
                 {
                     BlockState = TransfersBlockState.Invisible;
                     return; // No need to recompute the grid's height if we can't see the grid itself.
+                }
+
+                if (BlockState == TransfersBlockState.Invisible && _transferViewModels.Count == 1)
+                {
+                    BlockState = TransfersBlockState.Open;
                 }
 
                 UpdateOpenContentGridHeight(_transferViewModels.Count);

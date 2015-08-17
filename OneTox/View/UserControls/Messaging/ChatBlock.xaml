@@ -11,7 +11,6 @@
     mc:Ignorable="d"
     d:DesignHeight="800"
     d:DesignWidth="600"
-    Loaded="ChatBlockLoaded"
     DataContextChanged="ChatBlockDataContextChanged">
 
     <UserControl.Resources>
@@ -124,7 +123,8 @@
         <ListView x:Name="MessagesListView" Grid.Row="2"
                   ItemsSource="{Binding Conversation.MessageGroups}" SelectionMode="None"
                   HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                  IncrementalLoadingTrigger="None" ItemContainerStyle="{StaticResource ChatPageListViewItemStyle}">
+                  IncrementalLoadingTrigger="None" ItemContainerStyle="{StaticResource ChatPageListViewItemStyle}"
+                  Loaded="MessagesListViewLoaded">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <messaging:MessageBlock Margin="0,24,0,0" />

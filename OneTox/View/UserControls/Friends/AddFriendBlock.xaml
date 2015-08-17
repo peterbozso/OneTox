@@ -14,7 +14,7 @@
         <friends:AddFriendViewModel />
     </UserControl.DataContext>
 
-    <Grid x:Name="AddFriendFlyoutContent">
+    <Grid x:Name="AddFriendFlyoutContent" Margin="20,0,20,20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
