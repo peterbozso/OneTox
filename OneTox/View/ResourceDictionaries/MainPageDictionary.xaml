@@ -110,6 +110,7 @@
                                         <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
                                     </Storyboard>
                                 </VisualState>
+                                <!-- Same as above, but it removes the tilt animation played when an item is selected AND clicked/tapped.
                                 <VisualState x:Name="PressedSelected">
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetName="MultiSelectCheck"
@@ -132,7 +133,7 @@
                                         </ObjectAnimationUsingKeyFrames>
                                         <PointerDownThemeAnimation TargetName="ContentPresenter" />
                                     </Storyboard>
-                                </VisualState>
+                                </VisualState>-->
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="DisabledStates">
                                 <VisualState x:Name="Enabled" />
