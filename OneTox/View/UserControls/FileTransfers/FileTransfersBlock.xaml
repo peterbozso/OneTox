@@ -184,7 +184,7 @@
                        Text="{Binding Transfers.Count, Converter={StaticResource FileTransferCountToPlaceholderTextConverter}}"
                        VerticalAlignment="Center" />
             <TextBlock x:Name="ShowTransfersIcon" Grid.Column="1" FontFamily="Segoe MDL2 Assets" FontSize="16"
-                       Margin="12,0,30,6" Tapped="ShowTransfersIconTapped" Text="&#xE015;" VerticalAlignment="Bottom"
+                       Margin="12,0,12,6" Tapped="ShowTransfersIconTapped" Text="&#xE015;" VerticalAlignment="Bottom"
                        HorizontalAlignment="Center" />
         </Grid>
 
