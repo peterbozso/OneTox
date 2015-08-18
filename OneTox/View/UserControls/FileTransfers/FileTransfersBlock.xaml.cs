@@ -42,7 +42,7 @@ namespace OneTox.View.UserControls.FileTransfers
             ShowOpenContentGridAnimationEnd.Value = newHeight;
             OpenContentGridHeight.Value = newHeight;
         }
-        
+
         private void TransfersCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)

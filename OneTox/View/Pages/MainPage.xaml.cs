@@ -14,7 +14,6 @@ namespace OneTox.View.Pages
     public sealed partial class MainPage : Page
     {
         private readonly MainViewModel _mainViewModel;
-        private ChatBlock _chatBlock;
         private UserControl _rightPanelContent;
 
         public MainPage()
@@ -42,15 +41,15 @@ namespace OneTox.View.Pages
                 if (_mainViewModel.FriendList.Friends.Count > 0)
                 {
                     FriendList.SelectedItem = _mainViewModel.FriendList.Friends[0];
-                    _chatBlock = new ChatBlock {DataContext = _mainViewModel.FriendList.Friends[0]};
-                    SetRightPanelContent(_chatBlock);
+                    var chatBlock = new ChatBlock {DataContext = _mainViewModel.FriendList.Friends[0]};
+                    SetRightPanelContent(chatBlock);
                 }
             }
             else if (e.Parameter is FriendViewModel)
             {
                 FriendList.SelectedItem = e.Parameter;
-                _chatBlock = new ChatBlock {DataContext = e.Parameter};
-                SetRightPanelContent(_chatBlock);
+                var chatBlock = new ChatBlock {DataContext = e.Parameter};
+                SetRightPanelContent(chatBlock);
             }
             else if (Equals(e.Parameter, typeof (SettingsPage)))
             {
@@ -98,14 +97,14 @@ namespace OneTox.View.Pages
             if (FriendList.SelectedItem == null)
                 return;
 
-            if (_chatBlock == null)
+            if (_rightPanelContent is ChatBlock)
             {
-                _chatBlock = new ChatBlock {DataContext = FriendList.SelectedItem};
-                SetRightPanelContent(_chatBlock);
+                _rightPanelContent.DataContext = FriendList.SelectedItem;
             }
             else
             {
-                _chatBlock.DataContext = FriendList.SelectedItem;
+                var chatBlock = new ChatBlock {DataContext = FriendList.SelectedItem};
+                SetRightPanelContent(chatBlock);
             }
         }
 
