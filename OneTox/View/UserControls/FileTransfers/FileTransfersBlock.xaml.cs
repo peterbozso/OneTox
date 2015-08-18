@@ -57,16 +57,6 @@ namespace OneTox.View.UserControls.FileTransfers
             TransferRibbonsScrollViewer.ChangeView(null, double.MaxValue, null, true);
         }
 
-        /* TODO: Remove maybe?
-        private async Task SetAddDeleteThemeTransitionForTransferRibbons()
-        {
-            // We need this ugly hack because otherwise every time we navigate to ChatPage
-            // we'd see the "Add" animation of every item in the list (and we do not want that).
-            await Task.Delay(1);
-            TransferRibbons.ItemContainerTransitions = new TransitionCollection {new AddDeleteThemeTransition()};
-        }
-        */
-
         private void ShowTransfersIconTapped(object sender, TappedRoutedEventArgs e)
         {
             _fileTransfersViewModel.VisualStates.BlockState =
