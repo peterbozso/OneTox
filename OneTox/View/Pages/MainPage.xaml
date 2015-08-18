@@ -64,7 +64,7 @@
                       ItemContainerStyle="{StaticResource ListViewItemWithoutPressedVisualStateStyle}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <friends:FriendListItem Margin="8" />
+                        <friends:FriendListItem />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

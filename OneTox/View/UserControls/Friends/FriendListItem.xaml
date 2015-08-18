@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:OneTox.View.Converters"
     mc:Ignorable="d"
-    Height="60"
+    Height="78"
     d:DesignWidth="360">
 
     <UserControl.Resources>
@@ -19,30 +19,34 @@
         </MenuFlyout>
     </UserControl.Resources>
 
-    <Grid FlyoutBase.AttachedFlyout="{StaticResource FriendListItemFlyout}" RightTapped="MainGridRightTapped">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <Grid FlyoutBase.AttachedFlyout="{StaticResource FriendListItemFlyout}" RightTapped="MainGridRightTapped"
+          Background="Transparent">
+        <Grid Margin="16,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <Ellipse x:Name="FriendAvatarWithStatusColorBorder" Grid.Column="0" Width="60" Height="60" StrokeThickness="3"
-                 Stroke="{Binding Status, Converter={StaticResource StatusToColorConverter}}">
-            <Ellipse.Fill>
-                <ImageBrush ImageSource="{Binding Avatar}" />
-            </Ellipse.Fill>
-        </Ellipse>
+            <Ellipse x:Name="FriendAvatarWithStatusColorBorder" Grid.Column="0" Width="60" Height="60"
+                     StrokeThickness="3"
+                     Stroke="{Binding Status, Converter={StaticResource StatusToColorConverter}}">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="{Binding Avatar}" />
+                </Ellipse.Fill>
+            </Ellipse>
 
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
 
-            <TextBlock x:Name="FriendName" Grid.Row="0" Text="{Binding Name}" Margin="8,0,0,0" FontSize="20"
-                       HorizontalAlignment="Left" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" />
-            <TextBlock x:Name="FriendStatusMessage" Grid.Row="1" Text="{Binding StatusMessage}" Margin="8,0,0,0"
-                       FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" TextTrimming="WordEllipsis"
-                       Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}" />
+                <TextBlock x:Name="FriendName" Grid.Row="0" Text="{Binding Name}" Margin="8,0,0,0" FontSize="20"
+                           HorizontalAlignment="Left" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" />
+                <TextBlock x:Name="FriendStatusMessage" Grid.Row="1" Text="{Binding StatusMessage}" Margin="8,0,0,0"
+                           FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" TextTrimming="WordEllipsis"
+                           Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}" />
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>
