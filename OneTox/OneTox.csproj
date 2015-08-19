@@ -225,7 +225,6 @@
     <Content Include="Assets\default-profile-picture.png" />
     <Content Include="Assets\ring-in.wav" />
     <Content Include="Assets\ring-out.wav" />
-    <Content Include="Assets\tox-logo.jpg" />
     <Content Include="Common\ReadMe.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
