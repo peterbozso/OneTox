@@ -1,4 +1,6 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using OneTox.ViewModel.FriendRequests;
 
 namespace OneTox.View.UserControls.FriendRequests
 {
@@ -7,6 +9,16 @@ namespace OneTox.View.UserControls.FriendRequests
         public FriendRequestsList()
         {
             InitializeComponent();
+        }
+
+        private async void FriendRequestsListLoaded(object sender, RoutedEventArgs e)
+        {
+            var friendRequests = DataContext as FriendRequestsViewModel;
+
+            if (friendRequests.Requests.Count == 0)
+            {
+                await friendRequests.RestoreData();
+            }
         }
     }
 }

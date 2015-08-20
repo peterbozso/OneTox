@@ -37,27 +37,10 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <StackPanel x:Name="FriendRequests" Grid.Row="0" Margin="0,12"
-                        Visibility="{Binding FriendRequestsListVisibility}">
-                <TextBlock x:Name="FriendRequestsHeaderText" Margin="16,0,0,8" FontSize="20">Received friend requests</TextBlock>
-
-                <Rectangle x:Name="FriendRequestsHeaderLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}"
-                           Height="1" StrokeThickness="0.5" Margin="12,0,12,0" />
-
-                <ListView x:Name="FriendRequestsListView" ItemsSource="{Binding FriendRequests.Requests}"
-                          SelectionMode="None" MaxHeight="360"
-                          ItemContainerStyle="{StaticResource FriendRequestsListViewItemStyle}">
-
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <friendRequests:FriendRequestsListItem Margin="8" />
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-
-                <Rectangle x:Name="FriendRequestsFooterLine" Stroke="{ThemeResource ApplicationForegroundThemeBrush}"
-                           Height="1" StrokeThickness="0.5" Margin="12,0" />
-            </StackPanel>
+            <Grid x:Name="FriendRequests" Grid.Row="0" Margin="0,12"
+                  Visibility="{Binding FriendRequestsListVisibility}">
+                <friendRequests:FriendRequestsList DataContext="{Binding FriendRequests}" />
+            </Grid>
 
             <ListView x:Name="FriendList" Grid.Row="1" ItemsSource="{Binding FriendList.Friends}"
                       SelectionChanged="FriendListSelectionChanged"

@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     d:DesignHeight="28"
-    Width="360">
+    d:DesignWidth="360">
 
     <UserControl.Resources>
         <Flyout x:Key="FriendRequestInfoFlyout">
@@ -40,7 +40,8 @@
                    Text="{Binding PublicKey}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
                    VerticalAlignment="Center" />
 
-        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"
+                    Margin="12,0,0,0">
             <Button x:Name="AcceptButton" FontFamily="Segoe MDL2 Assets"
                     Template="{StaticResource RoundButtonTemplate}"
                     Height="36" Width="36" Content="&#xE10B;" Padding="0" Command="{Binding AcceptCommand}" />

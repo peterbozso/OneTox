@@ -10,13 +10,12 @@ namespace OneTox.View.Pages
         {
             InitializeComponent();
 
-            ChangeLayoutBasedOnWindowWidth(Window.Current.Bounds.Width);
+            DataContext = (Application.Current as App).MainViewModel;
         }
 
         private void FriendListPageLoaded(object sender, RoutedEventArgs e)
         {
             Window.Current.SizeChanged += WindowSizeChanged;
-            DataContext = (Application.Current as App).MainViewModel;
         }
 
         private void FriendListPageUnloaded(object sender, RoutedEventArgs e)
@@ -26,12 +25,7 @@ namespace OneTox.View.Pages
 
         private void WindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
-            ChangeLayoutBasedOnWindowWidth(e.Size.Width);
-        }
-
-        private void ChangeLayoutBasedOnWindowWidth(double width)
-        {
-            if (width >= 930)
+            if (e.Size.Width >= 930)
             {
                 Frame.Navigate(typeof (MainPage));
             }
