@@ -174,7 +174,7 @@ namespace OneTox.Model.Avatars
                     "avatars", CreationCollisionOption.OpenIfExists);
 
             await LoadUserAvatar();
-            await LoadFriendsAvatars();
+            await LoadFriendAvatars();
         }
 
         private async Task LoadUserAvatar()
@@ -190,8 +190,10 @@ namespace OneTox.Model.Avatars
             }
         }
 
-        private async Task LoadFriendsAvatars()
+        private async Task LoadFriendAvatars()
         {
+            FriendAvatars.Clear();
+
             foreach (var friendNumber in ToxModel.Instance.Friends)
             {
                 var publicKey = ToxModel.Instance.GetFriendPublicKey(friendNumber);
