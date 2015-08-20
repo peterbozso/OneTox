@@ -263,13 +263,25 @@ namespace OneTox.Model
             return _tox.GetFriendPublicKey(friendNumber);
         }
 
-        public async Task SaveDataAsync()
+        public async Task SaveDataAsync(bool isNewName = false, string oldName = null)
         {
             await _semaphore.WaitAsync();
             try
             {
-                var file = await ApplicationData.Current.RoamingFolder.CreateFileAsync(
-                    _tox.Name + ".tox", CreationCollisionOption.ReplaceExisting);
+                StorageFile file;
+
+                if (isNewName)
+                {
+                    var oldFile = await ApplicationData.Current.RoamingFolder.GetFileAsync(oldName + ".tox");
+                    await oldFile.RenameAsync(_tox.Name + ".tox", NameCollisionOption.ReplaceExisting);
+                    file = oldFile;
+                }
+                else
+                {
+                    file = await ApplicationData.Current.RoamingFolder.CreateFileAsync(
+                        _tox.Name + ".tox", CreationCollisionOption.ReplaceExisting);
+                }
+
                 await FileIO.WriteBytesAsync(file, _tox.GetData().Bytes);
                 ApplicationData.Current.RoamingSettings.Values["currentUserName"] = _tox.Name;
             }

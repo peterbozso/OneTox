@@ -38,11 +38,12 @@ namespace OneTox.View.UserControls.ProfileSettings
             var nameTextBox = sender as TextBox;
             if (nameTextBox.Text == string.Empty)
             {
-                nameTextBox.Text = _viewModel.Name;
+                nameTextBox.Text = _viewModel.Name; // We reset the name if the user just deleted it.
             }
             else
             {
-                await _viewModel.SaveDataAsync();
+                bool isNewName = nameTextBox.Text != _viewModel.Name;
+                await _viewModel.SaveDataAsync(isNewName, _viewModel.Name);
             }
         }
 
