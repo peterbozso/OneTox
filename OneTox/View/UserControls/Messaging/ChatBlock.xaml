@@ -74,7 +74,7 @@
 
         <CommandBar x:Name="TopActionBar" Grid.Row="0" ClosedDisplayMode="Compact"
                     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-            <AppBarButton Icon="Attach" Label="send file" Command="{Binding FileTransfers.SendFilesCommand}" />
+            <AppBarButton Icon="Attach" Label="send file" Command="{Binding FileTransfers.SendFilesCommand}" IsEnabled="{Binding IsConnected}" />
         </CommandBar>
 
         <StackPanel x:Name="HeaderBlock" Grid.Row="1" Margin="20,0">
@@ -168,7 +168,7 @@
         </Grid>
 
         <CommandBar x:Name="BottomActionBar" Grid.Row="4" ClosedDisplayMode="Minimal">
-            <AppBarButton Icon="Attach" Label="send file" Command="{Binding FileTransfers.SendFilesCommand}" />
+            <AppBarButton Icon="Attach" Label="send file" Command="{Binding FileTransfers.SendFilesCommand}" IsEnabled="{Binding IsConnected}" />
         </CommandBar>
     </Grid>
 </UserControl>
