@@ -180,8 +180,14 @@ namespace OneTox.Model.Avatars
         private async Task LoadUserAvatar()
         {
             var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png") as StorageFile;
-            if (file != null)
+            if (file == null)
+            {
+                ResetUserAvatar();
+            }
+            else
+            {
                 await SetUserAvatar(file);
+            }
         }
 
         private async Task LoadFriendsAvatars()
@@ -222,7 +228,9 @@ namespace OneTox.Model.Avatars
             {
                 if (stream.AsStream().Length > KMaxPictureSizeInBytes) // TODO: Remove this safety check later!
                     throw new ArgumentOutOfRangeException();
-                UserAvatar.SetSource(stream);
+                var newAvatar = new BitmapImage();
+                newAvatar.SetSource(stream);
+                UserAvatar = newAvatar;
                 IsUserAvatarSet = true;
             }
         }

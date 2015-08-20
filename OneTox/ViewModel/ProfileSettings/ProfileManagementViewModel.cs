@@ -8,6 +8,7 @@ using Windows.Storage.Pickers;
 using OneTox.Common;
 using OneTox.Helpers;
 using OneTox.Model;
+using OneTox.Model.Avatars;
 using SharpTox.Core;
 using SharpTox.Encryption;
 
@@ -144,6 +145,7 @@ namespace OneTox.ViewModel.ProfileSettings
             ToxModel.Instance.SetCurrent(new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(data)));
             await ToxModel.Instance.SaveDataAsync();
             ToxModel.Instance.Start();
+            await AvatarManager.Instance.LoadAvatars();
         }
 
         #endregion
