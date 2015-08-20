@@ -1,4 +1,8 @@
-﻿using OneTox.Common;
+﻿using System;
+using System.Threading;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
+using OneTox.Common;
 using OneTox.Helpers;
 using OneTox.Model;
 using SharpTox.Core;
@@ -10,6 +14,7 @@ namespace OneTox.ViewModel.Friends
         private RelayCommand _addFriendCommand;
         private string _friendId;
         private string _friendIdPlaceholder;
+        private Timer _friendIdPlaceholderTimer;
         private string _invitationMessage;
 
         public string FriendId
@@ -70,8 +75,8 @@ namespace OneTox.ViewModel.Friends
                                {
                                    if (!ToxId.IsValid(FriendId))
                                    {
-                                       FriendId = string.Empty;
-                                       FriendIdPlaceholder = "Invalid Tox ID, please enter it more carefully!";
+                                       ShowMessageAsFriendIdPlaceholder(
+                                           "Invalid Tox ID, please enter it more carefully!");
                                        return;
                                    }
 
@@ -79,16 +84,14 @@ namespace OneTox.ViewModel.Friends
 
                                    bool successFulAdd;
                                    ToxModel.Instance.AddFriend(new ToxId(FriendId), invitationMessage, out successFulAdd);
+                                   if (successFulAdd)
+                                   {
+                                       InvitationMessage = string.Empty;
+                                       ShowMessageAsFriendIdPlaceholder("Friend request successfully sent!");
+                                   }
                                }
                            }));
             }
-        }
-
-        public void ResetFlyout()
-        {
-            FriendId = string.Empty;
-            FriendIdPlaceholder = string.Empty;
-            InvitationMessage = string.Empty;
         }
 
         private string GetInvitationMessage()
@@ -96,6 +99,26 @@ namespace OneTox.ViewModel.Friends
             if (string.IsNullOrEmpty(InvitationMessage))
                 return "Hello! I'd like to add you to my friends list.";
             return InvitationMessage;
+        }
+
+        private void ShowMessageAsFriendIdPlaceholder(string message)
+        {
+            FriendId = string.Empty;
+            FriendIdPlaceholder = message;
+
+            if (_friendIdPlaceholderTimer == null)
+            {
+                _friendIdPlaceholderTimer =
+                    new Timer(
+                        async state =>
+                            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                                () => { FriendIdPlaceholder = string.Empty; }),
+                        null, 4500, Timeout.Infinite);
+            }
+            else
+            {
+                _friendIdPlaceholderTimer.Change(4500, Timeout.Infinite);
+            }
         }
     }
 }
