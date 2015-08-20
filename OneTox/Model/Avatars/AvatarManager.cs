@@ -192,15 +192,27 @@ namespace OneTox.Model.Avatars
 
         private async Task LoadFriendAvatars()
         {
-            FriendAvatars.Clear();
+            ClearFriendAvatars();
 
             foreach (var friendNumber in ToxModel.Instance.Friends)
             {
                 var publicKey = ToxModel.Instance.GetFriendPublicKey(friendNumber);
+
                 var file = await _avatarsFolder.TryGetItemAsync(publicKey + ".png") as StorageFile;
                 if (file == null)
                     continue;
+
                 await SetFriendAvatar(friendNumber, file);
+            }
+        }
+
+        private void ClearFriendAvatars()
+        {
+            FriendAvatars.Clear();
+
+            foreach (var friendNumber in ToxModel.Instance.Friends)
+            {
+                RaiseFriendAvatarChanged(friendNumber);
             }
         }
 
