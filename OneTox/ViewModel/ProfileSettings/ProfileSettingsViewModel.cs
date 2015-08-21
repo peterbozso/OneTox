@@ -29,9 +29,9 @@ namespace OneTox.ViewModel.ProfileSettings
             RefreshQrCodeId();
         }
 
-        public async Task SaveDataAsync(bool isNewName = false, string oldName = null)
+        public async Task SaveDataAsync()
         {
-            await ToxModel.Instance.SaveDataAsync(isNewName, oldName);
+            await ToxModel.Instance.SaveDataAsync();
         }
 
         #region Avatar

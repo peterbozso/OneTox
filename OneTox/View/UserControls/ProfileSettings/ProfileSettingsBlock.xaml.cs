@@ -42,8 +42,7 @@ namespace OneTox.View.UserControls.ProfileSettings
             }
             else
             {
-                var isNewName = nameTextBox.Text != _viewModel.Name;
-                await _viewModel.SaveDataAsync(isNewName, _viewModel.Name);
+                await _viewModel.SaveDataAsync();
             }
         }
 

@@ -134,7 +134,9 @@ namespace OneTox
                 // very firs time or something went wrong restoring data.
                 // So we save the current Tox instance (newly created, not loaded) as the default one.
                 if (!successfulRestoration)
+                {
                     await ToxModel.Instance.SaveDataAsync();
+                }
 
                 if (previousExecutionState != ApplicationExecutionState.NotRunning)
                     // We only have to restore session state in the other two cases.

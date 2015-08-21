@@ -14,7 +14,7 @@ using SharpTox.Encryption;
 
 namespace OneTox.ViewModel.ProfileSettings
 {
-    internal class ProfileManagementViewModel : ObservableObject
+    public class ProfileManagementViewModel : ObservableObject
     {
         private RelayCommand _createNewProfileCommand;
         private bool _isSwitchProfileFlyoutClosed;
@@ -22,11 +22,10 @@ namespace OneTox.ViewModel.ProfileSettings
 
         public ProfileManagementViewModel()
         {
-            ProfileFiles = new ObservableCollection<StorageFile>();
+            Profiles = new ObservableCollection<ExtendedTox>();
         }
 
-        public string Name => ToxModel.Instance.Name;
-        public ObservableCollection<StorageFile> ProfileFiles { get; set; }
+        public ObservableCollection<ExtendedTox> Profiles { get; set; }
 
         public bool IsSwitchProfileFlyoutClosed
         {
@@ -55,9 +54,7 @@ namespace OneTox.ViewModel.ProfileSettings
                                    Name = "User",
                                    StatusMessage = "Using OneTox."
                                };
-                               ToxModel.Instance.SetCurrent(tox);
-                               await ToxModel.Instance.SaveDataAsync();
-                               ToxModel.Instance.Start();
+                               await SetCurrentProfile(tox);
                            }));
             }
         }
@@ -71,19 +68,29 @@ namespace OneTox.ViewModel.ProfileSettings
                            async () =>
                            {
                                var fileList = await ApplicationData.Current.RoamingFolder.GetFilesAsync();
-                               ProfileFiles.Clear();
+                               Profiles.Clear();
                                foreach (var file in fileList)
                                {
-                                   ProfileFiles.Add(file);
+                                   if (file.FileType == ".tox")
+                                   {
+                                       var tox = await LoadToxInstanceFromFile(file);
+                                       Profiles.Add(tox);
+                                   }
                                }
                            }));
             }
         }
 
-        public async Task SwitchProfile(StorageFile file)
+        public async Task SwitchProfile(ExtendedTox tox)
         {
-            await SetCurrentProfile(file);
+            await SetCurrentProfile(tox);
             IsSwitchProfileFlyoutClosed = true;
+        }
+
+        private async Task<ExtendedTox> LoadToxInstanceFromFile(StorageFile file)
+        {
+            var data = (await FileIO.ReadBufferAsync(file)).ToArray();
+            return new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(data));
         }
 
         #region Export profile
@@ -106,7 +113,7 @@ namespace OneTox.ViewModel.ProfileSettings
         {
             var savePicker = new FileSavePicker();
             savePicker.FileTypeChoices.Add("Tox save file", new List<string> {".tox"});
-            savePicker.SuggestedFileName = Name;
+            savePicker.SuggestedFileName = ToxModel.Instance.Name;
             var file = await savePicker.PickSaveFileAsync();
             return file;
         }
@@ -128,7 +135,8 @@ namespace OneTox.ViewModel.ProfileSettings
             var file = await PickSourceFile();
             if (file != null)
             {
-                await SetCurrentProfile(file);
+                var tox = await LoadToxInstanceFromFile(file);
+                await SetCurrentProfile(tox);
             }
         }
 
@@ -139,10 +147,9 @@ namespace OneTox.ViewModel.ProfileSettings
             return await openPicker.PickSingleFileAsync();
         }
 
-        public async Task SetCurrentProfile(StorageFile file)
+        public async Task SetCurrentProfile(ExtendedTox tox)
         {
-            var data = (await FileIO.ReadBufferAsync(file)).ToArray();
-            ToxModel.Instance.SetCurrent(new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(data)));
+            ToxModel.Instance.SetCurrent(tox);
             await ToxModel.Instance.SaveDataAsync();
             ToxModel.Instance.Start();
             await AvatarManager.Instance.LoadAvatars();

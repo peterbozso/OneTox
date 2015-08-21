@@ -56,11 +56,11 @@
                         <StackPanel>
                             <TextBlock Text="Select profile"
                                        Margin="0,0,0,10" Width="160" />
-                            <ListView ItemsSource="{Binding ProfileFiles}" SelectionMode="None"
+                            <ListView ItemsSource="{Binding Profiles}" SelectionMode="None"
                                       IsItemClickEnabled="True" ItemClick="ProfileNameListItemClick">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding DisplayName}" />
+                                        <TextBlock Text="{Binding Name}" />
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>

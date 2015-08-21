@@ -263,27 +263,15 @@ namespace OneTox.Model
             return _tox.GetFriendPublicKey(friendNumber);
         }
 
-        public async Task SaveDataAsync(bool isNewName = false, string oldName = null)
+        public async Task SaveDataAsync()
         {
             await _semaphore.WaitAsync();
             try
             {
-                StorageFile file;
-
-                if (isNewName)
-                {
-                    var oldFile = await ApplicationData.Current.RoamingFolder.GetFileAsync(oldName + ".tox");
-                    await oldFile.RenameAsync(_tox.Name + ".tox", NameCollisionOption.ReplaceExisting);
-                    file = oldFile;
-                }
-                else
-                {
-                    file = await ApplicationData.Current.RoamingFolder.CreateFileAsync(
-                        _tox.Name + ".tox", CreationCollisionOption.ReplaceExisting);
-                }
-
+                var file = await ApplicationData.Current.RoamingFolder.CreateFileAsync(
+                    _tox.Id.PublicKey + ".tox", CreationCollisionOption.ReplaceExisting);
                 await FileIO.WriteBytesAsync(file, _tox.GetData().Bytes);
-                ApplicationData.Current.RoamingSettings.Values["currentUserName"] = _tox.Name;
+                ApplicationData.Current.RoamingSettings.Values["currentUserPublicKey"] = _tox.Id.PublicKey.ToString();
             }
             catch
             {
@@ -299,8 +287,8 @@ namespace OneTox.Model
         {
             try
             {
-                var currentUserName = ApplicationData.Current.RoamingSettings.Values["currentUserName"];
-                var file = await ApplicationData.Current.RoamingFolder.GetFileAsync(currentUserName + ".tox");
+                var currentUserPublicKey = ApplicationData.Current.RoamingSettings.Values["currentUserPublicKey"];
+                var file = await ApplicationData.Current.RoamingFolder.GetFileAsync(currentUserPublicKey + ".tox");
                 var toxData = (await FileIO.ReadBufferAsync(file)).ToArray();
                 SetCurrent(new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(toxData)));
             }
