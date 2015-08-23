@@ -78,7 +78,7 @@
                                  LostFocus="StatusMessageTextBoxLostFocus" />
                         <ComboBox x:Name="StatusComboBox" Header="Status" Width="300" Margin="0,8,0,0"
                                   SelectedItem="{Binding Status, Mode=TwoWay}"
-                                  SelectionChanged="StatusComboBoxSelectionChanged">
+                                  LostFocus="StatusComboBoxLostFocus">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>

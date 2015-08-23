@@ -28,7 +28,7 @@ namespace OneTox.View.UserControls.ProfileSettings
             await _viewModel.ChangeAvatar();
         }
 
-        private async void StatusComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void StatusComboBoxLostFocus(object sender, RoutedEventArgs e)
         {
             await _viewModel.SaveDataAsync();
         }

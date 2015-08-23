@@ -14,8 +14,6 @@ namespace OneTox.ViewModel.ProfileSettings
     public class ProfileManagementViewModel : ObservableObject
     {
         private RelayCommand _createNewProfileCommand;
-        private bool _isSwitchProfileFlyoutClosed;
-        private RelayCommand _refreshProfileListCommand;
 
         public ProfileManagementViewModel()
         {
@@ -23,20 +21,6 @@ namespace OneTox.ViewModel.ProfileSettings
         }
 
         public ObservableCollection<ProfileViewModel> Profiles { get; set; }
-
-        public bool IsSwitchProfileFlyoutClosed
-        {
-            get { return _isSwitchProfileFlyoutClosed; }
-            set
-            {
-                if (value == _isSwitchProfileFlyoutClosed)
-                    return;
-                _isSwitchProfileFlyoutClosed = value;
-                RaisePropertyChanged();
-                if (value)
-                    IsSwitchProfileFlyoutClosed = false;
-            }
-        }
 
         public RelayCommand CreateNewProfileCommand
         {
@@ -47,37 +31,28 @@ namespace OneTox.ViewModel.ProfileSettings
                            async () =>
                            {
                                var profile = ProfileViewModel.GetDefaultProfileViewModel();
+                               Profiles.Add(profile);
                                await profile.SetAsCurrent();
                            }));
             }
         }
 
-        public RelayCommand RefreshProfileListCommand
+        public async Task RefreshProfileList()
         {
-            get
+            var fileList = await ApplicationData.Current.RoamingFolder.GetFilesAsync();
+            Profiles.Clear();
+            foreach (var file in fileList)
             {
-                return _refreshProfileListCommand
-                       ?? (_refreshProfileListCommand = new RelayCommand(
-                           async () =>
-                           {
-                               var fileList = await ApplicationData.Current.RoamingFolder.GetFilesAsync();
-                               Profiles.Clear();
-                               foreach (var file in fileList)
-                               {
-                                   if (file.FileType == ".tox")
-                                   {
-                                       var profile = await ProfileViewModel.GetProfileViewModelFromFile(file);
-                                       Profiles.Add(profile);
-                                   }
-                               }
-                           }));
-            }
-        }
+                if (file.FileType == ".tox")
+                {
+                    var profile = await ProfileViewModel.GetProfileViewModelFromFile(file);
 
-        public async Task SwitchProfile(ProfileViewModel profile)
-        {
-            await profile.SetAsCurrent();
-            IsSwitchProfileFlyoutClosed = true;
+                    if (profile.Id == ToxModel.Instance.Id) // Don't include the current profile in this list.
+                        continue;
+
+                    Profiles.Add(profile);
+                }
+            }
         }
 
         #region Export profile
@@ -123,6 +98,7 @@ namespace OneTox.ViewModel.ProfileSettings
             if (file != null)
             {
                 var profile = await ProfileViewModel.GetProfileViewModelFromFile(file);
+                Profiles.Add(profile);
                 await profile.SetAsCurrent();
             }
         }

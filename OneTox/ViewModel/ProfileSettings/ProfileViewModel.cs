@@ -18,6 +18,7 @@ namespace OneTox.ViewModel.ProfileSettings
         }
 
         public string Name => _toxInstance.Name;
+        public ToxId Id => _toxInstance.Id;
 
         public static async Task<ProfileViewModel> GetProfileViewModelFromFile(StorageFile file)
         {

@@ -16,6 +16,11 @@ namespace OneTox.View.UserControls.ProfileSettings
             _viewModel = DataContext as ProfileManagementViewModel;
         }
 
+        private async void ProfileManagementBlockLoaded(object sender, RoutedEventArgs e)
+        {
+            await _viewModel.RefreshProfileList();
+        }
+
         private async void ExportButtonClick(object sender, RoutedEventArgs e)
         {
             await _viewModel.ExportProfile(PasswordTextBox.Text);
@@ -35,9 +40,10 @@ namespace OneTox.View.UserControls.ProfileSettings
             }
         }
 
-        private async void ProfileNameListItemClick(object sender, ItemClickEventArgs e)
+        private async void SwitchButtonClick(object sender, RoutedEventArgs e)
         {
-            await _viewModel.SwitchProfile(e.ClickedItem as ProfileViewModel);
+            await (ProfileList.SelectedItem as ProfileViewModel).SetAsCurrent();
+            await _viewModel.RefreshProfileList();
         }
     }
 }
