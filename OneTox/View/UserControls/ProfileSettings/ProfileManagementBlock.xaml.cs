@@ -2,7 +2,6 @@
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using OneTox.Model;
 using OneTox.ViewModel.ProfileSettings;
 
 namespace OneTox.View.UserControls.ProfileSettings
@@ -38,7 +37,7 @@ namespace OneTox.View.UserControls.ProfileSettings
 
         private async void ProfileNameListItemClick(object sender, ItemClickEventArgs e)
         {
-            await _viewModel.SwitchProfile(e.ClickedItem as ExtendedTox);
+            await _viewModel.SwitchProfile(e.ClickedItem as ProfileViewModel);
         }
     }
 }

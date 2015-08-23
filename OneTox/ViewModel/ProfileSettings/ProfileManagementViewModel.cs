@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using OneTox.Common;
 using OneTox.Helpers;
 using OneTox.Model;
-using OneTox.Model.Avatars;
-using SharpTox.Core;
 using SharpTox.Encryption;
 
 namespace OneTox.ViewModel.ProfileSettings
@@ -22,10 +19,10 @@ namespace OneTox.ViewModel.ProfileSettings
 
         public ProfileManagementViewModel()
         {
-            Profiles = new ObservableCollection<ExtendedTox>();
+            Profiles = new ObservableCollection<ProfileViewModel>();
         }
 
-        public ObservableCollection<ExtendedTox> Profiles { get; set; }
+        public ObservableCollection<ProfileViewModel> Profiles { get; set; }
 
         public bool IsSwitchProfileFlyoutClosed
         {
@@ -49,12 +46,8 @@ namespace OneTox.ViewModel.ProfileSettings
                        ?? (_createNewProfileCommand = new RelayCommand(
                            async () =>
                            {
-                               var tox = new ExtendedTox(new ToxOptions(true, true))
-                               {
-                                   Name = "User",
-                                   StatusMessage = "Using OneTox."
-                               };
-                               await SetCurrentProfile(tox);
+                               var profile = ProfileViewModel.GetDefaultProfileViewModel();
+                               await profile.SetAsCurrent();
                            }));
             }
         }
@@ -73,24 +66,18 @@ namespace OneTox.ViewModel.ProfileSettings
                                {
                                    if (file.FileType == ".tox")
                                    {
-                                       var tox = await LoadToxInstanceFromFile(file);
-                                       Profiles.Add(tox);
+                                       var profile = await ProfileViewModel.GetProfileViewModelFromFile(file);
+                                       Profiles.Add(profile);
                                    }
                                }
                            }));
             }
         }
 
-        public async Task SwitchProfile(ExtendedTox tox)
+        public async Task SwitchProfile(ProfileViewModel profile)
         {
-            await SetCurrentProfile(tox);
+            await profile.SetAsCurrent();
             IsSwitchProfileFlyoutClosed = true;
-        }
-
-        private async Task<ExtendedTox> LoadToxInstanceFromFile(StorageFile file)
-        {
-            var data = (await FileIO.ReadBufferAsync(file)).ToArray();
-            return new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(data));
         }
 
         #region Export profile
@@ -135,8 +122,8 @@ namespace OneTox.ViewModel.ProfileSettings
             var file = await PickSourceFile();
             if (file != null)
             {
-                var tox = await LoadToxInstanceFromFile(file);
-                await SetCurrentProfile(tox);
+                var profile = await ProfileViewModel.GetProfileViewModelFromFile(file);
+                await profile.SetAsCurrent();
             }
         }
 
@@ -145,14 +132,6 @@ namespace OneTox.ViewModel.ProfileSettings
             var openPicker = new FileOpenPicker();
             openPicker.FileTypeFilter.Add(".tox");
             return await openPicker.PickSingleFileAsync();
-        }
-
-        public async Task SetCurrentProfile(ExtendedTox tox)
-        {
-            ToxModel.Instance.SetCurrent(tox);
-            await ToxModel.Instance.SaveDataAsync();
-            ToxModel.Instance.Start();
-            await AvatarManager.Instance.LoadAvatars();
         }
 
         #endregion

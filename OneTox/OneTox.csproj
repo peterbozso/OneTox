@@ -143,6 +143,7 @@
     <Compile Include="ViewModel\Messaging\ToxMessageViewModelBase.cs" />
     <Compile Include="ViewModel\ProfileSettings\ProfileManagementViewModel.cs" />
     <Compile Include="ViewModel\ProfileSettings\ProfileSettingsViewModel.cs" />
+    <Compile Include="ViewModel\ProfileSettings\ProfileViewModel.cs" />
     <Compile Include="ViewModel\ToxErrorViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
     <Compile Include="View\Converters\BoolToOpacityConverter.cs" />
