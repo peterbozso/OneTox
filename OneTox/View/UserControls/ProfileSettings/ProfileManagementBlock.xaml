@@ -6,30 +6,32 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:profileSettings="using:OneTox.ViewModel.ProfileSettings"
+    xmlns:converters="using:OneTox.View.Converters"
     mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400"
+    d:DesignWidth="488"
     Loaded="ProfileManagementBlockLoaded">
 
     <UserControl.DataContext>
         <profileSettings:ProfileManagementViewModel />
     </UserControl.DataContext>
 
-    <StackPanel>
-        <TextBlock Text="Profile management" Margin="0,0,0,12" />
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
+    <UserControl.Resources>
+        <converters:UserStatusToStringConverter x:Key="UserStatusToStringConverter" />
+        <converters:SelectedItemToVisibilityConverter x:Key="SelectedItemToVisibilityConverter" />
+    </UserControl.Resources>
 
+    <StackPanel>
+        <TextBlock Text="Profile management" Margin="0,0,0,12" FontSize="20" />
+        <Grid>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition />
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="ExportButton" Grid.Column="0" Grid.Row="0" Content="Export" HorizontalAlignment="Stretch"
-                    Margin="0,0,4,4">
+            <Button x:Name="ExportButton" Grid.Column="0" Content="Export" HorizontalAlignment="Stretch"
+                    Margin="0,0,4,0">
                 <Button.Flyout>
                     <Flyout Placement="Left">
                         <StackPanel>
@@ -43,22 +45,36 @@
                 </Button.Flyout>
             </Button>
 
-            <Button x:Name="ImportButton" Grid.Column="1" Grid.Row="0" Content="Import" HorizontalAlignment="Stretch"
-                    Click="ImportButtonClick" Margin="4,0,0,4" />
+            <Button x:Name="ImportButton" Grid.Column="1" Content="Import" HorizontalAlignment="Stretch"
+                    Click="ImportButtonClick" Margin="4,0" />
 
-            <Button x:Name="SwitchButton" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Content="Switch"
-                    Margin="4,4,0,0" Click="SwitchButtonClick" />
-
-            <Button x:Name="NewButton" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Content="New"
-                    Command="{Binding CreateNewProfileCommand}" Margin="0,4,4,0" />
+            <Button x:Name="NewButton" Grid.Column="2" HorizontalAlignment="Stretch" Content="New"
+                    Command="{Binding CreateNewProfileCommand}" Margin="4,0,0,0" />
         </Grid>
 
-        <ListView x:Name="ProfileList" ItemsSource="{Binding Profiles}" SelectionMode="Single" Margin="0,12,0,0">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Name}" />
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <Grid Margin="0,12,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <ListView x:Name="ProfileList" Grid.Column="0" ItemsSource="{Binding Profiles}" SelectionMode="Single" Margin="0,0,12,0">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <StackPanel x:Name="SelectedProfileDetails" Grid.Column="1" Visibility="{Binding ElementName=ProfileList, Path=SelectedItem, Converter={StaticResource SelectedItemToVisibilityConverter}}">
+                <TextBlock FontSize="17">Tox ID</TextBlock>
+                <TextBlock Text="{Binding ElementName=ProfileList, Path=SelectedItem.Id}" TextWrapping="Wrap" Margin="8,4,0,8" />
+                <TextBlock FontSize="17">Status message</TextBlock>
+                <TextBlock Text="{Binding ElementName=ProfileList, Path=SelectedItem.StatusMessage}" TextWrapping="WrapWholeWords" Margin="8,4,0,8" />
+                <TextBlock FontSize="17">Status</TextBlock>
+                <TextBlock Text="{Binding ElementName=ProfileList, Path=SelectedItem.Status, Converter={StaticResource UserStatusToStringConverter}}" Margin="8,4,0,8" />
+                <Button x:Name="SwitchButton" HorizontalAlignment="Stretch" Content="Switch" Click="SwitchButtonClick" />
+            </StackPanel>
+        </Grid>
     </StackPanel>
 </UserControl>

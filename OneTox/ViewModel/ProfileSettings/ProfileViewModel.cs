@@ -19,6 +19,8 @@ namespace OneTox.ViewModel.ProfileSettings
 
         public ToxId Id => _toxInstance.Id;
         public string Name => _toxInstance.Name;
+        public ToxUserStatus Status => _toxInstance.Status;
+        public string StatusMessage => _toxInstance.StatusMessage;
 
         public static ProfileViewModel GetDefaultProfileViewModel()
         {

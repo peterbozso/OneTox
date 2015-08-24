@@ -155,6 +155,7 @@
     <Compile Include="View\Converters\FriendNameToTypingStatusConverter.cs" />
     <Compile Include="View\Converters\IsMutedToBackgroundColorConverter.cs" />
     <Compile Include="View\Converters\MessageToTextColorConverter.cs" />
+    <Compile Include="View\Converters\SelectedItemToVisibilityConverter.cs" />
     <Compile Include="View\Converters\SenderTypeToMessageBackgroundColorConverter.cs" />
     <Compile Include="View\Converters\SenderTypeToHorizontalAlignmentConverter.cs" />
     <Compile Include="View\Converters\SenderTypeToMessageMarginConverter.cs" />
