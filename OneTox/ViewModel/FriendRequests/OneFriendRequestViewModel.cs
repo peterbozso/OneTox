@@ -19,9 +19,6 @@ namespace OneTox.ViewModel.FriendRequests
             Message = message;
         }
 
-        public string PublicKey => _publicKey.ToString();
-        public string Message { get; private set; }
-
         public RelayCommand AcceptCommand
         {
             get
@@ -43,5 +40,8 @@ namespace OneTox.ViewModel.FriendRequests
                            new RelayCommand(() => { _friendRequestsViewModel.Requests.Remove(this); }));
             }
         }
+
+        public string Message { get; private set; }
+        public string PublicKey => _publicKey.ToString();
     }
 }

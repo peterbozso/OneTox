@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
-using OneTox.Common;
+﻿using OneTox.Common;
 using OneTox.Model;
 using OneTox.ViewModel.Friends;
 using SharpTox.Core;
+using System;
+using System.Threading;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 
 namespace OneTox.ViewModel.Messaging
 {
@@ -48,6 +48,34 @@ namespace OneTox.ViewModel.Messaging
             }
         }
 
+        private void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
+        {
+            if (e.FriendNumber != _target.FriendNumber)
+                return;
+
+            if (State == MessageDeliveryState.Pending)
+                ResendMessage();
+        }
+
+        private async void ReadReceiptReceivedHandler(object sender, ToxEventArgs.ReadReceiptEventArgs e)
+        {
+            if (e.FriendNumber != _target.FriendNumber)
+                return;
+
+            if (Id == e.Receipt)
+            {
+                await
+                    _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                        () => { State = MessageDeliveryState.Delivered; });
+            }
+        }
+
+        private void ResendMessage()
+        {
+            var messageId = ToxModel.Instance.SendMessage(_target.FriendNumber, Text, MessageType);
+            Id = messageId; // We have to update the message ID.
+        }
+
         /// <summary>
         ///     We automatically resend the message every 10 seconds for 3 times if we don't get a read receipt
         ///     for it in 10 seconds after we sent it for the first time.
@@ -62,7 +90,7 @@ namespace OneTox.ViewModel.Messaging
                     state =>
                     {
                         if (State == MessageDeliveryState.Delivered)
-                            // If it's delivered, then there's no need for resend.
+                        // If it's delivered, then there's no need for resend.
                         {
                             _resendTimer.Dispose();
                             return;
@@ -79,34 +107,6 @@ namespace OneTox.ViewModel.Messaging
                     },
                     null, 10000, 10000);
             }
-        }
-
-        private async void ReadReceiptReceivedHandler(object sender, ToxEventArgs.ReadReceiptEventArgs e)
-        {
-            if (e.FriendNumber != _target.FriendNumber)
-                return;
-
-            if (Id == e.Receipt)
-            {
-                await
-                    _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                        () => { State = MessageDeliveryState.Delivered; });
-            }
-        }
-
-        private void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
-        {
-            if (e.FriendNumber != _target.FriendNumber)
-                return;
-
-            if (State == MessageDeliveryState.Pending)
-                ResendMessage();
-        }
-
-        private void ResendMessage()
-        {
-            var messageId = ToxModel.Instance.SendMessage(_target.FriendNumber, Text, MessageType);
-            Id = messageId; // We have to update the message ID.
         }
     }
 }

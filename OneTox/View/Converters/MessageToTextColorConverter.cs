@@ -1,9 +1,9 @@
-﻿using System;
+﻿using OneTox.ViewModel.Messaging;
+using SharpTox.Core;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
-using OneTox.ViewModel.Messaging;
-using SharpTox.Core;
 
 namespace OneTox.View.Converters
 {
@@ -11,7 +11,7 @@ namespace OneTox.View.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var message = (ToxMessageViewModelBase) value;
+            var message = (ToxMessageViewModelBase)value;
             switch (message.MessageType)
             {
                 case ToxMessageType.Message:
@@ -20,6 +20,7 @@ namespace OneTox.View.Converters
                     if (message is SentMessageViewModel)
                         return Application.Current.Resources["SystemControlForegroundBaseHighBrush"] as SolidColorBrush;
                     break;
+
                 case ToxMessageType.Action:
                     if (message is ReceivedMessageViewModel)
                         return Application.Current.Resources["SystemControlForegroundBaseHighBrush"] as SolidColorBrush;

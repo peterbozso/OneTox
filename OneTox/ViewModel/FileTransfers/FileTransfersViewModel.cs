@@ -1,12 +1,12 @@
-﻿using System;
+﻿using OneTox.Common;
+using OneTox.Helpers;
+using OneTox.Model.FileTransfers;
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Windows.ApplicationModel.Core;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
-using OneTox.Common;
-using OneTox.Helpers;
-using OneTox.Model.FileTransfers;
 
 namespace OneTox.ViewModel.FileTransfers
 {
@@ -47,8 +47,8 @@ namespace OneTox.ViewModel.FileTransfers
                 Invisible
             }
 
-            private const int KHideArrowTextBlockHeight = 12;
             private const int KFileTransferRibbonHeight = 60;
+            private const int KHideArrowTextBlockHeight = 12;
             private readonly ObservableCollection<OneFileTransferViewModel> _transferViewModels;
             private TransfersBlockState _blockState;
             private double _openContentGridHeight;
@@ -114,11 +114,11 @@ namespace OneTox.ViewModel.FileTransfers
             {
                 // We don't show more than 3 items in the list at once, but use a scroll bar in that case.
                 var itemsToDisplay = transfersCount > 3 ? 3 : transfersCount;
-                OpenContentGridHeight = itemsToDisplay*KFileTransferRibbonHeight + KHideArrowTextBlockHeight;
+                OpenContentGridHeight = itemsToDisplay * KFileTransferRibbonHeight + KHideArrowTextBlockHeight;
             }
         }
 
-        #endregion
+        #endregion Visual states
 
         #region Fields
 
@@ -126,14 +126,14 @@ namespace OneTox.ViewModel.FileTransfers
         private readonly FileTransfersModel _transfersModel;
         private RelayCommand _sendFilesCommand;
 
-        #endregion
+        #endregion Fields
 
         #region Properties
 
         public ObservableCollection<OneFileTransferViewModel> Transfers { get; }
         public FileTransfersVisualStates VisualStates { get; }
 
-        #endregion
+        #endregion Properties
 
         #region File sending/receiving
 
@@ -162,13 +162,6 @@ namespace OneTox.ViewModel.FileTransfers
             }
         }
 
-        private async void FileTransferAddedHandler(object sender, OneFileTransferModel e)
-        {
-            await
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    () => { AddTransfer(e); });
-        }
-
         private void AddTransfer(OneFileTransferModel fileTransferModel)
         {
             var fileTransferViewModel = new OneFileTransferViewModel(this, fileTransferModel);
@@ -184,6 +177,13 @@ namespace OneTox.ViewModel.FileTransfers
             }
         }
 
-        #endregion
+        private async void FileTransferAddedHandler(object sender, OneFileTransferModel e)
+        {
+            await
+                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { AddTransfer(e); });
+        }
+
+        #endregion File sending/receiving
     }
 }

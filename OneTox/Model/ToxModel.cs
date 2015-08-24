@@ -1,13 +1,13 @@
-﻿using System;
+﻿using OneTox.Helpers;
+using OneTox.ViewModel;
+using SharpTox.Core;
+using SharpTox.Encryption;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using OneTox.Helpers;
-using OneTox.ViewModel;
-using SharpTox.Core;
-using SharpTox.Encryption;
 
 namespace OneTox.Model
 {
@@ -71,11 +71,6 @@ namespace OneTox.Model
                 _lastConnectionStatuses = new Dictionary<int, ToxConnectionStatus>();
             }
 
-            public void RegisterLast(int friendNumber, ToxConnectionStatus connectionStatus)
-            {
-                _lastConnectionStatuses[friendNumber] = connectionStatus;
-            }
-
             public ToxConnectionStatus GetLast(int friendNumber)
             {
                 if (_lastConnectionStatuses.ContainsKey(friendNumber))
@@ -85,15 +80,21 @@ namespace OneTox.Model
 
                 return ToxConnectionStatus.None;
             }
+
+            public void RegisterLast(int friendNumber, ToxConnectionStatus connectionStatus)
+            {
+                _lastConnectionStatuses[friendNumber] = connectionStatus;
+            }
         }
 
-        #endregion
+        #endregion Last ConnectionStatus registry
 
         #region Properties
 
-        public static ToxModel Instance => _instance ?? (_instance = new ToxModel());
-
         public int[] Friends => _tox.Friends;
+        public ToxId Id => _tox.Id;
+        public static ToxModel Instance => _instance ?? (_instance = new ToxModel());
+        public bool IsConnected => _tox.IsConnected;
 
         public string Name
         {
@@ -103,18 +104,6 @@ namespace OneTox.Model
                 if (value == _tox.Name)
                     return;
                 _tox.Name = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public string StatusMessage
-        {
-            get { return _tox.StatusMessage; }
-            set
-            {
-                if (value == _tox.StatusMessage)
-                    return;
-                _tox.StatusMessage = value;
                 RaisePropertyChanged();
             }
         }
@@ -131,13 +120,178 @@ namespace OneTox.Model
             }
         }
 
-        public ToxId Id => _tox.Id;
+        public string StatusMessage
+        {
+            get { return _tox.StatusMessage; }
+            set
+            {
+                if (value == _tox.StatusMessage)
+                    return;
+                _tox.StatusMessage = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public bool IsConnected => _tox.IsConnected;
-
-        #endregion
+        #endregion Properties
 
         #region Methods
+
+        public int AddFriend(ToxId id, string message, out bool success)
+        {
+            ToxErrorFriendAdd error;
+            var retVal = _tox.AddFriend(id, message, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            success = error == ToxErrorFriendAdd.Ok;
+            return retVal;
+        }
+
+        public int AddFriendNoRequest(ToxKey publicKey)
+        {
+            ToxErrorFriendAdd error;
+            var retVal = _tox.AddFriendNoRequest(publicKey, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
+        }
+
+        public bool DeleteFriend(int friendNumber)
+        {
+            ToxErrorFriendDelete error;
+            var retVal = _tox.DeleteFriend(friendNumber, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
+        }
+
+        public bool FileControl(int friendNumber, int fileNumber, ToxFileControl control)
+        {
+            ToxErrorFileControl error;
+            var retVal = _tox.FileControl(friendNumber, fileNumber, control, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
+        }
+
+        public byte[] FileGetId(int friendNumber, int fileNumber)
+        {
+            return _tox.FileGetId(friendNumber, fileNumber);
+        }
+
+        public bool FileSeek(int friendNumber, int fileNumber, long position)
+        {
+            ToxErrorFileSeek error;
+            var retVal = _tox.FileSeek(friendNumber, fileNumber, position, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
+        }
+
+        public ToxFileInfo FileSend(int friendNumber, ToxFileKind kind, long fileSize, string fileName,
+                    out bool success)
+        {
+            ToxErrorFileSend error;
+            var retVal = _tox.FileSend(friendNumber, kind, fileSize, fileName, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            success = error == ToxErrorFileSend.Ok;
+            return retVal;
+        }
+
+        public ToxFileInfo FileSend(int friendNumber, ToxFileKind kind, long fileSize, string fileName, byte[] fileId,
+                    out bool success)
+        {
+            ToxErrorFileSend error;
+            var retVal = _tox.FileSend(friendNumber, kind, fileSize, fileName, fileId, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            success = error == ToxErrorFileSend.Ok;
+            return retVal;
+        }
+
+        public bool FileSendChunk(int friendNumber, int fileNumber, long position, byte[] data)
+        {
+            ToxErrorFileSendChunk error;
+            var retVal = _tox.FileSendChunk(friendNumber, fileNumber, position, data, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
+        }
+
+        public ToxData GetData()
+        {
+            return _tox.GetData();
+        }
+
+        public ToxData GetData(ToxEncryptionKey key)
+        {
+            return _tox.GetData(key);
+        }
+
+        public string GetFriendName(int friendNumber)
+        {
+            return _tox.GetFriendName(friendNumber);
+        }
+
+        public ToxKey GetFriendPublicKey(int friendNumber)
+        {
+            return _tox.GetFriendPublicKey(friendNumber);
+        }
+
+        public ToxUserStatus GetFriendStatus(int friendNumber)
+        {
+            return _tox.GetFriendStatus(friendNumber);
+        }
+
+        public string GetFriendStatusMessage(int friendNumber)
+        {
+            return _tox.GetFriendStatusMessage(friendNumber);
+        }
+
+        public bool IsFriendOnline(int friendNumber)
+        {
+            return _tox.IsFriendOnline(friendNumber);
+        }
+
+        public ToxConnectionStatus LastConnectionStatusOfFriend(int friendNumber)
+        {
+            return _lastConnectionStatusRegistry.GetLast(friendNumber);
+        }
+
+        public async Task RestoreDataAsync()
+        {
+            try
+            {
+                var currentUserPublicKey = ApplicationData.Current.RoamingSettings.Values["currentUserPublicKey"];
+                var file = await ApplicationData.Current.RoamingFolder.GetFileAsync(currentUserPublicKey + ".tox");
+                var toxData = (await FileIO.ReadBufferAsync(file)).ToArray();
+                SetCurrent(new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(toxData)));
+            }
+            catch
+            {
+                // TODO: Exception handling!
+            }
+        }
+
+        public async Task SaveDataAsync()
+        {
+            await _semaphore.WaitAsync();
+            try
+            {
+                var file = await ApplicationData.Current.RoamingFolder.CreateFileAsync(
+                    _tox.Id.PublicKey + ".tox", CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteBytesAsync(file, _tox.GetData().Bytes);
+                ApplicationData.Current.RoamingSettings.Values["currentUserPublicKey"] = _tox.Id.PublicKey.ToString();
+            }
+            catch
+            {
+                // TODO: Exception handling!
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
+        }
+
+        public int SendMessage(int friendNumber, string message, ToxMessageType type)
+        {
+            ToxErrorSendMessage error;
+            var retVal = _tox.SendMessage(friendNumber, message, type, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
+        }
 
         /// <summary>
         ///     Replaces the current underlying EntededTox instance with a new one.
@@ -157,27 +311,14 @@ namespace OneTox.Model
             RaiseFriendListReseted();
         }
 
-        private void RegisterHandlers()
+        public void SetNospam(uint nospam)
         {
-            _tox.OnFriendListChanged += FriendListChangedHandler;
-            _tox.OnConnectionStatusChanged += ConnectionStatusChangedHandler;
-            _tox.OnFriendRequestReceived += FriendRequestReceivedHandler;
-            _tox.OnFriendNameChanged += FriendNameChangedHandler;
-            _tox.OnFriendStatusMessageChanged += FriendStatusMessageChangedHandler;
-            _tox.OnFriendStatusChanged += FriendStatusChangedHandler;
-            _tox.OnFriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
-            _tox.OnFriendMessageReceived += FriendMessageReceivedHandler;
-            _tox.OnFriendTypingChanged += FriendTypingChangedHandler;
-            _tox.OnFileControlReceived += FileControlReceivedHandler;
-            _tox.OnFileChunkRequested += FileChunkRequestedHandler;
-            _tox.OnFileSendRequestReceived += FileSendRequestReceivedHandler;
-            _tox.OnFileChunkReceived += FileChunkReceivedHandler;
-            _tox.OnReadReceiptReceived += ReadReceiptReceivedHandler;
+            _tox.SetNospam(nospam);
         }
 
-        private void RaiseAllPropertiesChanged()
+        public void SetTypingStatus(int friendNumber, bool isTyping)
         {
-            RaisePropertyChanged(string.Empty);
+            _tox.SetTypingStatus(friendNumber, isTyping);
         }
 
         public void Start()
@@ -208,232 +349,68 @@ namespace OneTox.Model
             }
         }
 
-        public void SetNospam(uint nospam)
+        private void RaiseAllPropertiesChanged()
         {
-            _tox.SetNospam(nospam);
+            RaisePropertyChanged(string.Empty);
         }
-
-        public int AddFriend(ToxId id, string message, out bool success)
-        {
-            ToxErrorFriendAdd error;
-            var retVal = _tox.AddFriend(id, message, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            success = error == ToxErrorFriendAdd.Ok;
-            return retVal;
-        }
-
-        public int AddFriendNoRequest(ToxKey publicKey)
-        {
-            ToxErrorFriendAdd error;
-            var retVal = _tox.AddFriendNoRequest(publicKey, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            return retVal;
-        }
-
-        public bool DeleteFriend(int friendNumber)
-        {
-            ToxErrorFriendDelete error;
-            var retVal = _tox.DeleteFriend(friendNumber, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            return retVal;
-        }
-
-        public string GetFriendName(int friendNumber)
-        {
-            return _tox.GetFriendName(friendNumber);
-        }
-
-        public string GetFriendStatusMessage(int friendNumber)
-        {
-            return _tox.GetFriendStatusMessage(friendNumber);
-        }
-
-        public ToxUserStatus GetFriendStatus(int friendNumber)
-        {
-            return _tox.GetFriendStatus(friendNumber);
-        }
-
-        public bool IsFriendOnline(int friendNumber)
-        {
-            return _tox.IsFriendOnline(friendNumber);
-        }
-
-        public ToxKey GetFriendPublicKey(int friendNumber)
-        {
-            return _tox.GetFriendPublicKey(friendNumber);
-        }
-
-        public async Task SaveDataAsync()
-        {
-            await _semaphore.WaitAsync();
-            try
-            {
-                var file = await ApplicationData.Current.RoamingFolder.CreateFileAsync(
-                    _tox.Id.PublicKey + ".tox", CreationCollisionOption.ReplaceExisting);
-                await FileIO.WriteBytesAsync(file, _tox.GetData().Bytes);
-                ApplicationData.Current.RoamingSettings.Values["currentUserPublicKey"] = _tox.Id.PublicKey.ToString();
-            }
-            catch
-            {
-                // TODO: Exception handling!
-            }
-            finally
-            {
-                _semaphore.Release();
-            }
-        }
-
-        public async Task RestoreDataAsync()
-        {
-            try
-            {
-                var currentUserPublicKey = ApplicationData.Current.RoamingSettings.Values["currentUserPublicKey"];
-                var file = await ApplicationData.Current.RoamingFolder.GetFileAsync(currentUserPublicKey + ".tox");
-                var toxData = (await FileIO.ReadBufferAsync(file)).ToArray();
-                SetCurrent(new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(toxData)));
-            }
-            catch
-            {
-                // TODO: Exception handling!
-            }
-        }
-
-        public ToxData GetData()
-        {
-            return _tox.GetData();
-        }
-
-        public ToxData GetData(ToxEncryptionKey key)
-        {
-            return _tox.GetData(key);
-        }
-
-        public int SendMessage(int friendNumber, string message, ToxMessageType type)
-        {
-            ToxErrorSendMessage error;
-            var retVal = _tox.SendMessage(friendNumber, message, type, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            return retVal;
-        }
-
-        public void SetTypingStatus(int friendNumber, bool isTyping)
-        {
-            _tox.SetTypingStatus(friendNumber, isTyping);
-        }
-
-        public bool FileControl(int friendNumber, int fileNumber, ToxFileControl control)
-        {
-            ToxErrorFileControl error;
-            var retVal = _tox.FileControl(friendNumber, fileNumber, control, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            return retVal;
-        }
-
-        public ToxFileInfo FileSend(int friendNumber, ToxFileKind kind, long fileSize, string fileName,
-            out bool success)
-        {
-            ToxErrorFileSend error;
-            var retVal = _tox.FileSend(friendNumber, kind, fileSize, fileName, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            success = error == ToxErrorFileSend.Ok;
-            return retVal;
-        }
-
-        public ToxFileInfo FileSend(int friendNumber, ToxFileKind kind, long fileSize, string fileName, byte[] fileId,
-            out bool success)
-        {
-            ToxErrorFileSend error;
-            var retVal = _tox.FileSend(friendNumber, kind, fileSize, fileName, fileId, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            success = error == ToxErrorFileSend.Ok;
-            return retVal;
-        }
-
-        public bool FileSendChunk(int friendNumber, int fileNumber, long position, byte[] data)
-        {
-            ToxErrorFileSendChunk error;
-            var retVal = _tox.FileSendChunk(friendNumber, fileNumber, position, data, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            return retVal;
-        }
-
-        public byte[] FileGetId(int friendNumber, int fileNumber)
-        {
-            return _tox.FileGetId(friendNumber, fileNumber);
-        }
-
-        public bool FileSeek(int friendNumber, int fileNumber, long position)
-        {
-            ToxErrorFileSeek error;
-            var retVal = _tox.FileSeek(friendNumber, fileNumber, position, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            return retVal;
-        }
-
-        public ToxConnectionStatus LastConnectionStatusOfFriend(int friendNumber)
-        {
-            return _lastConnectionStatusRegistry.GetLast(friendNumber);
-        }
-
 
         private void RaiseFriendListReseted()
         {
             FriendListChanged?.Invoke(this,
-                new FriendListChangedEventArgs {FriendNumber = -1, Action = FriendListChangedAction.Reset});
+                new FriendListChangedEventArgs { FriendNumber = -1, Action = FriendListChangedAction.Reset });
         }
 
-        #endregion
+        private void RegisterHandlers()
+        {
+            _tox.OnFriendListChanged += FriendListChangedHandler;
+            _tox.OnConnectionStatusChanged += ConnectionStatusChangedHandler;
+            _tox.OnFriendRequestReceived += FriendRequestReceivedHandler;
+            _tox.OnFriendNameChanged += FriendNameChangedHandler;
+            _tox.OnFriendStatusMessageChanged += FriendStatusMessageChangedHandler;
+            _tox.OnFriendStatusChanged += FriendStatusChangedHandler;
+            _tox.OnFriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
+            _tox.OnFriendMessageReceived += FriendMessageReceivedHandler;
+            _tox.OnFriendTypingChanged += FriendTypingChangedHandler;
+            _tox.OnFileControlReceived += FileControlReceivedHandler;
+            _tox.OnFileChunkRequested += FileChunkRequestedHandler;
+            _tox.OnFileSendRequestReceived += FileSendRequestReceivedHandler;
+            _tox.OnFileChunkReceived += FileChunkReceivedHandler;
+            _tox.OnReadReceiptReceived += ReadReceiptReceivedHandler;
+        }
+
+        #endregion Methods
 
         #region Events
 
-        public event EventHandler<FriendListChangedEventArgs> FriendListChanged;
-
-        public event EventHandler<ToxEventArgs.FriendRequestEventArgs> FriendRequestReceived;
-
-        public event EventHandler<ToxEventArgs.NameChangeEventArgs> FriendNameChanged;
-
-        public event EventHandler<ToxEventArgs.StatusMessageEventArgs> FriendStatusMessageChanged;
-
-        public event EventHandler<ToxEventArgs.StatusEventArgs> FriendStatusChanged;
-
-        public event EventHandler<ToxEventArgs.FriendConnectionStatusEventArgs> FriendConnectionStatusChanged;
-
-        public event EventHandler<ToxEventArgs.FriendMessageEventArgs> FriendMessageReceived;
-
-        public event EventHandler<ToxEventArgs.TypingStatusEventArgs> FriendTypingChanged;
-
-        public event EventHandler<ToxEventArgs.FileControlEventArgs> FileControlReceived;
+        public event EventHandler<ToxEventArgs.FileChunkEventArgs> FileChunkReceived;
 
         public event EventHandler<ToxEventArgs.FileRequestChunkEventArgs> FileChunkRequested;
 
+        public event EventHandler<ToxEventArgs.FileControlEventArgs> FileControlReceived;
+
         public event EventHandler<ToxEventArgs.FileSendRequestEventArgs> FileSendRequestReceived;
 
-        public event EventHandler<ToxEventArgs.FileChunkEventArgs> FileChunkReceived;
+        public event EventHandler<ToxEventArgs.FriendConnectionStatusEventArgs> FriendConnectionStatusChanged;
+
+        public event EventHandler<FriendListChangedEventArgs> FriendListChanged;
+
+        public event EventHandler<ToxEventArgs.FriendMessageEventArgs> FriendMessageReceived;
+
+        public event EventHandler<ToxEventArgs.NameChangeEventArgs> FriendNameChanged;
+
+        public event EventHandler<ToxEventArgs.FriendRequestEventArgs> FriendRequestReceived;
+
+        public event EventHandler<ToxEventArgs.StatusEventArgs> FriendStatusChanged;
+
+        public event EventHandler<ToxEventArgs.StatusMessageEventArgs> FriendStatusMessageChanged;
+
+        public event EventHandler<ToxEventArgs.TypingStatusEventArgs> FriendTypingChanged;
 
         public event EventHandler<ToxEventArgs.ReadReceiptEventArgs> ReadReceiptReceived;
 
-        #endregion
+        #endregion Events
 
         #region Event handlers
-
-        private async void FriendListChangedHandler(object sender, FriendListChangedEventArgs e)
-        {
-            await SaveDataAsync();
-
-            FriendListChanged?.Invoke(this, e);
-        }
-
-        private void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
-        {
-            FriendConnectionStatusChanged?.Invoke(this, e);
-
-            _lastConnectionStatusRegistry.RegisterLast(e.FriendNumber, e.Status);
-        }
-
-        private void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
-        {
-            FriendMessageReceived?.Invoke(this, e);
-        }
 
         private void ConnectionStatusChangedHandler(object sender, ToxEventArgs.ConnectionStatusEventArgs e)
         {
@@ -443,34 +420,9 @@ namespace OneTox.Model
                 BootstrapContinously();
         }
 
-        private void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
+        private void FileChunkReceivedHandler(object sender, ToxEventArgs.FileChunkEventArgs e)
         {
-            FriendRequestReceived?.Invoke(this, e);
-        }
-
-        private void FriendNameChangedHandler(object sender, ToxEventArgs.NameChangeEventArgs e)
-        {
-            FriendNameChanged?.Invoke(this, e);
-        }
-
-        private void FriendStatusMessageChangedHandler(object sender, ToxEventArgs.StatusMessageEventArgs e)
-        {
-            FriendStatusMessageChanged?.Invoke(this, e);
-        }
-
-        private void FriendStatusChangedHandler(object sender, ToxEventArgs.StatusEventArgs e)
-        {
-            FriendStatusChanged?.Invoke(this, e);
-        }
-
-        private void FriendTypingChangedHandler(object sender, ToxEventArgs.TypingStatusEventArgs e)
-        {
-            FriendTypingChanged?.Invoke(this, e);
-        }
-
-        private void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
-        {
-            FileControlReceived?.Invoke(this, e);
+            FileChunkReceived?.Invoke(this, e);
         }
 
         private void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
@@ -478,14 +430,58 @@ namespace OneTox.Model
             FileChunkRequested?.Invoke(this, e);
         }
 
+        private void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
+        {
+            FileControlReceived?.Invoke(this, e);
+        }
+
         private void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
         {
             FileSendRequestReceived?.Invoke(this, e);
         }
 
-        private void FileChunkReceivedHandler(object sender, ToxEventArgs.FileChunkEventArgs e)
+        private void FriendConnectionStatusChangedHandler(object sender, ToxEventArgs.FriendConnectionStatusEventArgs e)
         {
-            FileChunkReceived?.Invoke(this, e);
+            FriendConnectionStatusChanged?.Invoke(this, e);
+
+            _lastConnectionStatusRegistry.RegisterLast(e.FriendNumber, e.Status);
+        }
+
+        private async void FriendListChangedHandler(object sender, FriendListChangedEventArgs e)
+        {
+            await SaveDataAsync();
+
+            FriendListChanged?.Invoke(this, e);
+        }
+
+        private void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
+        {
+            FriendMessageReceived?.Invoke(this, e);
+        }
+
+        private void FriendNameChangedHandler(object sender, ToxEventArgs.NameChangeEventArgs e)
+        {
+            FriendNameChanged?.Invoke(this, e);
+        }
+
+        private void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
+        {
+            FriendRequestReceived?.Invoke(this, e);
+        }
+
+        private void FriendStatusChangedHandler(object sender, ToxEventArgs.StatusEventArgs e)
+        {
+            FriendStatusChanged?.Invoke(this, e);
+        }
+
+        private void FriendStatusMessageChangedHandler(object sender, ToxEventArgs.StatusMessageEventArgs e)
+        {
+            FriendStatusMessageChanged?.Invoke(this, e);
+        }
+
+        private void FriendTypingChangedHandler(object sender, ToxEventArgs.TypingStatusEventArgs e)
+        {
+            FriendTypingChanged?.Invoke(this, e);
         }
 
         private void ReadReceiptReceivedHandler(object sender, ToxEventArgs.ReadReceiptEventArgs e)
@@ -493,6 +489,6 @@ namespace OneTox.Model
             ReadReceiptReceived?.Invoke(this, e);
         }
 
-        #endregion
+        #endregion Event handlers
     }
 }

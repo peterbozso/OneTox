@@ -1,6 +1,6 @@
-﻿using System;
-using OneTox.Helpers;
+﻿using OneTox.Helpers;
 using SharpTox.Core;
+using System;
 
 namespace OneTox.ViewModel.Messaging
 {
@@ -15,7 +15,20 @@ namespace OneTox.ViewModel.Messaging
     {
         private MessageDeliveryState _state;
         private string _text;
+        public ToxMessageType MessageType { get; protected set; }
         public IToxUserViewModel Sender { get; protected set; }
+
+        public MessageDeliveryState State
+        {
+            get { return _state; }
+            protected set
+            {
+                if (value == _state)
+                    return;
+                _state = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public string Text
         {
@@ -35,18 +48,5 @@ namespace OneTox.ViewModel.Messaging
         }
 
         public DateTime Timestamp { get; protected set; }
-        public ToxMessageType MessageType { get; protected set; }
-
-        public MessageDeliveryState State
-        {
-            get { return _state; }
-            protected set
-            {
-                if (value == _state)
-                    return;
-                _state = value;
-                RaisePropertyChanged();
-            }
-        }
     }
 }

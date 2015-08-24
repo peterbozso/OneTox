@@ -54,7 +54,7 @@
                                             <DoubleAnimation Storyboard.TargetName="BorderBackground"
                                    Storyboard.TargetProperty="Opacity"
                                    Duration="0"
-                                   To="1"/>
+                                   To="1" />
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderBackground" Storyboard.TargetProperty="Fill">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
                                             </ObjectAnimationUsingKeyFrames>
@@ -1421,7 +1421,7 @@
                             </Grid>
                             <!-- The whole point of this style is to remove this button. TODO: Remove related animations!
                             <Button x:Name="MoreButton" Grid.Column="1" Foreground="{TemplateBinding Foreground}" MinHeight="{ThemeResource AppBarThemeCompactHeight}" Padding="16,23,16,0" Style="{StaticResource EllipsisButton}" VerticalAlignment="Top">
-                                <FontIcon x:Name="EllipsisIcon" FontSize="16" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE10C;" Height="{ThemeResource AppBarExpandButtonCircleDiameter}" VerticalAlignment="Center"/>
+                                <FontIcon x:Name="EllipsisIcon" FontSize="16" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE10C;" Height="{ThemeResource AppBarExpandButtonCircleDiameter}" VerticalAlignment="Center" />
                             </Button>
                             -->
                             <Popup x:Name="OverflowPopup">

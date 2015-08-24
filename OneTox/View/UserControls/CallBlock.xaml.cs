@@ -1,9 +1,9 @@
-﻿using System;
+﻿using OneTox.View.Converters;
+using OneTox.ViewModel.Calls;
+using System;
 using System.ComponentModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using OneTox.View.Converters;
-using OneTox.ViewModel.Calls;
 
 namespace OneTox.View.UserControls
 {
@@ -20,7 +20,7 @@ namespace OneTox.View.UserControls
 
         private void AudioCallBlockLoaded(object sender, RoutedEventArgs e)
         {
-            _audioCallViewModel = ((CallViewModel) DataContext).Audio;
+            _audioCallViewModel = ((CallViewModel)DataContext).Audio;
             _audioCallViewModel.MicrophoneIsNotAvailable += MicrophoneIsNotAvailableHandler;
             _audioCallViewModel.PropertyChanged += PropertyChangedHandler;
 
@@ -29,7 +29,7 @@ namespace OneTox.View.UserControls
 
             var state =
                 (string)
-                    new CallStateToStringConverter().Convert(_audioCallViewModel.State, typeof (string), null, null);
+                    new CallStateToStringConverter().Convert(_audioCallViewModel.State, typeof(string), null, null);
             VisualStateManager.GoToState(this, state, false);
         }
 
@@ -62,16 +62,22 @@ namespace OneTox.View.UserControls
                 ringPlayer.MediaOpened += MediaOpenedHandler;
             }
 
+            public void DeregisterEventHandlers(AudioCallViewModel audioCallViewModel)
+            {
+                audioCallViewModel.StartRinging -= StartRingingHandler;
+                audioCallViewModel.StopRinging -= StopRingingHandler;
+            }
+
             public void RegisterEventHandlers(AudioCallViewModel audioCallViewModel)
             {
                 audioCallViewModel.StartRinging += StartRingingHandler;
                 audioCallViewModel.StopRinging += StopRingingHandler;
             }
 
-            public void DeregisterEventHandlers(AudioCallViewModel audioCallViewModel)
+            private void MediaOpenedHandler(object sender, RoutedEventArgs e)
             {
-                audioCallViewModel.StartRinging -= StartRingingHandler;
-                audioCallViewModel.StopRinging -= StopRingingHandler;
+                if (_isRinging)
+                    _ringPlayer.Play();
             }
 
             private void StartRingingHandler(object sender, string ringFileName)
@@ -85,31 +91,15 @@ namespace OneTox.View.UserControls
                 _isRinging = false;
                 _ringPlayer.Stop();
             }
-
-            private void MediaOpenedHandler(object sender, RoutedEventArgs e)
-            {
-                if (_isRinging)
-                    _ringPlayer.Play();
-            }
         }
 
-        #endregion
+        #endregion RingManager
 
         #region Microphone availability error handling
 
-        private void MicrophoneIsNotAvailableHandler(object sender, string errorMessage)
-        {
-            if (_microphoneIsNotAvailableFylout == null)
-            {
-                var contentGrid = GetMicrophoneIsNotAvailableFlyoutContent(errorMessage);
-                _microphoneIsNotAvailableFylout = new Flyout {Content = contentGrid};
-            }
-            _microphoneIsNotAvailableFylout.ShowAt(MuteButton);
-        }
-
         private Grid GetMicrophoneIsNotAvailableFlyoutContent(string errorMessage)
         {
-            var contentGrid = new Grid {Width = 300};
+            var contentGrid = new Grid { Width = 300 };
 
             contentGrid.Children.Add(new TextBlock
             {
@@ -121,6 +111,16 @@ namespace OneTox.View.UserControls
             return contentGrid;
         }
 
+        private void MicrophoneIsNotAvailableHandler(object sender, string errorMessage)
+        {
+            if (_microphoneIsNotAvailableFylout == null)
+            {
+                var contentGrid = GetMicrophoneIsNotAvailableFlyoutContent(errorMessage);
+                _microphoneIsNotAvailableFylout = new Flyout { Content = contentGrid };
+            }
+            _microphoneIsNotAvailableFylout.ShowAt(MuteButton);
+        }
+
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             // Hide the flyout when the call ends.
@@ -130,6 +130,6 @@ namespace OneTox.View.UserControls
             }
         }
 
-        #endregion
+        #endregion Microphone availability error handling
     }
 }

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Diagnostics;
-using SharpTox.Av;
+﻿using SharpTox.Av;
 using SharpTox.Core;
+using System;
+using System.Diagnostics;
 
 namespace OneTox.ViewModel
 {
@@ -16,8 +16,10 @@ namespace OneTox.ViewModel
     public class ToxErrorViewModel
     {
         private static ToxErrorViewModel _instance;
-        public static ToxErrorViewModel Instance => _instance ?? (_instance = new ToxErrorViewModel());
+
         public event EventHandler<string> ToxErrorOccured;
+
+        public static ToxErrorViewModel Instance => _instance ?? (_instance = new ToxErrorViewModel());
 
         private void RaiseToxErrorOccured(string errorMessage)
         {
@@ -40,16 +42,20 @@ namespace OneTox.ViewModel
                     RaiseToxErrorOccured(
                         "Friend request is already sent or you already have this user on your friend list.");
                     return;
+
                 case ToxErrorFriendAdd.OwnKey:
                     RaiseToxErrorOccured("This ID is yours. You can't add yourself to your friend list.");
                     return;
+
                 case ToxErrorFriendAdd.SetNewNospam:
                     RaiseToxErrorOccured(
                         "You already have this user on your friend list, but with a different no spam value.");
                     return;
+
                 case ToxErrorFriendAdd.TooLong:
                     RaiseToxErrorOccured("The friend request message is too long.");
                     return;
+
                 default:
                     if (error != ToxErrorFriendAdd.Ok)
                         RaiseToxErrorOccured("An unexpected error occurred when handling a friend request: " + error);
@@ -87,7 +93,7 @@ namespace OneTox.ViewModel
                 Debug.WriteLine("An unexpected error occurred when seeking in a file: " + error);
         }
 
-        #endregion
+        #endregion Core errors
 
         #region Audio/Video errors
 
@@ -121,6 +127,6 @@ namespace OneTox.ViewModel
                 Debug.WriteLine("An unexpected error occurred when sending a frame: " + error);
         }
 
-        #endregion
+        #endregion Audio/Video errors
     }
 }

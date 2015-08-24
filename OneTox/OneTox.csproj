@@ -122,7 +122,6 @@
     <Compile Include="Model\FriendListChangedEventArgs.cs" />
     <Compile Include="Model\ToxAvModel.cs" />
     <Compile Include="Model\ToxModel.cs" />
-    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\Calls\AudioCallViewModel.cs" />
     <Compile Include="ViewModel\Calls\CallViewModel.cs" />

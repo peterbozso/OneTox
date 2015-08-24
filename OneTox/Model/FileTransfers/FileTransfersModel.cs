@@ -1,7 +1,7 @@
-﻿using System;
+﻿using SharpTox.Core;
+using System;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SharpTox.Core;
 
 namespace OneTox.Model.FileTransfers
 {
@@ -21,7 +21,7 @@ namespace OneTox.Model.FileTransfers
         private async Task<long> GetFileSizeInBytes(StorageFile file)
         {
             var fileProperties = await file.GetBasicPropertiesAsync();
-            return (long) fileProperties.Size;
+            return (long)fileProperties.Size;
         }
 
         #region Sending/receiving
@@ -76,7 +76,7 @@ namespace OneTox.Model.FileTransfers
             FileTransferAdded?.Invoke(this, oneFileTransferModel);
         }
 
-        #endregion
+        #endregion Sending/receiving
 
         #region File transfer resuming
 
@@ -119,6 +119,6 @@ namespace OneTox.Model.FileTransfers
             }
         }
 
-        #endregion
+        #endregion File transfer resuming
     }
 }

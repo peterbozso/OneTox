@@ -1,10 +1,10 @@
-﻿using System;
+﻿using OneTox.Model;
+using OneTox.Model.Avatars;
+using SharpTox.Core;
+using System;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Storage;
-using OneTox.Model;
-using OneTox.Model.Avatars;
-using SharpTox.Core;
 
 namespace OneTox.ViewModel.ProfileSettings
 {
@@ -17,14 +17,8 @@ namespace OneTox.ViewModel.ProfileSettings
             _toxInstance = toxInstance;
         }
 
-        public string Name => _toxInstance.Name;
         public ToxId Id => _toxInstance.Id;
-
-        public static async Task<ProfileViewModel> GetProfileViewModelFromFile(StorageFile file)
-        {
-            var data = (await FileIO.ReadBufferAsync(file)).ToArray();
-            return new ProfileViewModel(new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(data)));
-        }
+        public string Name => _toxInstance.Name;
 
         public static ProfileViewModel GetDefaultProfileViewModel()
         {
@@ -35,6 +29,12 @@ namespace OneTox.ViewModel.ProfileSettings
             };
 
             return new ProfileViewModel(toxInstance);
+        }
+
+        public static async Task<ProfileViewModel> GetProfileViewModelFromFile(StorageFile file)
+        {
+            var data = (await FileIO.ReadBufferAsync(file)).ToArray();
+            return new ProfileViewModel(new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(data)));
         }
 
         public async Task SetAsCurrent()

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using OneTox.Helpers;
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using OneTox.Helpers;
 
 namespace OneTox.ViewModel.Messaging
 {
@@ -16,8 +16,8 @@ namespace OneTox.ViewModel.Messaging
             Messages.CollectionChanged += MessagesCollectionChangedHandler;
         }
 
-        public IToxUserViewModel Sender { get; }
         public ObservableCollection<ToxMessageViewModelBase> Messages { get; }
+        public IToxUserViewModel Sender { get; }
 
         public DateTime Timestamp
         {
@@ -33,7 +33,7 @@ namespace OneTox.ViewModel.Messaging
 
         private void MessagesCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
         {
-            Timestamp = ((ToxMessageViewModelBase) e.NewItems[e.NewItems.Count - 1]).Timestamp;
+            Timestamp = ((ToxMessageViewModelBase)e.NewItems[e.NewItems.Count - 1]).Timestamp;
         }
     }
 }

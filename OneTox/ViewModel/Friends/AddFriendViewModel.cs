@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
-using OneTox.Common;
+﻿using OneTox.Common;
 using OneTox.Helpers;
 using OneTox.Model;
 using SharpTox.Core;
+using System;
+using System.Threading;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 
 namespace OneTox.ViewModel.Friends
 {
@@ -16,42 +16,6 @@ namespace OneTox.ViewModel.Friends
         private string _friendIdPlaceholder;
         private Timer _friendIdPlaceholderTimer;
         private string _invitationMessage;
-
-        public string FriendId
-        {
-            get { return _friendId; }
-            set
-            {
-                if (value == _friendId)
-                    return;
-                _friendId = value.Trim();
-                RaisePropertyChanged();
-            }
-        }
-
-        public string FriendIdPlaceholder
-        {
-            get { return _friendIdPlaceholder; }
-            private set
-            {
-                if (value == _friendIdPlaceholder)
-                    return;
-                _friendIdPlaceholder = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public string InvitationMessage
-        {
-            get { return _invitationMessage; }
-            set
-            {
-                if (value == _invitationMessage)
-                    return;
-                _invitationMessage = value;
-                RaisePropertyChanged();
-            }
-        }
 
         public RelayCommand AddFriendCommand
         {
@@ -91,6 +55,42 @@ namespace OneTox.ViewModel.Friends
                                    }
                                }
                            }));
+            }
+        }
+
+        public string FriendId
+        {
+            get { return _friendId; }
+            set
+            {
+                if (value == _friendId)
+                    return;
+                _friendId = value.Trim();
+                RaisePropertyChanged();
+            }
+        }
+
+        public string FriendIdPlaceholder
+        {
+            get { return _friendIdPlaceholder; }
+            private set
+            {
+                if (value == _friendIdPlaceholder)
+                    return;
+                _friendIdPlaceholder = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public string InvitationMessage
+        {
+            get { return _invitationMessage; }
+            set
+            {
+                if (value == _invitationMessage)
+                    return;
+                _invitationMessage = value;
+                RaisePropertyChanged();
             }
         }
 

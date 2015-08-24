@@ -45,14 +45,12 @@
                         </ObjectAnimationUsingKeyFrames>
                         <DoubleAnimation Duration="0" To="0.5" Storyboard.TargetProperty="(UIElement.Opacity)"
                                          Storyboard.TargetName="MessageText" d:IsOptimized="True" />
-
                     </Storyboard>
                 </VisualState>
                 <VisualState x:Name="Failed">
                     <Storyboard>
                         <DoubleAnimation Duration="0" To="0.5" Storyboard.TargetProperty="(UIElement.Opacity)"
                                          Storyboard.TargetName="MessageText" d:IsOptimized="True" />
-
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>

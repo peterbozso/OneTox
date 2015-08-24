@@ -1,7 +1,7 @@
-﻿using System.IO;
+﻿using SharpTox.Core;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SharpTox.Core;
 
 namespace OneTox.Model.FileTransfers
 {
@@ -40,6 +40,7 @@ namespace OneTox.Model.FileTransfers
                 case TransferDirection.Up:
                     State = FileTransferState.Uploading;
                     break;
+
                 case TransferDirection.Down:
                     State = FileTransferState.Downloading;
                     break;

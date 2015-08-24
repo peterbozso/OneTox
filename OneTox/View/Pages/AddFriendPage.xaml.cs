@@ -13,7 +13,7 @@ namespace OneTox.View.Pages
         {
             if (e.Size.Width >= 930)
             {
-                Frame.Navigate(typeof (MainPage), GetType());
+                Frame.Navigate(typeof(MainPage), GetType());
             }
         }
     }

@@ -1,4 +1,9 @@
-﻿using System;
+﻿using OneTox.Common;
+using OneTox.Model;
+using OneTox.Model.Avatars;
+using OneTox.View.Pages;
+using OneTox.ViewModel;
+using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -11,11 +16,6 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using OneTox.Common;
-using OneTox.Model;
-using OneTox.Model.Avatars;
-using OneTox.View.Pages;
-using OneTox.ViewModel;
 
 namespace OneTox
 {
@@ -79,40 +79,17 @@ namespace OneTox
 
                 if (Window.Current.Bounds.Width < 930)
                 {
-                    rootFrame.Navigate(typeof (FriendListPage));
+                    rootFrame.Navigate(typeof(FriendListPage));
                 }
                 else
                 {
-                    rootFrame.Navigate(typeof (MainPage));
+                    rootFrame.Navigate(typeof(MainPage));
                 }
             }
             // Ensure the current window is active
             Window.Current.Activate();
 
-            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size {Width = 500, Height = 500});
-        }
-
-        private async Task InitializeSingletons()
-        {
-            ToxModel.Instance.Start();
-            await AvatarManager.Instance.LoadAvatars();
-            ToxErrorViewModel.Instance.ToxErrorOccured += ToxErrorOccuredHandler;
-        }
-
-        private async void ToxErrorOccuredHandler(object sender, string errorMessage)
-        {
-            if (_showErrorDialogCommand != null)
-            {
-                return;
-            }
-
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                var msgDialog = new MessageDialog(errorMessage, "Error occured");
-                _showErrorDialogCommand = msgDialog.ShowAsync();
-                await _showErrorDialogCommand;
-                _showErrorDialogCommand = null;
-            });
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size { Width = 500, Height = 500 });
         }
 
         private async Task HandlePreviousExecutionState(ApplicationExecutionState previousExecutionState)
@@ -139,8 +116,8 @@ namespace OneTox
                 }
 
                 if (previousExecutionState != ApplicationExecutionState.NotRunning)
-                    // We only have to restore session state in the other two cases.
-                    // See: https://msdn.microsoft.com/en-us/library/ie/windows.applicationmodel.activation.applicationexecutionstate
+                // We only have to restore session state in the other two cases.
+                // See: https://msdn.microsoft.com/en-us/library/ie/windows.applicationmodel.activation.applicationexecutionstate
                 {
                     try
                     {
@@ -155,6 +132,13 @@ namespace OneTox
             }
         }
 
+        private async Task InitializeSingletons()
+        {
+            ToxModel.Instance.Start();
+            await AvatarManager.Instance.LoadAvatars();
+            ToxErrorViewModel.Instance.ToxErrorOccured += ToxErrorOccuredHandler;
+        }
+
         /// <summary>
         ///     Invoked when Navigation to a certain page fails
         /// </summary>
@@ -163,6 +147,15 @@ namespace OneTox
         private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+        }
+
+        private async void OnResuming(object sender, object e)
+        {
+            // See OnSuspending()!
+            // await SuspensionManager.RestoreAsync();
+
+            await ToxModel.Instance.RestoreDataAsync();
+            ToxModel.Instance.Start();
         }
 
         /// <summary>
@@ -184,13 +177,20 @@ namespace OneTox
             deferral.Complete();
         }
 
-        private async void OnResuming(object sender, object e)
+        private async void ToxErrorOccuredHandler(object sender, string errorMessage)
         {
-            // See OnSuspending()!
-            // await SuspensionManager.RestoreAsync();
+            if (_showErrorDialogCommand != null)
+            {
+                return;
+            }
 
-            await ToxModel.Instance.RestoreDataAsync();
-            ToxModel.Instance.Start();
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                var msgDialog = new MessageDialog(errorMessage, "Error occured");
+                _showErrorDialogCommand = msgDialog.ShowAsync();
+                await _showErrorDialogCommand;
+                _showErrorDialogCommand = null;
+            });
         }
     }
 }

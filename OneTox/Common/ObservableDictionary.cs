@@ -12,7 +12,26 @@ namespace OneTox.Common
     public class ObservableDictionary : IObservableMap<string, object>
     {
         private readonly Dictionary<string, object> _dictionary = new Dictionary<string, object>();
+
         public event MapChangedEventHandler<string, object> MapChanged;
+
+        public int Count => _dictionary.Count;
+
+        public bool IsReadOnly => false;
+
+        public ICollection<string> Keys => _dictionary.Keys;
+
+        public ICollection<object> Values => _dictionary.Values;
+
+        public object this[string key]
+        {
+            get { return _dictionary[key]; }
+            set
+            {
+                _dictionary[key] = value;
+                InvokeMapChanged(CollectionChange.ItemChanged, key);
+            }
+        }
 
         public void Add(string key, object value)
         {
@@ -23,6 +42,46 @@ namespace OneTox.Common
         public void Add(KeyValuePair<string, object> item)
         {
             Add(item.Key, item.Value);
+        }
+
+        public void Clear()
+        {
+            var priorKeys = _dictionary.Keys.ToArray();
+            _dictionary.Clear();
+            foreach (var key in priorKeys)
+            {
+                InvokeMapChanged(CollectionChange.ItemRemoved, key);
+            }
+        }
+
+        public bool Contains(KeyValuePair<string, object> item)
+        {
+            return _dictionary.Contains(item);
+        }
+
+        public bool ContainsKey(string key)
+        {
+            return _dictionary.ContainsKey(key);
+        }
+
+        public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
+        {
+            var arraySize = array.Length;
+            foreach (var pair in _dictionary)
+            {
+                if (arrayIndex >= arraySize) break;
+                array[arrayIndex++] = pair;
+            }
+        }
+
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        {
+            return _dictionary.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _dictionary.GetEnumerator();
         }
 
         public bool Remove(string key)
@@ -47,66 +106,9 @@ namespace OneTox.Common
             return false;
         }
 
-        public object this[string key]
-        {
-            get { return _dictionary[key]; }
-            set
-            {
-                _dictionary[key] = value;
-                InvokeMapChanged(CollectionChange.ItemChanged, key);
-            }
-        }
-
-        public void Clear()
-        {
-            var priorKeys = _dictionary.Keys.ToArray();
-            _dictionary.Clear();
-            foreach (var key in priorKeys)
-            {
-                InvokeMapChanged(CollectionChange.ItemRemoved, key);
-            }
-        }
-
-        public ICollection<string> Keys => _dictionary.Keys;
-
-        public bool ContainsKey(string key)
-        {
-            return _dictionary.ContainsKey(key);
-        }
-
         public bool TryGetValue(string key, out object value)
         {
             return _dictionary.TryGetValue(key, out value);
-        }
-
-        public ICollection<object> Values => _dictionary.Values;
-
-        public bool Contains(KeyValuePair<string, object> item)
-        {
-            return _dictionary.Contains(item);
-        }
-
-        public int Count => _dictionary.Count;
-        public bool IsReadOnly => false;
-
-        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
-        {
-            return _dictionary.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _dictionary.GetEnumerator();
-        }
-
-        public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
-        {
-            var arraySize = array.Length;
-            foreach (var pair in _dictionary)
-            {
-                if (arrayIndex >= arraySize) break;
-                array[arrayIndex++] = pair;
-            }
         }
 
         private void InvokeMapChanged(CollectionChange change, string key)

@@ -1,9 +1,9 @@
-﻿using System.Collections.Specialized;
+﻿using OneTox.ViewModel.FileTransfers;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using OneTox.ViewModel.FileTransfers;
 
 namespace OneTox.View.UserControls.FileTransfers
 {
@@ -14,6 +14,14 @@ namespace OneTox.View.UserControls.FileTransfers
         public FileTransfersBlock()
         {
             InitializeComponent();
+        }
+
+        private void AdjustOpenGridAnimationHeights()
+        {
+            // Storyboards don't really like data binded From and To values, so we have to do it this way, updating these manually.
+            var newHeight = _fileTransfersViewModel.VisualStates.OpenContentGridHeight;
+            ShowOpenContentGridAnimationEnd.Value = newHeight;
+            OpenContentGridHeight.Value = newHeight;
         }
 
         private void FileTransferBlockDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
@@ -27,28 +35,10 @@ namespace OneTox.View.UserControls.FileTransfers
             _fileTransfersViewModel.Transfers.CollectionChanged += TransfersCollectionChangedHandler;
         }
 
-        private void VisualStatesPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        private void HideTransfersIconTapped(object sender, TappedRoutedEventArgs e)
         {
-            if (e.PropertyName == "OpenContentGridHeight")
-            {
-                AdjustOpenGridAnimationHeights();
-            }
-        }
-
-        private void AdjustOpenGridAnimationHeights()
-        {
-            // Storyboards don't really like data binded From and To values, so we have to do it this way, updating these manually.
-            var newHeight = _fileTransfersViewModel.VisualStates.OpenContentGridHeight;
-            ShowOpenContentGridAnimationEnd.Value = newHeight;
-            OpenContentGridHeight.Value = newHeight;
-        }
-
-        private void TransfersCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                ScrollTransferRibbonsToBottom();
-            }
+            _fileTransfersViewModel.VisualStates.BlockState =
+                FileTransfersViewModel.FileTransfersVisualStates.TransfersBlockState.Collapsed;
         }
 
         private void ScrollTransferRibbonsToBottom()
@@ -63,10 +53,20 @@ namespace OneTox.View.UserControls.FileTransfers
                 FileTransfersViewModel.FileTransfersVisualStates.TransfersBlockState.Open;
         }
 
-        private void HideTransfersIconTapped(object sender, TappedRoutedEventArgs e)
+        private void TransfersCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
         {
-            _fileTransfersViewModel.VisualStates.BlockState =
-                FileTransfersViewModel.FileTransfersVisualStates.TransfersBlockState.Collapsed;
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                ScrollTransferRibbonsToBottom();
+            }
+        }
+
+        private void VisualStatesPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "OpenContentGridHeight")
+            {
+                AdjustOpenGridAnimationHeights();
+            }
         }
     }
 }

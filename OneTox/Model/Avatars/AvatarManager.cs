@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpTox.Core;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -11,7 +12,6 @@ using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
-using SharpTox.Core;
 
 namespace OneTox.Model.Avatars
 {
@@ -22,6 +22,7 @@ namespace OneTox.Model.Avatars
     {
         // See: https://github.com/irungentoo/Tox_Client_Guidelines/blob/master/Important/Avatars.md
         private const int KMaxPictureSizeInBytes = 1 << 16;
+
         private static AvatarManager _instance;
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private StorageFolder _avatarsFolder;
@@ -37,6 +38,7 @@ namespace OneTox.Model.Avatars
 
         #region Properties
 
+        public Dictionary<int, BitmapImage> FriendAvatars { get; }
         public static AvatarManager Instance => _instance ?? (_instance = new AvatarManager());
 
         public bool IsUserAvatarSet
@@ -59,19 +61,25 @@ namespace OneTox.Model.Avatars
             }
         }
 
-        public Dictionary<int, BitmapImage> FriendAvatars { get; }
-
-        #endregion
+        #endregion Properties
 
         #region Events
 
         public event EventHandler<int> FriendAvatarChanged;
-        public event EventHandler UserAvatarChanged;
+
         public event EventHandler IsUserAvatarSetChanged;
 
-        #endregion
+        public event EventHandler UserAvatarChanged;
+
+        #endregion Events
 
         #region Friend avatar management
+
+        public async void ChangeFriendAvatar(int friendNumber, MemoryStream avatarStream)
+        {
+            var file = await SaveFriendAvatar(friendNumber, avatarStream);
+            await SetFriendAvatar(friendNumber, file);
+        }
 
         public async Task<Stream> GetFriendAvatarStream(int friendNumber)
         {
@@ -105,10 +113,9 @@ namespace OneTox.Model.Avatars
                     StorageFile;
         }
 
-        public async void ChangeFriendAvatar(int friendNumber, MemoryStream avatarStream)
+        private void RaiseFriendAvatarChanged(int friendNumber)
         {
-            var file = await SaveFriendAvatar(friendNumber, avatarStream);
-            await SetFriendAvatar(friendNumber, file);
+            FriendAvatarChanged?.Invoke(this, friendNumber);
         }
 
         /// <summary>
@@ -157,12 +164,7 @@ namespace OneTox.Model.Avatars
             return true;
         }
 
-        private void RaiseFriendAvatarChanged(int friendNumber)
-        {
-            FriendAvatarChanged?.Invoke(this, friendNumber);
-        }
-
-        #endregion
+        #endregion Friend avatar management
 
         #region Loading avatars
 
@@ -177,16 +179,13 @@ namespace OneTox.Model.Avatars
             await LoadFriendAvatars();
         }
 
-        private async Task LoadUserAvatar()
+        private void ClearFriendAvatars()
         {
-            var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png") as StorageFile;
-            if (file == null)
+            FriendAvatars.Clear();
+
+            foreach (var friendNumber in ToxModel.Instance.Friends)
             {
-                ResetUserAvatar();
-            }
-            else
-            {
-                await SetUserAvatar(file);
+                RaiseFriendAvatarChanged(friendNumber);
             }
         }
 
@@ -206,17 +205,20 @@ namespace OneTox.Model.Avatars
             }
         }
 
-        private void ClearFriendAvatars()
+        private async Task LoadUserAvatar()
         {
-            FriendAvatars.Clear();
-
-            foreach (var friendNumber in ToxModel.Instance.Friends)
+            var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png") as StorageFile;
+            if (file == null)
             {
-                RaiseFriendAvatarChanged(friendNumber);
+                ResetUserAvatar();
+            }
+            else
+            {
+                await SetUserAvatar(file);
             }
         }
 
-        #endregion
+        #endregion Loading avatars
 
         #region User avatar management
 
@@ -236,40 +238,6 @@ namespace OneTox.Model.Avatars
             await BroadcastUserAvatarOnSet(newFile);
         }
 
-        private async Task SetUserAvatar(StorageFile file)
-        {
-            using (var stream = await file.OpenAsync(FileAccessMode.Read))
-            {
-                if (stream.AsStream().Length > KMaxPictureSizeInBytes) // TODO: Remove this safety check later!
-                    throw new ArgumentOutOfRangeException();
-                var newAvatar = new BitmapImage();
-                newAvatar.SetSource(stream);
-                UserAvatar = newAvatar;
-                IsUserAvatarSet = true;
-            }
-        }
-
-        /// <summary>
-        ///     Copies the user's avatar's file to it's place (avatars subfolder).
-        /// </summary>
-        /// <param name="file">The user's avatar's file.</param>
-        /// <returns>The copy of the file.</returns>
-        private async Task<StorageFile> SaveUserAvatarFile(StorageFile file)
-        {
-            var copy = await file.CopyAsync(_avatarsFolder);
-            await copy.RenameAsync(ToxModel.Instance.Id.PublicKey + ".png", NameCollisionOption.ReplaceExisting);
-            return copy;
-        }
-
-        private async Task BroadcastUserAvatarOnSet(StorageFile file)
-        {
-            foreach (var friendNumber in ToxModel.Instance.Friends)
-            {
-                if (ToxModel.Instance.IsFriendOnline(friendNumber))
-                    await SendUserAvatar(friendNumber, file);
-            }
-        }
-
         /// <summary>
         ///     Removes the current avatar of the user from both the app and the file system.
         /// </summary>
@@ -281,21 +249,6 @@ namespace OneTox.Model.Avatars
             BroadCastUserAvatarOnReset();
         }
 
-        /// <summary>
-        ///     Resets the user's avatar to the default one.
-        /// </summary>
-        private void ResetUserAvatar()
-        {
-            UserAvatar = new BitmapImage(new Uri("ms-appx:///Assets/default-profile-picture.png"));
-            IsUserAvatarSet = false;
-        }
-
-        private async Task DeleteUserAvatarFile()
-        {
-            var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
-            await file.DeleteAsync();
-        }
-
         private void BroadCastUserAvatarOnReset()
         {
             foreach (var friendNumber in ToxModel.Instance.Friends)
@@ -303,6 +256,21 @@ namespace OneTox.Model.Avatars
                 if (ToxModel.Instance.IsFriendOnline(friendNumber))
                     AvatarTransferManager.Instance.SendNullAvatar(friendNumber);
             }
+        }
+
+        private async Task BroadcastUserAvatarOnSet(StorageFile file)
+        {
+            foreach (var friendNumber in ToxModel.Instance.Friends)
+            {
+                if (ToxModel.Instance.IsFriendOnline(friendNumber))
+                    await SendUserAvatar(friendNumber, file);
+            }
+        }
+
+        private async Task DeleteUserAvatarFile()
+        {
+            var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
+            await file.DeleteAsync();
         }
 
         private async void FriendConnectionStatusChangedHandler(object sender,
@@ -329,10 +297,44 @@ namespace OneTox.Model.Avatars
             }
         }
 
+        /// <summary>
+        ///     Resets the user's avatar to the default one.
+        /// </summary>
+        private void ResetUserAvatar()
+        {
+            UserAvatar = new BitmapImage(new Uri("ms-appx:///Assets/default-profile-picture.png"));
+            IsUserAvatarSet = false;
+        }
+
+        /// <summary>
+        ///     Copies the user's avatar's file to it's place (avatars subfolder).
+        /// </summary>
+        /// <param name="file">The user's avatar's file.</param>
+        /// <returns>The copy of the file.</returns>
+        private async Task<StorageFile> SaveUserAvatarFile(StorageFile file)
+        {
+            var copy = await file.CopyAsync(_avatarsFolder);
+            await copy.RenameAsync(ToxModel.Instance.Id.PublicKey + ".png", NameCollisionOption.ReplaceExisting);
+            return copy;
+        }
+
         private async Task SendUserAvatar(int friendNumber, StorageFile file)
         {
             var stream = (await file.OpenReadAsync()).AsStreamForRead();
             AvatarTransferManager.Instance.SendAvatar(friendNumber, stream, file.Name);
+        }
+
+        private async Task SetUserAvatar(StorageFile file)
+        {
+            using (var stream = await file.OpenAsync(FileAccessMode.Read))
+            {
+                if (stream.AsStream().Length > KMaxPictureSizeInBytes) // TODO: Remove this safety check later!
+                    throw new ArgumentOutOfRangeException();
+                var newAvatar = new BitmapImage();
+                newAvatar.SetSource(stream);
+                UserAvatar = newAvatar;
+                IsUserAvatarSet = true;
+            }
         }
 
         private class AvatarResizer
@@ -346,6 +348,14 @@ namespace OneTox.Model.Avatars
                 _avatarFile = avatarFile;
             }
 
+            public static async Task<bool> IsAvatarTooBig(StorageFile file)
+            {
+                using (var stream = await file.OpenAsync(FileAccessMode.Read))
+                {
+                    return (stream.AsStream().Length > KMaxPictureSizeInBytes);
+                }
+            }
+
             public async Task<StorageFile> SaveUserAvatarFile()
             {
                 var avatar = await LoadAvatarToWriteableBitmap();
@@ -353,12 +363,24 @@ namespace OneTox.Model.Avatars
                 return await SaveUserAvatar(avatar);
             }
 
-            public static async Task<bool> IsAvatarTooBig(StorageFile file)
+            private WriteableBitmap CropIfNeeded(WriteableBitmap writeableBitmap)
             {
-                using (var stream = await file.OpenAsync(FileAccessMode.Read))
+                var height = writeableBitmap.PixelHeight;
+                var width = writeableBitmap.PixelWidth;
+                var xCenter = width / 2;
+                var yCenter = height / 2;
+
+                if (width > height)
                 {
-                    return (stream.AsStream().Length > KMaxPictureSizeInBytes);
+                    return writeableBitmap.Crop(xCenter - height / 2, 0, height, height);
                 }
+
+                if (width < height)
+                {
+                    return writeableBitmap.Crop(0, yCenter - width / 2, width, width);
+                }
+
+                return writeableBitmap;
             }
 
             private async Task<WriteableBitmap> LoadAvatarToWriteableBitmap()
@@ -379,28 +401,8 @@ namespace OneTox.Model.Avatars
             private WriteableBitmap ResizeAvatar(WriteableBitmap writeableBitmap)
             {
                 var resized = CropIfNeeded(writeableBitmap);
-                var size = Convert.ToInt32((double) Application.Current.Resources["DefaultAvatarSize"]);
+                var size = Convert.ToInt32((double)Application.Current.Resources["DefaultAvatarSize"]);
                 return resized.Resize(size, size, WriteableBitmapExtensions.Interpolation.Bilinear);
-            }
-
-            private WriteableBitmap CropIfNeeded(WriteableBitmap writeableBitmap)
-            {
-                var height = writeableBitmap.PixelHeight;
-                var width = writeableBitmap.PixelWidth;
-                var xCenter = width/2;
-                var yCenter = height/2;
-
-                if (width > height)
-                {
-                    return writeableBitmap.Crop(xCenter - height/2, 0, height, height);
-                }
-
-                if (width < height)
-                {
-                    return writeableBitmap.Crop(0, yCenter - width/2, width, width);
-                }
-
-                return writeableBitmap;
             }
 
             // Kudos: http://stackoverflow.com/questions/17140774/how-to-save-a-writeablebitmap-as-a-file
@@ -416,8 +418,8 @@ namespace OneTox.Model.Avatars
                     await pixelStream.ReadAsync(pixels, 0, pixels.Length);
 
                     encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
-                        (uint) avatar.PixelWidth,
-                        (uint) avatar.PixelHeight,
+                        (uint)avatar.PixelWidth,
+                        (uint)avatar.PixelHeight,
                         96.0,
                         96.0,
                         pixels);
@@ -427,6 +429,6 @@ namespace OneTox.Model.Avatars
             }
         }
 
-        #endregion
+        #endregion User avatar management
     }
 }

@@ -63,7 +63,7 @@
                                             <DoubleAnimation Storyboard.TargetName="BorderBackground"
                                    Storyboard.TargetProperty="Opacity"
                                    Duration="0"
-                                   To="1"/>
+                                   To="1" />
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderBackground" Storyboard.TargetProperty="Fill">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
                                             </ObjectAnimationUsingKeyFrames>

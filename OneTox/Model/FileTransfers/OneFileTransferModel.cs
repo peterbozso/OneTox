@@ -1,11 +1,11 @@
-﻿using System;
+﻿using OneTox.Helpers;
+using SharpTox.Core;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Storage;
 using Windows.UI.Xaml;
-using OneTox.Helpers;
-using SharpTox.Core;
 
 namespace OneTox.Model.FileTransfers
 {
@@ -18,33 +18,9 @@ namespace OneTox.Model.FileTransfers
             return (e.FriendNumber == _friendNumber && e.FileNumber == _fileNumber);
         }
 
-        #endregion
+        #endregion Helpers
 
         #region Constructor
-
-        public static async Task<OneFileTransferModel> CreateInstance(int friendNumber, int fileNumber, string name,
-            long fileSizeInBytes, TransferDirection direction, StorageFile file, long transferredBytes = 0)
-        {
-            if (file != null)
-                FileTransferResumer.Instance.RecordTransfer(file, friendNumber, fileNumber, direction);
-
-            var fileStream = file == null ? null : await GetStreamBasedOnDirection(file, direction);
-
-            return new OneFileTransferModel(friendNumber, fileNumber, name, fileSizeInBytes, direction, fileStream,
-                transferredBytes);
-        }
-
-        protected static async Task<Stream> GetStreamBasedOnDirection(StorageFile file, TransferDirection direction)
-        {
-            switch (direction)
-            {
-                case TransferDirection.Up:
-                    return await file.OpenStreamForReadAsync();
-                case TransferDirection.Down:
-                    return await file.OpenStreamForWriteAsync();
-            }
-            return null;
-        }
 
         protected OneFileTransferModel(int friendNumber, int fileNumber, string name,
             long fileSizeInBytes, TransferDirection direction, Stream stream, long transferredBytes = 0)
@@ -76,6 +52,31 @@ namespace OneTox.Model.FileTransfers
             Application.Current.Suspending += AppSuspendingHandler;
         }
 
+        public static async Task<OneFileTransferModel> CreateInstance(int friendNumber, int fileNumber, string name,
+                    long fileSizeInBytes, TransferDirection direction, StorageFile file, long transferredBytes = 0)
+        {
+            if (file != null)
+                FileTransferResumer.Instance.RecordTransfer(file, friendNumber, fileNumber, direction);
+
+            var fileStream = file == null ? null : await GetStreamBasedOnDirection(file, direction);
+
+            return new OneFileTransferModel(friendNumber, fileNumber, name, fileSizeInBytes, direction, fileStream,
+                transferredBytes);
+        }
+
+        protected static async Task<Stream> GetStreamBasedOnDirection(StorageFile file, TransferDirection direction)
+        {
+            switch (direction)
+            {
+                case TransferDirection.Up:
+                    return await file.OpenStreamForReadAsync();
+
+                case TransferDirection.Down:
+                    return await file.OpenStreamForWriteAsync();
+            }
+            return null;
+        }
+
         protected virtual void SetInitialStateBasedOnDirection(TransferDirection direction)
         {
             switch (direction)
@@ -83,13 +84,14 @@ namespace OneTox.Model.FileTransfers
                 case TransferDirection.Up:
                     State = FileTransferState.BeforeUpload;
                     break;
+
                 case TransferDirection.Down:
                     State = FileTransferState.BeforeDownload;
                     break;
             }
         }
 
-        #endregion
+        #endregion Constructor
 
         #region Fields
 
@@ -100,7 +102,7 @@ namespace OneTox.Model.FileTransfers
         private FileTransferState _state;
         private Stream _stream;
 
-        #endregion
+        #endregion Fields
 
         #region Properties
 
@@ -115,7 +117,7 @@ namespace OneTox.Model.FileTransfers
 
                 lock (_stream)
                 {
-                    return ((double) _stream.Position/_stream.Length)*100;
+                    return ((double)_stream.Position / _stream.Length) * 100;
                 }
             }
         }
@@ -139,7 +141,7 @@ namespace OneTox.Model.FileTransfers
 
         private bool IsPlaceholder => State == FileTransferState.Finished || State == FileTransferState.Cancelled;
 
-        #endregion
+        #endregion Properties
 
         #region Received file control handling
 
@@ -154,9 +156,11 @@ namespace OneTox.Model.FileTransfers
                     FileTransferResumer.Instance.RemoveTransfer(_friendNumber, _fileNumber);
                     State = FileTransferState.Cancelled;
                     return;
+
                 case ToxFileControl.Pause:
                     TryPauseTransfer();
                     return;
+
                 case ToxFileControl.Resume:
                     TryResumeTransfer();
                     return;
@@ -180,7 +184,7 @@ namespace OneTox.Model.FileTransfers
             SetResumingStateBasedOnDirection();
         }
 
-        #endregion
+        #endregion Received file control handling
 
         #region Sending
 
@@ -218,7 +222,7 @@ namespace OneTox.Model.FileTransfers
             }
         }
 
-        #endregion
+        #endregion Sending
 
         #region Receiving
 
@@ -249,17 +253,9 @@ namespace OneTox.Model.FileTransfers
             }
         }
 
-        #endregion
+        #endregion Receiving
 
         #region Control methods
-
-        public void CancelTransfer()
-        {
-            FileTransferResumer.Instance.RemoveTransfer(_friendNumber, _fileNumber);
-
-            if (!IsPlaceholder)
-                ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Cancel);
-        }
 
         public async Task AcceptTransfer(StorageFile file)
         {
@@ -280,6 +276,14 @@ namespace OneTox.Model.FileTransfers
                 ReplaceStream(null);
                 fileStream.Dispose();
             }
+        }
+
+        public void CancelTransfer()
+        {
+            FileTransferResumer.Instance.RemoveTransfer(_friendNumber, _fileNumber);
+
+            if (!IsPlaceholder)
+                ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Cancel);
         }
 
         public void PauseTransfer()
@@ -308,11 +312,9 @@ namespace OneTox.Model.FileTransfers
             }
         }
 
-        #endregion
+        #endregion Control methods
 
         #region Common
-
-        private long TransferredBytes => _stream?.Position ?? 0;
 
         private bool IsFinished
         {
@@ -325,25 +327,14 @@ namespace OneTox.Model.FileTransfers
             }
         }
 
+        private long TransferredBytes => _stream?.Position ?? 0;
+
         private void Dispose()
         {
             if (_stream != null) // It could be a dummy transfer waiting for accept from the user!
             {
                 _stream.Dispose();
                 _stream = null;
-            }
-        }
-
-        private void SetResumingStateBasedOnDirection()
-        {
-            switch (_direction)
-            {
-                case TransferDirection.Up:
-                    State = FileTransferState.Uploading;
-                    break;
-                case TransferDirection.Down:
-                    State = FileTransferState.Downloading;
-                    break;
             }
         }
 
@@ -356,7 +347,21 @@ namespace OneTox.Model.FileTransfers
             _stream = newStream;
         }
 
-        #endregion
+        private void SetResumingStateBasedOnDirection()
+        {
+            switch (_direction)
+            {
+                case TransferDirection.Up:
+                    State = FileTransferState.Uploading;
+                    break;
+
+                case TransferDirection.Down:
+                    State = FileTransferState.Downloading;
+                    break;
+            }
+        }
+
+        #endregion Common
 
         #region File transfer resuming
 
@@ -383,6 +388,6 @@ namespace OneTox.Model.FileTransfers
             }
         }
 
-        #endregion
+        #endregion File transfer resuming
     }
 }

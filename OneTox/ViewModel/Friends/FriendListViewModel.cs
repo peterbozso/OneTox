@@ -1,9 +1,9 @@
-﻿using System;
+﻿using OneTox.Model;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
-using OneTox.Model;
 
 namespace OneTox.ViewModel.Friends
 {
@@ -23,6 +23,11 @@ namespace OneTox.ViewModel.Friends
         }
 
         public ObservableCollection<FriendViewModel> Friends { get; set; }
+
+        private FriendViewModel FindFriend(int friendNumber)
+        {
+            return Friends.FirstOrDefault(friend => friend.FriendNumber == friendNumber);
+        }
 
         private async void FriendListChangedHandler(object sender, FriendListChangedEventArgs e)
         {
@@ -48,11 +53,6 @@ namespace OneTox.ViewModel.Friends
                             return;
                     }
                 });
-        }
-
-        private FriendViewModel FindFriend(int friendNumber)
-        {
-            return Friends.FirstOrDefault(friend => friend.FriendNumber == friendNumber);
         }
     }
 }

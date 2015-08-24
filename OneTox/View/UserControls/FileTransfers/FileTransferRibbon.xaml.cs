@@ -1,6 +1,6 @@
-﻿using Windows.UI.Xaml;
+﻿using OneTox.ViewModel.FileTransfers;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using OneTox.ViewModel.FileTransfers;
 
 namespace OneTox.View.UserControls.FileTransfers
 {
@@ -13,7 +13,7 @@ namespace OneTox.View.UserControls.FileTransfers
 
         private void FileTransferRibbonLoaded(object sender, RoutedEventArgs e)
         {
-            var transferViewModel = (OneFileTransferViewModel) DataContext;
+            var transferViewModel = (OneFileTransferViewModel)DataContext;
             VisualStateManager.GoToState(this, transferViewModel.State.ToString(), true);
         }
     }

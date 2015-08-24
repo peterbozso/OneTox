@@ -1,8 +1,8 @@
-﻿using System;
+﻿using OneTox.ViewModel.ProfileSettings;
+using System;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using OneTox.ViewModel.ProfileSettings;
 
 namespace OneTox.View.UserControls.ProfileSettings
 {
@@ -14,11 +14,6 @@ namespace OneTox.View.UserControls.ProfileSettings
         {
             InitializeComponent();
             _viewModel = DataContext as ProfileManagementViewModel;
-        }
-
-        private async void ProfileManagementBlockLoaded(object sender, RoutedEventArgs e)
-        {
-            await _viewModel.RefreshProfileList();
         }
 
         private async void ExportButtonClick(object sender, RoutedEventArgs e)
@@ -38,6 +33,11 @@ namespace OneTox.View.UserControls.ProfileSettings
                     "Error occurred");
                 await msgDialog.ShowAsync();
             }
+        }
+
+        private async void ProfileManagementBlockLoaded(object sender, RoutedEventArgs e)
+        {
+            await _viewModel.RefreshProfileList();
         }
 
         private async void SwitchButtonClick(object sender, RoutedEventArgs e)

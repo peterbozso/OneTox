@@ -1,4 +1,8 @@
-﻿using System;
+﻿using OneTox.Helpers;
+using OneTox.Model;
+using OneTox.ViewModel.Friends;
+using SharpTox.Core;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -7,10 +11,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
-using OneTox.Helpers;
-using OneTox.Model;
-using OneTox.ViewModel.Friends;
-using SharpTox.Core;
 
 namespace OneTox.ViewModel.Messaging
 {
@@ -40,7 +40,7 @@ namespace OneTox.ViewModel.Messaging
             foreach (var chunk in messageChunks)
             {
                 var messageId = ToxModel.Instance.SendMessage(_friendViewModel.FriendNumber, chunk, messageType);
-                // We store the message with this ID in every case, no matter if the sending was unsuccessful. 
+                // We store the message with this ID in every case, no matter if the sending was unsuccessful.
                 // If it was, we will resend the message later, and change it's message ID.
                 await
                     StoreMessage(new SentMessageViewModel(chunk, DateTime.Now, messageType, messageId,
@@ -48,7 +48,7 @@ namespace OneTox.ViewModel.Messaging
             }
         }
 
-        #endregion
+        #endregion Message sending
 
         #region Message tools
 
@@ -57,48 +57,17 @@ namespace OneTox.ViewModel.Messaging
         /// </summary>
         private static class MessageTools
         {
-            public static ToxMessageType GetMessageType(string message)
-            {
-                if (message.Length > 3 && message.Substring(0, 4).Equals("/me "))
-                    return ToxMessageType.Action;
-                return ToxMessageType.Message;
-            }
-
             public static List<string> GetMessageChunks(string message, ToxMessageType messageType)
             {
                 message = TrimMessage(message, messageType);
                 return SplitMessage(message);
             }
 
-            private static string TrimMessage(string message, ToxMessageType messageType)
+            public static ToxMessageType GetMessageType(string message)
             {
-                if (messageType == ToxMessageType.Action)
-                    message = message.Remove(0, 4);
-                message = message.Trim();
-                return message;
-            }
-
-            /// <summary>
-            ///     Split a message into ToxConstants.MaxMessageLength long (in bytes) chunks.
-            /// </summary>
-            /// <param name="message">The message to split.</param>
-            /// <returns>The list of chunks.</returns>
-            private static List<string> SplitMessage(string message)
-            {
-                var messageChunks = new List<string>();
-
-                var encoding = Encoding.UTF8;
-                var lengthInBytes = encoding.GetByteCount(message);
-                while (lengthInBytes > ToxConstants.MaxMessageLength)
-                {
-                    var chunk = GetChunkOfMaxMessageLength(message);
-                    messageChunks.Add(chunk);
-                    message = message.Substring(chunk.Length);
-                    lengthInBytes = encoding.GetByteCount(message);
-                }
-                messageChunks.Add(message);
-
-                return messageChunks;
+                if (message.Length > 3 && message.Substring(0, 4).Equals("/me "))
+                    return ToxMessageType.Action;
+                return ToxMessageType.Message;
             }
 
             // Kudos: http://codereview.stackexchange.com/questions/55103/method-to-return-a-string-of-max-length-in-bytes-vs-characterss
@@ -135,9 +104,40 @@ namespace OneTox.ViewModel.Messaging
 
                 return sb.ToString();
             }
+
+            /// <summary>
+            ///     Split a message into ToxConstants.MaxMessageLength long (in bytes) chunks.
+            /// </summary>
+            /// <param name="message">The message to split.</param>
+            /// <returns>The list of chunks.</returns>
+            private static List<string> SplitMessage(string message)
+            {
+                var messageChunks = new List<string>();
+
+                var encoding = Encoding.UTF8;
+                var lengthInBytes = encoding.GetByteCount(message);
+                while (lengthInBytes > ToxConstants.MaxMessageLength)
+                {
+                    var chunk = GetChunkOfMaxMessageLength(message);
+                    messageChunks.Add(chunk);
+                    message = message.Substring(chunk.Length);
+                    lengthInBytes = encoding.GetByteCount(message);
+                }
+                messageChunks.Add(message);
+
+                return messageChunks;
+            }
+
+            private static string TrimMessage(string message, ToxMessageType messageType)
+            {
+                if (messageType == ToxMessageType.Action)
+                    message = message.Remove(0, 4);
+                message = message.Trim();
+                return message;
+            }
         }
 
-        #endregion
+        #endregion Message tools
 
         #region Message receiving
 
@@ -156,24 +156,14 @@ namespace OneTox.ViewModel.Messaging
             await StoreMessage(receivedMessage);
         }
 
-        #endregion
+        #endregion Message receiving
 
         #region Common
 
-        private async Task StoreMessage(ToxMessageViewModelBase message)
-        {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                var successFulAppend = AppendToLastGroup(message);
-                if (successFulAppend)
-                    return;
-
-                var msgGroup = new MessageGroupViewModel(message.Sender);
-                msgGroup.Messages.Add(message);
-                MessageGroups.Add(msgGroup);
-                RaiseMessageAdded(message);
-            });
-        }
+        /// <summary>
+        ///     For signaling the View if a message is added to the conversation.
+        /// </summary>
+        public event EventHandler<ToxMessageViewModelBase> MessageAdded;
 
         /// <summary>
         ///     Try to append the message to the last message group. It's possible only if the last message group's sender is the
@@ -201,17 +191,27 @@ namespace OneTox.ViewModel.Messaging
             return false;
         }
 
-        /// <summary>
-        ///     For signaling the View if a message is added to the conversation.
-        /// </summary>
-        public event EventHandler<ToxMessageViewModelBase> MessageAdded;
-
         private void RaiseMessageAdded(ToxMessageViewModelBase message)
         {
             MessageAdded?.Invoke(this, message);
         }
 
-        #endregion
+        private async Task StoreMessage(ToxMessageViewModelBase message)
+        {
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                var successFulAppend = AppendToLastGroup(message);
+                if (successFulAppend)
+                    return;
+
+                var msgGroup = new MessageGroupViewModel(message.Sender);
+                msgGroup.Messages.Add(message);
+                MessageGroups.Add(msgGroup);
+                RaiseMessageAdded(message);
+            });
+        }
+
+        #endregion Common
 
         #region Typing
 
@@ -240,6 +240,6 @@ namespace OneTox.ViewModel.Messaging
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { IsFriendTyping = e.IsTyping; });
         }
 
-        #endregion
+        #endregion Typing
     }
 }

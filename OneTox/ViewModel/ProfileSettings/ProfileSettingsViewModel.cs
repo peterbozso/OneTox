@@ -1,4 +1,9 @@
-﻿using System;
+﻿using OneTox.Common;
+using OneTox.Helpers;
+using OneTox.Model;
+using OneTox.Model.Avatars;
+using SharpTox.Core;
+using System;
 using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,11 +14,6 @@ using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Media.Imaging;
-using OneTox.Common;
-using OneTox.Helpers;
-using OneTox.Model;
-using OneTox.Model.Avatars;
-using SharpTox.Core;
 using ZXing;
 using ZXing.Common;
 
@@ -36,18 +36,19 @@ namespace OneTox.ViewModel.ProfileSettings
 
         #region Avatar
 
+        private RelayCommand _removeAvatarCommand;
         public BitmapImage Avatar => AvatarManager.Instance.UserAvatar;
 
         public bool IsAvatarSet => AvatarManager.Instance.IsUserAvatarSet;
 
-        private void IsUserAvatarSetChangedHandler(object sender, EventArgs e)
+        public RelayCommand RemoveAvatarCommand
         {
-            RaisePropertyChanged("IsAvatarSet");
-        }
-
-        private void UserAvatarChangedHandler(object sender, EventArgs e)
-        {
-            RaisePropertyChanged("Avatar");
+            get
+            {
+                return _removeAvatarCommand ??
+                       (_removeAvatarCommand =
+                           new RelayCommand(async () => { await AvatarManager.Instance.RemoveUserAvatar(); }));
+            }
         }
 
         public async Task ChangeAvatar()
@@ -64,11 +65,9 @@ namespace OneTox.ViewModel.ProfileSettings
             }
         }
 
-        private async Task<StorageFile> PickUserAvatar()
+        private void IsUserAvatarSetChangedHandler(object sender, EventArgs e)
         {
-            var openPicker = new FileOpenPicker();
-            openPicker.FileTypeFilter.Add(".png");
-            return await openPicker.PickSingleFileAsync();
+            RaisePropertyChanged("IsAvatarSet");
         }
 
         private async Task<string> LoadUserAvatar(StorageFile file)
@@ -88,40 +87,24 @@ namespace OneTox.ViewModel.ProfileSettings
             return string.Empty;
         }
 
-        private RelayCommand _removeAvatarCommand;
-
-        public RelayCommand RemoveAvatarCommand
+        private async Task<StorageFile> PickUserAvatar()
         {
-            get
-            {
-                return _removeAvatarCommand ??
-                       (_removeAvatarCommand =
-                           new RelayCommand(async () => { await AvatarManager.Instance.RemoveUserAvatar(); }));
-            }
+            var openPicker = new FileOpenPicker();
+            openPicker.FileTypeFilter.Add(".png");
+            return await openPicker.PickSingleFileAsync();
         }
 
-        #endregion
+        private void UserAvatarChangedHandler(object sender, EventArgs e)
+        {
+            RaisePropertyChanged("Avatar");
+        }
+
+        #endregion Avatar
 
         #region Tox ID
 
-        public ToxId TextId => ToxModel.Instance.Id;
-
-        private void RefreshQrCodeId()
-        {
-            var writer = new BarcodeWriter
-            {
-                Format = BarcodeFormat.QR_CODE,
-                Options = new EncodingOptions
-                {
-                    Height = 200,
-                    Width = 200
-                }
-            };
-
-            QrCodeId = writer.Write(TextId.ToString()).ToBitmap() as WriteableBitmap;
-        }
-
         private WriteableBitmap _qrCodeId;
+        private RelayCommand _randomizeNoSpamCommand;
 
         public WriteableBitmap QrCodeId
         {
@@ -134,15 +117,6 @@ namespace OneTox.ViewModel.ProfileSettings
                 RaisePropertyChanged();
             }
         }
-
-        public void CopyToxIdToClipboard()
-        {
-            var dataPackage = new DataPackage {RequestedOperation = DataPackageOperation.Copy};
-            dataPackage.SetText(TextId.ToString());
-            Clipboard.SetContent(dataPackage);
-        }
-
-        private RelayCommand _randomizeNoSpamCommand;
 
         public RelayCommand RandomizeNoSpamCommand
         {
@@ -161,7 +135,31 @@ namespace OneTox.ViewModel.ProfileSettings
             }
         }
 
-        #endregion
+        public ToxId TextId => ToxModel.Instance.Id;
+
+        public void CopyToxIdToClipboard()
+        {
+            var dataPackage = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
+            dataPackage.SetText(TextId.ToString());
+            Clipboard.SetContent(dataPackage);
+        }
+
+        private void RefreshQrCodeId()
+        {
+            var writer = new BarcodeWriter
+            {
+                Format = BarcodeFormat.QR_CODE,
+                Options = new EncodingOptions
+                {
+                    Height = 200,
+                    Width = 200
+                }
+            };
+
+            QrCodeId = writer.Write(TextId.ToString()).ToBitmap() as WriteableBitmap;
+        }
+
+        #endregion Tox ID
 
         #region Other user data
 
@@ -175,6 +173,18 @@ namespace OneTox.ViewModel.ProfileSettings
                     lengthInBytes > ToxConstants.MaxNameLength)
                     return;
                 ToxModel.Instance.Name = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public ToxUserStatus Status
+        {
+            get { return ToxModel.Instance.Status; }
+            set
+            {
+                if (value == ToxModel.Instance.Status)
+                    return;
+                ToxModel.Instance.Status = value;
                 RaisePropertyChanged();
             }
         }
@@ -193,24 +203,12 @@ namespace OneTox.ViewModel.ProfileSettings
             }
         }
 
-        public ToxUserStatus Status
-        {
-            get { return ToxModel.Instance.Status; }
-            set
-            {
-                if (value == ToxModel.Instance.Status)
-                    return;
-                ToxModel.Instance.Status = value;
-                RaisePropertyChanged();
-            }
-        }
-
         private async void ToxModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () => { RaisePropertyChanged(e.PropertyName); });
         }
 
-        #endregion
+        #endregion Other user data
     }
 }

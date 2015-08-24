@@ -7,7 +7,7 @@ namespace OneTox.View.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var isTrue = (bool) value;
+            var isTrue = (bool)value;
             if (isTrue)
                 return 1;
             return 0.5;

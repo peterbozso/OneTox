@@ -1,11 +1,11 @@
-﻿using System;
+﻿using OneTox.Model.FileTransfers;
+using SharpTox.Core;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using OneTox.Model.FileTransfers;
-using SharpTox.Core;
 
 namespace OneTox.Model.Avatars
 {
@@ -32,28 +32,6 @@ namespace OneTox.Model.Avatars
 
         private readonly Dictionary<TransferId, TransferData> _transfers;
 
-        private class TransferId : IEquatable<TransferId>
-        {
-            public TransferId(int friendNumber, int fileNumber)
-            {
-                FriendNumber = friendNumber;
-                FileNumber = fileNumber;
-            }
-
-            public int FriendNumber { get; }
-            public int FileNumber { get; }
-
-            public bool Equals(TransferId other)
-            {
-                return (FriendNumber == other.FriendNumber) && (FileNumber == other.FileNumber);
-            }
-
-            public override int GetHashCode()
-            {
-                return FriendNumber | (FileNumber << 1);
-            }
-        }
-
         private class TransferData
         {
             private readonly Stream _stream;
@@ -74,12 +52,14 @@ namespace OneTox.Model.Avatars
 
             public TransferDirection Direction { get; }
 
-            public bool IsFinished()
+            public void Dispose()
             {
-                lock (_stream)
-                {
-                    return _stream.Position == _stream.Length;
-                }
+                _stream?.Dispose();
+            }
+
+            public MemoryStream GetMemoryStream()
+            {
+                return _stream as MemoryStream;
             }
 
             public byte[] GetNextChunk(ToxEventArgs.FileRequestChunkEventArgs e)
@@ -98,6 +78,14 @@ namespace OneTox.Model.Avatars
                 }
             }
 
+            public bool IsFinished()
+            {
+                lock (_stream)
+                {
+                    return _stream.Position == _stream.Length;
+                }
+            }
+
             public void PutNextChunk(ToxEventArgs.FileChunkEventArgs e)
             {
                 lock (_stream)
@@ -110,19 +98,31 @@ namespace OneTox.Model.Avatars
                     _stream.Write(e.Data, 0, e.Data.Length);
                 }
             }
+        }
 
-            public void Dispose()
+        private class TransferId : IEquatable<TransferId>
+        {
+            public TransferId(int friendNumber, int fileNumber)
             {
-                _stream?.Dispose();
+                FriendNumber = friendNumber;
+                FileNumber = fileNumber;
             }
 
-            public MemoryStream GetMemoryStream()
+            public int FileNumber { get; }
+            public int FriendNumber { get; }
+
+            public bool Equals(TransferId other)
             {
-                return _stream as MemoryStream;
+                return (FriendNumber == other.FriendNumber) && (FileNumber == other.FileNumber);
+            }
+
+            public override int GetHashCode()
+            {
+                return FriendNumber | (FileNumber << 1);
             }
         }
 
-        #endregion
+        #endregion Data model
 
         #region Common
 
@@ -135,45 +135,6 @@ namespace OneTox.Model.Avatars
             Debug.WriteLine(
                 "Avatar {0}load added! \t friend number: {1}, \t file number: {2}, \t total avatar transfers: {3}",
                 direction, friendNumber, fileNumber, _transfers.Count);
-        }
-
-        private void RemoveTransfer(TransferId transferId)
-        {
-            if (!_transfers.ContainsKey(transferId))
-                return;
-
-            var transferToRemove = _transfers[transferId];
-            var direction = transferToRemove.Direction;
-            transferToRemove.Dispose();
-            _transfers.Remove(transferId);
-
-            Debug.WriteLine(
-                "Avatar {0}load removed! \t friend number: {1}, \t file number: {2}, \t total avatar transfers: {3}",
-                direction, transferId.FriendNumber, transferId.FileNumber, _transfers.Count);
-        }
-
-        /// <summary>
-        ///     By calling this function before sending or receiving an avatar, we ensure that there is only
-        ///     1 upload and/or 1 download per friend at the same time.
-        /// </summary>
-        /// <param name="friendNumber">The friendNumber of the friend we'd like to remove transfers of.</param>
-        /// <param name="direction">The direction of the transfers we'd like to remove.</param>
-        private void RemoveAllTranfersOfFriendPerDirection(int friendNumber, TransferDirection direction)
-        {
-            var transfers = _transfers.ToArray();
-            foreach (var transfer in transfers)
-            {
-                if (transfer.Key.FriendNumber == friendNumber && transfer.Value.Direction == direction)
-                {
-                    SendCancelControl(transfer.Key.FriendNumber, transfer.Key.FileNumber);
-                    RemoveTransfer(transfer.Key);
-                }
-            }
-        }
-
-        private bool IsTransferFinished(TransferId transferId)
-        {
-            return !_transfers.ContainsKey(transferId);
         }
 
         private void FileControlReceivedHandler(object sender, ToxEventArgs.FileControlEventArgs e)
@@ -197,6 +158,45 @@ namespace OneTox.Model.Avatars
             }
         }
 
+        private bool IsTransferFinished(TransferId transferId)
+        {
+            return !_transfers.ContainsKey(transferId);
+        }
+
+        /// <summary>
+        ///     By calling this function before sending or receiving an avatar, we ensure that there is only
+        ///     1 upload and/or 1 download per friend at the same time.
+        /// </summary>
+        /// <param name="friendNumber">The friendNumber of the friend we'd like to remove transfers of.</param>
+        /// <param name="direction">The direction of the transfers we'd like to remove.</param>
+        private void RemoveAllTranfersOfFriendPerDirection(int friendNumber, TransferDirection direction)
+        {
+            var transfers = _transfers.ToArray();
+            foreach (var transfer in transfers)
+            {
+                if (transfer.Key.FriendNumber == friendNumber && transfer.Value.Direction == direction)
+                {
+                    SendCancelControl(transfer.Key.FriendNumber, transfer.Key.FileNumber);
+                    RemoveTransfer(transfer.Key);
+                }
+            }
+        }
+
+        private void RemoveTransfer(TransferId transferId)
+        {
+            if (!_transfers.ContainsKey(transferId))
+                return;
+
+            var transferToRemove = _transfers[transferId];
+            var direction = transferToRemove.Direction;
+            transferToRemove.Dispose();
+            _transfers.Remove(transferId);
+
+            Debug.WriteLine(
+                "Avatar {0}load removed! \t friend number: {1}, \t file number: {2}, \t total avatar transfers: {3}",
+                direction, transferId.FriendNumber, transferId.FileNumber, _transfers.Count);
+        }
+
         private void SendCancelControl(int friendNumber, int fileNumber)
         {
             ToxModel.Instance.FileControl(friendNumber, fileNumber, ToxFileControl.Cancel);
@@ -213,7 +213,7 @@ namespace OneTox.Model.Avatars
             return ToxModel.Instance.FileControl(friendNumber, fileNumber, ToxFileControl.Resume);
         }
 
-        #endregion
+        #endregion Common
 
         #region Sending
 
@@ -241,13 +241,6 @@ namespace OneTox.Model.Avatars
             ToxModel.Instance.FileSend(friendNumber, ToxFileKind.Avatar, 0, "", out successfulFileSend);
         }
 
-        private byte[] GetAvatarHash(Stream stream)
-        {
-            var buffer = new byte[stream.Length];
-            stream.Read(buffer, 0, (int) stream.Length);
-            return ToxTools.Hash(buffer);
-        }
-
         private void FileChunkRequestedHandler(object sender, ToxEventArgs.FileRequestChunkEventArgs e)
         {
             var transferId = new TransferId(e.FriendNumber, e.FileNumber);
@@ -269,43 +262,21 @@ namespace OneTox.Model.Avatars
             }
         }
 
+        private byte[] GetAvatarHash(Stream stream)
+        {
+            var buffer = new byte[stream.Length];
+            stream.Read(buffer, 0, (int)stream.Length);
+            return ToxTools.Hash(buffer);
+        }
+
         private void HandleFinishedUpload(TransferId transferId)
         {
             RemoveTransfer(transferId);
         }
 
-        #endregion
+        #endregion Sending
 
         #region Receiving
-
-        private async void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
-        {
-            if (e.FileKind != ToxFileKind.Avatar)
-                return;
-
-            if (e.FileSize == 0) // It means the avatar of the friend is removed.
-            {
-                SendCancelControl(e.FriendNumber, e.FileNumber);
-                await AvatarManager.Instance.RemoveFriendAvatar(e.FriendNumber);
-                return;
-            }
-
-            if (await AlreadyHaveAvatar(e.FriendNumber, e.FileNumber))
-            {
-                SendCancelControl(e.FriendNumber, e.FileNumber);
-                return;
-            }
-
-            RemoveAllTranfersOfFriendPerDirection(e.FriendNumber, TransferDirection.Down);
-
-            var resumeSent = SendResumeControl(e.FriendNumber, e.FileNumber);
-            if (resumeSent)
-            {
-                var stream = new MemoryStream((int) e.FileSize);
-                AddTransfer(e.FriendNumber, e.FileNumber, stream, e.FileSize, TransferDirection.Down);
-            }
-        }
-
 
         private async Task<bool> AlreadyHaveAvatar(int friendNumber, int fileNumber)
         {
@@ -336,6 +307,34 @@ namespace OneTox.Model.Avatars
             }
         }
 
+        private async void FileSendRequestReceivedHandler(object sender, ToxEventArgs.FileSendRequestEventArgs e)
+        {
+            if (e.FileKind != ToxFileKind.Avatar)
+                return;
+
+            if (e.FileSize == 0) // It means the avatar of the friend is removed.
+            {
+                SendCancelControl(e.FriendNumber, e.FileNumber);
+                await AvatarManager.Instance.RemoveFriendAvatar(e.FriendNumber);
+                return;
+            }
+
+            if (await AlreadyHaveAvatar(e.FriendNumber, e.FileNumber))
+            {
+                SendCancelControl(e.FriendNumber, e.FileNumber);
+                return;
+            }
+
+            RemoveAllTranfersOfFriendPerDirection(e.FriendNumber, TransferDirection.Down);
+
+            var resumeSent = SendResumeControl(e.FriendNumber, e.FileNumber);
+            if (resumeSent)
+            {
+                var stream = new MemoryStream((int)e.FileSize);
+                AddTransfer(e.FriendNumber, e.FileNumber, stream, e.FileSize, TransferDirection.Down);
+            }
+        }
+
         private void HandleFinishedDownload(TransferId transferId, int friendNumber, int fileNumber)
         {
             AvatarManager.Instance.ChangeFriendAvatar(friendNumber,
@@ -343,6 +342,6 @@ namespace OneTox.Model.Avatars
             RemoveTransfer(transferId);
         }
 
-        #endregion
+        #endregion Receiving
     }
 }

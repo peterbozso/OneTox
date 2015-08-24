@@ -1,4 +1,6 @@
-﻿using System;
+﻿using OneTox.Model;
+using SharpTox.Core;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -6,8 +8,6 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using OneTox.Model;
-using SharpTox.Core;
 
 namespace OneTox.ViewModel.FriendRequests
 {
@@ -31,8 +31,9 @@ namespace OneTox.ViewModel.FriendRequests
             _semaphore = new SemaphoreSlim(1);
         }
 
-        public ObservableCollection<OneFriendRequestViewModel> Requests { get; }
         public event EventHandler<ToxEventArgs.FriendRequestEventArgs> FriendRequestReceived;
+
+        public ObservableCollection<OneFriendRequestViewModel> Requests { get; }
 
         public void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e)
         {
@@ -41,11 +42,34 @@ namespace OneTox.ViewModel.FriendRequests
                 case FriendRequestAnswer.Accept:
                     ToxModel.Instance.AddFriendNoRequest(e.PublicKey);
                     return;
+
                 case FriendRequestAnswer.Decline:
                     return;
+
                 case FriendRequestAnswer.Later:
                     Requests.Add(new OneFriendRequestViewModel(this, e.PublicKey, e.Message));
                     return;
+            }
+        }
+
+        public async Task RestoreData()
+        {
+            try
+            {
+                var file = await ApplicationData.Current.RoamingFolder.GetFileAsync(KFileName);
+
+                var lines = await FileIO.ReadLinesAsync(file);
+
+                for (var i = 0; i < lines.Count; i += 2)
+                {
+                    var publicKey = lines[i];
+                    var message = lines[i + 1];
+                    Requests.Add(new OneFriendRequestViewModel(this, new ToxKey(ToxKeyType.Public, publicKey), message));
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                // The file was not there, so we cannot restore state, but no problem: keep going as if nothing had happened!
             }
         }
 
@@ -74,35 +98,14 @@ namespace OneTox.ViewModel.FriendRequests
             }
         }
 
-        public async Task RestoreData()
+        private void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
         {
-            try
-            {
-                var file = await ApplicationData.Current.RoamingFolder.GetFileAsync(KFileName);
-
-                var lines = await FileIO.ReadLinesAsync(file);
-
-                for (var i = 0; i < lines.Count; i += 2)
-                {
-                    var publicKey = lines[i];
-                    var message = lines[i + 1];
-                    Requests.Add(new OneFriendRequestViewModel(this, new ToxKey(ToxKeyType.Public, publicKey), message));
-                }
-            }
-            catch (FileNotFoundException)
-            {
-                // The file was not there, so we cannot restore state, but no problem: keep going as if nothing had happened!
-            }
+            FriendRequestReceived?.Invoke(sender, e);
         }
 
         private async void FriendRequestsCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
         {
             await SaveDataAsync();
-        }
-
-        private void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
-        {
-            FriendRequestReceived?.Invoke(sender, e);
         }
     }
 }

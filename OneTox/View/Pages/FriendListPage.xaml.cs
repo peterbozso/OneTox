@@ -13,6 +13,11 @@ namespace OneTox.View.Pages
             DataContext = (Application.Current as App).MainViewModel;
         }
 
+        private void AddFriendButtonClick(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(AddFriendPage));
+        }
+
         private void FriendListPageLoaded(object sender, RoutedEventArgs e)
         {
             Window.Current.SizeChanged += WindowSizeChanged;
@@ -23,30 +28,25 @@ namespace OneTox.View.Pages
             Window.Current.SizeChanged -= WindowSizeChanged;
         }
 
-        private void WindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
-        {
-            if (e.Size.Width >= 930)
-            {
-                Frame.Navigate(typeof (MainPage));
-            }
-        }
-
         private void FriendListSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (FriendList.SelectedItem == null)
                 return;
 
-            Frame.Navigate(typeof (ChatPage), FriendList.SelectedItem);
-        }
-
-        private void AddFriendButtonClick(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof (AddFriendPage));
+            Frame.Navigate(typeof(ChatPage), FriendList.SelectedItem);
         }
 
         private void SettingsButtonClick(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof (SettingsPage));
+            Frame.Navigate(typeof(SettingsPage));
+        }
+
+        private void WindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
+        {
+            if (e.Size.Width >= 930)
+            {
+                Frame.Navigate(typeof(MainPage));
+            }
         }
     }
 }

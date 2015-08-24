@@ -1,6 +1,6 @@
-﻿using System;
-using OneTox.ViewModel;
+﻿using OneTox.ViewModel;
 using SharpTox.Av;
+using System;
 
 namespace OneTox.Model
 {
@@ -18,10 +18,66 @@ namespace OneTox.Model
         private int _friendInCall = -1;
 
         private ToxAv _toxAv;
-        public static ToxAvModel Instance => _instance ?? (_instance = new ToxAvModel());
         public bool CanCall => _friendInCall == -1;
+        public static ToxAvModel Instance => _instance ?? (_instance = new ToxAvModel());
 
         #region Methods
+
+        public bool Answer(int friendNumber, int audioBitrate, int videoBitrate)
+        {
+            ToxAvErrorAnswer error;
+            var retVal = _toxAv.Answer(friendNumber, audioBitrate, videoBitrate, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
+        }
+
+        public bool Call(int friendNumber, int audioBitrate, int videoBitrate)
+        {
+            if (_friendInCall != -1)
+                return false;
+
+            _friendInCall = friendNumber;
+
+            ToxAvErrorCall error;
+            var retVal = _toxAv.Call(friendNumber, audioBitrate, videoBitrate, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
+        }
+
+        public bool SendAudioFrame(int friendNumber, ToxAvAudioFrame frame)
+        {
+            ToxAvErrorSendFrame error;
+            var retVal = _toxAv.SendAudioFrame(friendNumber, frame, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
+        }
+
+        public bool SendControl(int friendNumber, ToxAvCallControl control)
+        {
+            if (friendNumber == _friendInCall && control == ToxAvCallControl.Cancel)
+                _friendInCall = -1;
+
+            ToxAvErrorCallControl error;
+            var retVal = _toxAv.SendControl(friendNumber, control, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
+        }
+
+        public bool SendVideoFrame(int friendNumber, ToxAvVideoFrame frame)
+        {
+            ToxAvErrorSendFrame error;
+            var retVal = _toxAv.SendVideoFrame(friendNumber, frame, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
+        }
+
+        public bool SetAudioBitrate(int friendNumber, int bitrate, bool force)
+        {
+            ToxAvErrorSetBitrate error;
+            var retVal = _toxAv.SetAudioBitrate(friendNumber, bitrate, force, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
+        }
 
         public void SetCurrent(ExtendedTox tox)
         {
@@ -30,6 +86,14 @@ namespace OneTox.Model
             _toxAv = new ToxAv(tox);
 
             RegisterHandlers();
+        }
+
+        public bool SetVideoBitrate(int friendNumber, int bitrate, bool force)
+        {
+            ToxAvErrorSetBitrate error;
+            var retVal = _toxAv.SetVideoBitrate(friendNumber, bitrate, force, out error);
+            ToxErrorViewModel.Instance.RelayError(error);
+            return retVal;
         }
 
         public void Start()
@@ -47,89 +111,35 @@ namespace OneTox.Model
             _toxAv.OnVideoFrameReceived += VideoFrameReceivedHandler;
         }
 
-        public bool Call(int friendNumber, int audioBitrate, int videoBitrate)
-        {
-            if (_friendInCall != -1)
-                return false;
-
-            _friendInCall = friendNumber;
-
-            ToxAvErrorCall error;
-            var retVal = _toxAv.Call(friendNumber, audioBitrate, videoBitrate, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            return retVal;
-        }
-
-        public bool Answer(int friendNumber, int audioBitrate, int videoBitrate)
-        {
-            ToxAvErrorAnswer error;
-            var retVal = _toxAv.Answer(friendNumber, audioBitrate, videoBitrate, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            return retVal;
-        }
-
-        public bool SendControl(int friendNumber, ToxAvCallControl control)
-        {
-            if (friendNumber == _friendInCall && control == ToxAvCallControl.Cancel)
-                _friendInCall = -1;
-
-            ToxAvErrorCallControl error;
-            var retVal = _toxAv.SendControl(friendNumber, control, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            return retVal;
-        }
-
-        public bool SetAudioBitrate(int friendNumber, int bitrate, bool force)
-        {
-            ToxAvErrorSetBitrate error;
-            var retVal = _toxAv.SetAudioBitrate(friendNumber, bitrate, force, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            return retVal;
-        }
-
-        public bool SetVideoBitrate(int friendNumber, int bitrate, bool force)
-        {
-            ToxAvErrorSetBitrate error;
-            var retVal = _toxAv.SetVideoBitrate(friendNumber, bitrate, force, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            return retVal;
-        }
-
-        public bool SendVideoFrame(int friendNumber, ToxAvVideoFrame frame)
-        {
-            ToxAvErrorSendFrame error;
-            var retVal = _toxAv.SendVideoFrame(friendNumber, frame, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            return retVal;
-        }
-
-        public bool SendAudioFrame(int friendNumber, ToxAvAudioFrame frame)
-        {
-            ToxAvErrorSendFrame error;
-            var retVal = _toxAv.SendAudioFrame(friendNumber, frame, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            return retVal;
-        }
-
-        #endregion
+        #endregion Methods
 
         #region Events
+
+        public event EventHandler<ToxAvEventArgs.BitrateStatusEventArgs> AudioBitrateChanged;
+
+        public event EventHandler<ToxAvEventArgs.AudioFrameEventArgs> AudioFrameReceived;
 
         public event EventHandler<ToxAvEventArgs.CallRequestEventArgs> CallRequestReceived;
 
         public event EventHandler<ToxAvEventArgs.CallStateEventArgs> CallStateChanged;
 
-        public event EventHandler<ToxAvEventArgs.BitrateStatusEventArgs> AudioBitrateChanged;
-
         public event EventHandler<ToxAvEventArgs.BitrateStatusEventArgs> VideoBitrateChanged;
-
-        public event EventHandler<ToxAvEventArgs.AudioFrameEventArgs> AudioFrameReceived;
 
         public event EventHandler<ToxAvEventArgs.VideoFrameEventArgs> VideoFrameReceived;
 
-        #endregion
+        #endregion Events
 
         #region Event handlers
+
+        private void AudioBitrateChangedHandler(object sender, ToxAvEventArgs.BitrateStatusEventArgs e)
+        {
+            AudioBitrateChanged?.Invoke(this, e);
+        }
+
+        private void AudioFrameReceivedHandler(object sender, ToxAvEventArgs.AudioFrameEventArgs e)
+        {
+            AudioFrameReceived?.Invoke(this, e);
+        }
 
         private void CallRequestReceivedHandler(object sender, ToxAvEventArgs.CallRequestEventArgs e)
         {
@@ -157,19 +167,9 @@ namespace OneTox.Model
             CallStateChanged?.Invoke(this, e);
         }
 
-        private void AudioBitrateChangedHandler(object sender, ToxAvEventArgs.BitrateStatusEventArgs e)
-        {
-            AudioBitrateChanged?.Invoke(this, e);
-        }
-
         private void VideoBitrateChangedHandler(object sender, ToxAvEventArgs.BitrateStatusEventArgs e)
         {
             VideoBitrateChanged?.Invoke(this, e);
-        }
-
-        private void AudioFrameReceivedHandler(object sender, ToxAvEventArgs.AudioFrameEventArgs e)
-        {
-            AudioFrameReceived?.Invoke(this, e);
         }
 
         private void VideoFrameReceivedHandler(object sender, ToxAvEventArgs.VideoFrameEventArgs e)
@@ -177,6 +177,6 @@ namespace OneTox.Model
             VideoFrameReceived?.Invoke(this, e);
         }
 
-        #endregion
+        #endregion Event handlers
     }
 }

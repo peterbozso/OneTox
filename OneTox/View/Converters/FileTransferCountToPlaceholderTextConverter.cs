@@ -7,7 +7,7 @@ namespace OneTox.View.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var count = (int) value;
+            var count = (int)value;
             if (count == 1)
                 return "There is 1 ongoing file transfer.";
             return "There are " + count + " ongoing file transfers.";

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using OneTox.ViewModel;
+using OneTox.ViewModel.Friends;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
-using OneTox.ViewModel;
-using OneTox.ViewModel.Friends;
 
 namespace OneTox.View.Converters
 {

@@ -1,13 +1,13 @@
-﻿using System;
+﻿using OneTox.Common;
+using OneTox.Helpers;
+using OneTox.Model;
+using SharpTox.Encryption;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using OneTox.Common;
-using OneTox.Helpers;
-using OneTox.Model;
-using SharpTox.Encryption;
 
 namespace OneTox.ViewModel.ProfileSettings
 {
@@ -19,8 +19,6 @@ namespace OneTox.ViewModel.ProfileSettings
         {
             Profiles = new ObservableCollection<ProfileViewModel>();
         }
-
-        public ObservableCollection<ProfileViewModel> Profiles { get; set; }
 
         public RelayCommand CreateNewProfileCommand
         {
@@ -36,6 +34,8 @@ namespace OneTox.ViewModel.ProfileSettings
                            }));
             }
         }
+
+        public ObservableCollection<ProfileViewModel> Profiles { get; set; }
 
         public async Task RefreshProfileList()
         {
@@ -71,15 +71,6 @@ namespace OneTox.ViewModel.ProfileSettings
             }
         }
 
-        private async Task<StorageFile> PickDestinationFile()
-        {
-            var savePicker = new FileSavePicker();
-            savePicker.FileTypeChoices.Add("Tox save file", new List<string> {".tox"});
-            savePicker.SuggestedFileName = ToxModel.Instance.Name;
-            var file = await savePicker.PickSaveFileAsync();
-            return file;
-        }
-
         private byte[] GetData(string password)
         {
             if (password == string.Empty)
@@ -88,7 +79,16 @@ namespace OneTox.ViewModel.ProfileSettings
             return ToxModel.Instance.GetData(encryptionKey).Bytes;
         }
 
-        #endregion
+        private async Task<StorageFile> PickDestinationFile()
+        {
+            var savePicker = new FileSavePicker();
+            savePicker.FileTypeChoices.Add("Tox save file", new List<string> { ".tox" });
+            savePicker.SuggestedFileName = ToxModel.Instance.Name;
+            var file = await savePicker.PickSaveFileAsync();
+            return file;
+        }
+
+        #endregion Export profile
 
         #region Import profile
 
@@ -110,6 +110,6 @@ namespace OneTox.ViewModel.ProfileSettings
             return await openPicker.PickSingleFileAsync();
         }
 
-        #endregion
+        #endregion Import profile
     }
 }

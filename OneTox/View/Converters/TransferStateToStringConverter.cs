@@ -1,6 +1,6 @@
-﻿using System;
+﻿using OneTox.Model.FileTransfers;
+using System;
 using Windows.UI.Xaml.Data;
-using OneTox.Model.FileTransfers;
 
 namespace OneTox.View.Converters
 {
@@ -8,7 +8,7 @@ namespace OneTox.View.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var state = (FileTransferState) value;
+            var state = (FileTransferState)value;
             return state.ToString();
         }
 

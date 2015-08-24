@@ -1,13 +1,13 @@
-﻿using System;
+﻿using OneTox.Common;
+using OneTox.Helpers;
+using OneTox.Model.FileTransfers;
+using System;
 using System.ComponentModel;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-using OneTox.Common;
-using OneTox.Helpers;
-using OneTox.Model.FileTransfers;
 
 namespace OneTox.ViewModel.FileTransfers
 {
@@ -25,15 +25,15 @@ namespace OneTox.ViewModel.FileTransfers
         #region Fields
 
         private readonly FileTransfersViewModel _fileTransfersViewModel;
-        private readonly ProgressUpdater _progressUpdater;
         private readonly OneFileTransferModel _oneFileTransferModel;
+        private readonly ProgressUpdater _progressUpdater;
         private RelayCommand _acceptTransferCommand;
         private RelayCommand _cancelTransferCommand;
         private RelayCommand _pauseTransferCommand;
         private double _progress;
         private RelayCommand _resumeTransferCommand;
 
-        #endregion
+        #endregion Fields
 
         #region Properties
 
@@ -63,21 +63,9 @@ namespace OneTox.ViewModel.FileTransfers
                     () => { RaisePropertyChanged(e.PropertyName); });
         }
 
-        #endregion
+        #endregion Properties
 
         #region Commands
-
-        public RelayCommand CancelTransferCommand
-        {
-            get
-            {
-                return _cancelTransferCommand ?? (_cancelTransferCommand = new RelayCommand(() =>
-                {
-                    _oneFileTransferModel.CancelTransfer();
-                    _fileTransfersViewModel.Transfers.Remove(this);
-                }));
-            }
-        }
 
         public RelayCommand AcceptTransferCommand
         {
@@ -99,6 +87,18 @@ namespace OneTox.ViewModel.FileTransfers
             }
         }
 
+        public RelayCommand CancelTransferCommand
+        {
+            get
+            {
+                return _cancelTransferCommand ?? (_cancelTransferCommand = new RelayCommand(() =>
+                {
+                    _oneFileTransferModel.CancelTransfer();
+                    _fileTransfersViewModel.Transfers.Remove(this);
+                }));
+            }
+        }
+
         public RelayCommand PauseTransferCommand
         {
             get
@@ -117,7 +117,7 @@ namespace OneTox.ViewModel.FileTransfers
             }
         }
 
-        #endregion
+        #endregion Commands
 
         #region Progress updater
 
@@ -151,6 +151,17 @@ namespace OneTox.ViewModel.FileTransfers
                 }
             }
 
+            /// <summary>
+            ///     On every tick, we update the progress of each OneFileTransferViewModel. We need to do this periodically to not to
+            ///     block the UI thread and maintain a fluid display of progress changes.
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
+            private void ProgressDispatcherTimerTickHandler(object sender, object e)
+            {
+                _fileTransferViewModel.UpDateProgress();
+            }
+
             private async void StateChangedHandler(object sender, PropertyChangedEventArgs e)
             {
                 if (e.PropertyName != "State")
@@ -170,19 +181,8 @@ namespace OneTox.ViewModel.FileTransfers
                         _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { _progressDispatcherTimer.Start(); });
                 }
             }
-
-            /// <summary>
-            ///     On every tick, we update the progress of each OneFileTransferViewModel. We need to do this periodically to not to
-            ///     block the UI thread and maintain a fluid display of progress changes.
-            /// </summary>
-            /// <param name="sender"></param>
-            /// <param name="e"></param>
-            private void ProgressDispatcherTimerTickHandler(object sender, object e)
-            {
-                _fileTransferViewModel.UpDateProgress();
-            }
         }
 
-        #endregion
+        #endregion Progress updater
     }
 }

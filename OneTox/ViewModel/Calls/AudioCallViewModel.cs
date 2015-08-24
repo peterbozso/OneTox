@@ -1,4 +1,8 @@
-﻿using System;
+﻿using OneTox.Common;
+using OneTox.Helpers;
+using OneTox.Model;
+using SharpTox.Av;
+using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -9,29 +13,25 @@ using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Media.Render;
 using Windows.UI.Core;
-using OneTox.Common;
-using OneTox.Helpers;
-using OneTox.Model;
-using SharpTox.Av;
 
 namespace OneTox.ViewModel.Calls
 {
     public class AudioCallViewModel : ObservableObject
     {
-        public enum CallState
-        {
-            Default,
-            DuringCall,
-            OutgoingCall,
-            IncomingCall
-        }
-
         [ComImport]
         [Guid("5B0D3235-4DBA-4D44-865E-8F1D0E4FD04D")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         internal unsafe interface IMemoryBufferByteAccess
         {
             void GetBuffer(out byte* buffer, out uint capacity);
+        }
+
+        public enum CallState
+        {
+            Default,
+            DuringCall,
+            OutgoingCall,
+            IncomingCall
         }
 
         #region Constructor
@@ -51,24 +51,29 @@ namespace OneTox.ViewModel.Calls
         {
             // TODO: Set these based on app settings!
             _bitRate = 48;
-            _samplingRate = _bitRate*1000;
-            _frameSize = _samplingRate*KQuantumSize/1000;
+            _samplingRate = _bitRate * 1000;
+            _frameSize = _samplingRate * KQuantumSize / 1000;
         }
 
-        #endregion
+        #endregion Constructor
 
         #region Microphone availability error
+
+        public event EventHandler<string> MicrophoneIsNotAvailable;
 
         private void RaiseMicrophoneIsNotAvailable(string errorMessage)
         {
             MicrophoneIsNotAvailable?.Invoke(this, errorMessage);
         }
 
-        public event EventHandler<string> MicrophoneIsNotAvailable;
-
-        #endregion
+        #endregion Microphone availability error
 
         #region ToxAv event handlers
+
+        private async void CallRequestReceivedHandler(object sender, ToxAvEventArgs.CallRequestEventArgs e)
+        {
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { State = CallState.IncomingCall; });
+        }
 
         private async void CallStateChangedHandler(object sender, ToxAvEventArgs.CallStateEventArgs e)
         {
@@ -92,29 +97,43 @@ namespace OneTox.ViewModel.Calls
             }
         }
 
-        private async void CallRequestReceivedHandler(object sender, ToxAvEventArgs.CallRequestEventArgs e)
-        {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { State = CallState.IncomingCall; });
-        }
-
-        #endregion
+        #endregion ToxAv event handlers
 
         #region Fields
 
         private readonly int _friendNumber;
         private AudioGraph _audioGraph;
-        private AudioDeviceInputNode _microphoneInputNode;
-        private AudioFrameOutputNode _toxOutputNode;
-        private AudioDeviceOutputNode _speakerOutputNode;
-        private AudioFrameInputNode _toxInputNode;
-        private int _samplingRate;
         private int _bitRate;
         private int _frameSize;
         private bool _friendIsReceivingAudio;
+        private AudioDeviceInputNode _microphoneInputNode;
+        private int _samplingRate;
+        private AudioDeviceOutputNode _speakerOutputNode;
+        private AudioFrameInputNode _toxInputNode;
+        private AudioFrameOutputNode _toxOutputNode;
 
-        #endregion
+        #endregion Fields
 
         #region AudioGraph
+
+        private async Task InitAudioGraph()
+        {
+            var encodingProperties = AudioEncodingProperties.CreatePcm((uint)_samplingRate, 1, 16);
+
+            // Don't modify DesiredSamplesPerQuantum! If you do, change KQuantumSize accordingly!
+            var settings = new AudioGraphSettings(AudioRenderCategory.Communications)
+            {
+                EncodingProperties = encodingProperties
+            };
+
+            var result = await AudioGraph.CreateAsync(settings);
+            if (result.Status != AudioGraphCreationStatus.Success)
+            {
+                throw new Exception(result.Status.ToString());
+            }
+
+            _audioGraph = result.Graph;
+        }
 
         private async Task StartAudioGraph()
         {
@@ -156,28 +175,41 @@ namespace OneTox.ViewModel.Calls
             _audioGraph?.Stop();
         }
 
-        private async Task InitAudioGraph()
-        {
-            var encodingProperties = AudioEncodingProperties.CreatePcm((uint) _samplingRate, 1, 16);
-
-            // Don't modify DesiredSamplesPerQuantum! If you do, change KQuantumSize accordingly!
-            var settings = new AudioGraphSettings(AudioRenderCategory.Communications)
-            {
-                EncodingProperties = encodingProperties
-            };
-
-            var result = await AudioGraph.CreateAsync(settings);
-            if (result.Status != AudioGraphCreationStatus.Success)
-            {
-                throw new Exception(result.Status.ToString());
-            }
-
-            _audioGraph = result.Graph;
-        }
-
-        #endregion
+        #endregion AudioGraph
 
         #region Audio sending
+
+        private void AudioGraphQuantumProcessedHandler(AudioGraph sender, object args)
+        {
+            if (!_friendIsReceivingAudio)
+                return;
+
+            var frame = _toxOutputNode.GetFrame();
+            ProcessFrameOutput(frame);
+        }
+
+        private short[] ConvertFloatsToShorts(float[] inSamples)
+        {
+            var outSamples = new short[inSamples.Length];
+
+            for (var i = 0; i < inSamples.Length; i++)
+            {
+                var temp = inSamples[i] * (short.MaxValue + 1);
+
+                if (temp > short.MaxValue)
+                {
+                    temp = short.MaxValue;
+                }
+                else if (temp < short.MinValue)
+                {
+                    temp = short.MinValue;
+                }
+
+                outSamples[i] = (short)(temp);
+            }
+
+            return outSamples;
+        }
 
         private async Task<bool> CreateMicrophoneInputNode()
         {
@@ -191,11 +223,13 @@ namespace OneTox.ViewModel.Calls
                     case AudioDeviceNodeCreationStatus.DeviceNotAvailable:
                         RaiseMicrophoneIsNotAvailable("You do not have the required microphone present on your system.");
                         return false;
+
                     case AudioDeviceNodeCreationStatus.AccessDenied:
                         RaiseMicrophoneIsNotAvailable(
                             "OneTox doesn't have permission to use your microphone. To change this, please go to the Settings app's Privacy section. " +
                             "Then click or tap the mute button to start using the microphone again.");
                         return false;
+
                     default:
                         throw new Exception(result.Status.ToString());
                 }
@@ -212,15 +246,6 @@ namespace OneTox.ViewModel.Calls
             _microphoneInputNode.AddOutgoingConnection(_toxOutputNode);
         }
 
-        private void AudioGraphQuantumProcessedHandler(AudioGraph sender, object args)
-        {
-            if (!_friendIsReceivingAudio)
-                return;
-
-            var frame = _toxOutputNode.GetFrame();
-            ProcessFrameOutput(frame);
-        }
-
         private unsafe void ProcessFrameOutput(AudioFrame frame)
         {
             using (var buffer = frame.LockBuffer(AudioBufferAccessMode.Read))
@@ -229,15 +254,15 @@ namespace OneTox.ViewModel.Calls
                 byte* dataInBytes;
                 uint capacityInBytes;
 
-                ((IMemoryBufferByteAccess) reference).GetBuffer(out dataInBytes, out capacityInBytes);
+                ((IMemoryBufferByteAccess)reference).GetBuffer(out dataInBytes, out capacityInBytes);
 
-                var capacityInFloats = capacityInBytes/4;
+                var capacityInFloats = capacityInBytes / 4;
                 if (capacityInFloats != _frameSize) // Only send frames with the correct size.
                     return;
 
-                var dataInFloats = (float*) dataInBytes;
+                var dataInFloats = (float*)dataInBytes;
                 var floats = new float[capacityInFloats];
-                Marshal.Copy((IntPtr) dataInFloats, floats, 0, (int) capacityInFloats);
+                Marshal.Copy((IntPtr)dataInFloats, floats, 0, (int)capacityInFloats);
 
                 var shorts = ConvertFloatsToShorts(floats);
 
@@ -245,32 +270,40 @@ namespace OneTox.ViewModel.Calls
             }
         }
 
-        private short[] ConvertFloatsToShorts(float[] inSamples)
+        #endregion Audio sending
+
+        #region Audio receiving
+
+        private void AudioFrameReceivedHandler(object sender, ToxAvEventArgs.AudioFrameEventArgs e)
         {
-            var outSamples = new short[inSamples.Length];
+            if (e.FriendNumber != _friendNumber)
+                return;
+
+            _receiveBuffer.Post(e.Frame.Data);
+        }
+
+        private float[] ConvertShortsToFloats(short[] inSamples)
+        {
+            var outSamples = new float[inSamples.Length];
 
             for (var i = 0; i < inSamples.Length; i++)
             {
-                var temp = inSamples[i]*(short.MaxValue + 1);
+                var temp = inSamples[i] / (float)(short.MaxValue + 1);
 
-                if (temp > short.MaxValue)
+                if (temp > 1)
                 {
-                    temp = short.MaxValue;
+                    temp = 1;
                 }
-                else if (temp < short.MinValue)
+                else if (temp < -1)
                 {
-                    temp = short.MinValue;
+                    temp = -1;
                 }
 
-                outSamples[i] = (short) (temp);
+                outSamples[i] = temp;
             }
 
             return outSamples;
         }
-
-        #endregion
-
-        #region Audio receiving
 
         private async Task CreateSpeakerOutputNode()
         {
@@ -300,8 +333,37 @@ namespace OneTox.ViewModel.Calls
             _toxInputNode.QuantumStarted += ToxInputNodeQuantumStartedHandler;
         }
 
+        // TODO: Fix frame receiving!
+        private unsafe AudioFrame GenerateAudioData(uint samples, short[] shorts)
+        {
+            // Buffer size is (number of samples) * (size of each sample)
+            // We choose to generate single channel (mono) audio. For multi-channel, multiply by number of channels
+            var bufferSize = samples * sizeof(float);
+            var frame = new AudioFrame(bufferSize);
+
+            using (var buffer = frame.LockBuffer(AudioBufferAccessMode.Write))
+            using (var reference = buffer.CreateReference())
+            {
+                byte* dataInBytes;
+                uint capacityInBytes;
+
+                // Get the buffer from the AudioFrame
+                ((IMemoryBufferByteAccess)reference).GetBuffer(out dataInBytes, out capacityInBytes);
+
+                // Cast to float since the data we are generating is float
+                var dataInFloats = (float*)dataInBytes;
+
+                var floats = ConvertShortsToFloats(shorts);
+                var capacityInFloats = capacityInBytes / 4;
+
+                Marshal.Copy(floats, 0, (IntPtr)dataInFloats, (int)capacityInFloats);
+            }
+
+            return frame;
+        }
+
         private async void ToxInputNodeQuantumStartedHandler(AudioFrameInputNode sender,
-            FrameInputNodeQuantumStartedEventArgs args)
+                    FrameInputNodeQuantumStartedEventArgs args)
         {
             if (!await _receiveBuffer.OutputAvailableAsync())
                 return;
@@ -314,7 +376,7 @@ namespace OneTox.ViewModel.Calls
             // GenerateAudioData can provide PCM audio data by directly synthesizing it or reading from a file.
             // Need to know how many samples are required. In this case, the node is running at the same rate as the rest of the graph
             // For minimum latency, only provide the required amount of samples. Extra samples will introduce additional latency.
-            var numSamplesNeeded = (uint) args.RequiredSamples;
+            var numSamplesNeeded = (uint)args.RequiredSamples;
             if (numSamplesNeeded == 0)
                 return;
 
@@ -322,67 +384,7 @@ namespace OneTox.ViewModel.Calls
             _toxInputNode.AddFrame(audioData);
         }
 
-        // TODO: Fix frame receiving!
-        private unsafe AudioFrame GenerateAudioData(uint samples, short[] shorts)
-        {
-            // Buffer size is (number of samples) * (size of each sample)
-            // We choose to generate single channel (mono) audio. For multi-channel, multiply by number of channels
-            var bufferSize = samples*sizeof (float);
-            var frame = new AudioFrame(bufferSize);
-
-            using (var buffer = frame.LockBuffer(AudioBufferAccessMode.Write))
-            using (var reference = buffer.CreateReference())
-            {
-                byte* dataInBytes;
-                uint capacityInBytes;
-
-                // Get the buffer from the AudioFrame
-                ((IMemoryBufferByteAccess) reference).GetBuffer(out dataInBytes, out capacityInBytes);
-
-                // Cast to float since the data we are generating is float
-                var dataInFloats = (float*) dataInBytes;
-
-                var floats = ConvertShortsToFloats(shorts);
-                var capacityInFloats = capacityInBytes/4;
-
-                Marshal.Copy(floats, 0, (IntPtr) dataInFloats, (int) capacityInFloats);
-            }
-
-            return frame;
-        }
-
-        private float[] ConvertShortsToFloats(short[] inSamples)
-        {
-            var outSamples = new float[inSamples.Length];
-
-            for (var i = 0; i < inSamples.Length; i++)
-            {
-                var temp = inSamples[i]/(float) (short.MaxValue + 1);
-
-                if (temp > 1)
-                {
-                    temp = 1;
-                }
-                else if (temp < -1)
-                {
-                    temp = -1;
-                }
-
-                outSamples[i] = temp;
-            }
-
-            return outSamples;
-        }
-
-        private void AudioFrameReceivedHandler(object sender, ToxAvEventArgs.AudioFrameEventArgs e)
-        {
-            if (e.FriendNumber != _friendNumber)
-                return;
-
-            _receiveBuffer.Post(e.Frame.Data);
-        }
-
-        #endregion
+        #endregion Audio receiving
 
         #region Constants
 
@@ -392,21 +394,21 @@ namespace OneTox.ViewModel.Calls
         private const string KRingInFileName = "ring-in.wav";
         private const string KRingOutFileName = "ring-out.wav";
 
-        #endregion
+        #endregion Constants
 
         #region Fields
 
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly BufferBlock<short[]> _receiveBuffer = new BufferBlock<short[]>();
-        private bool _isMuted;
-        private CallState _state;
-        private RelayCommand _declineCallCommand;
-        private RelayCommand _changeMuteCommand;
-        private RelayCommand _stopCallCommand;
-        private RelayCommand _startCallCommand;
         private RelayCommand _acceptCallCommand;
+        private RelayCommand _changeMuteCommand;
+        private RelayCommand _declineCallCommand;
+        private bool _isMuted;
+        private RelayCommand _startCallCommand;
+        private CallState _state;
+        private RelayCommand _stopCallCommand;
 
-        #endregion
+        #endregion Fields
 
         #region Properties
 
@@ -435,12 +437,15 @@ namespace OneTox.ViewModel.Calls
                     case CallState.Default:
                         RaiseStopRinging();
                         break;
+
                     case CallState.DuringCall:
                         RaiseStopRinging();
                         break;
+
                     case CallState.IncomingCall:
                         RaiseStartRinging(KRingInFileName);
                         break;
+
                     case CallState.OutgoingCall:
                         RaiseStartRinging(KRingOutFileName);
                         break;
@@ -451,11 +456,12 @@ namespace OneTox.ViewModel.Calls
             }
         }
 
-        #endregion
+        #endregion Properties
 
         #region Ringing events
 
         public event EventHandler<string> StartRinging;
+
         public event EventHandler StopRinging;
 
         private void RaiseStartRinging(string ringFileName)
@@ -468,9 +474,22 @@ namespace OneTox.ViewModel.Calls
             StopRinging?.Invoke(this, EventArgs.Empty);
         }
 
-        #endregion
+        #endregion Ringing events
 
         #region Commands
+
+        public RelayCommand AcceptCallCommand
+        {
+            get
+            {
+                return _acceptCallCommand ?? (_acceptCallCommand = new RelayCommand(async () =>
+                {
+                    await StartAudioGraph();
+                    ToxAvModel.Instance.Answer(_friendNumber, _bitRate, 0);
+                    State = CallState.DuringCall;
+                }));
+            }
+        }
 
         public RelayCommand ChangeMuteCommand
         {
@@ -490,19 +509,6 @@ namespace OneTox.ViewModel.Calls
                         _microphoneInputNode.Start();
                         _toxOutputNode.Start();
                     }
-                }));
-            }
-        }
-
-        public RelayCommand AcceptCallCommand
-        {
-            get
-            {
-                return _acceptCallCommand ?? (_acceptCallCommand = new RelayCommand(async () =>
-                {
-                    await StartAudioGraph();
-                    ToxAvModel.Instance.Answer(_friendNumber, _bitRate, 0);
-                    State = CallState.DuringCall;
                 }));
             }
         }
@@ -552,6 +558,6 @@ namespace OneTox.ViewModel.Calls
             }
         }
 
-        #endregion
+        #endregion Commands
     }
 }

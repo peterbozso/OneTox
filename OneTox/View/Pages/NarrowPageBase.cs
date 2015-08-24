@@ -12,6 +12,13 @@ namespace OneTox.View.Pages
             Unloaded += PageUnloaded;
         }
 
+        protected abstract void WindowSizeChanged(object sender, WindowSizeChangedEventArgs e);
+
+        private void BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            Frame.Navigate(typeof(FriendListPage));
+        }
+
         private void PageLoaded(object sender, RoutedEventArgs e)
         {
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
@@ -29,12 +36,5 @@ namespace OneTox.View.Pages
 
             Window.Current.SizeChanged -= WindowSizeChanged;
         }
-
-        private void BackRequested(object sender, BackRequestedEventArgs e)
-        {
-            Frame.Navigate(typeof (FriendListPage));
-        }
-
-        protected abstract void WindowSizeChanged(object sender, WindowSizeChangedEventArgs e);
     }
 }

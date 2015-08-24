@@ -1,4 +1,6 @@
-﻿using System;
+﻿using OneTox.ViewModel.ProfileSettings;
+using SharpTox.Core;
+using System;
 using System.Linq;
 using System.Threading;
 using Windows.ApplicationModel.Core;
@@ -6,8 +8,6 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using OneTox.ViewModel.ProfileSettings;
-using SharpTox.Core;
 
 namespace OneTox.View.UserControls.ProfileSettings
 {
@@ -20,17 +20,7 @@ namespace OneTox.View.UserControls.ProfileSettings
         {
             InitializeComponent();
             _viewModel = DataContext as ProfileSettingsViewModel;
-            StatusComboBox.ItemsSource = Enum.GetValues(typeof (ToxUserStatus)).Cast<ToxUserStatus>();
-        }
-
-        private async void UserAvatarTapped(object sender, TappedRoutedEventArgs e)
-        {
-            await _viewModel.ChangeAvatar();
-        }
-
-        private async void StatusComboBoxLostFocus(object sender, RoutedEventArgs e)
-        {
-            await _viewModel.SaveDataAsync();
+            StatusComboBox.ItemsSource = Enum.GetValues(typeof(ToxUserStatus)).Cast<ToxUserStatus>();
         }
 
         private async void NameTextBoxLostFocus(object sender, RoutedEventArgs e)
@@ -46,9 +36,19 @@ namespace OneTox.View.UserControls.ProfileSettings
             }
         }
 
+        private async void StatusComboBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            await _viewModel.SaveDataAsync();
+        }
+
         private async void StatusMessageTextBoxLostFocus(object sender, RoutedEventArgs e)
         {
             await _viewModel.SaveDataAsync();
+        }
+
+        private async void UserAvatarTapped(object sender, TappedRoutedEventArgs e)
+        {
+            await _viewModel.ChangeAvatar();
         }
 
         #region Tox ID
@@ -78,6 +78,6 @@ namespace OneTox.View.UserControls.ProfileSettings
             }
         }
 
-        #endregion
+        #endregion Tox ID
     }
 }

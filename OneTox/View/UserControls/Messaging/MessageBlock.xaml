@@ -46,6 +46,5 @@
                    Text="{Binding Timestamp, Converter={StaticResource DateTimeConverter}}"
                    VerticalAlignment="Top"
                    TextAlignment="{Binding Path=Sender, Converter={StaticResource SenderTypeToTextAlignmentConverter}}" />
-
     </Grid>
 </UserControl>

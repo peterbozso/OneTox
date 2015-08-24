@@ -1,12 +1,12 @@
-﻿using System.Threading;
+﻿using OneTox.ViewModel.Friends;
+using OneTox.ViewModel.Messaging;
+using System.Threading;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
-using OneTox.ViewModel.Friends;
-using OneTox.ViewModel.Messaging;
 
 namespace OneTox.View.UserControls.Messaging
 {
@@ -30,14 +30,6 @@ namespace OneTox.View.UserControls.Messaging
             FileTransfersBlock.DataContext = _friendViewModel.FileTransfers;
         }
 
-        private void MessagesListViewLoaded(object sender, RoutedEventArgs e)
-        {
-            _scrollManager?.DeregisterHandlers();
-            _scrollManager = new ScrollManager(MessagesListView, _friendViewModel.Conversation,
-                MessageAddedNotificationGrid, MessageAddedNotificationAnimation);
-            _scrollManager.RegisterHandlers();
-        }
-
         private async void MessageInputKeyDown(object sender, KeyRoutedEventArgs e)
         {
             _chatTimer.Change(500, -1);
@@ -45,7 +37,7 @@ namespace OneTox.View.UserControls.Messaging
 
             if (e.Key == VirtualKey.Enter && MessageInput.Text != string.Empty)
             {
-                // I don't even... 
+                // I don't even...
                 // https://social.msdn.microsoft.com/Forums/windowsapps/en-US/734d6c7a-8da2-48c6-9b3d-fa868b4dfb1d/c-textbox-keydown-triggered-twice-in-metro-applications?forum=winappswithcsharp
                 if (e.KeyStatus.RepeatCount != 1)
                     return;
@@ -54,6 +46,14 @@ namespace OneTox.View.UserControls.Messaging
                 MessageInput.Text = string.Empty;
                 e.Handled = true;
             }
+        }
+
+        private void MessagesListViewLoaded(object sender, RoutedEventArgs e)
+        {
+            _scrollManager?.DeregisterHandlers();
+            _scrollManager = new ScrollManager(MessagesListView, _friendViewModel.Conversation,
+                MessageAddedNotificationGrid, MessageAddedNotificationAnimation);
+            _scrollManager.RegisterHandlers();
         }
 
         #region Management of scrolling of MessagesListView
@@ -96,33 +96,6 @@ namespace OneTox.View.UserControls.Messaging
                 _messageAddedNotificationGrid.Visibility = Visibility.Collapsed;
             }
 
-            public void RegisterHandlers()
-            {
-                _messagesListView.SizeChanged += MessagesListViewSizeChangedHandler;
-                RegsiterMessagesScrollViewerViewChangedHandler();
-                _conversationViewModel.MessageAdded += MessageAddedHandler;
-                _messageAddedNotificationGrid.Tapped += MessageAddedNotificationGridTapped;
-            }
-
-            private void RegsiterMessagesScrollViewerViewChangedHandler()
-            {
-                // We need to do it this way because in some cases, if we'd get the ScrollViewer sooner,
-                // the function would just return null.
-                _messagesScrollViewer = GetScrollViewer(_messagesListView);
-                if (_messagesScrollViewer == null)
-                {
-                    _messagesListView.Loaded += (sender, args) =>
-                    {
-                        _messagesScrollViewer = GetScrollViewer(_messagesListView);
-                        _messagesScrollViewer.ViewChanged += MessagesScrollViewerViewChangedHandler;
-                    };
-                }
-                else
-                {
-                    _messagesScrollViewer.ViewChanged += MessagesScrollViewerViewChangedHandler;
-                }
-            }
-
             public void DeregisterHandlers()
             {
                 _messagesListView.SizeChanged -= MessagesListViewSizeChangedHandler;
@@ -132,6 +105,20 @@ namespace OneTox.View.UserControls.Messaging
                 }
                 _conversationViewModel.MessageAdded -= MessageAddedHandler;
                 _messageAddedNotificationGrid.Tapped -= MessageAddedNotificationGridTapped;
+            }
+
+            public void RegisterHandlers()
+            {
+                _messagesListView.SizeChanged += MessagesListViewSizeChangedHandler;
+                RegsiterMessagesScrollViewerViewChangedHandler();
+                _conversationViewModel.MessageAdded += MessageAddedHandler;
+                _messageAddedNotificationGrid.Tapped += MessageAddedNotificationGridTapped;
+            }
+
+            public void ScrollToBottom(bool disableAnimation)
+            {
+                _messagesScrollViewer.UpdateLayout();
+                _messagesScrollViewer.ChangeView(null, double.MaxValue, null, disableAnimation);
             }
 
             private ScrollViewer GetScrollViewer(DependencyObject dependencyObject)
@@ -157,12 +144,9 @@ namespace OneTox.View.UserControls.Messaging
                 return null;
             }
 
-            private void MessagesListViewSizeChangedHandler(object sender, SizeChangedEventArgs e)
+            private bool IsSticky()
             {
-                if (IsSticky())
-                {
-                    ScrollToBottom(true);
-                }
+                return (_messagesScrollViewer != null && _stickToBottom);
             }
 
             private void MessageAddedHandler(object sender, ToxMessageViewModelBase message)
@@ -197,15 +181,12 @@ namespace OneTox.View.UserControls.Messaging
                 }
             }
 
-            private bool IsSticky()
+            private void MessagesListViewSizeChangedHandler(object sender, SizeChangedEventArgs e)
             {
-                return (_messagesScrollViewer != null && _stickToBottom);
-            }
-
-            public void ScrollToBottom(bool disableAnimation)
-            {
-                _messagesScrollViewer.UpdateLayout();
-                _messagesScrollViewer.ChangeView(null, double.MaxValue, null, disableAnimation);
+                if (IsSticky())
+                {
+                    ScrollToBottom(true);
+                }
             }
 
             private void MessagesScrollViewerViewChangedHandler(object sender, ScrollViewerViewChangedEventArgs e)
@@ -221,8 +202,27 @@ namespace OneTox.View.UserControls.Messaging
                 if (_stickToBottom)
                     _messageAddedNotificationGrid.Visibility = Visibility.Collapsed;
             }
+
+            private void RegsiterMessagesScrollViewerViewChangedHandler()
+            {
+                // We need to do it this way because in some cases, if we'd get the ScrollViewer sooner,
+                // the function would just return null.
+                _messagesScrollViewer = GetScrollViewer(_messagesListView);
+                if (_messagesScrollViewer == null)
+                {
+                    _messagesListView.Loaded += (sender, args) =>
+                    {
+                        _messagesScrollViewer = GetScrollViewer(_messagesListView);
+                        _messagesScrollViewer.ViewChanged += MessagesScrollViewerViewChangedHandler;
+                    };
+                }
+                else
+                {
+                    _messagesScrollViewer.ViewChanged += MessagesScrollViewerViewChangedHandler;
+                }
+            }
         }
 
-        #endregion
+        #endregion Management of scrolling of MessagesListView
     }
 }

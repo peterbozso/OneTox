@@ -11,6 +11,29 @@ using Windows.Storage.AccessCache;
 namespace OneTox.Model.FileTransfers
 {
     /// <summary>
+    ///     The data needed to be stored for each entry in the future access list.
+    /// </summary>
+    public struct TransferMetadata
+    {
+        public TransferDirection Direction;
+        public byte[] FileId;
+        public int FileNumber;
+        public int FriendNumber;
+        public long TransferredBytes;
+    }
+
+    /// <summary>
+    ///     The data needed for resuming a previously broken file transfer.
+    /// </summary>
+    public class ResumeData
+    {
+        public StorageFile File;
+        public byte[] FileId;
+        public int FriendNumber;
+        public long TransferredBytes;
+    }
+
+    /// <summary>
     ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
     ///     This class's responsibility is to keep record of broken file transfers between core restarts. It accomplishes this
     ///     goal by leveraging the benefits of future access list. We use it like this: whenever a file transfer added by
@@ -32,63 +55,22 @@ namespace OneTox.Model.FileTransfers
         public static FileTransferResumer Instance => _instace ?? (_instace = new FileTransferResumer());
 
         /// <summary>
-        ///     Records a file transfer for future resuming between core restarts.
+        ///     Retrieves the necessary data to resume a broken file download based on a file ID.
         /// </summary>
-        /// <param name="file">The file associated with the transfer.</param>
-        /// <param name="friendNumber">The friend number of the transfer.</param>
-        /// <param name="fileNumber">The file number of the transfer.</param>
-        /// <param name="direction">The direction of the transfer.</param>
-        public void RecordTransfer(StorageFile file, int friendNumber, int fileNumber, TransferDirection direction)
+        /// <param name="fileId">The file ID to search for.</param>
+        /// <returns>The data necessary for resuming the transfer.</returns>
+        public async Task<ResumeData> GetDownloadData(byte[] fileId)
         {
-            // TODO: Maybe we should try to make place for newer items?
-            if (_futureAccesList.MaximumItemsAllowed == _futureAccesList.Entries.Count)
-                return;
-
-            var metadata = new TransferMetadata
+            foreach (var entry in _futureAccesList.Entries)
             {
-                FriendNumber = friendNumber,
-                FileNumber = fileNumber,
-                FileId = ToxModel.Instance.FileGetId(friendNumber, fileNumber),
-                TransferredBytes = 0,
-                Direction = direction
-            };
+                var metadata = DeserializeMetadata(entry.Metadata);
 
-            var xmlMetadata = SerializeMetadata(metadata);
-
-            _futureAccesList.Add(file, xmlMetadata);
-        }
-
-        /// <summary>
-        ///     Updates the amount of transferred bytes we store for a transfer that was recorded previously with RecordTransfer().
-        /// </summary>
-        /// <param name="friendNumber">Friend number of the transfer to update.</param>
-        /// <param name="fileNumber">File number of the transfer to update.</param>
-        /// <param name="transferredBytes">New amount of transferred bytes.</param>
-        /// <returns></returns>
-        public async Task UpdateTransfer(int friendNumber, int fileNumber, long transferredBytes)
-        {
-            var entry = FindEntry(friendNumber, fileNumber);
-            if (entry.Token == null)
-                return;
-
-            var file = await _futureAccesList.GetFileAsync(entry.Token);
-            var metadata = DeserializeMetadata(entry.Metadata);
-            metadata.TransferredBytes = transferredBytes;
-
-            _futureAccesList.AddOrReplace(entry.Token, file, SerializeMetadata(metadata));
-        }
-
-        /// <summary>
-        ///     Removes the record of the given file transfer.
-        /// </summary>
-        /// <param name="friendNumber">The friend number of the transfer</param>
-        /// <param name="fileNumber">The file number of the transfer</param>
-        public void RemoveTransfer(int friendNumber, int fileNumber)
-        {
-            var entry = FindEntry(friendNumber, fileNumber);
-
-            if (entry.Token != null)
-                _futureAccesList.Remove(entry.Token);
+                if (metadata.FileId.SequenceEqual(fileId))
+                {
+                    return await GetResumeData(entry.Token, metadata);
+                }
+            }
+            return null;
         }
 
         /// <summary>
@@ -119,22 +101,112 @@ namespace OneTox.Model.FileTransfers
         }
 
         /// <summary>
-        ///     Retrieves the necessary data to resume a broken file download based on a file ID.
+        ///     Records a file transfer for future resuming between core restarts.
         /// </summary>
-        /// <param name="fileId">The file ID to search for.</param>
-        /// <returns>The data necessary for resuming the transfer.</returns>
-        public async Task<ResumeData> GetDownloadData(byte[] fileId)
+        /// <param name="file">The file associated with the transfer.</param>
+        /// <param name="friendNumber">The friend number of the transfer.</param>
+        /// <param name="fileNumber">The file number of the transfer.</param>
+        /// <param name="direction">The direction of the transfer.</param>
+        public void RecordTransfer(StorageFile file, int friendNumber, int fileNumber, TransferDirection direction)
+        {
+            // TODO: Maybe we should try to make place for newer items?
+            if (_futureAccesList.MaximumItemsAllowed == _futureAccesList.Entries.Count)
+                return;
+
+            var metadata = new TransferMetadata
+            {
+                FriendNumber = friendNumber,
+                FileNumber = fileNumber,
+                FileId = ToxModel.Instance.FileGetId(friendNumber, fileNumber),
+                TransferredBytes = 0,
+                Direction = direction
+            };
+
+            var xmlMetadata = SerializeMetadata(metadata);
+
+            _futureAccesList.Add(file, xmlMetadata);
+        }
+
+        /// <summary>
+        ///     Removes the record of the given file transfer.
+        /// </summary>
+        /// <param name="friendNumber">The friend number of the transfer</param>
+        /// <param name="fileNumber">The file number of the transfer</param>
+        public void RemoveTransfer(int friendNumber, int fileNumber)
+        {
+            var entry = FindEntry(friendNumber, fileNumber);
+
+            if (entry.Token != null)
+                _futureAccesList.Remove(entry.Token);
+        }
+
+        /// <summary>
+        ///     Updates the amount of transferred bytes we store for a transfer that was recorded previously with RecordTransfer().
+        /// </summary>
+        /// <param name="friendNumber">Friend number of the transfer to update.</param>
+        /// <param name="fileNumber">File number of the transfer to update.</param>
+        /// <param name="transferredBytes">New amount of transferred bytes.</param>
+        /// <returns></returns>
+        public async Task UpdateTransfer(int friendNumber, int fileNumber, long transferredBytes)
+        {
+            var entry = FindEntry(friendNumber, fileNumber);
+            if (entry.Token == null)
+                return;
+
+            var file = await _futureAccesList.GetFileAsync(entry.Token);
+            var metadata = DeserializeMetadata(entry.Metadata);
+            metadata.TransferredBytes = transferredBytes;
+
+            _futureAccesList.AddOrReplace(entry.Token, file, SerializeMetadata(metadata));
+        }
+
+        private TransferMetadata DeserializeMetadata(string xml)
+        {
+            var deserializer = new XmlSerializer(typeof(TransferMetadata));
+            var reader = new StringReader(xml);
+            return (TransferMetadata)deserializer.Deserialize(reader);
+        }
+
+        /// <summary>
+        ///     Finds an entry in the future access list.
+        /// </summary>
+        /// <param name="friendNumber">The friend number to look for.</param>
+        /// <param name="fileNumber">The file number to look for.</param>
+        /// <returns>The entry we are looking for.</returns>
+        private AccessListEntry FindEntry(int friendNumber, int fileNumber)
         {
             foreach (var entry in _futureAccesList.Entries)
             {
                 var metadata = DeserializeMetadata(entry.Metadata);
 
-                if (metadata.FileId.SequenceEqual(fileId))
+                if (metadata.FriendNumber == friendNumber && metadata.FileNumber == fileNumber)
                 {
-                    return await GetResumeData(entry.Token, metadata);
+                    return entry;
                 }
             }
-            return null;
+
+            return new AccessListEntry();
+        }
+
+        /// <summary>
+        ///     In case a friend is removed from the friend list, we remove all broken transfers associated with him/her as well.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FriendListChangedHandler(object sender, FriendListChangedEventArgs e)
+        {
+            if (e.Action == FriendListChangedAction.Remove)
+            {
+                foreach (var entry in _futureAccesList.Entries)
+                {
+                    var metadata = DeserializeMetadata(entry.Metadata);
+
+                    if (metadata.FriendNumber == e.FriendNumber)
+                    {
+                        _futureAccesList.Remove(entry.Token);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -167,85 +239,13 @@ namespace OneTox.Model.FileTransfers
             return null;
         }
 
-        /// <summary>
-        ///     In case a friend is removed from the friend list, we remove all broken transfers associated with him/her as well.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FriendListChangedHandler(object sender, FriendListChangedEventArgs e)
-        {
-            if (e.Action == FriendListChangedAction.Remove)
-            {
-                foreach (var entry in _futureAccesList.Entries)
-                {
-                    var metadata = DeserializeMetadata(entry.Metadata);
-
-                    if (metadata.FriendNumber == e.FriendNumber)
-                    {
-                        _futureAccesList.Remove(entry.Token);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Finds an entry in the future access list.
-        /// </summary>
-        /// <param name="friendNumber">The friend number to look for.</param>
-        /// <param name="fileNumber">The file number to look for.</param>
-        /// <returns>The entry we are looking for.</returns>
-        private AccessListEntry FindEntry(int friendNumber, int fileNumber)
-        {
-            foreach (var entry in _futureAccesList.Entries)
-            {
-                var metadata = DeserializeMetadata(entry.Metadata);
-
-                if (metadata.FriendNumber == friendNumber && metadata.FileNumber == fileNumber)
-                {
-                    return entry;
-                }
-            }
-
-            return new AccessListEntry();
-        }
-
         private string SerializeMetadata(TransferMetadata metadata)
         {
-            var serializer = new XmlSerializer(typeof (TransferMetadata));
+            var serializer = new XmlSerializer(typeof(TransferMetadata));
             var xmlMetadata = new StringBuilder();
             var writer = new StringWriter(xmlMetadata);
             serializer.Serialize(writer, metadata);
             return xmlMetadata.ToString();
         }
-
-        private TransferMetadata DeserializeMetadata(string xml)
-        {
-            var deserializer = new XmlSerializer(typeof (TransferMetadata));
-            var reader = new StringReader(xml);
-            return (TransferMetadata) deserializer.Deserialize(reader);
-        }
-    }
-
-    /// <summary>
-    ///     The data needed for resuming a previously broken file transfer.
-    /// </summary>
-    public class ResumeData
-    {
-        public StorageFile File;
-        public byte[] FileId;
-        public int FriendNumber;
-        public long TransferredBytes;
-    }
-
-    /// <summary>
-    ///     The data needed to be stored for each entry in the future access list.
-    /// </summary>
-    public struct TransferMetadata
-    {
-        public TransferDirection Direction;
-        public byte[] FileId;
-        public int FileNumber;
-        public int FriendNumber;
-        public long TransferredBytes;
     }
 }

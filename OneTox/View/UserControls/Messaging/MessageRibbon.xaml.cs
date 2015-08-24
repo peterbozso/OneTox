@@ -1,6 +1,6 @@
-﻿using Windows.UI.Xaml;
+﻿using OneTox.ViewModel.Messaging;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using OneTox.ViewModel.Messaging;
 
 namespace OneTox.View.UserControls.Messaging
 {
@@ -13,7 +13,7 @@ namespace OneTox.View.UserControls.Messaging
 
         private void MessageRibbonLoaded(object sender, RoutedEventArgs e)
         {
-            var messageViewModel = (ToxMessageViewModelBase) DataContext;
+            var messageViewModel = (ToxMessageViewModelBase)DataContext;
             VisualStateManager.GoToState(this, messageViewModel.State.ToString(), true);
         }
     }

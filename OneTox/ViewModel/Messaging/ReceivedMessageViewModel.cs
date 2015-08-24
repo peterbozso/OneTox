@@ -1,6 +1,6 @@
-﻿using System;
-using OneTox.ViewModel.Friends;
+﻿using OneTox.ViewModel.Friends;
 using SharpTox.Core;
+using System;
 
 namespace OneTox.ViewModel.Messaging
 {
