@@ -16,6 +16,11 @@ namespace OneTox.View.UserControls.ProfileSettings
             _viewModel = DataContext as ProfileManagementViewModel;
         }
 
+        private async void DeleteButtonClick(object sender, RoutedEventArgs e)
+        {
+            await _viewModel.DeleteProfile(ProfileList.SelectedItem as ProfileViewModel);
+        }
+
         private async void ExportButtonClick(object sender, RoutedEventArgs e)
         {
             await _viewModel.ExportProfile(PasswordTextBox.Text);

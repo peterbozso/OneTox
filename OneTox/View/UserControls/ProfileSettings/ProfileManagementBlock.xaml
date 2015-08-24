@@ -73,7 +73,16 @@
                 <TextBlock Text="{Binding ElementName=ProfileList, Path=SelectedItem.StatusMessage}" TextWrapping="WrapWholeWords" Margin="8,4,0,8" />
                 <TextBlock FontSize="17">Status</TextBlock>
                 <TextBlock Text="{Binding ElementName=ProfileList, Path=SelectedItem.Status, Converter={StaticResource UserStatusToStringConverter}}" Margin="8,4,0,8" />
-                <Button x:Name="SwitchButton" HorizontalAlignment="Stretch" Content="Switch" Click="SwitchButtonClick" />
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="SwitchButton" Grid.Column="0"  HorizontalAlignment="Stretch" Content="Switch" Click="SwitchButtonClick" Margin="0,0,4,0" />
+                    <Button x:Name="DeleteButton" Grid.Column="1" HorizontalAlignment="Stretch" Content="Delete" Click="DeleteButtonClick" />
+                </Grid>
             </StackPanel>
         </Grid>
     </StackPanel>

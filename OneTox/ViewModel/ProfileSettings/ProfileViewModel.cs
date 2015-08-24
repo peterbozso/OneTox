@@ -39,6 +39,12 @@ namespace OneTox.ViewModel.ProfileSettings
             return new ProfileViewModel(new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(data)));
         }
 
+        public async Task DeleteBackingFile()
+        {
+            var file = await ApplicationData.Current.RoamingFolder.GetFileAsync(_toxInstance.Id.PublicKey + ".tox");
+            await file.DeleteAsync();
+        }
+
         public async Task SetAsCurrent()
         {
             ToxModel.Instance.SetCurrent(_toxInstance);

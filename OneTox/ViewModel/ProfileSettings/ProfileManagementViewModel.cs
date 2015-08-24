@@ -37,6 +37,12 @@ namespace OneTox.ViewModel.ProfileSettings
 
         public ObservableCollection<ProfileViewModel> Profiles { get; set; }
 
+        public async Task DeleteProfile(ProfileViewModel profile)
+        {
+            Profiles.Remove(profile);
+            await profile.DeleteBackingFile();
+        }
+
         public async Task RefreshProfileList()
         {
             var fileList = await ApplicationData.Current.RoamingFolder.GetFilesAsync();
