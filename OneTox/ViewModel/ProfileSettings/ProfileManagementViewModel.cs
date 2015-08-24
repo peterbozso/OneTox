@@ -29,8 +29,8 @@ namespace OneTox.ViewModel.ProfileSettings
                            async () =>
                            {
                                var profile = ProfileViewModel.GetDefaultProfileViewModel();
-                               Profiles.Add(profile);
                                await profile.SetAsCurrent();
+                               await RefreshProfileList();
                            }));
             }
         }
@@ -98,8 +98,8 @@ namespace OneTox.ViewModel.ProfileSettings
             if (file != null)
             {
                 var profile = await ProfileViewModel.GetProfileViewModelFromFile(file);
-                Profiles.Add(profile);
                 await profile.SetAsCurrent();
+                await RefreshProfileList();
             }
         }
 
