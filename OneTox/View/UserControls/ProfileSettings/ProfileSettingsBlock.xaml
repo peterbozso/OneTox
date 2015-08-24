@@ -31,6 +31,7 @@
                         <Setter Target="UserAvatarWithStatusColorBorder.(FrameworkElement.Height)" Value="140" />
                         <Setter Target="StatusComboBox.(FrameworkElement.Width)" Value="280" />
                         <Setter Target="ToxIdBlock.(FrameworkElement.Width)" Value="440" />
+                        <Setter Target="ProfileManagementBlock.(FrameworkElement.Width)" Value="440" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
