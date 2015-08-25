@@ -8,12 +8,17 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.UI.Popups;
 
 namespace OneTox.ViewModel.ProfileSettings
 {
     public class ProfileManagementViewModel : ObservableObject
     {
         private RelayCommand _createNewProfileCommand;
+        private RelayCommand _deleteProfileCommand;
+        private RelayCommand _exportProfileCommand;
+        private RelayCommand _importProfileCommand;
+        private RelayCommand _switchProfileCommand;
 
         public ProfileManagementViewModel()
         {
@@ -35,12 +40,31 @@ namespace OneTox.ViewModel.ProfileSettings
             }
         }
 
-        public ObservableCollection<ProfileViewModel> Profiles { get; set; }
-
-        public async Task DeleteProfile(ProfileViewModel profile)
+        public RelayCommand DeleteProfileCommand
         {
-            Profiles.Remove(profile);
-            await profile.DeleteBackingFile();
+            get
+            {
+                return _deleteProfileCommand ?? (_deleteProfileCommand = new RelayCommand(async (object parameter) =>
+                {
+                    var profile = parameter as ProfileViewModel;
+                    Profiles.Remove(profile);
+                    await profile.DeleteBackingFile();
+                }));
+            }
+        }
+
+        public ObservableCollection<ProfileViewModel> Profiles { get; }
+
+        public RelayCommand SwitchProfileCommand
+        {
+            get
+            {
+                return _switchProfileCommand ?? (_switchProfileCommand = new RelayCommand(async (object parameter) =>
+                {
+                    await (parameter as ProfileViewModel).SetAsCurrent();
+                    await RefreshProfileList();
+                }));
+            }
         }
 
         public async Task RefreshProfileList()
@@ -63,17 +87,20 @@ namespace OneTox.ViewModel.ProfileSettings
 
         #region Export profile
 
-        /// <summary>
-        ///     Exports the current profile to the selected file.
-        /// </summary>
-        /// <param name="password">Password (optional) to encrypt the profile with.</param>
-        /// <returns></returns>
-        public async Task ExportProfile(string password)
+        public RelayCommand ExportProfileCommand
         {
-            var file = await PickDestinationFile();
-            if (file != null)
+            get
             {
-                await FileIO.WriteBytesAsync(file, GetData(password));
+                return _exportProfileCommand ?? (_exportProfileCommand = new RelayCommand(async (object parameter) =>
+                {
+                    var password = parameter as string;
+
+                    var file = await PickDestinationFile();
+                    if (file != null)
+                    {
+                        await FileIO.WriteBytesAsync(file, GetData(password));
+                    }
+                }));
             }
         }
 
@@ -98,14 +125,29 @@ namespace OneTox.ViewModel.ProfileSettings
 
         #region Import profile
 
-        public async Task ImportProfile()
+        public RelayCommand ImportProfileCommand
         {
-            var file = await PickSourceFile();
-            if (file != null)
+            get
             {
-                var profile = await ProfileViewModel.GetProfileViewModelFromFile(file);
-                await profile.SetAsCurrent();
-                await RefreshProfileList();
+                return _importProfileCommand ?? (_importProfileCommand = new RelayCommand(async () =>
+                {
+                    try
+                    {
+                        var file = await PickSourceFile();
+                        if (file != null)
+                        {
+                            var profile = await ProfileViewModel.GetProfileViewModelFromFile(file);
+                            await profile.SetAsCurrent();
+                            await RefreshProfileList();
+                        }
+                    }
+                    catch
+                    {
+                        var msgDialog = new MessageDialog("Importing profile failed because of corrupted .tox file.",
+                            "Error occurred");
+                        await msgDialog.ShowAsync();
+                    }
+                }));
             }
         }
 

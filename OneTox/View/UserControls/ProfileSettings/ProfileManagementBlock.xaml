@@ -39,14 +39,14 @@
                             <TextBox x:Name="PasswordTextBox" Header="Password (optional)" Width="266"
                                      ToolTipService.ToolTip="You can encrypt your saved profile with a password, preventing data theft. You'll also need it for importing."
                                      IsEnabled="False" />
-                            <Button Margin="0,5,0,0" Content="Export" Click="ExportButtonClick" />
+                            <Button Margin="0,5,0,0" Content="Export" Command="{Binding ExportProfileCommand}" CommandParameter="{Binding ElementName=PasswordTextBox, Path=Text}" />
                         </StackPanel>
                     </Flyout>
                 </Button.Flyout>
             </Button>
 
             <Button x:Name="ImportButton" Grid.Column="1" Content="Import" HorizontalAlignment="Stretch"
-                    Click="ImportButtonClick" Margin="4,0" />
+                    Command="{Binding ImportProfileCommand}" Margin="4,0" />
 
             <Button x:Name="NewButton" Grid.Column="2" HorizontalAlignment="Stretch" Content="New"
                     Command="{Binding CreateNewProfileCommand}" Margin="4,0,0,0" />
@@ -82,8 +82,8 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="SwitchButton" Grid.Column="0"  HorizontalAlignment="Stretch" Content="Switch" Click="SwitchButtonClick" Margin="0,0,4,0" />
-                    <Button x:Name="DeleteButton" Grid.Column="1" HorizontalAlignment="Stretch" Content="Delete" Click="DeleteButtonClick" />
+                    <Button x:Name="SwitchButton" Grid.Column="0"  HorizontalAlignment="Stretch" Content="Switch" Command="{Binding SwitchProfileCommand}" CommandParameter="{Binding ElementName=ProfileList, Path=SelectedItem}"  Margin="0,0,4,0" />
+                    <Button x:Name="DeleteButton" Grid.Column="1" HorizontalAlignment="Stretch" Content="Delete" Command="{Binding DeleteProfileCommand}" CommandParameter="{Binding ElementName=ProfileList, Path=SelectedItem}" />
                 </Grid>
             </StackPanel>
         </Grid>
