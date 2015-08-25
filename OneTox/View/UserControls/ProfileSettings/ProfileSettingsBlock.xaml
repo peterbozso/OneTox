@@ -94,18 +94,15 @@
                 </Grid>
 
                 <StackPanel x:Name="ToxIdBlock" Margin="0,32,0,0" Width="488">
-                    <TextBlock x:Name="ToxIdHeader" Text="Tox ID" FontSize="20" />
+                    <TextBlock x:Name="ToxIdHeader" Grid.Row="0" Text="Tox ID" FontSize="22" Margin="0,0,0,8" />
 
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <Image x:Name="QrCodeImage" Grid.Column="0" Source="{Binding QrCodeId}" Height="160"
-                               Width="160" />
-
-                        <Grid Grid.Column="1" VerticalAlignment="Center">
+                        <Grid Grid.Column="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -113,7 +110,7 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock x:Name="ToxIdTextBlock" Grid.Row="0" TextWrapping="Wrap" Text="{Binding TextId}"
-                                       Margin="0,0,0,8" VerticalAlignment="Bottom" HorizontalAlignment="Left" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" />
+                                       Margin="0,0,0,8" VerticalAlignment="Bottom" HorizontalAlignment="Left" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" TextAlignment="Justify" />
 
                             <Grid x:Name="CopyIdToClipboardBlock" Grid.Row="1" VerticalAlignment="Top" Margin="0,0,0,8">
                                 <Grid.ColumnDefinitions>
@@ -132,10 +129,13 @@
                                     Command="{Binding RandomizeNoSpamCommand}" Width="180"
                                     ToolTipService.ToolTip="Use this if you're receiving spam friend request. The operation also makes your current Tox ID invalid." />
                         </Grid>
+
+                        <Image x:Name="QrCodeImage" Grid.Column="1" Source="{Binding QrCodeId}" Height="120"
+                               Width="120" Margin="20,0,0,0" VerticalAlignment="Center" />
                     </Grid>
                 </StackPanel>
 
-                <local:ProfileManagementBlock x:Name="ProfileManagementBlock" HorizontalAlignment="Left" Margin="0,20,0,0" Width="488" />
+                <local:ProfileManagementBlock x:Name="ProfileManagementBlock" HorizontalAlignment="Left" Margin="0,32,0,0" Width="488" />
             </StackPanel>
         </ScrollViewer>
     </Grid>

@@ -151,8 +151,9 @@ namespace OneTox.ViewModel.ProfileSettings
                 Format = BarcodeFormat.QR_CODE,
                 Options = new EncodingOptions
                 {
-                    Height = 200,
-                    Width = 200
+                    Height = 120,
+                    Width = 120,
+                    Margin = 0
                 }
             };
 

@@ -22,7 +22,7 @@
     </UserControl.Resources>
 
     <StackPanel>
-        <TextBlock Text="Profile management" Margin="0,0,0,12" FontSize="20" />
+        <TextBlock Text="Profile management" Margin="0,0,0,8" FontSize="22" />
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -52,7 +52,9 @@
                     Command="{Binding CreateNewProfileCommand}" Margin="4,0,0,0" />
         </Grid>
 
-        <Grid Margin="0,12,0,0">
+        <TextBlock Margin="0,12,0,8" FontSize="17">Available profiles</TextBlock>
+
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
