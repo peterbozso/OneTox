@@ -207,6 +207,11 @@ namespace OneTox.ViewModel.ProfileSettings
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () => { RaisePropertyChanged(e.PropertyName); });
+
+            if (e.PropertyName == string.Empty)
+            {
+                RefreshQrCodeId();
+            }
         }
 
         #endregion Other user data
