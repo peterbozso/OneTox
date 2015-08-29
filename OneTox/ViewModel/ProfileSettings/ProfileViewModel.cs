@@ -10,44 +10,43 @@ namespace OneTox.ViewModel.ProfileSettings
 {
     public class ProfileViewModel
     {
-        private readonly ExtendedTox _toxInstance;
+        private readonly ToxData _toxData;
+        private readonly ToxDataInfo _toxDataInfo;
 
-        private ProfileViewModel(ExtendedTox toxInstance)
+        private ProfileViewModel(ToxData toxData, ToxDataInfo toxDataInfo)
         {
-            _toxInstance = toxInstance;
+            _toxData = toxData;
+            _toxDataInfo = toxDataInfo;
         }
 
-        public ToxId Id => _toxInstance.Id;
-        public string Name => _toxInstance.Name;
-        public ToxUserStatus Status => _toxInstance.Status;
-        public string StatusMessage => _toxInstance.StatusMessage;
-
-        public static ProfileViewModel GetDefaultProfileViewModel()
-        {
-            var toxInstance = new ExtendedTox(new ToxOptions(true, true))
-            {
-                Name = "User",
-                StatusMessage = "Using OneTox."
-            };
-
-            return new ProfileViewModel(toxInstance);
-        }
+        public ToxId Id => _toxDataInfo.Id;
+        public string Name => _toxDataInfo.Name;
+        public ToxUserStatus Status => _toxDataInfo.Status;
+        public string StatusMessage => _toxDataInfo.StatusMessage;
 
         public static async Task<ProfileViewModel> GetProfileViewModelFromFile(StorageFile file)
         {
             var data = (await FileIO.ReadBufferAsync(file)).ToArray();
-            return new ProfileViewModel(new ExtendedTox(new ToxOptions(true, true), ToxData.FromBytes(data)));
+            var toxData = ToxData.FromBytes(data);
+
+            ToxDataInfo toxDataInfo;
+            toxData.TryParse(out toxDataInfo);
+            if (toxDataInfo == null)
+                return null;
+
+            return new ProfileViewModel(toxData, toxDataInfo);
         }
 
         public async Task DeleteBackingFile()
         {
-            var file = await ApplicationData.Current.RoamingFolder.GetFileAsync(_toxInstance.Id.PublicKey + ".tox");
+            var file = await ApplicationData.Current.RoamingFolder.GetFileAsync(_toxDataInfo.Id.PublicKey + ".tox");
             await file.DeleteAsync();
         }
 
         public async Task SetAsCurrent()
         {
-            ToxModel.Instance.SetCurrent(_toxInstance);
+            var toxInstance = new ExtendedTox(new ToxOptions(true, true), _toxData);
+            ToxModel.Instance.SetCurrent(toxInstance);
             await ToxModel.Instance.SaveDataAsync();
             ToxModel.Instance.Start();
             await AvatarManager.Instance.LoadAvatars();

@@ -1,6 +1,8 @@
 ﻿using OneTox.Common;
 using OneTox.Helpers;
 using OneTox.Model;
+using OneTox.Model.Avatars;
+using SharpTox.Core;
 using SharpTox.Encryption;
 using System;
 using System.Collections.Generic;
@@ -33,8 +35,17 @@ namespace OneTox.ViewModel.ProfileSettings
                        ?? (_createNewProfileCommand = new RelayCommand(
                            async () =>
                            {
-                               var profile = ProfileViewModel.GetDefaultProfileViewModel();
-                               await profile.SetAsCurrent();
+                               var toxInstance = new ExtendedTox(new ToxOptions(true, true))
+                               {
+                                   Name = "User",
+                                   StatusMessage = "Using OneTox."
+                               };
+
+                               ToxModel.Instance.SetCurrent(toxInstance);
+                               await ToxModel.Instance.SaveDataAsync();
+                               ToxModel.Instance.Start();
+                               await AvatarManager.Instance.LoadAvatars();
+
                                await RefreshProfileList();
                            }));
             }
@@ -76,6 +87,12 @@ namespace OneTox.ViewModel.ProfileSettings
                 if (file.FileType == ".tox")
                 {
                     var profile = await ProfileViewModel.GetProfileViewModelFromFile(file);
+
+                    if (profile == null) // It's a corrupted file: better get rid of it and don't waste time with it anymore!
+                    {
+                        await file.DeleteAsync();
+                        continue;
+                    }
 
                     if (profile.Id == ToxModel.Instance.Id) // Don't include the current profile in this list.
                         continue;
@@ -131,21 +148,18 @@ namespace OneTox.ViewModel.ProfileSettings
             {
                 return _importProfileCommand ?? (_importProfileCommand = new RelayCommand(async () =>
                 {
-                    try
+                    var file = await PickSourceFile();
+                    if (file != null)
                     {
-                        var file = await PickSourceFile();
-                        if (file != null)
+                        var profile = await ProfileViewModel.GetProfileViewModelFromFile(file);
+                        if (profile == null)
                         {
-                            var profile = await ProfileViewModel.GetProfileViewModelFromFile(file);
-                            await profile.SetAsCurrent();
-                            await RefreshProfileList();
+                            var msgDialog = new MessageDialog("Importing profile failed because of corrupted .tox file.", "Error occurred");
+                            await msgDialog.ShowAsync();
+                            return;
                         }
-                    }
-                    catch
-                    {
-                        var msgDialog = new MessageDialog("Importing profile failed because of corrupted .tox file.",
-                            "Error occurred");
-                        await msgDialog.ShowAsync();
+                        await profile.SetAsCurrent();
+                        await RefreshProfileList();
                     }
                 }));
             }
