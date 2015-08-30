@@ -763,31 +763,34 @@
                          Value="{Binding Progress}" />
         </Grid>
 
-        <Grid x:Name="ControlButtons"
-              Grid.Column="2"
-              Margin="20,0,0,0">
+        <Grid x:Name="ControlButtons" Grid.Column="2">
             <TextBlock x:Name="WaitingHintTextBlock"
                        Width="88"
                        Height="52"
+                       Margin="20,0,0,0"
                        VerticalAlignment="Center"
                        FontSize="12"
-                       Text="Waiting for feedback from friend..."
+                       Text="Waiting for answer from friend..."
                        TextWrapping="Wrap" />
 
             <Button x:Name="AcceptButton"
                     Width="88"
+                    Margin="20,0,0,0"
                     Command="{Binding AcceptTransferCommand}"
                     Content="Accept" />
             <Button x:Name="PauseButton"
                     Width="88"
+                    Margin="20,0,0,0"
                     Command="{Binding PauseTransferCommand}"
                     Content="Pause" />
             <Button x:Name="ResumeButton"
                     Width="88"
+                    Margin="20,0,0,0"
                     Command="{Binding ResumeTransferCommand}"
                     Content="Resume" />
             <Button x:Name="PausedByFriendButton"
                     Width="88"
+                    Margin="20,0,0,0"
                     Content="Paused"
                     IsEnabled="False" />
         </Grid>
