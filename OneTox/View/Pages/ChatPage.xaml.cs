@@ -1,7 +1,7 @@
-﻿using OneTox.ViewModel.Friends;
-using Windows.UI.Core;
+﻿using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
+using OneTox.ViewModel.Friends;
 
 namespace OneTox.View.Pages
 {
@@ -27,7 +27,7 @@ namespace OneTox.View.Pages
         {
             if (e.Size.Width >= 930)
             {
-                Frame.Navigate(typeof(MainPage), _friendViewModel);
+                Frame.Navigate(typeof (MainPage), _friendViewModel);
             }
         }
     }

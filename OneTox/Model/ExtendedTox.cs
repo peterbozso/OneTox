@@ -1,6 +1,6 @@
-﻿using SharpTox.Core;
+﻿using System;
+using SharpTox.Core;
 using SharpTox.Encryption;
-using System;
 
 namespace OneTox.Model
 {
@@ -71,7 +71,7 @@ namespace OneTox.Model
         private void FriendListChanged(int friendNumber, FriendListChangedAction action)
         {
             OnFriendListChanged?.Invoke(this,
-                new FriendListChangedEventArgs { FriendNumber = friendNumber, Action = action });
+                new FriendListChangedEventArgs {FriendNumber = friendNumber, Action = action});
         }
     }
 }

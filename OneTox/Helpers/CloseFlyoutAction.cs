@@ -1,7 +1,7 @@
-﻿using Microsoft.Xaml.Interactivity;
-using System;
+﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Microsoft.Xaml.Interactivity;
 
 namespace OneTox.Helpers
 {

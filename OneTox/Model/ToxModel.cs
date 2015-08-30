@@ -1,13 +1,13 @@
-﻿using OneTox.Helpers;
-using OneTox.ViewModel;
-using SharpTox.Core;
-using SharpTox.Encryption;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using OneTox.Helpers;
+using OneTox.ViewModel;
+using SharpTox.Core;
+using SharpTox.Encryption;
 
 namespace OneTox.Model
 {
@@ -183,7 +183,7 @@ namespace OneTox.Model
         }
 
         public ToxFileInfo FileSend(int friendNumber, ToxFileKind kind, long fileSize, string fileName,
-                    out bool success)
+            out bool success)
         {
             ToxErrorFileSend error;
             var retVal = _tox.FileSend(friendNumber, kind, fileSize, fileName, out error);
@@ -193,7 +193,7 @@ namespace OneTox.Model
         }
 
         public ToxFileInfo FileSend(int friendNumber, ToxFileKind kind, long fileSize, string fileName, byte[] fileId,
-                    out bool success)
+            out bool success)
         {
             ToxErrorFileSend error;
             var retVal = _tox.FileSend(friendNumber, kind, fileSize, fileName, fileId, out error);
@@ -357,7 +357,7 @@ namespace OneTox.Model
         private void RaiseFriendListReseted()
         {
             FriendListChanged?.Invoke(this,
-                new FriendListChangedEventArgs { FriendNumber = -1, Action = FriendListChangedAction.Reset });
+                new FriendListChangedEventArgs {FriendNumber = -1, Action = FriendListChangedAction.Reset});
         }
 
         private void RegisterHandlers()

@@ -1,10 +1,10 @@
-﻿using OneTox.Model;
-using OneTox.Model.Avatars;
-using SharpTox.Core;
-using System;
+﻿using System;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Storage;
+using OneTox.Model;
+using OneTox.Model.Avatars;
+using SharpTox.Core;
 
 namespace OneTox.ViewModel.ProfileSettings
 {

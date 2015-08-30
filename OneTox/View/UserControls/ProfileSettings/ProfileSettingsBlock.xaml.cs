@@ -1,6 +1,4 @@
-﻿using OneTox.ViewModel.ProfileSettings;
-using SharpTox.Core;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using Windows.ApplicationModel.Core;
@@ -8,6 +6,8 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using OneTox.ViewModel.ProfileSettings;
+using SharpTox.Core;
 
 namespace OneTox.View.UserControls.ProfileSettings
 {
@@ -20,7 +20,7 @@ namespace OneTox.View.UserControls.ProfileSettings
         {
             InitializeComponent();
             _viewModel = DataContext as ProfileSettingsViewModel;
-            StatusComboBox.ItemsSource = Enum.GetValues(typeof(ToxUserStatus)).Cast<ToxUserStatus>();
+            StatusComboBox.ItemsSource = Enum.GetValues(typeof (ToxUserStatus)).Cast<ToxUserStatus>();
         }
 
         private async void NameTextBoxLostFocus(object sender, RoutedEventArgs e)

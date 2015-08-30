@@ -1,6 +1,6 @@
-﻿using OneTox.ViewModel.FriendRequests;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using OneTox.ViewModel.FriendRequests;
 
 namespace OneTox.View.UserControls.FriendRequests
 {

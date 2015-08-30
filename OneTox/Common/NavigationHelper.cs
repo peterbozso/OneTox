@@ -23,33 +23,33 @@ namespace OneTox.Common
     ///     constructor for the page and register a callback for the LoadState and
     ///     SaveState events.
     ///     <code>
-    ///      public MyPage()
-    ///      {
-    ///          this.InitializeComponent();
-    ///          var navigationHelper = new NavigationHelper(this);
-    ///          this.navigationHelper.LoadState += navigationHelper_LoadState;
-    ///          this.navigationHelper.SaveState += navigationHelper_SaveState;
-    ///      }
-    ///
-    ///      private async void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
-    ///      { }
-    ///      private async void navigationHelper_SaveState(object sender, LoadStateEventArgs e)
-    ///      { }
-    ///  </code>
+    ///       public MyPage()
+    ///       {
+    ///           this.InitializeComponent();
+    ///           var navigationHelper = new NavigationHelper(this);
+    ///           this.navigationHelper.LoadState += navigationHelper_LoadState;
+    ///           this.navigationHelper.SaveState += navigationHelper_SaveState;
+    ///       }
+    /// 
+    ///       private async void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
+    ///       { }
+    ///       private async void navigationHelper_SaveState(object sender, LoadStateEventArgs e)
+    ///       { }
+    ///   </code>
     ///     2) Register the page to call into the NavigationHelper whenever the page participates
     ///     in navigation by overriding the <see cref="Windows.UI.Xaml.Controls.Page.OnNavigatedTo" />
     ///     and <see cref="Windows.UI.Xaml.Controls.Page.OnNavigatedFrom" /> events.
     ///     <code>
-    ///      protected override void OnNavigatedTo(NavigationEventArgs e)
-    ///      {
-    ///          navigationHelper.OnNavigatedTo(e);
-    ///      }
-    ///
-    ///      protected override void OnNavigatedFrom(NavigationEventArgs e)
-    ///      {
-    ///          navigationHelper.OnNavigatedFrom(e);
-    ///      }
-    ///  </code>
+    ///       protected override void OnNavigatedTo(NavigationEventArgs e)
+    ///       {
+    ///           navigationHelper.OnNavigatedTo(e);
+    ///       }
+    /// 
+    ///       protected override void OnNavigatedFrom(NavigationEventArgs e)
+    ///       {
+    ///           navigationHelper.OnNavigatedFrom(e);
+    ///       }
+    ///   </code>
     /// </example>
     [WebHostHidden]
     public class NavigationHelper : DependencyObject
@@ -229,7 +229,7 @@ namespace OneTox.Common
             if ((e.EventType == CoreAcceleratorKeyEventType.SystemKeyDown ||
                  e.EventType == CoreAcceleratorKeyEventType.KeyDown) &&
                 (virtualKey == VirtualKey.Left || virtualKey == VirtualKey.Right ||
-                 (int)virtualKey == 166 || (int)virtualKey == 167))
+                 (int) virtualKey == 166 || (int) virtualKey == 167))
             {
                 var coreWindow = Window.Current.CoreWindow;
                 var downState = CoreVirtualKeyStates.Down;
@@ -239,14 +239,14 @@ namespace OneTox.Common
                 var noModifiers = !menuKey && !controlKey && !shiftKey;
                 var onlyAlt = menuKey && !controlKey && !shiftKey;
 
-                if (((int)virtualKey == 166 && noModifiers) ||
+                if (((int) virtualKey == 166 && noModifiers) ||
                     (virtualKey == VirtualKey.Left && onlyAlt))
                 {
                     // When the previous key or Alt+Left are pressed navigate back
                     e.Handled = true;
                     GoBackCommand.Execute(null);
                 }
-                else if (((int)virtualKey == 167 && noModifiers) ||
+                else if (((int) virtualKey == 167 && noModifiers) ||
                          (virtualKey == VirtualKey.Right && onlyAlt))
                 {
                     // When the next key or Alt+Right are pressed navigate forward
@@ -342,7 +342,7 @@ namespace OneTox.Common
                 // the same strategy for loading suspended state and recreating pages discarded
                 // from cache
                 LoadState?.Invoke(this,
-                    new LoadStateEventArgs(e.Parameter, (Dictionary<string, object>)frameState[_pageKey]));
+                    new LoadStateEventArgs(e.Parameter, (Dictionary<string, object>) frameState[_pageKey]));
             }
         }
 

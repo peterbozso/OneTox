@@ -1,8 +1,6 @@
-﻿using OneTox.ViewModel.ProfileSettings;
-using System;
-using Windows.UI.Popups;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using OneTox.ViewModel.ProfileSettings;
 
 namespace OneTox.View.UserControls.ProfileSettings
 {

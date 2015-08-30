@@ -1,12 +1,12 @@
-﻿using OneTox.ViewModel.Friends;
-using OneTox.ViewModel.Messaging;
-using System.Threading;
+﻿using System.Threading;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+using OneTox.ViewModel.Friends;
+using OneTox.ViewModel.Messaging;
 
 namespace OneTox.View.UserControls.Messaging
 {

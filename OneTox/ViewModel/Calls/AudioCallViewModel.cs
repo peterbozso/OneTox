@@ -1,8 +1,4 @@
-﻿using OneTox.Common;
-using OneTox.Helpers;
-using OneTox.Model;
-using SharpTox.Av;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -13,25 +9,29 @@ using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Media.Render;
 using Windows.UI.Core;
+using OneTox.Common;
+using OneTox.Helpers;
+using OneTox.Model;
+using SharpTox.Av;
 
 namespace OneTox.ViewModel.Calls
 {
     public class AudioCallViewModel : ObservableObject
     {
-        [ComImport]
-        [Guid("5B0D3235-4DBA-4D44-865E-8F1D0E4FD04D")]
-        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        internal unsafe interface IMemoryBufferByteAccess
-        {
-            void GetBuffer(out byte* buffer, out uint capacity);
-        }
-
         public enum CallState
         {
             Default,
             DuringCall,
             OutgoingCall,
             IncomingCall
+        }
+
+        [ComImport]
+        [Guid("5B0D3235-4DBA-4D44-865E-8F1D0E4FD04D")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        internal unsafe interface IMemoryBufferByteAccess
+        {
+            void GetBuffer(out byte* buffer, out uint capacity);
         }
 
         #region Constructor
@@ -51,8 +51,8 @@ namespace OneTox.ViewModel.Calls
         {
             // TODO: Set these based on app settings!
             _bitRate = 48;
-            _samplingRate = _bitRate * 1000;
-            _frameSize = _samplingRate * KQuantumSize / 1000;
+            _samplingRate = _bitRate*1000;
+            _frameSize = _samplingRate*KQuantumSize/1000;
         }
 
         #endregion Constructor
@@ -118,7 +118,7 @@ namespace OneTox.ViewModel.Calls
 
         private async Task InitAudioGraph()
         {
-            var encodingProperties = AudioEncodingProperties.CreatePcm((uint)_samplingRate, 1, 16);
+            var encodingProperties = AudioEncodingProperties.CreatePcm((uint) _samplingRate, 1, 16);
 
             // Don't modify DesiredSamplesPerQuantum! If you do, change KQuantumSize accordingly!
             var settings = new AudioGraphSettings(AudioRenderCategory.Communications)
@@ -194,7 +194,7 @@ namespace OneTox.ViewModel.Calls
 
             for (var i = 0; i < inSamples.Length; i++)
             {
-                var temp = inSamples[i] * (short.MaxValue + 1);
+                var temp = inSamples[i]*(short.MaxValue + 1);
 
                 if (temp > short.MaxValue)
                 {
@@ -205,7 +205,7 @@ namespace OneTox.ViewModel.Calls
                     temp = short.MinValue;
                 }
 
-                outSamples[i] = (short)(temp);
+                outSamples[i] = (short) (temp);
             }
 
             return outSamples;
@@ -254,15 +254,15 @@ namespace OneTox.ViewModel.Calls
                 byte* dataInBytes;
                 uint capacityInBytes;
 
-                ((IMemoryBufferByteAccess)reference).GetBuffer(out dataInBytes, out capacityInBytes);
+                ((IMemoryBufferByteAccess) reference).GetBuffer(out dataInBytes, out capacityInBytes);
 
-                var capacityInFloats = capacityInBytes / 4;
+                var capacityInFloats = capacityInBytes/4;
                 if (capacityInFloats != _frameSize) // Only send frames with the correct size.
                     return;
 
-                var dataInFloats = (float*)dataInBytes;
+                var dataInFloats = (float*) dataInBytes;
                 var floats = new float[capacityInFloats];
-                Marshal.Copy((IntPtr)dataInFloats, floats, 0, (int)capacityInFloats);
+                Marshal.Copy((IntPtr) dataInFloats, floats, 0, (int) capacityInFloats);
 
                 var shorts = ConvertFloatsToShorts(floats);
 
@@ -288,7 +288,7 @@ namespace OneTox.ViewModel.Calls
 
             for (var i = 0; i < inSamples.Length; i++)
             {
-                var temp = inSamples[i] / (float)(short.MaxValue + 1);
+                var temp = inSamples[i]/(float) (short.MaxValue + 1);
 
                 if (temp > 1)
                 {
@@ -338,7 +338,7 @@ namespace OneTox.ViewModel.Calls
         {
             // Buffer size is (number of samples) * (size of each sample)
             // We choose to generate single channel (mono) audio. For multi-channel, multiply by number of channels
-            var bufferSize = samples * sizeof(float);
+            var bufferSize = samples*sizeof (float);
             var frame = new AudioFrame(bufferSize);
 
             using (var buffer = frame.LockBuffer(AudioBufferAccessMode.Write))
@@ -348,22 +348,22 @@ namespace OneTox.ViewModel.Calls
                 uint capacityInBytes;
 
                 // Get the buffer from the AudioFrame
-                ((IMemoryBufferByteAccess)reference).GetBuffer(out dataInBytes, out capacityInBytes);
+                ((IMemoryBufferByteAccess) reference).GetBuffer(out dataInBytes, out capacityInBytes);
 
                 // Cast to float since the data we are generating is float
-                var dataInFloats = (float*)dataInBytes;
+                var dataInFloats = (float*) dataInBytes;
 
                 var floats = ConvertShortsToFloats(shorts);
-                var capacityInFloats = capacityInBytes / 4;
+                var capacityInFloats = capacityInBytes/4;
 
-                Marshal.Copy(floats, 0, (IntPtr)dataInFloats, (int)capacityInFloats);
+                Marshal.Copy(floats, 0, (IntPtr) dataInFloats, (int) capacityInFloats);
             }
 
             return frame;
         }
 
         private async void ToxInputNodeQuantumStartedHandler(AudioFrameInputNode sender,
-                    FrameInputNodeQuantumStartedEventArgs args)
+            FrameInputNodeQuantumStartedEventArgs args)
         {
             if (!await _receiveBuffer.OutputAvailableAsync())
                 return;
@@ -376,7 +376,7 @@ namespace OneTox.ViewModel.Calls
             // GenerateAudioData can provide PCM audio data by directly synthesizing it or reading from a file.
             // Need to know how many samples are required. In this case, the node is running at the same rate as the rest of the graph
             // For minimum latency, only provide the required amount of samples. Extra samples will introduce additional latency.
-            var numSamplesNeeded = (uint)args.RequiredSamples;
+            var numSamplesNeeded = (uint) args.RequiredSamples;
             if (numSamplesNeeded == 0)
                 return;
 

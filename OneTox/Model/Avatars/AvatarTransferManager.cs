@@ -1,11 +1,11 @@
-﻿using OneTox.Model.FileTransfers;
-using SharpTox.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using OneTox.Model.FileTransfers;
+using SharpTox.Core;
 
 namespace OneTox.Model.Avatars
 {
@@ -265,7 +265,7 @@ namespace OneTox.Model.Avatars
         private byte[] GetAvatarHash(Stream stream)
         {
             var buffer = new byte[stream.Length];
-            stream.Read(buffer, 0, (int)stream.Length);
+            stream.Read(buffer, 0, (int) stream.Length);
             return ToxTools.Hash(buffer);
         }
 
@@ -330,7 +330,7 @@ namespace OneTox.Model.Avatars
             var resumeSent = SendResumeControl(e.FriendNumber, e.FileNumber);
             if (resumeSent)
             {
-                var stream = new MemoryStream((int)e.FileSize);
+                var stream = new MemoryStream((int) e.FileSize);
                 AddTransfer(e.FriendNumber, e.FileNumber, stream, e.FileSize, TransferDirection.Down);
             }
         }

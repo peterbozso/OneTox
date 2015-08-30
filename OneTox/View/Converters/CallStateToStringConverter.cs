@@ -1,6 +1,6 @@
-﻿using OneTox.ViewModel.Calls;
-using System;
+﻿using System;
 using Windows.UI.Xaml.Data;
+using OneTox.ViewModel.Calls;
 
 namespace OneTox.View.Converters
 {
@@ -8,7 +8,7 @@ namespace OneTox.View.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var state = (AudioCallViewModel.CallState)value;
+            var state = (AudioCallViewModel.CallState) value;
             return state.ToString();
         }
 

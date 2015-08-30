@@ -1,7 +1,7 @@
-﻿using OneTox.ViewModel;
-using System;
+﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
+using OneTox.ViewModel;
 
 namespace OneTox.View.Converters
 {
@@ -9,7 +9,7 @@ namespace OneTox.View.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var status = (ExtendedToxUserStatus)value;
+            var status = (ExtendedToxUserStatus) value;
             switch (status)
             {
                 case ExtendedToxUserStatus.Available:

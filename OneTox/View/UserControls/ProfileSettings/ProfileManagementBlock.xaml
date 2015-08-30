@@ -39,7 +39,8 @@
                             <TextBox x:Name="PasswordTextBox" Header="Password (optional)" Width="266"
                                      ToolTipService.ToolTip="You can encrypt your saved profile with a password, preventing data theft. You'll also need it for importing."
                                      IsEnabled="False" />
-                            <Button Margin="0,5,0,0" Content="Export" Command="{Binding ExportProfileCommand}" CommandParameter="{Binding ElementName=PasswordTextBox, Path=Text}" />
+                            <Button Margin="0,5,0,0" Content="Export" Command="{Binding ExportProfileCommand}"
+                                    CommandParameter="{Binding ElementName=PasswordTextBox, Path=Text}" />
                         </StackPanel>
                     </Flyout>
                 </Button.Flyout>
@@ -60,7 +61,8 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <ListView x:Name="ProfileList" Grid.Column="0" ItemsSource="{Binding Profiles}" SelectionMode="Single" Margin="0,0,12,0">
+            <ListView x:Name="ProfileList" Grid.Column="0" ItemsSource="{Binding Profiles}" SelectionMode="Single"
+                      Margin="0,0,12,0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Name}" />
@@ -68,13 +70,18 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <StackPanel x:Name="SelectedProfileDetails" Grid.Column="1" Visibility="{Binding ElementName=ProfileList, Path=SelectedItem, Converter={StaticResource SelectedItemToVisibilityConverter}}">
+            <StackPanel x:Name="SelectedProfileDetails" Grid.Column="1"
+                        Visibility="{Binding ElementName=ProfileList, Path=SelectedItem, Converter={StaticResource SelectedItemToVisibilityConverter}}">
                 <TextBlock FontSize="17">Tox ID</TextBlock>
-                <TextBlock Text="{Binding ElementName=ProfileList, Path=SelectedItem.Id}" TextWrapping="Wrap" Margin="8,4,0,8" />
+                <TextBlock Text="{Binding ElementName=ProfileList, Path=SelectedItem.Id}" TextWrapping="Wrap"
+                           Margin="8,4,0,8" />
                 <TextBlock FontSize="17">Status message</TextBlock>
-                <TextBlock Text="{Binding ElementName=ProfileList, Path=SelectedItem.StatusMessage}" TextWrapping="WrapWholeWords" Margin="8,4,0,8" />
+                <TextBlock Text="{Binding ElementName=ProfileList, Path=SelectedItem.StatusMessage}"
+                           TextWrapping="WrapWholeWords" Margin="8,4,0,8" />
                 <TextBlock FontSize="17">Status</TextBlock>
-                <TextBlock Text="{Binding ElementName=ProfileList, Path=SelectedItem.Status, Converter={StaticResource UserStatusToStringConverter}}" Margin="8,4,0,8" />
+                <TextBlock
+                    Text="{Binding ElementName=ProfileList, Path=SelectedItem.Status, Converter={StaticResource UserStatusToStringConverter}}"
+                    Margin="8,4,0,8" />
 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -82,8 +89,12 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="SwitchButton" Grid.Column="0"  HorizontalAlignment="Stretch" Content="Switch" Command="{Binding SwitchProfileCommand}" CommandParameter="{Binding ElementName=ProfileList, Path=SelectedItem}"  Margin="0,0,4,0" />
-                    <Button x:Name="DeleteButton" Grid.Column="1" HorizontalAlignment="Stretch" Content="Delete" Command="{Binding DeleteProfileCommand}" CommandParameter="{Binding ElementName=ProfileList, Path=SelectedItem}" />
+                    <Button x:Name="SwitchButton" Grid.Column="0" HorizontalAlignment="Stretch" Content="Switch"
+                            Command="{Binding SwitchProfileCommand}"
+                            CommandParameter="{Binding ElementName=ProfileList, Path=SelectedItem}" Margin="0,0,4,0" />
+                    <Button x:Name="DeleteButton" Grid.Column="1" HorizontalAlignment="Stretch" Content="Delete"
+                            Command="{Binding DeleteProfileCommand}"
+                            CommandParameter="{Binding ElementName=ProfileList, Path=SelectedItem}" />
                 </Grid>
             </StackPanel>
         </Grid>

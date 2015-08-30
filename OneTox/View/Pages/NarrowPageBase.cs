@@ -16,7 +16,7 @@ namespace OneTox.View.Pages
 
         private void BackRequested(object sender, BackRequestedEventArgs e)
         {
-            Frame.Navigate(typeof(FriendListPage));
+            Frame.Navigate(typeof (FriendListPage));
         }
 
         private void PageLoaded(object sender, RoutedEventArgs e)

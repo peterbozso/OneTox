@@ -15,7 +15,7 @@ namespace OneTox.View.Pages
 
         private void AddFriendButtonClick(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(AddFriendPage));
+            Frame.Navigate(typeof (AddFriendPage));
         }
 
         private void FriendListPageLoaded(object sender, RoutedEventArgs e)
@@ -33,19 +33,19 @@ namespace OneTox.View.Pages
             if (FriendList.SelectedItem == null)
                 return;
 
-            Frame.Navigate(typeof(ChatPage), FriendList.SelectedItem);
+            Frame.Navigate(typeof (ChatPage), FriendList.SelectedItem);
         }
 
         private void SettingsButtonClick(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(SettingsPage));
+            Frame.Navigate(typeof (SettingsPage));
         }
 
         private void WindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
             if (e.Size.Width >= 930)
             {
-                Frame.Navigate(typeof(MainPage));
+                Frame.Navigate(typeof (MainPage));
             }
         }
     }

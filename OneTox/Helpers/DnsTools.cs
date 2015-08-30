@@ -1,46 +1,15 @@
-﻿using SharpTox.Core;
-using SharpTox.Dns;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using SharpTox.Core;
+using SharpTox.Dns;
 
 namespace OneTox.Helpers
 {
     // Kudos: https://github.com/Reverp/Toxy/blob/master/Toxy/ToxHelpers/DnsTools.cs
     public static class DnsTools
     {
-        private enum QueryOptions
-        {
-            DNS_QUERY_ACCEPT_TRUNCATED_RESPONSE = 1,
-            DNS_QUERY_BYPASS_CACHE = 8,
-            DNS_QUERY_DONT_RESET_TTL_VALUES = 0x100000,
-            DNS_QUERY_NO_HOSTS_FILE = 0x40,
-            DNS_QUERY_NO_LOCAL_NAME = 0x20,
-            DNS_QUERY_NO_NETBT = 0x80,
-            DNS_QUERY_NO_RECURSION = 4,
-            DNS_QUERY_NO_WIRE_QUERY = 0x10,
-            DNS_QUERY_RESERVED = -16777216,
-            DNS_QUERY_RETURN_MESSAGE = 0x200,
-            DNS_QUERY_STANDARD = 0,
-            DNS_QUERY_TREAT_AS_FQDN = 0x1000,
-            DNS_QUERY_USE_TCP_ONLY = 2,
-            DNS_QUERY_WIRE_ONLY = 0x100
-        }
-
-        private enum QueryTypes
-        {
-            DNS_TYPE_A = 1,
-            DNS_TYPE_NS = 2,
-            DNS_TYPE_CNAME = 5,
-            DNS_TYPE_SOA = 6,
-            DNS_TYPE_PTR = 12,
-            DNS_TYPE_HINFO = 13,
-            DNS_TYPE_MX = 15,
-            DNS_TYPE_TXT = 16,
-            DNS_TYPE_AAAA = 28
-        }
-
         public static string TryDiscoverToxId(string domain, out bool success)
         {
             if (!domain.Contains("@"))
@@ -170,7 +139,7 @@ namespace OneTox.Helpers
         }
 
         [DllImport("dnsapi", EntryPoint = "DnsQuery_W", CharSet = CharSet.Unicode, SetLastError = true,
-                    ExactSpelling = true)]
+            ExactSpelling = true)]
         private static extern int DnsQuery([MarshalAs(UnmanagedType.VBByRefStr)] ref string pszName, QueryTypes wType,
             QueryOptions options, int aipServers, ref IntPtr ppQueryResults, int pReserved);
 
@@ -188,7 +157,7 @@ namespace OneTox.Helpers
                 foreach (var record in records)
                 {
                     if (!string.IsNullOrEmpty(record))
-                        return new ToxNameService { Domain = domain, PublicKey = record };
+                        return new ToxNameService {Domain = domain, PublicKey = record};
                 }
             }
 
@@ -218,7 +187,7 @@ namespace OneTox.Helpers
                 for (var ptr2 = ptr1; !ptr2.Equals(IntPtr.Zero); ptr2 = recSpf.pNext)
                 {
                     recSpf = Marshal.PtrToStructure<SpfRecord>(ptr2);
-                    if (recSpf.wType == (short)QueryTypes.DNS_TYPE_TXT)
+                    if (recSpf.wType == (short) QueryTypes.DNS_TYPE_TXT)
                     {
                         for (var i = 0; i < recSpf.dwStringCount; i++)
                         {
@@ -236,6 +205,37 @@ namespace OneTox.Helpers
             }
 
             return list.ToArray();
+        }
+
+        private enum QueryOptions
+        {
+            DNS_QUERY_ACCEPT_TRUNCATED_RESPONSE = 1,
+            DNS_QUERY_BYPASS_CACHE = 8,
+            DNS_QUERY_DONT_RESET_TTL_VALUES = 0x100000,
+            DNS_QUERY_NO_HOSTS_FILE = 0x40,
+            DNS_QUERY_NO_LOCAL_NAME = 0x20,
+            DNS_QUERY_NO_NETBT = 0x80,
+            DNS_QUERY_NO_RECURSION = 4,
+            DNS_QUERY_NO_WIRE_QUERY = 0x10,
+            DNS_QUERY_RESERVED = -16777216,
+            DNS_QUERY_RETURN_MESSAGE = 0x200,
+            DNS_QUERY_STANDARD = 0,
+            DNS_QUERY_TREAT_AS_FQDN = 0x1000,
+            DNS_QUERY_USE_TCP_ONLY = 2,
+            DNS_QUERY_WIRE_ONLY = 0x100
+        }
+
+        private enum QueryTypes
+        {
+            DNS_TYPE_A = 1,
+            DNS_TYPE_NS = 2,
+            DNS_TYPE_CNAME = 5,
+            DNS_TYPE_SOA = 6,
+            DNS_TYPE_PTR = 12,
+            DNS_TYPE_HINFO = 13,
+            DNS_TYPE_MX = 15,
+            DNS_TYPE_TXT = 16,
+            DNS_TYPE_AAAA = 28
         }
 
         [StructLayout(LayoutKind.Sequential)]

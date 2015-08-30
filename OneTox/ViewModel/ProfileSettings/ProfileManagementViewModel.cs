@@ -1,16 +1,16 @@
-﻿using OneTox.Common;
-using OneTox.Helpers;
-using OneTox.Model;
-using OneTox.Model.Avatars;
-using SharpTox.Core;
-using SharpTox.Encryption;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Popups;
+using OneTox.Common;
+using OneTox.Helpers;
+using OneTox.Model;
+using OneTox.Model.Avatars;
+using SharpTox.Core;
+using SharpTox.Encryption;
 
 namespace OneTox.ViewModel.ProfileSettings
 {
@@ -88,7 +88,8 @@ namespace OneTox.ViewModel.ProfileSettings
                 {
                     var profile = await ProfileViewModel.GetProfileViewModelFromFile(file);
 
-                    if (profile == null) // It's a corrupted file: better get rid of it and don't waste time with it anymore!
+                    if (profile == null)
+                        // It's a corrupted file: better get rid of it and don't waste time with it anymore!
                     {
                         await file.DeleteAsync();
                         continue;
@@ -132,7 +133,7 @@ namespace OneTox.ViewModel.ProfileSettings
         private async Task<StorageFile> PickDestinationFile()
         {
             var savePicker = new FileSavePicker();
-            savePicker.FileTypeChoices.Add("Tox save file", new List<string> { ".tox" });
+            savePicker.FileTypeChoices.Add("Tox save file", new List<string> {".tox"});
             savePicker.SuggestedFileName = ToxModel.Instance.Name;
             var file = await savePicker.PickSaveFileAsync();
             return file;
@@ -154,7 +155,8 @@ namespace OneTox.ViewModel.ProfileSettings
                         var profile = await ProfileViewModel.GetProfileViewModelFromFile(file);
                         if (profile == null)
                         {
-                            var msgDialog = new MessageDialog("Importing profile failed because of corrupted .tox file.", "Error occurred");
+                            var msgDialog = new MessageDialog(
+                                "Importing profile failed because of corrupted .tox file.", "Error occurred");
                             await msgDialog.ShowAsync();
                             return;
                         }

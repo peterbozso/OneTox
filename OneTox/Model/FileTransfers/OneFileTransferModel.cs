@@ -1,11 +1,11 @@
-﻿using OneTox.Helpers;
-using SharpTox.Core;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Storage;
 using Windows.UI.Xaml;
+using OneTox.Helpers;
+using SharpTox.Core;
 
 namespace OneTox.Model.FileTransfers
 {
@@ -53,7 +53,7 @@ namespace OneTox.Model.FileTransfers
         }
 
         public static async Task<OneFileTransferModel> CreateInstance(int friendNumber, int fileNumber, string name,
-                    long fileSizeInBytes, TransferDirection direction, StorageFile file, long transferredBytes = 0)
+            long fileSizeInBytes, TransferDirection direction, StorageFile file, long transferredBytes = 0)
         {
             if (file != null)
                 FileTransferResumer.Instance.RecordTransfer(file, friendNumber, fileNumber, direction);
@@ -117,7 +117,7 @@ namespace OneTox.Model.FileTransfers
 
                 lock (_stream)
                 {
-                    return ((double)_stream.Position / _stream.Length) * 100;
+                    return ((double) _stream.Position/_stream.Length)*100;
                 }
             }
         }

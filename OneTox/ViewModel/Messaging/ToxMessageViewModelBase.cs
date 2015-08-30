@@ -1,6 +1,6 @@
-﻿using OneTox.Helpers;
+﻿using System;
+using OneTox.Helpers;
 using SharpTox.Core;
-using System;
 
 namespace OneTox.ViewModel.Messaging
 {

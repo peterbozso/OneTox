@@ -1,9 +1,9 @@
-﻿using OneTox.View.Converters;
-using OneTox.ViewModel.Calls;
-using System;
+﻿using System;
 using System.ComponentModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using OneTox.View.Converters;
+using OneTox.ViewModel.Calls;
 
 namespace OneTox.View.UserControls
 {
@@ -20,7 +20,7 @@ namespace OneTox.View.UserControls
 
         private void AudioCallBlockLoaded(object sender, RoutedEventArgs e)
         {
-            _audioCallViewModel = ((CallViewModel)DataContext).Audio;
+            _audioCallViewModel = ((CallViewModel) DataContext).Audio;
             _audioCallViewModel.MicrophoneIsNotAvailable += MicrophoneIsNotAvailableHandler;
             _audioCallViewModel.PropertyChanged += PropertyChangedHandler;
 
@@ -29,7 +29,7 @@ namespace OneTox.View.UserControls
 
             var state =
                 (string)
-                    new CallStateToStringConverter().Convert(_audioCallViewModel.State, typeof(string), null, null);
+                    new CallStateToStringConverter().Convert(_audioCallViewModel.State, typeof (string), null, null);
             VisualStateManager.GoToState(this, state, false);
         }
 
@@ -99,7 +99,7 @@ namespace OneTox.View.UserControls
 
         private Grid GetMicrophoneIsNotAvailableFlyoutContent(string errorMessage)
         {
-            var contentGrid = new Grid { Width = 300 };
+            var contentGrid = new Grid {Width = 300};
 
             contentGrid.Children.Add(new TextBlock
             {
@@ -116,7 +116,7 @@ namespace OneTox.View.UserControls
             if (_microphoneIsNotAvailableFylout == null)
             {
                 var contentGrid = GetMicrophoneIsNotAvailableFlyoutContent(errorMessage);
-                _microphoneIsNotAvailableFylout = new Flyout { Content = contentGrid };
+                _microphoneIsNotAvailableFylout = new Flyout {Content = contentGrid};
             }
             _microphoneIsNotAvailableFylout.ShowAt(MuteButton);
         }

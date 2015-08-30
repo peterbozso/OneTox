@@ -1,8 +1,4 @@
-﻿using OneTox.Helpers;
-using OneTox.Model;
-using OneTox.ViewModel.Friends;
-using SharpTox.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -11,6 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using OneTox.Helpers;
+using OneTox.Model;
+using OneTox.ViewModel.Friends;
+using SharpTox.Core;
 
 namespace OneTox.ViewModel.Messaging
 {

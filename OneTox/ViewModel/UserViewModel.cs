@@ -1,12 +1,12 @@
-﻿using OneTox.Helpers;
-using OneTox.Model;
-using OneTox.Model.Avatars;
-using SharpTox.Core;
-using System;
+﻿using System;
 using System.ComponentModel;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
+using OneTox.Helpers;
+using OneTox.Model;
+using OneTox.Model.Avatars;
+using SharpTox.Core;
 
 namespace OneTox.ViewModel
 {
@@ -18,8 +18,9 @@ namespace OneTox.ViewModel
             AvatarManager.Instance.UserAvatarChanged += UserAvatarChangedHandler;
         }
 
-        public BitmapImage Avatar => AvatarManager.Instance.UserAvatar;
         public ToxId Id => ToxModel.Instance.Id;
+
+        public BitmapImage Avatar => AvatarManager.Instance.UserAvatar;
         public bool IsConnected => ToxModel.Instance.IsConnected;
         public string Name => ToxModel.Instance.Name;
 
@@ -29,7 +30,7 @@ namespace OneTox.ViewModel
             {
                 if (ToxModel.Instance.IsConnected)
                 {
-                    return (ExtendedToxUserStatus)ToxModel.Instance.Status;
+                    return (ExtendedToxUserStatus) ToxModel.Instance.Status;
                 }
 
                 return ExtendedToxUserStatus.Offline;

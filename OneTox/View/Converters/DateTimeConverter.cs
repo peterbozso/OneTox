@@ -7,7 +7,7 @@ namespace OneTox.View.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var dateTime = (DateTime)value;
+            var dateTime = (DateTime) value;
             return dateTime.ToString("HH:mm");
         }
 

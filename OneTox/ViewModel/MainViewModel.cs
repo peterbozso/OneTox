@@ -1,13 +1,13 @@
-﻿using OneTox.Helpers;
-using OneTox.ViewModel.FriendRequests;
-using OneTox.ViewModel.Friends;
-using SharpTox.Core;
-using System;
+﻿using System;
 using System.Collections.Specialized;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
+using OneTox.Helpers;
+using OneTox.ViewModel.FriendRequests;
+using OneTox.ViewModel.Friends;
+using SharpTox.Core;
 
 namespace OneTox.ViewModel
 {
@@ -59,7 +59,7 @@ namespace OneTox.ViewModel
                     FriendRequestsViewModel.FriendRequestAnswer.Decline));
                 msgDialog.Commands.Add(new UICommand("Later", null, FriendRequestsViewModel.FriendRequestAnswer.Later));
                 var answer = await msgDialog.ShowAsync();
-                FriendRequests.HandleFriendRequestAnswer((FriendRequestsViewModel.FriendRequestAnswer)answer.Id, e);
+                FriendRequests.HandleFriendRequestAnswer((FriendRequestsViewModel.FriendRequestAnswer) answer.Id, e);
             });
         }
 

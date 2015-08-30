@@ -1,9 +1,4 @@
-﻿using OneTox.Common;
-using OneTox.Helpers;
-using OneTox.Model;
-using OneTox.Model.Avatars;
-using SharpTox.Core;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +9,11 @@ using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Media.Imaging;
+using OneTox.Common;
+using OneTox.Helpers;
+using OneTox.Model;
+using OneTox.Model.Avatars;
+using SharpTox.Core;
 using ZXing;
 using ZXing.Common;
 
@@ -139,7 +139,7 @@ namespace OneTox.ViewModel.ProfileSettings
 
         public void CopyToxIdToClipboard()
         {
-            var dataPackage = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
+            var dataPackage = new DataPackage {RequestedOperation = DataPackageOperation.Copy};
             dataPackage.SetText(TextId.ToString());
             Clipboard.SetContent(dataPackage);
         }

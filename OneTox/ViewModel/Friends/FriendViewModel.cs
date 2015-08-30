@@ -1,4 +1,9 @@
-﻿using OneTox.Common;
+﻿using System;
+using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.UI.Core;
+using Windows.UI.Xaml.Media.Imaging;
+using OneTox.Common;
 using OneTox.Helpers;
 using OneTox.Model;
 using OneTox.Model.Avatars;
@@ -6,11 +11,6 @@ using OneTox.ViewModel.Calls;
 using OneTox.ViewModel.FileTransfers;
 using OneTox.ViewModel.Messaging;
 using SharpTox.Core;
-using System;
-using Windows.ApplicationModel.Core;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.UI.Core;
-using Windows.UI.Xaml.Media.Imaging;
 
 namespace OneTox.ViewModel.Friends
 {
@@ -55,16 +55,6 @@ namespace OneTox.ViewModel.Friends
             ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
         }
 
-        public BitmapImage Avatar
-        {
-            get
-            {
-                if (AvatarManager.Instance.FriendAvatars.ContainsKey(FriendNumber))
-                    return AvatarManager.Instance.FriendAvatars[FriendNumber];
-                return new BitmapImage(new Uri("ms-appx:///Assets/default-profile-picture.png"));
-            }
-        }
-
         public CallViewModel Call { get; }
         public ConversationViewModel Conversation { get; }
 
@@ -74,7 +64,7 @@ namespace OneTox.ViewModel.Friends
             {
                 return _copyIdCommand ?? (_copyIdCommand = new RelayCommand(() =>
                 {
-                    var dataPackage = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
+                    var dataPackage = new DataPackage {RequestedOperation = DataPackageOperation.Copy};
                     dataPackage.SetText(ToxModel.Instance.GetFriendPublicKey(FriendNumber).ToString());
                     Clipboard.SetContent(dataPackage);
                 }));
@@ -83,6 +73,26 @@ namespace OneTox.ViewModel.Friends
 
         public FileTransfersViewModel FileTransfers { get; }
         public int FriendNumber { get; }
+
+        public RelayCommand RemoveFriendCommand
+        {
+            get
+            {
+                return _removeFriendCommand
+                       ?? (_removeFriendCommand = new RelayCommand(
+                           () => { ToxModel.Instance.DeleteFriend(FriendNumber); }));
+            }
+        }
+
+        public BitmapImage Avatar
+        {
+            get
+            {
+                if (AvatarManager.Instance.FriendAvatars.ContainsKey(FriendNumber))
+                    return AvatarManager.Instance.FriendAvatars[FriendNumber];
+                return new BitmapImage(new Uri("ms-appx:///Assets/default-profile-picture.png"));
+            }
+        }
 
         public bool IsConnected
         {
@@ -105,16 +115,6 @@ namespace OneTox.ViewModel.Friends
                     return;
                 _name = value;
                 RaisePropertyChanged();
-            }
-        }
-
-        public RelayCommand RemoveFriendCommand
-        {
-            get
-            {
-                return _removeFriendCommand
-                       ?? (_removeFriendCommand = new RelayCommand(
-                           () => { ToxModel.Instance.DeleteFriend(FriendNumber); }));
             }
         }
 
@@ -146,7 +146,7 @@ namespace OneTox.ViewModel.Friends
         {
             if (ToxModel.Instance.IsFriendOnline(FriendNumber))
             {
-                Status = (ExtendedToxUserStatus)status;
+                Status = (ExtendedToxUserStatus) status;
             }
             else
             {

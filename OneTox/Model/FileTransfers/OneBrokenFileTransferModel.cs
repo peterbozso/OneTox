@@ -1,7 +1,7 @@
-﻿using SharpTox.Core;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SharpTox.Core;
 
 namespace OneTox.Model.FileTransfers
 {

@@ -1,7 +1,7 @@
-﻿using SharpTox.Av;
-using SharpTox.Core;
-using System;
+﻿using System;
 using System.Diagnostics;
+using SharpTox.Av;
+using SharpTox.Core;
 
 namespace OneTox.ViewModel
 {
@@ -17,9 +17,9 @@ namespace OneTox.ViewModel
     {
         private static ToxErrorViewModel _instance;
 
-        public event EventHandler<string> ToxErrorOccured;
-
         public static ToxErrorViewModel Instance => _instance ?? (_instance = new ToxErrorViewModel());
+
+        public event EventHandler<string> ToxErrorOccured;
 
         private void RaiseToxErrorOccured(string errorMessage)
         {

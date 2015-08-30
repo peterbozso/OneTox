@@ -1,9 +1,4 @@
-﻿using OneTox.Common;
-using OneTox.Model;
-using OneTox.Model.Avatars;
-using OneTox.View.Pages;
-using OneTox.ViewModel;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -16,6 +11,11 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using OneTox.Common;
+using OneTox.Model;
+using OneTox.Model.Avatars;
+using OneTox.View.Pages;
+using OneTox.ViewModel;
 
 namespace OneTox
 {
@@ -79,17 +79,17 @@ namespace OneTox
 
                 if (Window.Current.Bounds.Width < 930)
                 {
-                    rootFrame.Navigate(typeof(FriendListPage));
+                    rootFrame.Navigate(typeof (FriendListPage));
                 }
                 else
                 {
-                    rootFrame.Navigate(typeof(MainPage));
+                    rootFrame.Navigate(typeof (MainPage));
                 }
             }
             // Ensure the current window is active
             Window.Current.Activate();
 
-            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size { Width = 500, Height = 500 });
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size {Width = 500, Height = 500});
         }
 
         private async Task HandlePreviousExecutionState(ApplicationExecutionState previousExecutionState)
@@ -116,8 +116,8 @@ namespace OneTox
                 }
 
                 if (previousExecutionState != ApplicationExecutionState.NotRunning)
-                // We only have to restore session state in the other two cases.
-                // See: https://msdn.microsoft.com/en-us/library/ie/windows.applicationmodel.activation.applicationexecutionstate
+                    // We only have to restore session state in the other two cases.
+                    // See: https://msdn.microsoft.com/en-us/library/ie/windows.applicationmodel.activation.applicationexecutionstate
                 {
                     try
                     {

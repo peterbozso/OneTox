@@ -23,16 +23,16 @@ namespace OneTox.Common
         private static readonly List<WeakReference<Frame>> _registeredFrames = new List<WeakReference<Frame>>();
 
         private static readonly DependencyProperty FrameSessionBaseKeyProperty =
-            DependencyProperty.RegisterAttached("_FrameSessionBaseKeyParams", typeof(string),
-                typeof(SuspensionManager), null);
+            DependencyProperty.RegisterAttached("_FrameSessionBaseKeyParams", typeof (string),
+                typeof (SuspensionManager), null);
 
         private static readonly DependencyProperty FrameSessionStateKeyProperty =
-                            DependencyProperty.RegisterAttached("_FrameSessionStateKey", typeof(string), typeof(SuspensionManager),
+            DependencyProperty.RegisterAttached("_FrameSessionStateKey", typeof (string), typeof (SuspensionManager),
                 null);
 
         private static readonly DependencyProperty FrameSessionStateProperty =
-            DependencyProperty.RegisterAttached("_FrameSessionState", typeof(Dictionary<string, object>),
-                typeof(SuspensionManager), null);
+            DependencyProperty.RegisterAttached("_FrameSessionState", typeof (Dictionary<string, object>),
+                typeof (SuspensionManager), null);
 
         /// <summary>
         ///     List of custom types provided to the <see cref="DataContractSerializer" /> when
@@ -124,9 +124,9 @@ namespace OneTox.Common
                 using (var inStream = await file.OpenSequentialReadAsync())
                 {
                     // Deserialize the Session State
-                    var serializer = new DataContractSerializer(typeof(Dictionary<string, object>),
+                    var serializer = new DataContractSerializer(typeof (Dictionary<string, object>),
                         KnownTypes);
-                    SessionState = (Dictionary<string, object>)serializer.ReadObject(inStream.AsStreamForRead());
+                    SessionState = (Dictionary<string, object>) serializer.ReadObject(inStream.AsStreamForRead());
                 }
 
                 // Restore any registered frames to their saved state
@@ -134,7 +134,7 @@ namespace OneTox.Common
                 {
                     Frame frame;
                     if (weakFrameReference.TryGetTarget(out frame) &&
-                        (string)frame.GetValue(FrameSessionBaseKeyProperty) == sessionBaseKey)
+                        (string) frame.GetValue(FrameSessionBaseKeyProperty) == sessionBaseKey)
                     {
                         frame.ClearValue(FrameSessionStateProperty);
                         RestoreFrameNavigationState(frame);
@@ -171,7 +171,7 @@ namespace OneTox.Common
                 // Serialize the session state synchronously to avoid asynchronous access to shared
                 // state
                 var sessionData = new MemoryStream();
-                var serializer = new DataContractSerializer(typeof(Dictionary<string, object>),
+                var serializer = new DataContractSerializer(typeof (Dictionary<string, object>),
                     KnownTypes);
                 serializer.WriteObject(sessionData, SessionState);
 
@@ -211,11 +211,11 @@ namespace OneTox.Common
         /// </returns>
         public static Dictionary<string, object> SessionStateForFrame(Frame frame)
         {
-            var frameState = (Dictionary<string, object>)frame.GetValue(FrameSessionStateProperty);
+            var frameState = (Dictionary<string, object>) frame.GetValue(FrameSessionStateProperty);
 
             if (frameState == null)
             {
-                var frameSessionKey = (string)frame.GetValue(FrameSessionStateKeyProperty);
+                var frameSessionKey = (string) frame.GetValue(FrameSessionStateKeyProperty);
                 if (frameSessionKey != null)
                 {
                     // Registered frames reflect the corresponding session state
@@ -223,7 +223,7 @@ namespace OneTox.Common
                     {
                         SessionState[frameSessionKey] = new Dictionary<string, object>();
                     }
-                    frameState = (Dictionary<string, object>)SessionState[frameSessionKey];
+                    frameState = (Dictionary<string, object>) SessionState[frameSessionKey];
                 }
                 else
                 {
@@ -248,7 +248,7 @@ namespace OneTox.Common
         {
             // Remove session state and remove the frame from the list of frames whose navigation
             // state will be saved (along with any weak references that are no longer reachable)
-            SessionState.Remove((string)frame.GetValue(FrameSessionStateKeyProperty));
+            SessionState.Remove((string) frame.GetValue(FrameSessionStateKeyProperty));
             _registeredFrames.RemoveAll(weakFrameReference =>
             {
                 Frame testFrame;
@@ -261,7 +261,7 @@ namespace OneTox.Common
             var frameState = SessionStateForFrame(frame);
             if (frameState.ContainsKey("Navigation"))
             {
-                frame.SetNavigationState((string)frameState["Navigation"]);
+                frame.SetNavigationState((string) frameState["Navigation"]);
             }
         }
 

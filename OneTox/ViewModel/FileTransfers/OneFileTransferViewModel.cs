@@ -1,13 +1,13 @@
-﻿using OneTox.Common;
-using OneTox.Helpers;
-using OneTox.Model.FileTransfers;
-using System;
+﻿using System;
 using System.ComponentModel;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using OneTox.Common;
+using OneTox.Helpers;
+using OneTox.Model.FileTransfers;
 
 namespace OneTox.ViewModel.FileTransfers
 {

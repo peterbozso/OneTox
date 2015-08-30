@@ -1,9 +1,9 @@
-﻿using OneTox.ViewModel.FileTransfers;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.ComponentModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using OneTox.ViewModel.FileTransfers;
 
 namespace OneTox.View.UserControls.FileTransfers
 {

@@ -1,11 +1,11 @@
-﻿using OneTox.Common;
-using OneTox.Helpers;
-using OneTox.Model;
-using SharpTox.Core;
-using System;
+﻿using System;
 using System.Threading;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using OneTox.Common;
+using OneTox.Helpers;
+using OneTox.Model;
+using SharpTox.Core;
 
 namespace OneTox.ViewModel.Friends
 {

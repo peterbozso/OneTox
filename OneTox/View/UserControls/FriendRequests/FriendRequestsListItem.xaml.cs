@@ -14,7 +14,7 @@ namespace OneTox.View.UserControls.FriendRequests
 
         private void PublicKeyTapped(object sender, TappedRoutedEventArgs e)
         {
-            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement) sender);
         }
     }
 }

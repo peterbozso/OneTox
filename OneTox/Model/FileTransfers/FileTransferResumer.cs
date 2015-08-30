@@ -162,9 +162,9 @@ namespace OneTox.Model.FileTransfers
 
         private TransferMetadata DeserializeMetadata(string xml)
         {
-            var deserializer = new XmlSerializer(typeof(TransferMetadata));
+            var deserializer = new XmlSerializer(typeof (TransferMetadata));
             var reader = new StringReader(xml);
-            return (TransferMetadata)deserializer.Deserialize(reader);
+            return (TransferMetadata) deserializer.Deserialize(reader);
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace OneTox.Model.FileTransfers
 
         private string SerializeMetadata(TransferMetadata metadata)
         {
-            var serializer = new XmlSerializer(typeof(TransferMetadata));
+            var serializer = new XmlSerializer(typeof (TransferMetadata));
             var xmlMetadata = new StringBuilder();
             var writer = new StringWriter(xmlMetadata);
             serializer.Serialize(writer, metadata);

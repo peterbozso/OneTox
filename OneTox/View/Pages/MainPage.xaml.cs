@@ -1,13 +1,13 @@
-﻿using OneTox.View.UserControls.Friends;
-using OneTox.View.UserControls.Messaging;
-using OneTox.View.UserControls.ProfileSettings;
-using OneTox.ViewModel;
-using OneTox.ViewModel.Friends;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using OneTox.View.UserControls.Friends;
+using OneTox.View.UserControls.Messaging;
+using OneTox.View.UserControls.ProfileSettings;
+using OneTox.ViewModel;
+using OneTox.ViewModel.Friends;
 
 namespace OneTox.View.Pages
 {
@@ -33,21 +33,21 @@ namespace OneTox.View.Pages
                 if (_mainViewModel.FriendList.Friends.Count > 0)
                 {
                     FriendList.SelectedItem = _mainViewModel.FriendList.Friends[0];
-                    var chatBlock = new ChatBlock { DataContext = _mainViewModel.FriendList.Friends[0] };
+                    var chatBlock = new ChatBlock {DataContext = _mainViewModel.FriendList.Friends[0]};
                     SetRightPanelContent(chatBlock);
                 }
             }
             else if (e.Parameter is FriendViewModel)
             {
                 FriendList.SelectedItem = e.Parameter;
-                var chatBlock = new ChatBlock { DataContext = e.Parameter };
+                var chatBlock = new ChatBlock {DataContext = e.Parameter};
                 SetRightPanelContent(chatBlock);
             }
-            else if (Equals(e.Parameter, typeof(SettingsPage)))
+            else if (Equals(e.Parameter, typeof (SettingsPage)))
             {
                 SetRightPanelContent(new ProfileSettingsBlock());
             }
-            else if (Equals(e.Parameter, typeof(AddFriendPage)))
+            else if (Equals(e.Parameter, typeof (AddFriendPage)))
             {
                 SetRightPanelContent(new AddFriendBlock());
             }
@@ -70,7 +70,7 @@ namespace OneTox.View.Pages
             }
             else
             {
-                var chatBlock = new ChatBlock { DataContext = FriendList.SelectedItem };
+                var chatBlock = new ChatBlock {DataContext = FriendList.SelectedItem};
                 SetRightPanelContent(chatBlock);
             }
         }
@@ -121,15 +121,15 @@ namespace OneTox.View.Pages
             {
                 if (_rightPanelContent is ChatBlock)
                 {
-                    Frame.Navigate(typeof(ChatPage), FriendList.SelectedItem);
+                    Frame.Navigate(typeof (ChatPage), FriendList.SelectedItem);
                 }
                 else if (_rightPanelContent is ProfileSettingsBlock)
                 {
-                    Frame.Navigate(typeof(SettingsPage));
+                    Frame.Navigate(typeof (SettingsPage));
                 }
                 else if (_rightPanelContent is AddFriendBlock)
                 {
-                    Frame.Navigate(typeof(AddFriendPage));
+                    Frame.Navigate(typeof (AddFriendPage));
                 }
             }
         }

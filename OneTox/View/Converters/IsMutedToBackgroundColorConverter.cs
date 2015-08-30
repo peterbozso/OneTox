@@ -9,7 +9,7 @@ namespace OneTox.View.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var isMuted = (bool)value;
+            var isMuted = (bool) value;
 
             if (isMuted)
                 return Application.Current.Resources["StatusRed"] as SolidColorBrush;

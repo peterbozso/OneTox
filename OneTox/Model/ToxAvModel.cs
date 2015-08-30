@@ -1,6 +1,6 @@
-﻿using OneTox.ViewModel;
+﻿using System;
+using OneTox.ViewModel;
 using SharpTox.Av;
-using System;
 
 namespace OneTox.Model
 {

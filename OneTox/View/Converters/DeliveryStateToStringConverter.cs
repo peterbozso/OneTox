@@ -1,6 +1,6 @@
-﻿using OneTox.ViewModel.Messaging;
-using System;
+﻿using System;
 using Windows.UI.Xaml.Data;
+using OneTox.ViewModel.Messaging;
 
 namespace OneTox.View.Converters
 {
@@ -8,7 +8,7 @@ namespace OneTox.View.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var state = (MessageDeliveryState)value;
+            var state = (MessageDeliveryState) value;
             return state.ToString();
         }
 

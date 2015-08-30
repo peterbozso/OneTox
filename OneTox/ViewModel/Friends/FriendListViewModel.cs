@@ -1,9 +1,9 @@
-﻿using OneTox.Model;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using OneTox.Model;
 
 namespace OneTox.ViewModel.Friends
 {

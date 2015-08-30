@@ -1,12 +1,12 @@
-﻿using OneTox.Common;
-using OneTox.Helpers;
-using OneTox.Model.FileTransfers;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Windows.ApplicationModel.Core;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
+using OneTox.Common;
+using OneTox.Helpers;
+using OneTox.Model.FileTransfers;
 
 namespace OneTox.ViewModel.FileTransfers
 {
@@ -114,7 +114,7 @@ namespace OneTox.ViewModel.FileTransfers
             {
                 // We don't show more than 3 items in the list at once, but use a scroll bar in that case.
                 var itemsToDisplay = transfersCount > 3 ? 3 : transfersCount;
-                OpenContentGridHeight = itemsToDisplay * KFileTransferRibbonHeight + KHideArrowTextBlockHeight;
+                OpenContentGridHeight = itemsToDisplay*KFileTransferRibbonHeight + KHideArrowTextBlockHeight;
             }
         }
 

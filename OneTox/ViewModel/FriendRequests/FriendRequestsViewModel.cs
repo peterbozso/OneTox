@@ -1,6 +1,4 @@
-﻿using OneTox.Model;
-using SharpTox.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -8,6 +6,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using OneTox.Model;
+using SharpTox.Core;
 
 namespace OneTox.ViewModel.FriendRequests
 {
@@ -31,9 +31,9 @@ namespace OneTox.ViewModel.FriendRequests
             _semaphore = new SemaphoreSlim(1);
         }
 
-        public event EventHandler<ToxEventArgs.FriendRequestEventArgs> FriendRequestReceived;
-
         public ObservableCollection<OneFriendRequestViewModel> Requests { get; }
+
+        public event EventHandler<ToxEventArgs.FriendRequestEventArgs> FriendRequestReceived;
 
         public void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e)
         {

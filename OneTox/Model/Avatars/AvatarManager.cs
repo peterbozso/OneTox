@@ -1,5 +1,4 @@
-﻿using SharpTox.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -12,6 +11,7 @@ using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
+using SharpTox.Core;
 
 namespace OneTox.Model.Avatars
 {
@@ -367,17 +367,17 @@ namespace OneTox.Model.Avatars
             {
                 var height = writeableBitmap.PixelHeight;
                 var width = writeableBitmap.PixelWidth;
-                var xCenter = width / 2;
-                var yCenter = height / 2;
+                var xCenter = width/2;
+                var yCenter = height/2;
 
                 if (width > height)
                 {
-                    return writeableBitmap.Crop(xCenter - height / 2, 0, height, height);
+                    return writeableBitmap.Crop(xCenter - height/2, 0, height, height);
                 }
 
                 if (width < height)
                 {
-                    return writeableBitmap.Crop(0, yCenter - width / 2, width, width);
+                    return writeableBitmap.Crop(0, yCenter - width/2, width, width);
                 }
 
                 return writeableBitmap;
@@ -401,7 +401,7 @@ namespace OneTox.Model.Avatars
             private WriteableBitmap ResizeAvatar(WriteableBitmap writeableBitmap)
             {
                 var resized = CropIfNeeded(writeableBitmap);
-                var size = Convert.ToInt32((double)Application.Current.Resources["DefaultAvatarSize"]);
+                var size = Convert.ToInt32((double) Application.Current.Resources["DefaultAvatarSize"]);
                 return resized.Resize(size, size, WriteableBitmapExtensions.Interpolation.Bilinear);
             }
 
@@ -418,8 +418,8 @@ namespace OneTox.Model.Avatars
                     await pixelStream.ReadAsync(pixels, 0, pixels.Length);
 
                     encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
-                        (uint)avatar.PixelWidth,
-                        (uint)avatar.PixelHeight,
+                        (uint) avatar.PixelWidth,
+                        (uint) avatar.PixelHeight,
                         96.0,
                         96.0,
                         pixels);

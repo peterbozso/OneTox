@@ -1,11 +1,11 @@
-﻿using OneTox.Common;
-using OneTox.Model;
-using OneTox.ViewModel.Friends;
-using SharpTox.Core;
-using System;
+﻿using System;
 using System.Threading;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using OneTox.Common;
+using OneTox.Model;
+using OneTox.ViewModel.Friends;
+using SharpTox.Core;
 
 namespace OneTox.ViewModel.Messaging
 {
@@ -90,7 +90,7 @@ namespace OneTox.ViewModel.Messaging
                     state =>
                     {
                         if (State == MessageDeliveryState.Delivered)
-                        // If it's delivered, then there's no need for resend.
+                            // If it's delivered, then there's no need for resend.
                         {
                             _resendTimer.Dispose();
                             return;
