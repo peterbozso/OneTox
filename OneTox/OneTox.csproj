@@ -335,11 +335,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="SharpTox Portable">
-      <HintPath>..\libs\SharpTox Portable.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
       <Name>Behaviors SDK %28XAML%29</Name>
     </SDKReference>
@@ -347,7 +342,12 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SharpTox\SharpTox\SharpTox Portable.csproj">
+      <Project>{3e9f2e3b-53b2-49a2-91a3-70816df89a1e}</Project>
+      <Name>SharpTox Portable</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
