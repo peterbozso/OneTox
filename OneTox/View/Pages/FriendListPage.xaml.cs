@@ -1,6 +1,8 @@
 ﻿using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using OneTox.ViewModel;
+using OneTox.ViewModel.Friends;
 
 namespace OneTox.View.Pages
 {
@@ -41,6 +43,9 @@ namespace OneTox.View.Pages
 
         private void FriendListItemClick(object sender, ItemClickEventArgs e)
         {
+            var mainViewModel = DataContext as MainViewModel;
+            mainViewModel.FriendList.SelectedFriend = e.ClickedItem as FriendViewModel;
+
             Frame.Navigate(typeof (ChatPage));
         }
     }
