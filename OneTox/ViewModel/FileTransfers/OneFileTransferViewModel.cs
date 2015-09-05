@@ -5,6 +5,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using GalaSoft.MvvmLight.Command;
 using OneTox.Common;
 using OneTox.Helpers;
 using OneTox.Model.FileTransfers;

@@ -2,6 +2,7 @@
 using System.Threading;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using GalaSoft.MvvmLight.Command;
 using OneTox.Common;
 using OneTox.Model;
 using OneTox.ViewModel.Friends;

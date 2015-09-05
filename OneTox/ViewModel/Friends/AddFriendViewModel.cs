@@ -2,6 +2,7 @@
 using System.Threading;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using GalaSoft.MvvmLight.Command;
 using OneTox.Common;
 using OneTox.Helpers;
 using OneTox.Model;
@@ -23,7 +24,7 @@ namespace OneTox.ViewModel.Friends
             {
                 return _addFriendCommand
                        ?? (_addFriendCommand = new RelayCommand(
-                           parameter =>
+                           () =>
                            {
                                if (string.IsNullOrEmpty(FriendId))
                                    return;

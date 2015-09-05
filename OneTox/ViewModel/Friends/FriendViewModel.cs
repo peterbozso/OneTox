@@ -3,6 +3,7 @@ using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
+using GalaSoft.MvvmLight.Command;
 using OneTox.Common;
 using OneTox.Helpers;
 using OneTox.Model;

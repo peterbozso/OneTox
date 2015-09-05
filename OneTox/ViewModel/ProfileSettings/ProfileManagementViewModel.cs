@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Popups;
-using OneTox.Common;
+using GalaSoft.MvvmLight.Command;
 using OneTox.Helpers;
 using OneTox.Model;
 using OneTox.Model.Avatars;
@@ -17,10 +17,10 @@ namespace OneTox.ViewModel.ProfileSettings
     public class ProfileManagementViewModel : ObservableObject
     {
         private RelayCommand _createNewProfileCommand;
-        private RelayCommand _deleteProfileCommand;
-        private RelayCommand _exportProfileCommand;
+        private RelayCommand<ProfileViewModel> _deleteProfileCommand;
+        private RelayCommand<string> _exportProfileCommand;
         private RelayCommand _importProfileCommand;
-        private RelayCommand _switchProfileCommand;
+        private RelayCommand<ProfileViewModel> _switchProfileCommand;
 
         public ProfileManagementViewModel()
         {
@@ -51,30 +51,31 @@ namespace OneTox.ViewModel.ProfileSettings
             }
         }
 
-        public RelayCommand DeleteProfileCommand
+        public RelayCommand<ProfileViewModel> DeleteProfileCommand
         {
             get
             {
-                return _deleteProfileCommand ?? (_deleteProfileCommand = new RelayCommand(async (object parameter) =>
-                {
-                    var profile = parameter as ProfileViewModel;
-                    Profiles.Remove(profile);
-                    await profile.DeleteBackingFile();
-                }));
+                return _deleteProfileCommand ??
+                       (_deleteProfileCommand = new RelayCommand<ProfileViewModel>(async profile =>
+                       {
+                           Profiles.Remove(profile);
+                           await profile.DeleteBackingFile();
+                       }));
             }
         }
 
         public ObservableCollection<ProfileViewModel> Profiles { get; }
 
-        public RelayCommand SwitchProfileCommand
+        public RelayCommand<ProfileViewModel> SwitchProfileCommand
         {
             get
             {
-                return _switchProfileCommand ?? (_switchProfileCommand = new RelayCommand(async (object parameter) =>
-                {
-                    await (parameter as ProfileViewModel).SetAsCurrent();
-                    await RefreshProfileList();
-                }));
+                return _switchProfileCommand ??
+                       (_switchProfileCommand = new RelayCommand<ProfileViewModel>(async profile =>
+                       {
+                           await profile.SetAsCurrent();
+                           await RefreshProfileList();
+                       }));
             }
         }
 
@@ -105,14 +106,12 @@ namespace OneTox.ViewModel.ProfileSettings
 
         #region Export profile
 
-        public RelayCommand ExportProfileCommand
+        public RelayCommand<string> ExportProfileCommand
         {
             get
             {
-                return _exportProfileCommand ?? (_exportProfileCommand = new RelayCommand(async (object parameter) =>
+                return _exportProfileCommand ?? (_exportProfileCommand = new RelayCommand<string>(async password =>
                 {
-                    var password = parameter as string;
-
                     var file = await PickDestinationFile();
                     if (file != null)
                     {
