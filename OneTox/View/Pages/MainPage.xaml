@@ -11,7 +11,6 @@
       xmlns:viewModel="using:OneTox.ViewModel"
       Loaded="MainPageLoaded"
       Unloaded="MainPageUnloaded"
-      d:DataContext="{d:DesignData /SampleData/MainViewModelSampleData.xaml}"
       mc:Ignorable="d">
 
     <Page.Resources>
