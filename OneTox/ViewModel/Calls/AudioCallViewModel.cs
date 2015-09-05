@@ -10,7 +10,6 @@ using Windows.Media.MediaProperties;
 using Windows.Media.Render;
 using Windows.UI.Core;
 using GalaSoft.MvvmLight.Command;
-using OneTox.Common;
 using OneTox.Helpers;
 using OneTox.Model;
 using SharpTox.Av;

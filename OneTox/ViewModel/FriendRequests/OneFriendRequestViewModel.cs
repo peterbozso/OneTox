@@ -1,5 +1,4 @@
 ﻿using GalaSoft.MvvmLight.Command;
-using OneTox.Common;
 using OneTox.Model;
 using SharpTox.Core;
 
