@@ -11,9 +11,6 @@ using SharpTox.Encryption;
 
 namespace OneTox.Model
 {
-    /// <summary>
-    ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
-    /// </summary>
     public class ToxModel : ObservableObject, IToxModel
     {
         private static readonly ToxNode[] Nodes =
