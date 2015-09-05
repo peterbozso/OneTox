@@ -85,7 +85,7 @@ namespace OneTox.Common
         /// </param>
         public void Execute(object parameter)
         {
-            if (_execute != null) // Only one of them can be set thanks to the contructors.
+            if (_execute != null) // Only one of them can be set thanks to the constructors.
                 _execute();
             else
                 _executeWithParameter(parameter);
