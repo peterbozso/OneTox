@@ -36,9 +36,10 @@
 
         <ListView x:Name="FriendList"
                   Grid.Row="1"
+                  IsItemClickEnabled="True"
+                  ItemClick="FriendListItemClick"
                   ItemContainerStyle="{StaticResource ListViewItemWithoutPressedVisualStateStyle}"
                   ItemsSource="{Binding FriendList.Friends}"
-                  SelectionChanged="FriendListSelectionChanged"
                   SelectionMode="Single">
             <ListView.ItemTemplate>
                 <DataTemplate>

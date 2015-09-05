@@ -16,19 +16,12 @@ namespace OneTox.View.UserControls.FileTransfers
             InitializeComponent();
         }
 
-        private void AdjustOpenGridAnimationHeights()
-        {
-            // Storyboards don't really like data binded From and To values, so we have to do it this way, updating these manually.
-            var newHeight = _fileTransfersViewModel.VisualStates.OpenContentGridHeight;
-            ShowOpenContentGridAnimationEnd.Value = newHeight;
-            OpenContentGridHeight.Value = newHeight;
-        }
-
         private void FileTransferBlockDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
-            _fileTransfersViewModel = DataContext as FileTransfersViewModel;
+            if (DataContext == null)
+                return;
 
-            AdjustOpenGridAnimationHeights();
+            _fileTransfersViewModel = DataContext as FileTransfersViewModel;
             _fileTransfersViewModel.VisualStates.PropertyChanged += VisualStatesPropertyChangedHandler;
 
             VisualStateManager.GoToState(this, _fileTransfersViewModel.VisualStates.BlockState.ToString(), false);
@@ -67,6 +60,19 @@ namespace OneTox.View.UserControls.FileTransfers
             {
                 AdjustOpenGridAnimationHeights();
             }
+        }
+
+        private void FileTransfersBlockLoaded(object sender, RoutedEventArgs e)
+        {
+            AdjustOpenGridAnimationHeights();
+        }
+
+        private void AdjustOpenGridAnimationHeights()
+        {
+            // Storyboards don't really like data binded From and To values, so we have to do it this way, updating these manually.
+            var newHeight = _fileTransfersViewModel.VisualStates.OpenContentGridHeight;
+            ShowOpenContentGridAnimationEnd.Value = newHeight;
+            OpenContentGridHeight.Value = newHeight;
         }
     }
 }

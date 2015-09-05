@@ -26,8 +26,10 @@ namespace OneTox.View.UserControls.Messaging
 
         private void ChatBlockDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
+            if (DataContext == null)
+                return;
+
             _friendViewModel = DataContext as FriendViewModel;
-            FileTransfersBlock.DataContext = _friendViewModel.FileTransfers;
         }
 
         private async void MessageInputKeyDown(object sender, KeyRoutedEventArgs e)

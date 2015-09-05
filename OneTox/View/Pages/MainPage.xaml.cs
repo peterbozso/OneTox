@@ -27,23 +27,7 @@ namespace OneTox.View.Pages
         {
             base.OnNavigatedTo(e);
 
-            if (e.Parameter == null)
-            {
-                // TODO: Display a splash screen or something if the user doesn't have any friends!
-                if (_mainViewModel.FriendList.Friends.Count > 0)
-                {
-                    FriendList.SelectedItem = _mainViewModel.FriendList.Friends[0];
-                    var chatBlock = new ChatBlock {DataContext = _mainViewModel.FriendList.Friends[0]};
-                    SetRightPanelContent(chatBlock);
-                }
-            }
-            else if (e.Parameter is FriendViewModel)
-            {
-                FriendList.SelectedItem = e.Parameter;
-                var chatBlock = new ChatBlock {DataContext = e.Parameter};
-                SetRightPanelContent(chatBlock);
-            }
-            else if (Equals(e.Parameter, typeof (SettingsPage)))
+            if (Equals(e.Parameter, typeof (SettingsPage)))
             {
                 SetRightPanelContent(new ProfileSettingsBlock());
             }
@@ -51,11 +35,16 @@ namespace OneTox.View.Pages
             {
                 SetRightPanelContent(new AddFriendBlock());
             }
+            else
+            {
+                // TODO: Display a splash screen or something if the user doesn't have any friends!
+                SetRightPanelContent(new ChatBlock());
+            }
         }
 
         private void AddFriendButtonClick(object sender, RoutedEventArgs e)
         {
-            FriendList.SelectedItem = null;
+            _mainViewModel.FriendList.SelectedFriend = null;
             SetRightPanelContent(new AddFriendBlock());
         }
 
@@ -64,41 +53,20 @@ namespace OneTox.View.Pages
             if (FriendList.SelectedItem == null)
                 return;
 
-            if (_rightPanelContent is ChatBlock)
+            if (!(_rightPanelContent is ChatBlock))
             {
-                _rightPanelContent.DataContext = FriendList.SelectedItem;
-            }
-            else
-            {
-                var chatBlock = new ChatBlock {DataContext = FriendList.SelectedItem};
-                SetRightPanelContent(chatBlock);
-            }
-        }
-
-        private void FriendsCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.OldStartingIndex == -1)
-                return;
-
-            if (FriendList.SelectedItem == null) // It means that we just removed the currently selected friend.
-            {
-                // So select the one right above it:
-                FriendList.SelectedItem = (e.OldStartingIndex - 1) > 0
-                    ? _mainViewModel.FriendList.Friends[e.OldStartingIndex - 1]
-                    : _mainViewModel.FriendList.Friends[0];
+                SetRightPanelContent(new ChatBlock());
             }
         }
 
         private void MainPageLoaded(object sender, RoutedEventArgs e)
         {
             Window.Current.SizeChanged += WindowSizeChanged;
-            _mainViewModel.FriendList.Friends.CollectionChanged += FriendsCollectionChangedHandler;
         }
 
         private void MainPageUnloaded(object sender, RoutedEventArgs e)
         {
             Window.Current.SizeChanged -= WindowSizeChanged;
-            _mainViewModel.FriendList.Friends.CollectionChanged -= FriendsCollectionChangedHandler;
         }
 
         private void SetRightPanelContent(UserControl userControl)
@@ -111,7 +79,7 @@ namespace OneTox.View.Pages
 
         private void SettingsButtonClick(object sender, RoutedEventArgs e)
         {
-            FriendList.SelectedItem = null;
+            _mainViewModel.FriendList.SelectedFriend = null;
             SetRightPanelContent(new ProfileSettingsBlock());
         }
 
@@ -121,7 +89,7 @@ namespace OneTox.View.Pages
             {
                 if (_rightPanelContent is ChatBlock)
                 {
-                    Frame.Navigate(typeof (ChatPage), FriendList.SelectedItem);
+                    Frame.Navigate(typeof (ChatPage));
                 }
                 else if (_rightPanelContent is ProfileSettingsBlock)
                 {

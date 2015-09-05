@@ -26,14 +26,6 @@ namespace OneTox.View.Pages
             Window.Current.SizeChanged -= WindowSizeChanged;
         }
 
-        private void FriendListSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (FriendList.SelectedItem == null)
-                return;
-
-            Frame.Navigate(typeof (ChatPage), FriendList.SelectedItem);
-        }
-
         private void SettingsButtonClick(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof (SettingsPage));
@@ -45,6 +37,11 @@ namespace OneTox.View.Pages
             {
                 Frame.Navigate(typeof (MainPage));
             }
+        }
+
+        private void FriendListItemClick(object sender, ItemClickEventArgs e)
+        {
+            Frame.Navigate(typeof (ChatPage));
         }
     }
 }

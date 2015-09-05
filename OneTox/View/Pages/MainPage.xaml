@@ -46,6 +46,8 @@
                       Grid.Row="1"
                       ItemContainerStyle="{StaticResource ListViewItemWithoutPressedVisualStateStyle}"
                       ItemsSource="{Binding FriendList.Friends}"
+                      SelectedItem="{Binding FriendList.SelectedFriend,
+                                             Mode=TwoWay}"
                       SelectionChanged="FriendListSelectionChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate>
