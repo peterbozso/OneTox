@@ -57,11 +57,15 @@
                                 <VisualState x:Name="CheckboxPressed">
                                     <Storyboard>
                                         <PointerDownThemeAnimation Storyboard.TargetName="CheckboxTiltContainer" />
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NormalRectangle" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxPressedBackgroundThemeBrush}" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NormalRectangle"
+                                                                       Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{ThemeResource CheckBoxPressedBackgroundThemeBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CheckGlyph" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxPressedForegroundThemeBrush}" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CheckGlyph"
+                                                                       Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{ThemeResource CheckBoxPressedForegroundThemeBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -74,12 +78,14 @@
                                         <ObjectAnimationUsingKeyFrames Duration="0"
                                                                        Storyboard.TargetName="NormalRectangle"
                                                                        Storyboard.TargetProperty="Stroke">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxDisabledBorderThemeBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{ThemeResource CheckBoxDisabledBorderThemeBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Duration="0"
                                                                        Storyboard.TargetName="CheckGlyph"
                                                                        Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxDisabledForegroundThemeBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{ThemeResource CheckBoxDisabledForegroundThemeBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Duration="0"
                                                                        Storyboard.TargetName="SelectedBorder"
@@ -187,11 +193,13 @@
                                 </VisualState>
                                 <VisualState x:Name="Reorderable">
                                     <Storyboard>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentScaleTransform" Storyboard.TargetProperty="ScaleX">
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentScaleTransform"
+                                                                       Storyboard.TargetProperty="ScaleX">
                                             <LinearDoubleKeyFrame KeyTime="00:00:00.075" Value="1.05" />
                                             <LinearDoubleKeyFrame KeyTime="00:00:00.2" Value="1.0" />
                                         </DoubleAnimationUsingKeyFrames>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentScaleTransform" Storyboard.TargetProperty="ScaleY">
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentScaleTransform"
+                                                                       Storyboard.TargetProperty="ScaleY">
                                             <LinearDoubleKeyFrame KeyTime="00:00:00.075" Value="1.05" />
                                             <LinearDoubleKeyFrame KeyTime="00:00:00.2" Value="1.0" />
                                         </DoubleAnimationUsingKeyFrames>
@@ -245,7 +253,8 @@
                                     </Border.Clip>
                                     <Grid x:Name="CheckboxContainer">
                                         <Grid.RenderTransform>
-                                            <TranslateTransform x:Name="CheckboxContainerTranslateTransform" X="{ThemeResource ListViewItemContentOffsetX}" />
+                                            <TranslateTransform x:Name="CheckboxContainerTranslateTransform"
+                                                                X="{ThemeResource ListViewItemContentOffsetX}" />
                                         </Grid.RenderTransform>
                                         <Rectangle x:Name="NormalRectangle"
                                                    Width="25.5"

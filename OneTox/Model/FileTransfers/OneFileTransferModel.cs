@@ -56,7 +56,8 @@ namespace OneTox.Model.FileTransfers
             Application.Current.Suspending += AppSuspendingHandler;
         }
 
-        public static async Task<OneFileTransferModel> CreateInstance(IDataService dataService, int friendNumber, int fileNumber, string name,
+        public static async Task<OneFileTransferModel> CreateInstance(IDataService dataService, int friendNumber,
+            int fileNumber, string name,
             long fileSizeInBytes, TransferDirection direction, StorageFile file, long transferredBytes = 0)
         {
             if (file != null)
@@ -66,7 +67,8 @@ namespace OneTox.Model.FileTransfers
 
             var fileStream = file == null ? null : await GetStreamBasedOnDirection(file, direction);
 
-            return new OneFileTransferModel(dataService, friendNumber, fileNumber, name, fileSizeInBytes, direction, fileStream,
+            return new OneFileTransferModel(dataService, friendNumber, fileNumber, name, fileSizeInBytes, direction,
+                fileStream,
                 transferredBytes);
         }
 
@@ -107,8 +109,8 @@ namespace OneTox.Model.FileTransfers
         private readonly int _friendNumber;
         private FileTransferState _state;
         private Stream _stream;
-        private IToxModel _toxModel;
-        private IFileTransferResumer _fileTransferResumer;
+        private readonly IToxModel _toxModel;
+        private readonly IFileTransferResumer _fileTransferResumer;
 
         #endregion Fields
 

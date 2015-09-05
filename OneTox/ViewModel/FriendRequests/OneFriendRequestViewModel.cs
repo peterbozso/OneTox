@@ -8,11 +8,12 @@ namespace OneTox.ViewModel.FriendRequests
     {
         private readonly FriendRequestsViewModel _friendRequestsViewModel;
         private readonly ToxKey _publicKey;
+        private readonly IToxModel _toxModel;
         private RelayCommand _acceptCommand;
         private RelayCommand _declineCommand;
-        private readonly IToxModel _toxModel;
 
-        public OneFriendRequestViewModel(IToxModel toxModel, FriendRequestsViewModel friendRequestsViewModel, ToxKey publicKey,
+        public OneFriendRequestViewModel(IToxModel toxModel, FriendRequestsViewModel friendRequestsViewModel,
+            ToxKey publicKey,
             string message)
         {
             _toxModel = toxModel;

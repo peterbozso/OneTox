@@ -8,13 +8,15 @@ namespace OneTox.Model.FileTransfers
 {
     internal class OneBrokenFileTransferModel : OneFileTransferModel
     {
-        private OneBrokenFileTransferModel(IDataService dataService, int friendNumber, int fileNumber, string name, long fileSizeInBytes,
+        private OneBrokenFileTransferModel(IDataService dataService, int friendNumber, int fileNumber, string name,
+            long fileSizeInBytes,
             TransferDirection direction, Stream stream, long transferredBytes = 0)
             : base(dataService, friendNumber, fileNumber, name, fileSizeInBytes, direction, stream, transferredBytes)
         {
         }
 
-        public new static async Task<OneFileTransferModel> CreateInstance(IDataService dataService, int friendNumber, int fileNumber, string name,
+        public new static async Task<OneFileTransferModel> CreateInstance(IDataService dataService, int friendNumber,
+            int fileNumber, string name,
             long fileSizeInBytes, TransferDirection direction, StorageFile file, long transferredBytes = 0)
         {
             if (file != null)

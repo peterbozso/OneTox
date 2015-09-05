@@ -14,12 +14,13 @@ namespace OneTox.ViewModel.Messaging
     {
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly FriendViewModel _target;
+        private readonly IToxModel _toxModel;
         private RelayCommand _resendMessageCommand;
         private Timer _resendTimer;
         private int _timerCallbackFired;
-        private readonly IToxModel _toxModel;
 
-        public SentMessageViewModel(IDataService dataService, string text, DateTime timestamp, ToxMessageType messageType, int id,
+        public SentMessageViewModel(IDataService dataService, string text, DateTime timestamp,
+            ToxMessageType messageType, int id,
             FriendViewModel target)
         {
             _toxModel = dataService.ToxModel;

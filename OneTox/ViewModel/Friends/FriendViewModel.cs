@@ -17,15 +17,15 @@ namespace OneTox.ViewModel.Friends
 {
     public class FriendViewModel : ObservableObject, IToxUserViewModel
     {
+        private readonly IAvatarManager _avatarManager;
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+        private readonly IToxModel _toxModel;
         private RelayCommand _copyIdCommand;
         private bool _isConnected;
         private string _name;
         private RelayCommand _removeFriendCommand;
         private ExtendedToxUserStatus _status;
         private string _statusMessage;
-        private readonly IToxModel _toxModel;
-        private readonly IAvatarManager _avatarManager;
 
         public FriendViewModel(IDataService dataService, int friendNumber)
         {

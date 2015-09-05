@@ -17,11 +17,11 @@ namespace OneTox.ViewModel.Messaging
 {
     public class ConversationViewModel : ObservableObject
     {
+        private readonly IDataService _dataService;
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly FriendViewModel _friendViewModel;
-        private bool _isFriendTyping;
-        private readonly IDataService _dataService;
         private readonly IToxModel _toxModel;
+        private bool _isFriendTyping;
 
         public ConversationViewModel(IDataService dataService, FriendViewModel friendViewModel)
         {

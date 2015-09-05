@@ -31,31 +31,43 @@
                                                                         Value="{ThemeResource ButtonPointerOverBackgroundThemeBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                 -->
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonPointerOverForegroundThemeBrush}" />
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                               Storyboard.TargetProperty="Foreground">
+                                    <DiscreteObjectKeyFrame KeyTime="0"
+                                                            Value="{ThemeResource ButtonPointerOverForegroundThemeBrush}" />
                                 </ObjectAnimationUsingKeyFrames>
                             </Storyboard>
                         </VisualState>
                         <VisualState x:Name="Pressed">
                             <Storyboard>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="Background">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonPressedBackgroundThemeBrush}" />
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Border"
+                                                               Storyboard.TargetProperty="Background">
+                                    <DiscreteObjectKeyFrame KeyTime="0"
+                                                            Value="{ThemeResource ButtonPressedBackgroundThemeBrush}" />
                                 </ObjectAnimationUsingKeyFrames>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonPressedForegroundThemeBrush}" />
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                               Storyboard.TargetProperty="Foreground">
+                                    <DiscreteObjectKeyFrame KeyTime="0"
+                                                            Value="{ThemeResource ButtonPressedForegroundThemeBrush}" />
                                 </ObjectAnimationUsingKeyFrames>
                             </Storyboard>
                         </VisualState>
                         <VisualState x:Name="Disabled">
                             <Storyboard>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="Background">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonDisabledBackgroundThemeBrush}" />
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Border"
+                                                               Storyboard.TargetProperty="Background">
+                                    <DiscreteObjectKeyFrame KeyTime="0"
+                                                            Value="{ThemeResource ButtonDisabledBackgroundThemeBrush}" />
                                 </ObjectAnimationUsingKeyFrames>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="BorderBrush">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonDisabledBorderThemeBrush}" />
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Border"
+                                                               Storyboard.TargetProperty="BorderBrush">
+                                    <DiscreteObjectKeyFrame KeyTime="0"
+                                                            Value="{ThemeResource ButtonDisabledBorderThemeBrush}" />
                                 </ObjectAnimationUsingKeyFrames>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonDisabledForegroundThemeBrush}" />
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                               Storyboard.TargetProperty="Foreground">
+                                    <DiscreteObjectKeyFrame KeyTime="0"
+                                                            Value="{ThemeResource ButtonDisabledForegroundThemeBrush}" />
                                 </ObjectAnimationUsingKeyFrames>
                             </Storyboard>
                         </VisualState>
@@ -113,16 +125,23 @@
 
     <Grid Background="{ThemeResource BackgroundColor}">
         <interactivity:Interaction.Behaviors>
-            <core:DataTriggerBehavior Binding="{Binding Audio.State, Converter={StaticResource CallStateToStringConverter}}" Value="Default">
+            <core:DataTriggerBehavior
+                Binding="{Binding Audio.State, Converter={StaticResource CallStateToStringConverter}}" Value="Default">
                 <core:GoToStateAction StateName="Default" />
             </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior Binding="{Binding Audio.State, Converter={StaticResource CallStateToStringConverter}}" Value="DuringCall">
+            <core:DataTriggerBehavior
+                Binding="{Binding Audio.State, Converter={StaticResource CallStateToStringConverter}}"
+                Value="DuringCall">
                 <core:GoToStateAction StateName="DuringCall" />
             </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior Binding="{Binding Audio.State, Converter={StaticResource CallStateToStringConverter}}" Value="OutgoingCall">
+            <core:DataTriggerBehavior
+                Binding="{Binding Audio.State, Converter={StaticResource CallStateToStringConverter}}"
+                Value="OutgoingCall">
                 <core:GoToStateAction StateName="OutgoingCall" />
             </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior Binding="{Binding Audio.State, Converter={StaticResource CallStateToStringConverter}}" Value="IncomingCall">
+            <core:DataTriggerBehavior
+                Binding="{Binding Audio.State, Converter={StaticResource CallStateToStringConverter}}"
+                Value="IncomingCall">
                 <core:GoToStateAction StateName="IncomingCall" />
             </core:DataTriggerBehavior>
         </interactivity:Interaction.Behaviors>
@@ -131,28 +150,32 @@
             <VisualStateGroup x:Name="VisualStateGroup">
                 <VisualState x:Name="Default">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MuteButton" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MuteButton"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StopCallButton" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StopCallButton"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OutgoingCallGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OutgoingCallGrid"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IncomingCallGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IncomingCallGrid"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
@@ -163,21 +186,24 @@
                 </VisualState>
                 <VisualState x:Name="DuringCall">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StartCallButton" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StartCallButton"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OutgoingCallGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OutgoingCallGrid"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IncomingCallGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IncomingCallGrid"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
@@ -188,28 +214,32 @@
                 </VisualState>
                 <VisualState x:Name="OutgoingCall">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MuteButton" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MuteButton"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StopCallButton" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StopCallButton"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StartCallButton" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StartCallButton"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IncomingCallGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IncomingCallGrid"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
@@ -220,28 +250,32 @@
                 </VisualState>
                 <VisualState x:Name="IncomingCall">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OutgoingCallGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OutgoingCallGrid"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StopCallButton" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StopCallButton"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MuteButton" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MuteButton"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StartCallButton" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StartCallButton"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>

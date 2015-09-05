@@ -18,13 +18,15 @@
         <converters:DateTimeConverter x:Key="DateTimeConverter" />
     </UserControl.Resources>
 
-    <Grid HorizontalAlignment="{Binding Path=Sender, Converter={StaticResource SenderTypeToHorizontalAlignmentConverter}}">
+    <Grid
+        HorizontalAlignment="{Binding Path=Sender, Converter={StaticResource SenderTypeToHorizontalAlignmentConverter}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Margin="{Binding Path=Sender, Converter={StaticResource SenderTypeToMessageMarginConverter}}" Background="{Binding Path=Sender, Converter={StaticResource SenderTypeToMessageBackgroundColorConverter}}">
+        <Grid Margin="{Binding Path=Sender, Converter={StaticResource SenderTypeToMessageMarginConverter}}"
+              Background="{Binding Path=Sender, Converter={StaticResource SenderTypeToMessageBackgroundColorConverter}}">
 
             <ItemsControl Grid.Row="0"
                           Margin="12,4"

@@ -11,8 +11,8 @@ namespace OneTox.Model.Avatars
 {
     public class AvatarTransferManager
     {
-        private readonly IToxModel _toxModel;
         private readonly AvatarManager _avatarManager;
+        private readonly IToxModel _toxModel;
 
         public AvatarTransferManager(IToxModel toxModel, AvatarManager avatarManager)
         {

@@ -12,12 +12,12 @@ namespace OneTox.ViewModel.Friends
 {
     public class AddFriendViewModel : ObservableObject
     {
+        private readonly IToxModel _toxModel;
         private RelayCommand _addFriendCommand;
         private string _friendId;
         private string _friendIdPlaceholder;
         private Timer _friendIdPlaceholderTimer;
         private string _invitationMessage;
-        private readonly IToxModel _toxModel;
 
         public AddFriendViewModel(IDataService dataService)
         {

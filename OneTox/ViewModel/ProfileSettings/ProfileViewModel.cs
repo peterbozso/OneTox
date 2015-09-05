@@ -11,10 +11,10 @@ namespace OneTox.ViewModel.ProfileSettings
 {
     public class ProfileViewModel
     {
+        private readonly IAvatarManager _avatarManager;
         private readonly ToxData _toxData;
         private readonly ToxDataInfo _toxDataInfo;
         private readonly IToxModel _toxModel;
-        private readonly IAvatarManager _avatarManager;
 
         private ProfileViewModel(IDataService dataService, ToxData toxData, ToxDataInfo toxDataInfo)
         {
@@ -30,7 +30,8 @@ namespace OneTox.ViewModel.ProfileSettings
         public ToxUserStatus Status => _toxDataInfo.Status;
         public string StatusMessage => _toxDataInfo.StatusMessage;
 
-        public static async Task<ProfileViewModel> GetProfileViewModelFromFile(IDataService dataService, StorageFile file)
+        public static async Task<ProfileViewModel> GetProfileViewModelFromFile(IDataService dataService,
+            StorageFile file)
         {
             var data = (await FileIO.ReadBufferAsync(file)).ToArray();
             var toxData = ToxData.FromBytes(data);

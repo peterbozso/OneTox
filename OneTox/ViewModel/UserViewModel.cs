@@ -13,8 +13,8 @@ namespace OneTox.ViewModel
 {
     public class UserViewModel : ObservableObject, IToxUserViewModel
     {
-        private readonly IToxModel _toxModel;
         private readonly IAvatarManager _avatarManager;
+        private readonly IToxModel _toxModel;
 
         public UserViewModel(IDataService dataService)
         {

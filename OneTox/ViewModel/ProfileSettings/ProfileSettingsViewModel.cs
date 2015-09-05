@@ -22,8 +22,8 @@ namespace OneTox.ViewModel.ProfileSettings
 {
     internal class ProfileSettingsViewModel : ObservableObject
     {
-        private readonly IToxModel _toxModel;
         private readonly IAvatarManager _avatarManager;
+        private readonly IToxModel _toxModel;
 
         public ProfileSettingsViewModel(IDataService dataService)
         {

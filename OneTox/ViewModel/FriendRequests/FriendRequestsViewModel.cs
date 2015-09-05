@@ -67,7 +67,8 @@ namespace OneTox.ViewModel.FriendRequests
                 {
                     var publicKey = lines[i];
                     var message = lines[i + 1];
-                    Requests.Add(new OneFriendRequestViewModel(_toxModel, this, new ToxKey(ToxKeyType.Public, publicKey), message));
+                    Requests.Add(new OneFriendRequestViewModel(_toxModel, this, new ToxKey(ToxKeyType.Public, publicKey),
+                        message));
                 }
             }
             catch (FileNotFoundException)

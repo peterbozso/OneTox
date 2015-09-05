@@ -26,9 +26,9 @@ namespace OneTox
     /// </summary>
     sealed partial class App : Application
     {
+        private IAvatarManager _avatarManager;
         private IAsyncOperation<IUICommand> _showErrorDialogCommand;
         private IToxModel _toxModel;
-        private IAvatarManager _avatarManager;
 
         /// <summary>
         ///     Initializes the singleton Application object.  This is the first line of authored code

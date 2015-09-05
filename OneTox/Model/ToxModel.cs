@@ -32,7 +32,7 @@ namespace OneTox.Model
             new ToxNode("104.219.184.206", 33445,
                 new ToxKey(ToxKeyType.Public, "8CD087E31C67568103E8C2A28653337E90E6B8EDA0D765D57C6B5172B4F1F04C"))
         };
-        
+
         private readonly LastConnectionStatusRegistry _lastConnectionStatusRegistry;
         private readonly SemaphoreSlim _semaphore;
         private ExtendedTox _tox;

@@ -19,19 +19,19 @@ namespace OneTox.Model.Avatars
     {
         // See: https://github.com/irungentoo/Tox_Client_Guidelines/blob/master/Important/Avatars.md
         private const int KMaxPictureSizeInBytes = 1 << 16;
+        private readonly AvatarTransferManager _avatarTransferManager;
 
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+        private readonly IToxModel _toxModel;
         private StorageFolder _avatarsFolder;
         private bool _isUserAvatarSet;
         private BitmapImage _userAvatar;
-        private readonly IToxModel _toxModel;
-        private readonly AvatarTransferManager _avatarTransferManager;
 
         public AvatarManager(IToxModel toxModel)
         {
             _toxModel = toxModel;
             _avatarTransferManager = new AvatarTransferManager(toxModel, this);
-            
+
             ResetUserAvatar();
             FriendAvatars = new Dictionary<int, BitmapImage>();
             _toxModel.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;

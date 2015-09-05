@@ -17,14 +17,14 @@ namespace OneTox.ViewModel.ProfileSettings
 {
     public class ProfileManagementViewModel : ObservableObject
     {
+        private readonly IAvatarManager _avatarManager;
+        private readonly IDataService _dataService;
+        private readonly IToxModel _toxModel;
         private RelayCommand _createNewProfileCommand;
         private RelayCommand<ProfileViewModel> _deleteProfileCommand;
         private RelayCommand<string> _exportProfileCommand;
         private RelayCommand _importProfileCommand;
         private RelayCommand<ProfileViewModel> _switchProfileCommand;
-        private readonly IDataService _dataService;
-        private readonly IToxModel _toxModel;
-        private readonly IAvatarManager _avatarManager;
 
         public ProfileManagementViewModel(IDataService dataService)
         {

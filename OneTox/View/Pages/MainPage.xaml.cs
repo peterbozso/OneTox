@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using Windows.UI.Core;
+﻿using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -7,7 +6,6 @@ using OneTox.View.UserControls.Friends;
 using OneTox.View.UserControls.Messaging;
 using OneTox.View.UserControls.ProfileSettings;
 using OneTox.ViewModel;
-using OneTox.ViewModel.Friends;
 
 namespace OneTox.View.Pages
 {

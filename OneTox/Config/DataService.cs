@@ -4,11 +4,11 @@ using OneTox.Model.FileTransfers;
 
 namespace OneTox.Config
 {
-    class DataService : IDataService
+    internal class DataService : IDataService
     {
-        private readonly ToxModel _toxModel;
         private readonly AvatarManager _avatarManager;
         private readonly FileTransferResumer _fileTransferResumer;
+        private readonly ToxModel _toxModel;
 
         public DataService()
         {

@@ -8,10 +8,10 @@ namespace OneTox.Model.FileTransfers
 {
     public class FileTransfersModel
     {
-        private readonly int _friendNumber;
         private readonly IDataService _dataService;
-        private readonly IToxModel _toxModel;
         private readonly IFileTransferResumer _fileTransferResumer;
+        private readonly int _friendNumber;
+        private readonly IToxModel _toxModel;
 
         public FileTransfersModel(IDataService dataService, int friendNumber)
         {
@@ -44,8 +44,9 @@ namespace OneTox.Model.FileTransfers
 
             if (successfulFileSend)
             {
-                var transferModel = await OneFileTransferModel.CreateInstance(_dataService, _friendNumber, fileInfo.Number, file.Name,
-                    fileSizeInBytes, TransferDirection.Up, file);
+                var transferModel =
+                    await OneFileTransferModel.CreateInstance(_dataService, _friendNumber, fileInfo.Number, file.Name,
+                        fileSizeInBytes, TransferDirection.Up, file);
                 return transferModel;
             }
 
@@ -68,7 +69,8 @@ namespace OneTox.Model.FileTransfers
             {
                 oneFileTransferModel =
                     await
-                        OneBrokenFileTransferModel.CreateInstance(_dataService, e.FriendNumber, e.FileNumber, resumeData.File.Name,
+                        OneBrokenFileTransferModel.CreateInstance(_dataService, e.FriendNumber, e.FileNumber,
+                            resumeData.File.Name,
                             e.FileSize, TransferDirection.Down, resumeData.File, resumeData.TransferredBytes);
             }
             else
@@ -77,7 +79,8 @@ namespace OneTox.Model.FileTransfers
                 // in OneFileTransferModel.AcceptTransfer() when the user accepts the request and chooses a location to save the file to.
                 oneFileTransferModel =
                     await
-                        OneFileTransferModel.CreateInstance(_dataService, e.FriendNumber, e.FileNumber, e.FileName, e.FileSize,
+                        OneFileTransferModel.CreateInstance(_dataService, e.FriendNumber, e.FileNumber, e.FileName,
+                            e.FileSize,
                             TransferDirection.Down, null);
             }
 
@@ -118,7 +121,8 @@ namespace OneTox.Model.FileTransfers
                 {
                     var oneFileTransferModel =
                         await
-                            OneBrokenFileTransferModel.CreateInstance(_dataService, resumeData.FriendNumber, fileInfo.Number,
+                            OneBrokenFileTransferModel.CreateInstance(_dataService, resumeData.FriendNumber,
+                                fileInfo.Number,
                                 resumeData.File.Name, fileSizeInBytes, TransferDirection.Up, resumeData.File,
                                 resumeData.TransferredBytes);
 

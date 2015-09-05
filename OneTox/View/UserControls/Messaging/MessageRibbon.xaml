@@ -23,7 +23,8 @@
             <VisualStateGroup x:Name="VisualStateGroup">
                 <VisualState x:Name="Delivered">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ResendButton" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ResendButton"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
@@ -34,7 +35,8 @@
                 </VisualState>
                 <VisualState x:Name="Pending">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ResendButton" Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ResendButton"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Visibility>Collapsed</Visibility>
@@ -60,13 +62,16 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <interactivity:Interaction.Behaviors>
-            <core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource DeliveryStateToStringConverter}}" Value="Delivered">
+            <core:DataTriggerBehavior
+                Binding="{Binding State, Converter={StaticResource DeliveryStateToStringConverter}}" Value="Delivered">
                 <core:GoToStateAction StateName="Delivered" />
             </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource DeliveryStateToStringConverter}}" Value="Pending">
+            <core:DataTriggerBehavior
+                Binding="{Binding State, Converter={StaticResource DeliveryStateToStringConverter}}" Value="Pending">
                 <core:GoToStateAction StateName="Pending" />
             </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource DeliveryStateToStringConverter}}" Value="Failed">
+            <core:DataTriggerBehavior
+                Binding="{Binding State, Converter={StaticResource DeliveryStateToStringConverter}}" Value="Failed">
                 <core:GoToStateAction StateName="Failed" />
             </core:DataTriggerBehavior>
         </interactivity:Interaction.Behaviors>
