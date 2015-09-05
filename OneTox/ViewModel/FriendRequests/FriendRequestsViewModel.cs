@@ -22,12 +22,15 @@ namespace OneTox.ViewModel.FriendRequests
 
         private const string KFileName = "FriendRequests";
         private readonly SemaphoreSlim _semaphore;
+        private readonly IToxModel _toxModel;
 
-        public FriendRequestsViewModel()
+        public FriendRequestsViewModel(IToxModel toxModel)
         {
+            _toxModel = toxModel;
+
             Requests = new ObservableCollection<OneFriendRequestViewModel>();
             Requests.CollectionChanged += FriendRequestsCollectionChangedHandler;
-            ToxModel.Instance.FriendRequestReceived += FriendRequestReceivedHandler;
+            _toxModel.FriendRequestReceived += FriendRequestReceivedHandler;
             _semaphore = new SemaphoreSlim(1);
         }
 
@@ -40,14 +43,14 @@ namespace OneTox.ViewModel.FriendRequests
             switch (answer)
             {
                 case FriendRequestAnswer.Accept:
-                    ToxModel.Instance.AddFriendNoRequest(e.PublicKey);
+                    _toxModel.AddFriendNoRequest(e.PublicKey);
                     return;
 
                 case FriendRequestAnswer.Decline:
                     return;
 
                 case FriendRequestAnswer.Later:
-                    Requests.Add(new OneFriendRequestViewModel(this, e.PublicKey, e.Message));
+                    Requests.Add(new OneFriendRequestViewModel(_toxModel, this, e.PublicKey, e.Message));
                     return;
             }
         }
@@ -64,7 +67,7 @@ namespace OneTox.ViewModel.FriendRequests
                 {
                     var publicKey = lines[i];
                     var message = lines[i + 1];
-                    Requests.Add(new OneFriendRequestViewModel(this, new ToxKey(ToxKeyType.Public, publicKey), message));
+                    Requests.Add(new OneFriendRequestViewModel(_toxModel, this, new ToxKey(ToxKeyType.Public, publicKey), message));
                 }
             }
             catch (FileNotFoundException)

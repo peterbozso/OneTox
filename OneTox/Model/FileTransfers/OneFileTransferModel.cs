@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Storage;
 using Windows.UI.Xaml;
+using OneTox.Config;
 using OneTox.Helpers;
 using SharpTox.Core;
 
@@ -22,9 +23,12 @@ namespace OneTox.Model.FileTransfers
 
         #region Constructor
 
-        protected OneFileTransferModel(int friendNumber, int fileNumber, string name,
+        protected OneFileTransferModel(IDataService dataService, int friendNumber, int fileNumber, string name,
             long fileSizeInBytes, TransferDirection direction, Stream stream, long transferredBytes = 0)
         {
+            _toxModel = dataService.ToxModel;
+            _fileTransferResumer = dataService.FileTransferResumer;
+
             _stream = stream;
             if (_stream != null)
             {
@@ -45,22 +49,24 @@ namespace OneTox.Model.FileTransfers
             _friendNumber = friendNumber;
             _fileNumber = fileNumber;
 
-            ToxModel.Instance.FileControlReceived += FileControlReceivedHandler;
-            ToxModel.Instance.FileChunkRequested += FileChunkRequestedHandler;
-            ToxModel.Instance.FileChunkReceived += FileChunkReceivedHandler;
-            ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
+            _toxModel.FileControlReceived += FileControlReceivedHandler;
+            _toxModel.FileChunkRequested += FileChunkRequestedHandler;
+            _toxModel.FileChunkReceived += FileChunkReceivedHandler;
+            _toxModel.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
             Application.Current.Suspending += AppSuspendingHandler;
         }
 
-        public static async Task<OneFileTransferModel> CreateInstance(int friendNumber, int fileNumber, string name,
+        public static async Task<OneFileTransferModel> CreateInstance(IDataService dataService, int friendNumber, int fileNumber, string name,
             long fileSizeInBytes, TransferDirection direction, StorageFile file, long transferredBytes = 0)
         {
             if (file != null)
-                FileTransferResumer.Instance.RecordTransfer(file, friendNumber, fileNumber, direction);
+            {
+                dataService.FileTransferResumer.RecordTransfer(file, friendNumber, fileNumber, direction);
+            }
 
             var fileStream = file == null ? null : await GetStreamBasedOnDirection(file, direction);
 
-            return new OneFileTransferModel(friendNumber, fileNumber, name, fileSizeInBytes, direction, fileStream,
+            return new OneFileTransferModel(dataService, friendNumber, fileNumber, name, fileSizeInBytes, direction, fileStream,
                 transferredBytes);
         }
 
@@ -101,6 +107,8 @@ namespace OneTox.Model.FileTransfers
         private readonly int _friendNumber;
         private FileTransferState _state;
         private Stream _stream;
+        private IToxModel _toxModel;
+        private IFileTransferResumer _fileTransferResumer;
 
         #endregion Fields
 
@@ -153,7 +161,7 @@ namespace OneTox.Model.FileTransfers
             switch (e.Control)
             {
                 case ToxFileControl.Cancel:
-                    FileTransferResumer.Instance.RemoveTransfer(_friendNumber, _fileNumber);
+                    _fileTransferResumer.RemoveTransfer(_friendNumber, _fileNumber);
                     State = FileTransferState.Cancelled;
                     return;
 
@@ -194,13 +202,13 @@ namespace OneTox.Model.FileTransfers
                 return;
 
             var chunk = GetNextChunk(e);
-            var successfulChunkSend = ToxModel.Instance.FileSendChunk(e.FriendNumber, e.FileNumber, e.Position, chunk);
+            var successfulChunkSend = _toxModel.FileSendChunk(e.FriendNumber, e.FileNumber, e.Position, chunk);
 
             if (successfulChunkSend)
             {
                 if (IsFinished)
                 {
-                    FileTransferResumer.Instance.RemoveTransfer(_friendNumber, _fileNumber);
+                    _fileTransferResumer.RemoveTransfer(_friendNumber, _fileNumber);
                     State = FileTransferState.Finished;
                 }
             }
@@ -235,7 +243,7 @@ namespace OneTox.Model.FileTransfers
 
             if (IsFinished)
             {
-                FileTransferResumer.Instance.RemoveTransfer(_friendNumber, _fileNumber);
+                _fileTransferResumer.RemoveTransfer(_friendNumber, _fileNumber);
                 State = FileTransferState.Finished;
             }
         }
@@ -264,11 +272,11 @@ namespace OneTox.Model.FileTransfers
             // Replace the dummy stream set previously in FileSendRequestReceivedHandler():
             ReplaceStream(fileStream);
 
-            var successfulSend = ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Resume);
+            var successfulSend = _toxModel.FileControl(_friendNumber, _fileNumber, ToxFileControl.Resume);
 
             if (successfulSend)
             {
-                FileTransferResumer.Instance.RecordTransfer(file, _friendNumber, _fileNumber, TransferDirection.Down);
+                _fileTransferResumer.RecordTransfer(file, _friendNumber, _fileNumber, TransferDirection.Down);
                 State = FileTransferState.Downloading;
             }
             else
@@ -280,10 +288,10 @@ namespace OneTox.Model.FileTransfers
 
         public void CancelTransfer()
         {
-            FileTransferResumer.Instance.RemoveTransfer(_friendNumber, _fileNumber);
+            _fileTransferResumer.RemoveTransfer(_friendNumber, _fileNumber);
 
             if (!IsPlaceholder)
-                ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Cancel);
+                _toxModel.FileControl(_friendNumber, _fileNumber, ToxFileControl.Cancel);
         }
 
         public void PauseTransfer()
@@ -291,7 +299,7 @@ namespace OneTox.Model.FileTransfers
             if (State != FileTransferState.Downloading && State != FileTransferState.Uploading)
                 return;
 
-            var successfulSend = ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Pause);
+            var successfulSend = _toxModel.FileControl(_friendNumber, _fileNumber, ToxFileControl.Pause);
 
             if (successfulSend)
             {
@@ -304,7 +312,7 @@ namespace OneTox.Model.FileTransfers
             if (State != FileTransferState.PausedByUser)
                 return;
 
-            var successfulSend = ToxModel.Instance.FileControl(_friendNumber, _fileNumber, ToxFileControl.Resume);
+            var successfulSend = _toxModel.FileControl(_friendNumber, _fileNumber, ToxFileControl.Resume);
 
             if (successfulSend)
             {
@@ -370,7 +378,7 @@ namespace OneTox.Model.FileTransfers
             var deferral = e.SuspendingOperation.GetDeferral();
 
             if (!IsPlaceholder)
-                await FileTransferResumer.Instance.UpdateTransfer(_friendNumber, _fileNumber, TransferredBytes);
+                await _fileTransferResumer.UpdateTransfer(_friendNumber, _fileNumber, TransferredBytes);
 
             deferral.Complete();
         }
@@ -381,9 +389,9 @@ namespace OneTox.Model.FileTransfers
             if (_friendNumber != e.FriendNumber || IsPlaceholder)
                 return;
 
-            if (!ToxModel.Instance.IsFriendOnline(e.FriendNumber))
+            if (!_toxModel.IsFriendOnline(e.FriendNumber))
             {
-                await FileTransferResumer.Instance.UpdateTransfer(_friendNumber, _fileNumber, TransferredBytes);
+                await _fileTransferResumer.UpdateTransfer(_friendNumber, _fileNumber, TransferredBytes);
                 State = FileTransferState.Cancelled;
             }
         }

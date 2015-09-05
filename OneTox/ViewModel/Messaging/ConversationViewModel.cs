@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.Model;
 using OneTox.ViewModel.Friends;
@@ -19,13 +20,18 @@ namespace OneTox.ViewModel.Messaging
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly FriendViewModel _friendViewModel;
         private bool _isFriendTyping;
+        private readonly IDataService _dataService;
+        private readonly IToxModel _toxModel;
 
-        public ConversationViewModel(FriendViewModel friendViewModel)
+        public ConversationViewModel(IDataService dataService, FriendViewModel friendViewModel)
         {
+            _dataService = dataService;
+            _toxModel = dataService.ToxModel;
+
             _friendViewModel = friendViewModel;
             MessageGroups = new ObservableCollection<MessageGroupViewModel>();
-            ToxModel.Instance.FriendMessageReceived += FriendMessageReceivedHandler;
-            ToxModel.Instance.FriendTypingChanged += FriendTypingChangedHandler;
+            _toxModel.FriendMessageReceived += FriendMessageReceivedHandler;
+            _toxModel.FriendTypingChanged += FriendTypingChangedHandler;
         }
 
         public ObservableCollection<MessageGroupViewModel> MessageGroups { get; set; }
@@ -39,11 +45,11 @@ namespace OneTox.ViewModel.Messaging
 
             foreach (var chunk in messageChunks)
             {
-                var messageId = ToxModel.Instance.SendMessage(_friendViewModel.FriendNumber, chunk, messageType);
+                var messageId = _toxModel.SendMessage(_friendViewModel.FriendNumber, chunk, messageType);
                 // We store the message with this ID in every case, no matter if the sending was unsuccessful.
                 // If it was, we will resend the message later, and change it's message ID.
                 await
-                    StoreMessage(new SentMessageViewModel(chunk, DateTime.Now, messageType, messageId,
+                    StoreMessage(new SentMessageViewModel(_dataService, chunk, DateTime.Now, messageType, messageId,
                         _friendViewModel));
             }
         }
@@ -229,7 +235,7 @@ namespace OneTox.ViewModel.Messaging
 
         public void SetTypingStatus(bool isTyping)
         {
-            ToxModel.Instance.SetTypingStatus(_friendViewModel.FriendNumber, isTyping);
+            _toxModel.SetTypingStatus(_friendViewModel.FriendNumber, isTyping);
         }
 
         private async void FriendTypingChangedHandler(object sender, ToxEventArgs.TypingStatusEventArgs e)

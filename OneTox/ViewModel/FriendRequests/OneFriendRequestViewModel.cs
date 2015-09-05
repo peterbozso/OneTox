@@ -10,10 +10,13 @@ namespace OneTox.ViewModel.FriendRequests
         private readonly ToxKey _publicKey;
         private RelayCommand _acceptCommand;
         private RelayCommand _declineCommand;
+        private readonly IToxModel _toxModel;
 
-        public OneFriendRequestViewModel(FriendRequestsViewModel friendRequestsViewModel, ToxKey publicKey,
+        public OneFriendRequestViewModel(IToxModel toxModel, FriendRequestsViewModel friendRequestsViewModel, ToxKey publicKey,
             string message)
         {
+            _toxModel = toxModel;
+
             _friendRequestsViewModel = friendRequestsViewModel;
             _publicKey = publicKey;
             Message = message;
@@ -25,7 +28,7 @@ namespace OneTox.ViewModel.FriendRequests
             {
                 return _acceptCommand ?? (_acceptCommand = new RelayCommand(() =>
                 {
-                    ToxModel.Instance.AddFriendNoRequest(_publicKey);
+                    _toxModel.AddFriendNoRequest(_publicKey);
                     _friendRequestsViewModel.Requests.Remove(this);
                 }));
             }

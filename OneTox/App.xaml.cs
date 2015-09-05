@@ -11,7 +11,9 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Practices.ServiceLocation;
 using OneTox.Common;
+using OneTox.Config;
 using OneTox.Model;
 using OneTox.Model.Avatars;
 using OneTox.View.Pages;
@@ -25,6 +27,8 @@ namespace OneTox
     sealed partial class App : Application
     {
         private IAsyncOperation<IUICommand> _showErrorDialogCommand;
+        private IToxModel _toxModel;
+        private IAvatarManager _avatarManager;
 
         /// <summary>
         ///     Initializes the singleton Application object.  This is the first line of authored code
@@ -37,8 +41,6 @@ namespace OneTox
             Resuming += OnResuming;
         }
 
-        public MainViewModel MainViewModel { get; private set; }
-
         /// <summary>
         ///     Invoked when the application is launched normally by the end user.  Other entry points
         ///     will be used such as when the application is launched to open a specific file.
@@ -46,6 +48,11 @@ namespace OneTox
         /// <param name="e">Details about the launch request and process.</param>
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
+            // We cheat a little bit here... TODO: Fix it! Until then: Please, don't use ServiceLocator anywhere else in the code than ViewModelLocator!
+            var dataService = ServiceLocator.Current.GetInstance<IDataService>();
+            _toxModel = dataService.ToxModel;
+            _avatarManager = dataService.AvatarManager;
+
             var rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -74,9 +81,6 @@ namespace OneTox
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-
-                MainViewModel = new MainViewModel();
-
                 if (Window.Current.Bounds.Width < 930)
                 {
                     rootFrame.Navigate(typeof (FriendListPage));
@@ -101,7 +105,7 @@ namespace OneTox
                 var successfulRestoration = true;
                 try
                 {
-                    await ToxModel.Instance.RestoreDataAsync();
+                    await _toxModel.RestoreDataAsync();
                 }
                 catch
                 {
@@ -112,7 +116,7 @@ namespace OneTox
                 // So we save the current Tox instance (newly created, not loaded) as the default one.
                 if (!successfulRestoration)
                 {
-                    await ToxModel.Instance.SaveDataAsync();
+                    await _toxModel.SaveDataAsync();
                 }
 
                 if (previousExecutionState != ApplicationExecutionState.NotRunning)
@@ -134,8 +138,8 @@ namespace OneTox
 
         private async Task InitializeSingletons()
         {
-            ToxModel.Instance.Start();
-            await AvatarManager.Instance.LoadAvatars();
+            _toxModel.Start();
+            await _avatarManager.LoadAvatars();
             ToxErrorViewModel.Instance.ToxErrorOccured += ToxErrorOccuredHandler;
         }
 
@@ -154,8 +158,8 @@ namespace OneTox
             // See OnSuspending()!
             // await SuspensionManager.RestoreAsync();
 
-            await ToxModel.Instance.RestoreDataAsync();
-            ToxModel.Instance.Start();
+            await _toxModel.RestoreDataAsync();
+            _toxModel.Start();
         }
 
         /// <summary>
@@ -173,7 +177,7 @@ namespace OneTox
             // (It's the FriendViewModel on MainPage -> ChatPage navigation.)
             // await SuspensionManager.SaveAsync();
 
-            await ToxModel.Instance.SaveDataAsync();
+            await _toxModel.SaveDataAsync();
             deferral.Complete();
         }
 

@@ -10,6 +10,7 @@ using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Media.Imaging;
 using GalaSoft.MvvmLight.Command;
+using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.Model;
 using OneTox.Model.Avatars;
@@ -21,25 +22,31 @@ namespace OneTox.ViewModel.ProfileSettings
 {
     internal class ProfileSettingsViewModel : ObservableObject
     {
-        public ProfileSettingsViewModel()
+        private readonly IToxModel _toxModel;
+        private readonly IAvatarManager _avatarManager;
+
+        public ProfileSettingsViewModel(IDataService dataService)
         {
-            ToxModel.Instance.PropertyChanged += ToxModelPropertyChangedHandler;
-            AvatarManager.Instance.UserAvatarChanged += UserAvatarChangedHandler;
-            AvatarManager.Instance.IsUserAvatarSetChanged += IsUserAvatarSetChangedHandler;
+            _toxModel = dataService.ToxModel;
+            _avatarManager = dataService.AvatarManager;
+
+            _toxModel.PropertyChanged += ToxModelPropertyChangedHandler;
+            _avatarManager.UserAvatarChanged += UserAvatarChangedHandler;
+            _avatarManager.IsUserAvatarSetChanged += IsUserAvatarSetChangedHandler;
             RefreshQrCodeId();
         }
 
         public async Task SaveDataAsync()
         {
-            await ToxModel.Instance.SaveDataAsync();
+            await _toxModel.SaveDataAsync();
         }
 
         #region Avatar
 
         private RelayCommand _removeAvatarCommand;
-        public BitmapImage Avatar => AvatarManager.Instance.UserAvatar;
+        public BitmapImage Avatar => _avatarManager.UserAvatar;
 
-        public bool IsAvatarSet => AvatarManager.Instance.IsUserAvatarSet;
+        public bool IsAvatarSet => _avatarManager.IsUserAvatarSet;
 
         public RelayCommand RemoveAvatarCommand
         {
@@ -47,7 +54,7 @@ namespace OneTox.ViewModel.ProfileSettings
             {
                 return _removeAvatarCommand ??
                        (_removeAvatarCommand =
-                           new RelayCommand(async () => { await AvatarManager.Instance.RemoveUserAvatar(); }));
+                           new RelayCommand(async () => { await _avatarManager.RemoveUserAvatar(); }));
             }
         }
 
@@ -74,7 +81,7 @@ namespace OneTox.ViewModel.ProfileSettings
         {
             try
             {
-                await AvatarManager.Instance.ChangeUserAvatar(file);
+                await _avatarManager.ChangeUserAvatar(file);
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -127,15 +134,15 @@ namespace OneTox.ViewModel.ProfileSettings
                     var rand = new Random();
                     var nospam = new byte[4];
                     rand.NextBytes(nospam);
-                    ToxModel.Instance.SetNospam(BitConverter.ToUInt32(nospam, 0));
-                    await ToxModel.Instance.SaveDataAsync();
+                    _toxModel.SetNospam(BitConverter.ToUInt32(nospam, 0));
+                    await _toxModel.SaveDataAsync();
                     RaisePropertyChanged("TextId");
                     RefreshQrCodeId();
                 }));
             }
         }
 
-        public ToxId TextId => ToxModel.Instance.Id;
+        public ToxId TextId => _toxModel.Id;
 
         public void CopyToxIdToClipboard()
         {
@@ -166,40 +173,40 @@ namespace OneTox.ViewModel.ProfileSettings
 
         public string Name
         {
-            get { return ToxModel.Instance.Name; }
+            get { return _toxModel.Name; }
             set
             {
                 var lengthInBytes = Encoding.Unicode.GetBytes(value).Length;
-                if (ToxModel.Instance.Name == value || value == string.Empty ||
+                if (_toxModel.Name == value || value == string.Empty ||
                     lengthInBytes > ToxConstants.MaxNameLength)
                     return;
-                ToxModel.Instance.Name = value;
+                _toxModel.Name = value;
                 RaisePropertyChanged();
             }
         }
 
         public ToxUserStatus Status
         {
-            get { return ToxModel.Instance.Status; }
+            get { return _toxModel.Status; }
             set
             {
-                if (value == ToxModel.Instance.Status)
+                if (value == _toxModel.Status)
                     return;
-                ToxModel.Instance.Status = value;
+                _toxModel.Status = value;
                 RaisePropertyChanged();
             }
         }
 
         public string StatusMessage
         {
-            get { return ToxModel.Instance.StatusMessage; }
+            get { return _toxModel.StatusMessage; }
             set
             {
                 var lengthInBytes = Encoding.Unicode.GetBytes(value).Length;
-                if (ToxModel.Instance.StatusMessage == value || value == string.Empty ||
+                if (_toxModel.StatusMessage == value || value == string.Empty ||
                     lengthInBytes > ToxConstants.MaxStatusMessageLength)
                     return;
-                ToxModel.Instance.StatusMessage = value;
+                _toxModel.StatusMessage = value;
                 RaisePropertyChanged();
             }
         }

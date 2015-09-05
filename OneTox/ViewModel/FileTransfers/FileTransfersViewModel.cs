@@ -5,6 +5,7 @@ using Windows.ApplicationModel.Core;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using GalaSoft.MvvmLight.Command;
+using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.Model.FileTransfers;
 
@@ -12,10 +13,14 @@ namespace OneTox.ViewModel.FileTransfers
 {
     public class FileTransfersViewModel
     {
-        public FileTransfersViewModel(int friendNumber)
+        private readonly IDataService _dataService;
+
+        public FileTransfersViewModel(IDataService dataService, int friendNumber)
         {
+            _dataService = dataService;
+
             _friendNumber = friendNumber;
-            _transfersModel = new FileTransfersModel(friendNumber);
+            _transfersModel = new FileTransfersModel(dataService, friendNumber);
             _transfersModel.FileTransferAdded += FileTransferAddedHandler;
             Transfers = new ObservableCollection<OneFileTransferViewModel>();
             VisualStates = new FileTransfersVisualStates(Transfers);

@@ -1,33 +1,36 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
+using OneTox.Config;
 using SharpTox.Core;
 
 namespace OneTox.Model.FileTransfers
 {
     internal class OneBrokenFileTransferModel : OneFileTransferModel
     {
-        private OneBrokenFileTransferModel(int friendNumber, int fileNumber, string name, long fileSizeInBytes,
+        private OneBrokenFileTransferModel(IDataService dataService, int friendNumber, int fileNumber, string name, long fileSizeInBytes,
             TransferDirection direction, Stream stream, long transferredBytes = 0)
-            : base(friendNumber, fileNumber, name, fileSizeInBytes, direction, stream, transferredBytes)
+            : base(dataService, friendNumber, fileNumber, name, fileSizeInBytes, direction, stream, transferredBytes)
         {
         }
 
-        public new static async Task<OneFileTransferModel> CreateInstance(int friendNumber, int fileNumber, string name,
+        public new static async Task<OneFileTransferModel> CreateInstance(IDataService dataService, int friendNumber, int fileNumber, string name,
             long fileSizeInBytes, TransferDirection direction, StorageFile file, long transferredBytes = 0)
         {
             if (file != null)
-                FileTransferResumer.Instance.RecordTransfer(file, friendNumber, fileNumber, direction);
+            {
+                dataService.FileTransferResumer.RecordTransfer(file, friendNumber, fileNumber, direction);
+            }
 
             var fileStream = file == null ? null : await GetStreamBasedOnDirection(file, direction);
 
-            var oneBrokenFileDownloadModel = new OneBrokenFileTransferModel(friendNumber, fileNumber, name,
+            var oneBrokenFileDownloadModel = new OneBrokenFileTransferModel(dataService, friendNumber, fileNumber, name,
                 fileSizeInBytes, direction, fileStream, transferredBytes);
 
             if (direction == TransferDirection.Down)
             {
-                ToxModel.Instance.FileSeek(friendNumber, fileNumber, transferredBytes);
-                ToxModel.Instance.FileControl(friendNumber, fileNumber, ToxFileControl.Resume);
+                dataService.ToxModel.FileSeek(friendNumber, fileNumber, transferredBytes);
+                dataService.ToxModel.FileControl(friendNumber, fileNumber, ToxFileControl.Resume);
             }
 
             return oneBrokenFileDownloadModel;

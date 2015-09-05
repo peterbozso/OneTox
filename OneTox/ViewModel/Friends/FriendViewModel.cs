@@ -4,6 +4,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using GalaSoft.MvvmLight.Command;
+using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.Model;
 using OneTox.Model.Avatars;
@@ -23,36 +24,41 @@ namespace OneTox.ViewModel.Friends
         private RelayCommand _removeFriendCommand;
         private ExtendedToxUserStatus _status;
         private string _statusMessage;
+        private readonly IToxModel _toxModel;
+        private readonly IAvatarManager _avatarManager;
 
-        public FriendViewModel(int friendNumber)
+        public FriendViewModel(IDataService dataService, int friendNumber)
         {
+            _toxModel = dataService.ToxModel;
+            _avatarManager = dataService.AvatarManager;
+
             FriendNumber = friendNumber;
 
-            Conversation = new ConversationViewModel(this);
-            FileTransfers = new FileTransfersViewModel(friendNumber);
+            Conversation = new ConversationViewModel(dataService, this);
+            FileTransfers = new FileTransfersViewModel(dataService, friendNumber);
             Call = new CallViewModel(friendNumber);
 
-            Name = ToxModel.Instance.GetFriendName(friendNumber);
+            Name = _toxModel.GetFriendName(friendNumber);
             if (Name == string.Empty)
             {
-                Name = ToxModel.Instance.GetFriendPublicKey(friendNumber).ToString();
+                Name = _toxModel.GetFriendPublicKey(friendNumber).ToString();
             }
 
-            StatusMessage = ToxModel.Instance.GetFriendStatusMessage(friendNumber);
+            StatusMessage = _toxModel.GetFriendStatusMessage(friendNumber);
             if (StatusMessage == string.Empty)
             {
                 StatusMessage = "Friend request sent.";
             }
 
-            SetFriendStatus(ToxModel.Instance.GetFriendStatus(friendNumber));
-            IsConnected = ToxModel.Instance.IsFriendOnline(friendNumber);
+            SetFriendStatus(_toxModel.GetFriendStatus(friendNumber));
+            IsConnected = _toxModel.IsFriendOnline(friendNumber);
 
-            AvatarManager.Instance.FriendAvatarChanged += FriendAvatarChangedHandler;
+            _avatarManager.FriendAvatarChanged += FriendAvatarChangedHandler;
 
-            ToxModel.Instance.FriendNameChanged += FriendNameChangedHandler;
-            ToxModel.Instance.FriendStatusMessageChanged += FriendStatusMessageChangedHandler;
-            ToxModel.Instance.FriendStatusChanged += FriendStatusChangedHandler;
-            ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
+            _toxModel.FriendNameChanged += FriendNameChangedHandler;
+            _toxModel.FriendStatusMessageChanged += FriendStatusMessageChangedHandler;
+            _toxModel.FriendStatusChanged += FriendStatusChangedHandler;
+            _toxModel.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
         }
 
         public CallViewModel Call { get; }
@@ -65,7 +71,7 @@ namespace OneTox.ViewModel.Friends
                 return _copyIdCommand ?? (_copyIdCommand = new RelayCommand(() =>
                 {
                     var dataPackage = new DataPackage {RequestedOperation = DataPackageOperation.Copy};
-                    dataPackage.SetText(ToxModel.Instance.GetFriendPublicKey(FriendNumber).ToString());
+                    dataPackage.SetText(_toxModel.GetFriendPublicKey(FriendNumber).ToString());
                     Clipboard.SetContent(dataPackage);
                 }));
             }
@@ -80,7 +86,7 @@ namespace OneTox.ViewModel.Friends
             {
                 return _removeFriendCommand
                        ?? (_removeFriendCommand = new RelayCommand(
-                           () => { ToxModel.Instance.DeleteFriend(FriendNumber); }));
+                           () => { _toxModel.DeleteFriend(FriendNumber); }));
             }
         }
 
@@ -88,8 +94,8 @@ namespace OneTox.ViewModel.Friends
         {
             get
             {
-                if (AvatarManager.Instance.FriendAvatars.ContainsKey(FriendNumber))
-                    return AvatarManager.Instance.FriendAvatars[FriendNumber];
+                if (_avatarManager.FriendAvatars.ContainsKey(FriendNumber))
+                    return _avatarManager.FriendAvatars[FriendNumber];
                 return new BitmapImage(new Uri("ms-appx:///Assets/default-profile-picture.png"));
             }
         }
@@ -144,7 +150,7 @@ namespace OneTox.ViewModel.Friends
 
         private void SetFriendStatus(ToxUserStatus status)
         {
-            if (ToxModel.Instance.IsFriendOnline(FriendNumber))
+            if (_toxModel.IsFriendOnline(FriendNumber))
             {
                 Status = (ExtendedToxUserStatus) status;
             }
@@ -172,7 +178,7 @@ namespace OneTox.ViewModel.Friends
                 () =>
                 {
                     IsConnected = e.Status != ToxConnectionStatus.None;
-                    SetFriendStatus(ToxModel.Instance.GetFriendStatus(e.FriendNumber));
+                    SetFriendStatus(_toxModel.GetFriendStatus(e.FriendNumber));
                 });
         }
 

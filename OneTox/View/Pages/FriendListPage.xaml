@@ -6,9 +6,10 @@
       xmlns:friends="using:OneTox.View.UserControls.Friends"
       xmlns:local="using:OneTox.View.Pages"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      DataContext="{Binding Source={StaticResource ViewModelLocator},
+                            Path=Main}"
       Loaded="FriendListPageLoaded"
       Unloaded="FriendListPageUnloaded"
-      d:DataContext="{d:DesignData /SampleData/MainViewModelSampleData.xaml}"
       mc:Ignorable="d">
 
     <Page.Resources>

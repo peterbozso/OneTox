@@ -1,0 +1,75 @@
+﻿using System.Diagnostics;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Views;
+using Microsoft.Practices.ServiceLocation;
+using OneTox.ViewModel;
+using OneTox.ViewModel.Friends;
+using OneTox.ViewModel.ProfileSettings;
+
+namespace OneTox.Config
+{
+    internal class ViewModelLocator
+    {
+        public ViewModelLocator()
+        {
+            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+
+            RegisterNavigationService();
+            RegisterDialogService();
+            RegisterDataService();
+            RegisterViewModels();
+        }
+
+        public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
+
+        public ProfileSettingsViewModel ProfileSettings
+            => ServiceLocator.Current.GetInstance<ProfileSettingsViewModel>();
+
+        public ProfileManagementViewModel ProfileManagement
+            => ServiceLocator.Current.GetInstance<ProfileManagementViewModel>();
+
+        public AddFriendViewModel AddFriend => ServiceLocator.Current.GetInstance<AddFriendViewModel>();
+
+        private static void RegisterNavigationService()
+        {
+            SimpleIoc.Default.Register(CreateNavigationService);
+        }
+
+        private static NavigationService CreateNavigationService()
+        {
+            var navigationService = new NavigationService();
+
+            Debug.WriteLine("STUB: CreateNavigationService()!");
+
+            return navigationService;
+        }
+
+
+        private static void RegisterDialogService()
+        {
+            SimpleIoc.Default.Register<IDialogService, DialogService>();
+        }
+
+        private static void RegisterDataService()
+        {
+            if (ViewModelBase.IsInDesignModeStatic)
+            {
+                Debug.WriteLine("STUB: RegisterDataService() - Register mock data!");
+                // SimpleIoc.Default.Register<IDataService, MockDataService>();
+            }
+            else
+            {
+                SimpleIoc.Default.Register<IDataService, DataService>();
+            }
+        }
+
+        private static void RegisterViewModels()
+        {
+            SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<ProfileSettingsViewModel>();
+            SimpleIoc.Default.Register<ProfileManagementViewModel>();
+            SimpleIoc.Default.Register<AddFriendViewModel>();
+        }
+    }
+}

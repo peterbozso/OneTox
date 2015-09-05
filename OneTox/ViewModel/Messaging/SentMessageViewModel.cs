@@ -3,6 +3,7 @@ using System.Threading;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using GalaSoft.MvvmLight.Command;
+using OneTox.Config;
 using OneTox.Model;
 using OneTox.ViewModel.Friends;
 using SharpTox.Core;
@@ -16,20 +17,23 @@ namespace OneTox.ViewModel.Messaging
         private RelayCommand _resendMessageCommand;
         private Timer _resendTimer;
         private int _timerCallbackFired;
+        private readonly IToxModel _toxModel;
 
-        public SentMessageViewModel(string text, DateTime timestamp, ToxMessageType messageType, int id,
+        public SentMessageViewModel(IDataService dataService, string text, DateTime timestamp, ToxMessageType messageType, int id,
             FriendViewModel target)
         {
+            _toxModel = dataService.ToxModel;
+
             Text = text;
             Timestamp = timestamp;
             MessageType = messageType;
-            Sender = new UserViewModel();
+            Sender = new UserViewModel(dataService);
             State = MessageDeliveryState.Pending;
             Id = id;
             _target = target;
 
-            ToxModel.Instance.ReadReceiptReceived += ReadReceiptReceivedHandler;
-            ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
+            _toxModel.ReadReceiptReceived += ReadReceiptReceivedHandler;
+            _toxModel.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
 
             SetupAndStartResendTimer();
         }
@@ -72,7 +76,7 @@ namespace OneTox.ViewModel.Messaging
 
         private void ResendMessage()
         {
-            var messageId = ToxModel.Instance.SendMessage(_target.FriendNumber, Text, MessageType);
+            var messageId = _toxModel.SendMessage(_target.FriendNumber, Text, MessageType);
             Id = messageId; // We have to update the message ID.
         }
 
@@ -82,7 +86,7 @@ namespace OneTox.ViewModel.Messaging
         /// </summary>
         private void SetupAndStartResendTimer()
         {
-            if (ToxModel.Instance.IsFriendOnline(_target.FriendNumber))
+            if (_toxModel.IsFriendOnline(_target.FriendNumber))
             {
                 _timerCallbackFired = 0;
 

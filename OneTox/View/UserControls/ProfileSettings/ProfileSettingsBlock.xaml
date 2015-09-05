@@ -6,6 +6,8 @@
              xmlns:local="using:OneTox.View.UserControls.ProfileSettings"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:profileSettings="using:OneTox.ViewModel.ProfileSettings"
+             DataContext="{Binding Source={StaticResource ViewModelLocator},
+                                   Path=ProfileSettings}"
              d:DesignHeight="1000"
              d:DesignWidth="800"
              mc:Ignorable="d">
@@ -15,10 +17,6 @@
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:UserStatusToStringConverter x:Key="UserStatusToStringConverter" />
     </UserControl.Resources>
-
-    <UserControl.DataContext>
-        <profileSettings:ProfileSettingsViewModel />
-    </UserControl.DataContext>
 
     <Grid Margin="20,0,20,20" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>

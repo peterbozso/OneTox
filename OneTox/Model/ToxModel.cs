@@ -14,7 +14,7 @@ namespace OneTox.Model
     /// <summary>
     ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
     /// </summary>
-    public class ToxModel : ObservableObject
+    public class ToxModel : ObservableObject, IToxModel
     {
         private static readonly ToxNode[] Nodes =
         {
@@ -35,13 +35,12 @@ namespace OneTox.Model
             new ToxNode("104.219.184.206", 33445,
                 new ToxKey(ToxKeyType.Public, "8CD087E31C67568103E8C2A28653337E90E6B8EDA0D765D57C6B5172B4F1F04C"))
         };
-
-        private static ToxModel _instance;
+        
         private readonly LastConnectionStatusRegistry _lastConnectionStatusRegistry;
         private readonly SemaphoreSlim _semaphore;
         private ExtendedTox _tox;
 
-        private ToxModel()
+        public ToxModel()
         {
             var tox = new ExtendedTox(new ToxOptions(true, true))
             {
@@ -93,7 +92,6 @@ namespace OneTox.Model
 
         public int[] Friends => _tox.Friends;
         public ToxId Id => _tox.Id;
-        public static ToxModel Instance => _instance ?? (_instance = new ToxModel());
         public bool IsConnected => _tox.IsConnected;
 
         public string Name

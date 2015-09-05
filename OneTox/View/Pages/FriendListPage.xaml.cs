@@ -9,8 +9,6 @@ namespace OneTox.View.Pages
         public FriendListPage()
         {
             InitializeComponent();
-
-            DataContext = (Application.Current as App).MainViewModel;
         }
 
         private void AddFriendButtonClick(object sender, RoutedEventArgs e)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.Storage;
+using OneTox.Config;
 using SharpTox.Core;
 
 namespace OneTox.Model.FileTransfers
@@ -8,12 +9,19 @@ namespace OneTox.Model.FileTransfers
     public class FileTransfersModel
     {
         private readonly int _friendNumber;
+        private readonly IDataService _dataService;
+        private readonly IToxModel _toxModel;
+        private readonly IFileTransferResumer _fileTransferResumer;
 
-        public FileTransfersModel(int friendNumber)
+        public FileTransfersModel(IDataService dataService, int friendNumber)
         {
+            _dataService = dataService;
+            _toxModel = dataService.ToxModel;
+            _fileTransferResumer = dataService.FileTransferResumer;
+
             _friendNumber = friendNumber;
-            ToxModel.Instance.FileSendRequestReceived += FileSendRequestReceivedHandler;
-            ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
+            _toxModel.FileSendRequestReceived += FileSendRequestReceivedHandler;
+            _toxModel.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
         }
 
         public event EventHandler<OneFileTransferModel> FileTransferAdded;
@@ -31,12 +39,12 @@ namespace OneTox.Model.FileTransfers
             var fileSizeInBytes = await GetFileSizeInBytes(file);
 
             bool successfulFileSend;
-            var fileInfo = ToxModel.Instance.FileSend(_friendNumber, ToxFileKind.Data, fileSizeInBytes, file.Name,
+            var fileInfo = _toxModel.FileSend(_friendNumber, ToxFileKind.Data, fileSizeInBytes, file.Name,
                 out successfulFileSend);
 
             if (successfulFileSend)
             {
-                var transferModel = await OneFileTransferModel.CreateInstance(_friendNumber, fileInfo.Number, file.Name,
+                var transferModel = await OneFileTransferModel.CreateInstance(_dataService, _friendNumber, fileInfo.Number, file.Name,
                     fileSizeInBytes, TransferDirection.Up, file);
                 return transferModel;
             }
@@ -50,8 +58,8 @@ namespace OneTox.Model.FileTransfers
             if (e.FileKind != ToxFileKind.Data || e.FriendNumber != _friendNumber)
                 return;
 
-            var fileId = ToxModel.Instance.FileGetId(e.FriendNumber, e.FileNumber);
-            var resumeData = await FileTransferResumer.Instance.GetDownloadData(fileId);
+            var fileId = _toxModel.FileGetId(e.FriendNumber, e.FileNumber);
+            var resumeData = await _fileTransferResumer.GetDownloadData(fileId);
 
             OneFileTransferModel oneFileTransferModel;
 
@@ -60,7 +68,7 @@ namespace OneTox.Model.FileTransfers
             {
                 oneFileTransferModel =
                     await
-                        OneBrokenFileTransferModel.CreateInstance(e.FriendNumber, e.FileNumber, resumeData.File.Name,
+                        OneBrokenFileTransferModel.CreateInstance(_dataService, e.FriendNumber, e.FileNumber, resumeData.File.Name,
                             e.FileSize, TransferDirection.Down, resumeData.File, resumeData.TransferredBytes);
             }
             else
@@ -69,7 +77,7 @@ namespace OneTox.Model.FileTransfers
                 // in OneFileTransferModel.AcceptTransfer() when the user accepts the request and chooses a location to save the file to.
                 oneFileTransferModel =
                     await
-                        OneFileTransferModel.CreateInstance(e.FriendNumber, e.FileNumber, e.FileName, e.FileSize,
+                        OneFileTransferModel.CreateInstance(_dataService, e.FriendNumber, e.FileNumber, e.FileName, e.FileSize,
                             TransferDirection.Down, null);
             }
 
@@ -86,8 +94,8 @@ namespace OneTox.Model.FileTransfers
             if (_friendNumber != e.FriendNumber)
                 return;
 
-            if (ToxModel.Instance.IsFriendOnline(e.FriendNumber) &&
-                ToxModel.Instance.LastConnectionStatusOfFriend(e.FriendNumber) == ToxConnectionStatus.None)
+            if (_toxModel.IsFriendOnline(e.FriendNumber) &&
+                _toxModel.LastConnectionStatusOfFriend(e.FriendNumber) == ToxConnectionStatus.None)
             {
                 // The given friend just came online... let's restart all of our previously broken uploads towards him/her!
                 await ResumeBrokenUploadsForFriend(e.FriendNumber);
@@ -96,21 +104,21 @@ namespace OneTox.Model.FileTransfers
 
         private async Task ResumeBrokenUploadsForFriend(int friendNumber)
         {
-            var resumeDataOfBrokenUploads = await FileTransferResumer.Instance.GetUploadData(friendNumber);
+            var resumeDataOfBrokenUploads = await _fileTransferResumer.GetUploadData(friendNumber);
 
             foreach (var resumeData in resumeDataOfBrokenUploads)
             {
                 var fileSizeInBytes = await GetFileSizeInBytes(resumeData.File);
 
                 bool successfulFileSend;
-                var fileInfo = ToxModel.Instance.FileSend(resumeData.FriendNumber, ToxFileKind.Data,
+                var fileInfo = _toxModel.FileSend(resumeData.FriendNumber, ToxFileKind.Data,
                     fileSizeInBytes, resumeData.File.Name, resumeData.FileId, out successfulFileSend);
 
                 if (successfulFileSend)
                 {
                     var oneFileTransferModel =
                         await
-                            OneBrokenFileTransferModel.CreateInstance(resumeData.FriendNumber, fileInfo.Number,
+                            OneBrokenFileTransferModel.CreateInstance(_dataService, resumeData.FriendNumber, fileInfo.Number,
                                 resumeData.File.Name, fileSizeInBytes, TransferDirection.Up, resumeData.File,
                                 resumeData.TransferredBytes);
 

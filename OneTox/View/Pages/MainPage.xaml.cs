@@ -20,7 +20,7 @@ namespace OneTox.View.Pages
         {
             InitializeComponent();
 
-            DataContext = _mainViewModel = (Application.Current as App).MainViewModel;
+            _mainViewModel = DataContext as MainViewModel;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

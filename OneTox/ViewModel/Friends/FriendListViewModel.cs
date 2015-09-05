@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using OneTox.Config;
 using OneTox.Model;
 
 namespace OneTox.ViewModel.Friends
@@ -10,16 +11,21 @@ namespace OneTox.ViewModel.Friends
     public class FriendListViewModel
     {
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+        private readonly IDataService _dataService;
+        private readonly IToxModel _toxModel;
 
-        public FriendListViewModel()
+        public FriendListViewModel(IDataService dataService)
         {
+            _dataService = dataService;
+            _toxModel = dataService.ToxModel;
+
             Friends = new ObservableCollection<FriendViewModel>();
-            foreach (var friendNumber in ToxModel.Instance.Friends)
+            foreach (var friendNumber in _toxModel.Friends)
             {
-                Friends.Add(new FriendViewModel(friendNumber));
+                Friends.Add(new FriendViewModel(dataService, friendNumber));
             }
 
-            ToxModel.Instance.FriendListChanged += FriendListChangedHandler;
+            _toxModel.FriendListChanged += FriendListChangedHandler;
         }
 
         public ObservableCollection<FriendViewModel> Friends { get; set; }
@@ -37,7 +43,7 @@ namespace OneTox.ViewModel.Friends
                     switch (e.Action)
                     {
                         case FriendListChangedAction.Add:
-                            Friends.Add(new FriendViewModel(e.FriendNumber));
+                            Friends.Add(new FriendViewModel(_dataService, e.FriendNumber));
                             return;
 
                         case FriendListChangedAction.Remove:
@@ -46,9 +52,9 @@ namespace OneTox.ViewModel.Friends
 
                         case FriendListChangedAction.Reset:
                             Friends.Clear();
-                            foreach (var friendN in ToxModel.Instance.Friends)
+                            foreach (var friendNumber in _toxModel.Friends)
                             {
-                                Friends.Add(new FriendViewModel(friendN));
+                                Friends.Add(new FriendViewModel(_dataService, friendNumber));
                             }
                             return;
                     }

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
+using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.Model;
 using OneTox.Model.Avatars;
@@ -12,32 +13,37 @@ namespace OneTox.ViewModel
 {
     public class UserViewModel : ObservableObject, IToxUserViewModel
     {
-        public UserViewModel()
+        private readonly IToxModel _toxModel;
+        private readonly IAvatarManager _avatarManager;
+
+        public UserViewModel(IDataService dataService)
         {
-            ToxModel.Instance.PropertyChanged += ToxModelPropertyChangedHandler;
-            AvatarManager.Instance.UserAvatarChanged += UserAvatarChangedHandler;
+            _toxModel = dataService.ToxModel;
+            _avatarManager = dataService.AvatarManager;
+
+            _toxModel.PropertyChanged += ToxModelPropertyChangedHandler;
+            _avatarManager.UserAvatarChanged += UserAvatarChangedHandler;
         }
 
-        public ToxId Id => ToxModel.Instance.Id;
-
-        public BitmapImage Avatar => AvatarManager.Instance.UserAvatar;
-        public bool IsConnected => ToxModel.Instance.IsConnected;
-        public string Name => ToxModel.Instance.Name;
+        public ToxId Id => _toxModel.Id;
+        public BitmapImage Avatar => _avatarManager.UserAvatar;
+        public bool IsConnected => _toxModel.IsConnected;
+        public string Name => _toxModel.Name;
 
         public ExtendedToxUserStatus Status
         {
             get
             {
-                if (ToxModel.Instance.IsConnected)
+                if (_toxModel.IsConnected)
                 {
-                    return (ExtendedToxUserStatus) ToxModel.Instance.Status;
+                    return (ExtendedToxUserStatus) _toxModel.Status;
                 }
 
                 return ExtendedToxUserStatus.Offline;
             }
         }
 
-        public string StatusMessage => ToxModel.Instance.StatusMessage;
+        public string StatusMessage => _toxModel.StatusMessage;
 
         private async void ToxModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {

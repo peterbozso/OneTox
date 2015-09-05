@@ -3,6 +3,7 @@ using System.Threading;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using GalaSoft.MvvmLight.Command;
+using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.Model;
 using SharpTox.Core;
@@ -16,6 +17,12 @@ namespace OneTox.ViewModel.Friends
         private string _friendIdPlaceholder;
         private Timer _friendIdPlaceholderTimer;
         private string _invitationMessage;
+        private readonly IToxModel _toxModel;
+
+        public AddFriendViewModel(IDataService dataService)
+        {
+            _toxModel = dataService.ToxModel;
+        }
 
         public RelayCommand AddFriendCommand
         {
@@ -47,7 +54,7 @@ namespace OneTox.ViewModel.Friends
                                    var invitationMessage = GetInvitationMessage();
 
                                    bool successFulAdd;
-                                   ToxModel.Instance.AddFriend(new ToxId(FriendId), invitationMessage, out successFulAdd);
+                                   _toxModel.AddFriend(new ToxId(FriendId), invitationMessage, out successFulAdd);
                                    if (successFulAdd)
                                    {
                                        InvitationMessage = string.Empty;

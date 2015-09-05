@@ -6,6 +6,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Popups;
 using GalaSoft.MvvmLight.Command;
+using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.Model;
 using OneTox.Model.Avatars;
@@ -21,9 +22,16 @@ namespace OneTox.ViewModel.ProfileSettings
         private RelayCommand<string> _exportProfileCommand;
         private RelayCommand _importProfileCommand;
         private RelayCommand<ProfileViewModel> _switchProfileCommand;
+        private readonly IDataService _dataService;
+        private readonly IToxModel _toxModel;
+        private readonly IAvatarManager _avatarManager;
 
-        public ProfileManagementViewModel()
+        public ProfileManagementViewModel(IDataService dataService)
         {
+            _dataService = dataService;
+            _toxModel = dataService.ToxModel;
+            _avatarManager = dataService.AvatarManager;
+
             Profiles = new ObservableCollection<ProfileViewModel>();
         }
 
@@ -41,10 +49,10 @@ namespace OneTox.ViewModel.ProfileSettings
                                    StatusMessage = "Using OneTox."
                                };
 
-                               ToxModel.Instance.SetCurrent(toxInstance);
-                               await ToxModel.Instance.SaveDataAsync();
-                               ToxModel.Instance.Start();
-                               await AvatarManager.Instance.LoadAvatars();
+                               _toxModel.SetCurrent(toxInstance);
+                               await _toxModel.SaveDataAsync();
+                               _toxModel.Start();
+                               await _avatarManager.LoadAvatars();
 
                                await RefreshProfileList();
                            }));
@@ -87,7 +95,7 @@ namespace OneTox.ViewModel.ProfileSettings
             {
                 if (file.FileType == ".tox")
                 {
-                    var profile = await ProfileViewModel.GetProfileViewModelFromFile(file);
+                    var profile = await ProfileViewModel.GetProfileViewModelFromFile(_dataService, file);
 
                     if (profile == null)
                         // It's a corrupted file: better get rid of it and don't waste time with it anymore!
@@ -96,7 +104,7 @@ namespace OneTox.ViewModel.ProfileSettings
                         continue;
                     }
 
-                    if (profile.Id == ToxModel.Instance.Id) // Don't include the current profile in this list.
+                    if (profile.Id == _toxModel.Id) // Don't include the current profile in this list.
                         continue;
 
                     Profiles.Add(profile);
@@ -124,16 +132,16 @@ namespace OneTox.ViewModel.ProfileSettings
         private byte[] GetData(string password)
         {
             if (password == string.Empty)
-                return ToxModel.Instance.GetData().Bytes;
+                return _toxModel.GetData().Bytes;
             var encryptionKey = new ToxEncryptionKey(password);
-            return ToxModel.Instance.GetData(encryptionKey).Bytes;
+            return _toxModel.GetData(encryptionKey).Bytes;
         }
 
         private async Task<StorageFile> PickDestinationFile()
         {
             var savePicker = new FileSavePicker();
             savePicker.FileTypeChoices.Add("Tox save file", new List<string> {".tox"});
-            savePicker.SuggestedFileName = ToxModel.Instance.Name;
+            savePicker.SuggestedFileName = _toxModel.Name;
             var file = await savePicker.PickSaveFileAsync();
             return file;
         }
@@ -151,7 +159,7 @@ namespace OneTox.ViewModel.ProfileSettings
                     var file = await PickSourceFile();
                     if (file != null)
                     {
-                        var profile = await ProfileViewModel.GetProfileViewModelFromFile(file);
+                        var profile = await ProfileViewModel.GetProfileViewModelFromFile(_dataService, file);
                         if (profile == null)
                         {
                             var msgDialog = new MessageDialog(

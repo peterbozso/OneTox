@@ -4,6 +4,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
+using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.ViewModel.FriendRequests;
 using OneTox.ViewModel.Friends;
@@ -15,11 +16,11 @@ namespace OneTox.ViewModel
     {
         private Visibility _friendRequestsListVisibility;
 
-        public MainViewModel()
+        public MainViewModel(IDataService dataService)
         {
-            FriendList = new FriendListViewModel();
+            FriendList = new FriendListViewModel(dataService);
 
-            FriendRequests = new FriendRequestsViewModel();
+            FriendRequests = new FriendRequestsViewModel(dataService.ToxModel);
             FriendRequests.FriendRequestReceived += FriendRequestReceivedHandler;
             FriendRequests.Requests.CollectionChanged += FriendRequestsCollectionChangedHandler;
             DecideFriendRequestsListVisibility();

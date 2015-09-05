@@ -6,14 +6,12 @@
              xmlns:local="using:OneTox.View.UserControls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:profileSettings="using:OneTox.ViewModel.ProfileSettings"
+             DataContext="{Binding Source={StaticResource ViewModelLocator},
+                                   Path=ProfileManagement}"
              Loaded="ProfileManagementBlockLoaded"
              d:DesignHeight="300"
              d:DesignWidth="488"
              mc:Ignorable="d">
-
-    <UserControl.DataContext>
-        <profileSettings:ProfileManagementViewModel />
-    </UserControl.DataContext>
 
     <UserControl.Resources>
         <converters:UserStatusToStringConverter x:Key="UserStatusToStringConverter" />

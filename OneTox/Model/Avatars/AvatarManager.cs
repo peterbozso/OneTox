@@ -15,31 +15,31 @@ using SharpTox.Core;
 
 namespace OneTox.Model.Avatars
 {
-    /// <summary>
-    ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
-    /// </summary>
-    public class AvatarManager
+    public class AvatarManager : IAvatarManager
     {
         // See: https://github.com/irungentoo/Tox_Client_Guidelines/blob/master/Important/Avatars.md
         private const int KMaxPictureSizeInBytes = 1 << 16;
 
-        private static AvatarManager _instance;
         private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private StorageFolder _avatarsFolder;
         private bool _isUserAvatarSet;
         private BitmapImage _userAvatar;
+        private readonly IToxModel _toxModel;
+        private readonly AvatarTransferManager _avatarTransferManager;
 
-        private AvatarManager()
+        public AvatarManager(IToxModel toxModel)
         {
+            _toxModel = toxModel;
+            _avatarTransferManager = new AvatarTransferManager(toxModel, this);
+            
             ResetUserAvatar();
-            ToxModel.Instance.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
             FriendAvatars = new Dictionary<int, BitmapImage>();
+            _toxModel.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
         }
 
         #region Properties
 
         public Dictionary<int, BitmapImage> FriendAvatars { get; }
-        public static AvatarManager Instance => _instance ?? (_instance = new AvatarManager());
 
         public bool IsUserAvatarSet
         {
@@ -109,7 +109,7 @@ namespace OneTox.Model.Avatars
         private async Task<StorageFile> GetFriendAvatarFile(int friendNumber)
         {
             return
-                await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.GetFriendPublicKey(friendNumber) + ".png") as
+                await _avatarsFolder.TryGetItemAsync(_toxModel.GetFriendPublicKey(friendNumber) + ".png") as
                     StorageFile;
         }
 
@@ -126,7 +126,7 @@ namespace OneTox.Model.Avatars
         /// <returns>The file where the avatar was saved.</returns>
         private async Task<StorageFile> SaveFriendAvatar(int friendNumber, MemoryStream avatarStream)
         {
-            var file = await _avatarsFolder.CreateFileAsync(ToxModel.Instance.GetFriendPublicKey(friendNumber) + ".png",
+            var file = await _avatarsFolder.CreateFileAsync(_toxModel.GetFriendPublicKey(friendNumber) + ".png",
                 CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteBytesAsync(file, avatarStream.ToArray());
             return file;
@@ -183,7 +183,7 @@ namespace OneTox.Model.Avatars
         {
             FriendAvatars.Clear();
 
-            foreach (var friendNumber in ToxModel.Instance.Friends)
+            foreach (var friendNumber in _toxModel.Friends)
             {
                 RaiseFriendAvatarChanged(friendNumber);
             }
@@ -193,9 +193,9 @@ namespace OneTox.Model.Avatars
         {
             ClearFriendAvatars();
 
-            foreach (var friendNumber in ToxModel.Instance.Friends)
+            foreach (var friendNumber in _toxModel.Friends)
             {
-                var publicKey = ToxModel.Instance.GetFriendPublicKey(friendNumber);
+                var publicKey = _toxModel.GetFriendPublicKey(friendNumber);
 
                 var file = await _avatarsFolder.TryGetItemAsync(publicKey + ".png") as StorageFile;
                 if (file == null)
@@ -207,7 +207,7 @@ namespace OneTox.Model.Avatars
 
         private async Task LoadUserAvatar()
         {
-            var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png") as StorageFile;
+            var file = await _avatarsFolder.TryGetItemAsync(_toxModel.Id.PublicKey + ".png") as StorageFile;
             if (file == null)
             {
                 ResetUserAvatar();
@@ -227,7 +227,7 @@ namespace OneTox.Model.Avatars
             StorageFile newFile;
             if (await AvatarResizer.IsAvatarTooBig(file))
             {
-                var avatarResizer = new AvatarResizer(_avatarsFolder, file);
+                var avatarResizer = new AvatarResizer(_toxModel, _avatarsFolder, file);
                 newFile = await avatarResizer.SaveUserAvatarFile();
             }
             else
@@ -251,44 +251,44 @@ namespace OneTox.Model.Avatars
 
         private void BroadCastUserAvatarOnReset()
         {
-            foreach (var friendNumber in ToxModel.Instance.Friends)
+            foreach (var friendNumber in _toxModel.Friends)
             {
-                if (ToxModel.Instance.IsFriendOnline(friendNumber))
-                    AvatarTransferManager.Instance.SendNullAvatar(friendNumber);
+                if (_toxModel.IsFriendOnline(friendNumber))
+                    _avatarTransferManager.SendNullAvatar(friendNumber);
             }
         }
 
         private async Task BroadcastUserAvatarOnSet(StorageFile file)
         {
-            foreach (var friendNumber in ToxModel.Instance.Friends)
+            foreach (var friendNumber in _toxModel.Friends)
             {
-                if (ToxModel.Instance.IsFriendOnline(friendNumber))
+                if (_toxModel.IsFriendOnline(friendNumber))
                     await SendUserAvatar(friendNumber, file);
             }
         }
 
         private async Task DeleteUserAvatarFile()
         {
-            var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png");
+            var file = await _avatarsFolder.TryGetItemAsync(_toxModel.Id.PublicKey + ".png");
             await file.DeleteAsync();
         }
 
         private async void FriendConnectionStatusChangedHandler(object sender,
             ToxEventArgs.FriendConnectionStatusEventArgs e)
         {
-            if (ToxModel.Instance.IsFriendOnline(e.FriendNumber))
+            if (_toxModel.IsFriendOnline(e.FriendNumber))
             {
                 Debug.WriteLine("Friend just came online: {0}, status: {1}, name: {2}", e.FriendNumber, e.Status,
-                    ToxModel.Instance.GetFriendName(e.FriendNumber));
+                    _toxModel.GetFriendName(e.FriendNumber));
 
-                var file = await _avatarsFolder.TryGetItemAsync(ToxModel.Instance.Id.PublicKey + ".png") as StorageFile;
+                var file = await _avatarsFolder.TryGetItemAsync(_toxModel.Id.PublicKey + ".png") as StorageFile;
                 if (file != null)
                 {
                     await SendUserAvatar(e.FriendNumber, file);
                 }
                 else // We have no saved avatar for the user: we have no avatar set.
                 {
-                    AvatarTransferManager.Instance.SendNullAvatar(e.FriendNumber);
+                    _avatarTransferManager.SendNullAvatar(e.FriendNumber);
                 }
             }
             else
@@ -314,14 +314,14 @@ namespace OneTox.Model.Avatars
         private async Task<StorageFile> SaveUserAvatarFile(StorageFile file)
         {
             var copy = await file.CopyAsync(_avatarsFolder);
-            await copy.RenameAsync(ToxModel.Instance.Id.PublicKey + ".png", NameCollisionOption.ReplaceExisting);
+            await copy.RenameAsync(_toxModel.Id.PublicKey + ".png", NameCollisionOption.ReplaceExisting);
             return copy;
         }
 
         private async Task SendUserAvatar(int friendNumber, StorageFile file)
         {
             var stream = (await file.OpenReadAsync()).AsStreamForRead();
-            AvatarTransferManager.Instance.SendAvatar(friendNumber, stream, file.Name);
+            _avatarTransferManager.SendAvatar(friendNumber, stream, file.Name);
         }
 
         private async Task SetUserAvatar(StorageFile file)
@@ -341,9 +341,11 @@ namespace OneTox.Model.Avatars
         {
             private readonly StorageFile _avatarFile;
             private readonly StorageFolder _avatarsFolder;
+            private readonly IToxModel _toxModel;
 
-            public AvatarResizer(StorageFolder avatarsFolder, StorageFile avatarFile)
+            public AvatarResizer(IToxModel toxModel, StorageFolder avatarsFolder, StorageFile avatarFile)
             {
+                _toxModel = toxModel;
                 _avatarsFolder = avatarsFolder;
                 _avatarFile = avatarFile;
             }
@@ -408,7 +410,7 @@ namespace OneTox.Model.Avatars
             // Kudos: http://stackoverflow.com/questions/17140774/how-to-save-a-writeablebitmap-as-a-file
             private async Task<StorageFile> SaveUserAvatar(WriteableBitmap avatar)
             {
-                var file = await _avatarsFolder.CreateFileAsync(ToxModel.Instance.Id.PublicKey + ".png",
+                var file = await _avatarsFolder.CreateFileAsync(_toxModel.Id.PublicKey + ".png",
                     CreationCollisionOption.ReplaceExisting);
                 using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
                 {

@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Storage;
+using OneTox.Config;
 using OneTox.Model;
 using OneTox.Model.Avatars;
 using SharpTox.Core;
@@ -12,9 +13,14 @@ namespace OneTox.ViewModel.ProfileSettings
     {
         private readonly ToxData _toxData;
         private readonly ToxDataInfo _toxDataInfo;
+        private readonly IToxModel _toxModel;
+        private readonly IAvatarManager _avatarManager;
 
-        private ProfileViewModel(ToxData toxData, ToxDataInfo toxDataInfo)
+        private ProfileViewModel(IDataService dataService, ToxData toxData, ToxDataInfo toxDataInfo)
         {
+            _toxModel = dataService.ToxModel;
+            _avatarManager = dataService.AvatarManager;
+
             _toxData = toxData;
             _toxDataInfo = toxDataInfo;
         }
@@ -24,7 +30,7 @@ namespace OneTox.ViewModel.ProfileSettings
         public ToxUserStatus Status => _toxDataInfo.Status;
         public string StatusMessage => _toxDataInfo.StatusMessage;
 
-        public static async Task<ProfileViewModel> GetProfileViewModelFromFile(StorageFile file)
+        public static async Task<ProfileViewModel> GetProfileViewModelFromFile(IDataService dataService, StorageFile file)
         {
             var data = (await FileIO.ReadBufferAsync(file)).ToArray();
             var toxData = ToxData.FromBytes(data);
@@ -34,7 +40,7 @@ namespace OneTox.ViewModel.ProfileSettings
             if (toxDataInfo == null)
                 return null;
 
-            return new ProfileViewModel(toxData, toxDataInfo);
+            return new ProfileViewModel(dataService, toxData, toxDataInfo);
         }
 
         public async Task DeleteBackingFile()
@@ -46,10 +52,10 @@ namespace OneTox.ViewModel.ProfileSettings
         public async Task SetAsCurrent()
         {
             var toxInstance = new ExtendedTox(new ToxOptions(true, true), _toxData);
-            ToxModel.Instance.SetCurrent(toxInstance);
-            await ToxModel.Instance.SaveDataAsync();
-            ToxModel.Instance.Start();
-            await AvatarManager.Instance.LoadAvatars();
+            _toxModel.SetCurrent(toxInstance);
+            await _toxModel.SaveDataAsync();
+            _toxModel.Start();
+            await _avatarManager.LoadAvatars();
         }
     }
 }

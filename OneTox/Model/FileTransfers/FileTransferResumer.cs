@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using OneTox.Config;
 
 namespace OneTox.Model.FileTransfers
 {
@@ -34,7 +35,6 @@ namespace OneTox.Model.FileTransfers
     }
 
     /// <summary>
-    ///     Implements the Singleton pattern. (https://msdn.microsoft.com/en-us/library/ff650849.aspx)
     ///     This class's responsibility is to keep record of broken file transfers between core restarts. It accomplishes this
     ///     goal by leveraging the benefits of future access list. We use it like this: whenever a file transfer added by
     ///     FileTransfersViewModel, we record that transfer in future access list with RecordTransfer(). If a transfer finishes
@@ -42,17 +42,17 @@ namespace OneTox.Model.FileTransfers
     ///     access list. If one of the participants goes offline before a transfer finishes, we update it's progress with
     ///     UpdateTransfer() so we can resume the transfer where it is left off.
     /// </summary>
-    internal class FileTransferResumer
+    internal class FileTransferResumer : IFileTransferResumer
     {
-        private static FileTransferResumer _instace;
         private readonly StorageItemAccessList _futureAccesList = StorageApplicationPermissions.FutureAccessList;
+        private readonly IToxModel _toxModel;
 
-        private FileTransferResumer()
+        public FileTransferResumer(IToxModel toxModel)
         {
-            ToxModel.Instance.FriendListChanged += FriendListChangedHandler;
-        }
+            _toxModel = toxModel;
 
-        public static FileTransferResumer Instance => _instace ?? (_instace = new FileTransferResumer());
+            _toxModel.FriendListChanged += FriendListChangedHandler;
+        }
 
         /// <summary>
         ///     Retrieves the necessary data to resume a broken file download based on a file ID.
@@ -117,7 +117,7 @@ namespace OneTox.Model.FileTransfers
             {
                 FriendNumber = friendNumber,
                 FileNumber = fileNumber,
-                FileId = ToxModel.Instance.FileGetId(friendNumber, fileNumber),
+                FileId = _toxModel.FileGetId(friendNumber, fileNumber),
                 TransferredBytes = 0,
                 Direction = direction
             };
