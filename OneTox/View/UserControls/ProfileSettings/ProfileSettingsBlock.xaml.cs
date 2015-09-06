@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using GalaSoft.MvvmLight.Threading;
 using OneTox.ViewModel.ProfileSettings;
 using SharpTox.Core;
 
@@ -67,8 +66,8 @@ namespace OneTox.View.UserControls.ProfileSettings
             {
                 _copyClipboardTimer =
                     new Timer(
-                        async state =>
-                            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                        state =>
+                            DispatcherHelper.CheckBeginInvokeOnUI(
                                 () => { ClipboardCopyConfirmIcon.Visibility = Visibility.Collapsed; }),
                         null, 3000, Timeout.Infinite);
             }

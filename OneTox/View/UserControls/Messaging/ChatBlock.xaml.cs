@@ -32,7 +32,7 @@ namespace OneTox.View.UserControls.Messaging
             _friendViewModel = DataContext as FriendViewModel;
         }
 
-        private async void MessageInputKeyDown(object sender, KeyRoutedEventArgs e)
+        private void MessageInputKeyDown(object sender, KeyRoutedEventArgs e)
         {
             _chatTimer.Change(500, -1);
             _friendViewModel.Conversation.SetTypingStatus(true);
@@ -44,7 +44,7 @@ namespace OneTox.View.UserControls.Messaging
                 if (e.KeyStatus.RepeatCount != 1)
                     return;
 
-                await _friendViewModel.Conversation.SendMessage(MessageInput.Text);
+                _friendViewModel.Conversation.SendMessage(MessageInput.Text);
                 MessageInput.Text = string.Empty;
                 e.Handled = true;
             }

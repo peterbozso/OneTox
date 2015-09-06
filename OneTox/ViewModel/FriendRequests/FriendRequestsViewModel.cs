@@ -32,6 +32,8 @@ namespace OneTox.ViewModel.FriendRequests
             Requests.CollectionChanged += FriendRequestsCollectionChangedHandler;
             _toxModel.FriendRequestReceived += FriendRequestReceivedHandler;
             _semaphore = new SemaphoreSlim(1);
+
+            RestoreData();
         }
 
         public ObservableCollection<OneFriendRequestViewModel> Requests { get; }

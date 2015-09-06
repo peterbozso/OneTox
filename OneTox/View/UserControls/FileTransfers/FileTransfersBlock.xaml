@@ -12,10 +12,10 @@
              DataContext="{Binding Source={StaticResource ViewModelLocator},
                                    Path=Main.FriendList.SelectedFriend.FileTransfers}"
              DataContextChanged="FileTransferBlockDataContextChanged"
+             Loaded="FileTransfersBlockLoaded"
              d:DesignHeight="68"
              d:DesignWidth="800"
-             mc:Ignorable="d"
-             Loaded="FileTransfersBlockLoaded">
+             mc:Ignorable="d">
 
     <UserControl.Resources>
         <converters:FileTransferCountToPlaceholderTextConverter x:Key="FileTransferCountToPlaceholderTextConverter" />
@@ -24,19 +24,13 @@
 
     <Grid x:Name="RootGrid" Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
         <interactivity:Interaction.Behaviors>
-            <core:DataTriggerBehavior
-                Binding="{Binding VisualStates.BlockState, Converter={StaticResource TransfersBlockStateToStringConverter}}"
-                Value="Open">
+            <core:DataTriggerBehavior Binding="{Binding VisualStates.BlockState, Converter={StaticResource TransfersBlockStateToStringConverter}}" Value="Open">
                 <core:GoToStateAction StateName="Open" />
             </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior
-                Binding="{Binding VisualStates.BlockState, Converter={StaticResource TransfersBlockStateToStringConverter}}"
-                Value="Collapsed">
+            <core:DataTriggerBehavior Binding="{Binding VisualStates.BlockState, Converter={StaticResource TransfersBlockStateToStringConverter}}" Value="Collapsed">
                 <core:GoToStateAction StateName="Collapsed" />
             </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior
-                Binding="{Binding VisualStates.BlockState, Converter={StaticResource TransfersBlockStateToStringConverter}}"
-                Value="Invisible">
+            <core:DataTriggerBehavior Binding="{Binding VisualStates.BlockState, Converter={StaticResource TransfersBlockStateToStringConverter}}" Value="Invisible">
                 <core:GoToStateAction StateName="Invisible" />
             </core:DataTriggerBehavior>
         </interactivity:Interaction.Behaviors>
@@ -59,8 +53,7 @@
                             <!--    -->
 
                             <!--  Hide scroll bar  -->
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TransferRibbonsScrollViewer"
-                                                           Storyboard.TargetProperty="(ScrollViewer.VerticalScrollBarVisibility)">
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TransferRibbonsScrollViewer" Storyboard.TargetProperty="(ScrollViewer.VerticalScrollBarVisibility)">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Disabled" />
                             </ObjectAnimationUsingKeyFrames>
                             <!--    -->
@@ -91,8 +84,7 @@
                             <!--    -->
 
                             <!--  Show scroll bar  -->
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TransferRibbonsScrollViewer"
-                                                           Storyboard.TargetProperty="(ScrollViewer.VerticalScrollBarVisibility)">
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TransferRibbonsScrollViewer" Storyboard.TargetProperty="(ScrollViewer.VerticalScrollBarVisibility)">
                                 <DiscreteObjectKeyFrame KeyTime="0:0:0.5" Value="Auto" />
                             </ObjectAnimationUsingKeyFrames>
                             <!--    -->
@@ -114,56 +106,47 @@
 
                 <VisualState x:Name="Open">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CollapsedContentGrid"
-                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CollapsedContentGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                         </ObjectAnimationUsingKeyFrames>
 
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CollapsedContentGrid"
-                                                       Storyboard.TargetProperty="(FrameworkElement.Height)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CollapsedContentGrid" Storyboard.TargetProperty="(FrameworkElement.Height)">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="0" />
                         </ObjectAnimationUsingKeyFrames>
 
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OpenContentGrid"
-                                                       Storyboard.TargetProperty="(FrameworkElement.Height)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OpenContentGrid" Storyboard.TargetProperty="(FrameworkElement.Height)">
                             <DiscreteObjectKeyFrame x:Name="OpenContentGridHeight"
                                                     KeyTime="0"
                                                     Value="72" />
                         </ObjectAnimationUsingKeyFrames>
 
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TransferRibbonsScrollViewer"
-                                                       Storyboard.TargetProperty="(ScrollViewer.VerticalScrollBarVisibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TransferRibbonsScrollViewer" Storyboard.TargetProperty="(ScrollViewer.VerticalScrollBarVisibility)">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Auto" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
                 <VisualState x:Name="Collapsed">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OpenContentGrid"
-                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OpenContentGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                         </ObjectAnimationUsingKeyFrames>
 
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CollapsedContentGrid"
-                                                       Storyboard.TargetProperty="(FrameworkElement.Height)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CollapsedContentGrid" Storyboard.TargetProperty="(FrameworkElement.Height)">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="30" />
                         </ObjectAnimationUsingKeyFrames>
 
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OpenContentGrid"
-                                                       Storyboard.TargetProperty="(FrameworkElement.Height)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OpenContentGrid" Storyboard.TargetProperty="(FrameworkElement.Height)">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="0" />
                         </ObjectAnimationUsingKeyFrames>
 
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TransferRibbonsScrollViewer"
-                                                       Storyboard.TargetProperty="(ScrollViewer.VerticalScrollBarVisibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TransferRibbonsScrollViewer" Storyboard.TargetProperty="(ScrollViewer.VerticalScrollBarVisibility)">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Disabled" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
                 <VisualState x:Name="Invisible">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid"
-                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>

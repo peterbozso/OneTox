@@ -2,15 +2,14 @@
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Globalization;
-using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
 using OneTox.Common;
 using OneTox.Config;
@@ -48,6 +47,8 @@ namespace OneTox
         /// <param name="e">Details about the launch request and process.</param>
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
+            DispatcherHelper.Initialize();
+
             // We cheat a little bit here... TODO: Fix it! Until then: Please, don't use ServiceLocator anywhere else in the code than ViewModelLocator!
             var dataService = ServiceLocator.Current.GetInstance<IDataService>();
             _toxModel = dataService.ToxModel;
@@ -181,14 +182,14 @@ namespace OneTox
             deferral.Complete();
         }
 
-        private async void ToxErrorOccuredHandler(object sender, string errorMessage)
+        private void ToxErrorOccuredHandler(object sender, string errorMessage)
         {
             if (_showErrorDialogCommand != null)
             {
                 return;
             }
 
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            DispatcherHelper.CheckBeginInvokeOnUI(async () =>
             {
                 var msgDialog = new MessageDialog(errorMessage, "Error occured");
                 _showErrorDialogCommand = msgDialog.ShowAsync();

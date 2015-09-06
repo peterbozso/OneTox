@@ -1,9 +1,8 @@
 ﻿using System;
-using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.Model;
@@ -18,7 +17,6 @@ namespace OneTox.ViewModel.Friends
     public class FriendViewModel : ObservableObject, IToxUserViewModel
     {
         private readonly IAvatarManager _avatarManager;
-        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly IToxModel _toxModel;
         private RelayCommand _copyIdCommand;
         private bool _isConnected;
@@ -168,45 +166,41 @@ namespace OneTox.ViewModel.Friends
                 RaisePropertyChanged("Avatar");
         }
 
-        private async void FriendConnectionStatusChangedHandler(object sender,
+        private void FriendConnectionStatusChangedHandler(object sender,
             ToxEventArgs.FriendConnectionStatusEventArgs e)
         {
             if (FriendNumber != e.FriendNumber)
                 return;
 
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () =>
-                {
-                    IsConnected = e.Status != ToxConnectionStatus.None;
-                    SetFriendStatus(_toxModel.GetFriendStatus(e.FriendNumber));
-                });
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+            {
+                IsConnected = e.Status != ToxConnectionStatus.None;
+                SetFriendStatus(_toxModel.GetFriendStatus(e.FriendNumber));
+            });
         }
 
-        private async void FriendNameChangedHandler(object sender, ToxEventArgs.NameChangeEventArgs e)
+        private void FriendNameChangedHandler(object sender, ToxEventArgs.NameChangeEventArgs e)
         {
             if (FriendNumber != e.FriendNumber)
                 return;
 
-            await
-                _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Name = e.Name; });
+            DispatcherHelper.CheckBeginInvokeOnUI(() => { Name = e.Name; });
         }
 
-        private async void FriendStatusChangedHandler(object sender, ToxEventArgs.StatusEventArgs e)
+        private void FriendStatusChangedHandler(object sender, ToxEventArgs.StatusEventArgs e)
         {
             if (FriendNumber != e.FriendNumber)
                 return;
 
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => { SetFriendStatus(e.Status); });
+            DispatcherHelper.CheckBeginInvokeOnUI(() => { SetFriendStatus(e.Status); });
         }
 
-        private async void FriendStatusMessageChangedHandler(object sender, ToxEventArgs.StatusMessageEventArgs e)
+        private void FriendStatusMessageChangedHandler(object sender, ToxEventArgs.StatusMessageEventArgs e)
         {
             if (FriendNumber != e.FriendNumber)
                 return;
 
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => { StatusMessage = e.StatusMessage; });
+            DispatcherHelper.CheckBeginInvokeOnUI(() => { StatusMessage = e.StatusMessage; });
         }
 
         #endregion Event handlers

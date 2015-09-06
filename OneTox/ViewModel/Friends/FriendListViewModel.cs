@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
+using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.Model;
@@ -12,7 +10,6 @@ namespace OneTox.ViewModel.Friends
     public class FriendListViewModel : ObservableObject
     {
         private readonly IDataService _dataService;
-        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly IToxModel _toxModel;
         private FriendViewModel _selectedFriend;
 
@@ -22,6 +19,7 @@ namespace OneTox.ViewModel.Friends
             _toxModel = dataService.ToxModel;
 
             Friends = new ObservableCollection<FriendViewModel>();
+
             foreach (var friendNumber in _toxModel.Friends)
             {
                 // TODO: Remember which friend we talked last and set the selection to that one by default!
@@ -58,9 +56,9 @@ namespace OneTox.ViewModel.Friends
             return Friends.FirstOrDefault(friend => friend.FriendNumber == friendNumber);
         }
 
-        private async void FriendListChangedHandler(object sender, FriendListChangedEventArgs e)
+        private void FriendListChangedHandler(object sender, FriendListChangedEventArgs e)
         {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            DispatcherHelper.CheckBeginInvokeOnUI(
                 () =>
                 {
                     switch (e.Action)

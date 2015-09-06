@@ -314,7 +314,7 @@ namespace OneTox.Model.Avatars
             if (e.FileSize == 0) // It means the avatar of the friend is removed.
             {
                 SendCancelControl(e.FriendNumber, e.FileNumber);
-                await _avatarManager.RemoveFriendAvatar(e.FriendNumber);
+                _avatarManager.RemoveFriendAvatar(e.FriendNumber);
                 return;
             }
 
@@ -334,9 +334,9 @@ namespace OneTox.Model.Avatars
             }
         }
 
-        private void HandleFinishedDownload(TransferId transferId)
+        private async void HandleFinishedDownload(TransferId transferId)
         {
-            _avatarManager.ChangeFriendAvatar(transferId.FriendNumber,
+            await _avatarManager.ChangeFriendAvatar(transferId.FriendNumber,
                 (_transfers[transferId]).GetMemoryStream());
             RemoveTransfer(transferId);
         }

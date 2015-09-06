@@ -11,7 +11,7 @@ namespace OneTox.Config
 {
     internal class ViewModelLocator
     {
-        public ViewModelLocator()
+        static ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
@@ -45,7 +45,6 @@ namespace OneTox.Config
             return navigationService;
         }
 
-
         private static void RegisterDialogService()
         {
             SimpleIoc.Default.Register<IDialogService, DialogService>();
@@ -55,8 +54,7 @@ namespace OneTox.Config
         {
             if (ViewModelBase.IsInDesignModeStatic)
             {
-                Debug.WriteLine("STUB: RegisterDataService() - Register mock data!");
-                // SimpleIoc.Default.Register<IDataService, MockDataService>();
+                SimpleIoc.Default.Register<IDataService, MockDataService>();
             }
             else
             {

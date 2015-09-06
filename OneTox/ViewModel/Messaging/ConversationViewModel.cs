@@ -4,9 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
+using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.Model;
@@ -18,7 +16,6 @@ namespace OneTox.ViewModel.Messaging
     public class ConversationViewModel : ObservableObject
     {
         private readonly IDataService _dataService;
-        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly FriendViewModel _friendViewModel;
         private readonly IToxModel _toxModel;
         private bool _isFriendTyping;
@@ -38,7 +35,7 @@ namespace OneTox.ViewModel.Messaging
 
         #region Message sending
 
-        public async Task SendMessage(string message)
+        public void SendMessage(string message)
         {
             var messageType = MessageTools.GetMessageType(message);
             var messageChunks = MessageTools.GetMessageChunks(message, messageType);
@@ -48,9 +45,8 @@ namespace OneTox.ViewModel.Messaging
                 var messageId = _toxModel.SendMessage(_friendViewModel.FriendNumber, chunk, messageType);
                 // We store the message with this ID in every case, no matter if the sending was unsuccessful.
                 // If it was, we will resend the message later, and change it's message ID.
-                await
-                    StoreMessage(new SentMessageViewModel(_dataService, chunk, DateTime.Now, messageType, messageId,
-                        _friendViewModel));
+                StoreMessage(new SentMessageViewModel(_dataService, chunk, DateTime.Now, messageType, messageId,
+                    _friendViewModel));
             }
         }
 
@@ -147,19 +143,19 @@ namespace OneTox.ViewModel.Messaging
 
         #region Message receiving
 
-        private async void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
+        private void FriendMessageReceivedHandler(object sender, ToxEventArgs.FriendMessageEventArgs e)
         {
             if (e.FriendNumber != _friendViewModel.FriendNumber)
                 return;
 
-            await ReceiveMessage(e);
+            ReceiveMessage(e);
         }
 
-        private async Task ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
+        private void ReceiveMessage(ToxEventArgs.FriendMessageEventArgs e)
         {
             // Here we make a very benign assumption that message_id stay being uint32_t in toxcore.
             var receivedMessage = new ReceivedMessageViewModel(e.Message, DateTime.Now, e.MessageType, _friendViewModel);
-            await StoreMessage(receivedMessage);
+            StoreMessage(receivedMessage);
         }
 
         #endregion Message receiving
@@ -202,9 +198,9 @@ namespace OneTox.ViewModel.Messaging
             MessageAdded?.Invoke(this, message);
         }
 
-        private async Task StoreMessage(ToxMessageViewModelBase message)
+        private void StoreMessage(ToxMessageViewModelBase message)
         {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
                 var successFulAppend = AppendToLastGroup(message);
                 if (successFulAppend)
@@ -238,12 +234,12 @@ namespace OneTox.ViewModel.Messaging
             _toxModel.SetTypingStatus(_friendViewModel.FriendNumber, isTyping);
         }
 
-        private async void FriendTypingChangedHandler(object sender, ToxEventArgs.TypingStatusEventArgs e)
+        private void FriendTypingChangedHandler(object sender, ToxEventArgs.TypingStatusEventArgs e)
         {
             if (e.FriendNumber != _friendViewModel.FriendNumber)
                 return;
 
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { IsFriendTyping = e.IsTyping; });
+            DispatcherHelper.CheckBeginInvokeOnUI(() => { IsFriendTyping = e.IsTyping; });
         }
 
         #endregion Typing

@@ -2,14 +2,13 @@
 using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Media.Imaging;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.Model;
@@ -211,10 +210,9 @@ namespace OneTox.ViewModel.ProfileSettings
             }
         }
 
-        private async void ToxModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        private void ToxModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => { RaisePropertyChanged(e.PropertyName); });
+            DispatcherHelper.CheckBeginInvokeOnUI(() => { RaisePropertyChanged(e.PropertyName); });
 
             if (e.PropertyName == string.Empty)
             {

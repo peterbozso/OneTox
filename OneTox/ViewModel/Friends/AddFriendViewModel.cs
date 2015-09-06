@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
+﻿using System.Threading;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.Model;
@@ -117,9 +115,8 @@ namespace OneTox.ViewModel.Friends
             {
                 _friendIdPlaceholderTimer =
                     new Timer(
-                        async state =>
-                            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                                () => { FriendIdPlaceholder = string.Empty; }),
+                        state =>
+                            DispatcherHelper.CheckBeginInvokeOnUI(() => { FriendIdPlaceholder = string.Empty; }),
                         null, 4500, Timeout.Infinite);
             }
             else

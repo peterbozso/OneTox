@@ -108,6 +108,7 @@
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Config\DataService.cs" />
     <Compile Include="Config\IDataService.cs" />
+    <Compile Include="Config\MockDataService.cs" />
     <Compile Include="Config\ViewModelLocator.cs" />
     <Compile Include="Helpers\CloseFlyoutAction.cs" />
     <Compile Include="Helpers\DnsTools.cs" />
@@ -115,16 +116,19 @@
     <Compile Include="Model\Avatars\AvatarManager.cs" />
     <Compile Include="Model\Avatars\AvatarTransferManager.cs" />
     <Compile Include="Model\Avatars\IAvatarManager.cs" />
+    <Compile Include="Model\Avatars\MockAvatarManager.cs" />
     <Compile Include="Model\ExtendedTox.cs" />
     <Compile Include="Model\FileTransfers\FileTransferResumer.cs" />
     <Compile Include="Model\FileTransfers\FileTransfersModel.cs" />
     <Compile Include="Model\FileTransfers\FileTransferState.cs" />
     <Compile Include="Model\FileTransfers\IFileTransferResumer.cs" />
+    <Compile Include="Model\FileTransfers\MockFileTransferResumer.cs" />
     <Compile Include="Model\FileTransfers\OneBrokenFileTransferModel.cs" />
     <Compile Include="Model\FileTransfers\OneFileTransferModel.cs" />
     <Compile Include="Model\FileTransfers\TransferDirection.cs" />
     <Compile Include="Model\FriendListChangedEventArgs.cs" />
     <Compile Include="Model\IToxModel.cs" />
+    <Compile Include="Model\MockToxModel.cs" />
     <Compile Include="Model\ToxAvModel.cs" />
     <Compile Include="Model\ToxModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Threading;
 using OneTox.Helpers;
 using OneTox.Model.FileTransfers;
 
@@ -56,11 +55,9 @@ namespace OneTox.ViewModel.FileTransfers
 
         public FileTransferState State => _oneFileTransferModel.State;
 
-        private async void ModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        private void ModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
-            await
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    () => { RaisePropertyChanged(e.PropertyName); });
+            DispatcherHelper.CheckBeginInvokeOnUI(() => { RaisePropertyChanged(e.PropertyName); });
         }
 
         #endregion Properties
@@ -131,7 +128,6 @@ namespace OneTox.ViewModel.FileTransfers
         /// </summary>
         private class ProgressUpdater
         {
-            private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
             private readonly OneFileTransferViewModel _fileTransferViewModel;
             private readonly DispatcherTimer _progressDispatcherTimer;
 
@@ -162,7 +158,7 @@ namespace OneTox.ViewModel.FileTransfers
                 _fileTransferViewModel.UpDateProgress();
             }
 
-            private async void StateChangedHandler(object sender, PropertyChangedEventArgs e)
+            private void StateChangedHandler(object sender, PropertyChangedEventArgs e)
             {
                 if (e.PropertyName != "State")
                     return;
@@ -172,13 +168,11 @@ namespace OneTox.ViewModel.FileTransfers
                 if (_fileTransferViewModel.State != FileTransferState.Uploading &&
                     _fileTransferViewModel.State != FileTransferState.Downloading)
                 {
-                    await
-                        _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { _progressDispatcherTimer.Stop(); });
+                    DispatcherHelper.CheckBeginInvokeOnUI(() => { _progressDispatcherTimer.Stop(); });
                 }
                 else
                 {
-                    await
-                        _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { _progressDispatcherTimer.Start(); });
+                    DispatcherHelper.CheckBeginInvokeOnUI(() => { _progressDispatcherTimer.Start(); });
                 }
             }
         }

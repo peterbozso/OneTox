@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Specialized;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
+using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.ViewModel.FriendRequests;
@@ -48,10 +47,10 @@ namespace OneTox.ViewModel
                 : Visibility.Collapsed;
         }
 
-        private async void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
+        private void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
         {
             // TODO: Turn it into a toast notification.
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            DispatcherHelper.CheckBeginInvokeOnUI(async () =>
             {
                 var message = "From: " + e.PublicKey + "\n" + "Message: " + e.Message;
                 var msgDialog = new MessageDialog(message, "Friend request received");

@@ -2,14 +2,13 @@
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-using Windows.ApplicationModel.Core;
 using Windows.Media;
 using Windows.Media.Audio;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Media.Render;
-using Windows.UI.Core;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Threading;
 using OneTox.Helpers;
 using OneTox.Model;
 using SharpTox.Av;
@@ -70,12 +69,12 @@ namespace OneTox.ViewModel.Calls
 
         #region ToxAv event handlers
 
-        private async void CallRequestReceivedHandler(object sender, ToxAvEventArgs.CallRequestEventArgs e)
+        private void CallRequestReceivedHandler(object sender, ToxAvEventArgs.CallRequestEventArgs e)
         {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { State = CallState.IncomingCall; });
+            DispatcherHelper.CheckBeginInvokeOnUI(() => { State = CallState.IncomingCall; });
         }
 
-        private async void CallStateChangedHandler(object sender, ToxAvEventArgs.CallStateEventArgs e)
+        private void CallStateChangedHandler(object sender, ToxAvEventArgs.CallStateEventArgs e)
         {
             if (e.FriendNumber != _friendNumber)
                 return;
@@ -83,8 +82,7 @@ namespace OneTox.ViewModel.Calls
             if (e.State.HasFlag(ToxAvFriendCallState.ReceivingAudio) ||
                 e.State.HasFlag(ToxAvFriendCallState.SendingAudio))
             {
-                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    () => { State = CallState.DuringCall; });
+                DispatcherHelper.CheckBeginInvokeOnUI(() => { State = CallState.DuringCall; });
             }
 
             _friendIsReceivingAudio = e.State.HasFlag(ToxAvFriendCallState.ReceivingAudio);
@@ -92,8 +90,7 @@ namespace OneTox.ViewModel.Calls
             if (e.State.HasFlag(ToxAvFriendCallState.Finished) || e.State.HasFlag(ToxAvFriendCallState.Error))
             {
                 StopAudioGraph();
-                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    () => { State = CallState.Default; });
+                DispatcherHelper.CheckBeginInvokeOnUI(() => { State = CallState.Default; });
             }
         }
 
@@ -398,7 +395,6 @@ namespace OneTox.ViewModel.Calls
 
         #region Fields
 
-        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly BufferBlock<short[]> _receiveBuffer = new BufferBlock<short[]>();
         private RelayCommand _acceptCallCommand;
         private RelayCommand _changeMuteCommand;

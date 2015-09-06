@@ -1,8 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
+using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.Model;
@@ -45,18 +44,17 @@ namespace OneTox.ViewModel
 
         public string StatusMessage => _toxModel.StatusMessage;
 
-        private async void ToxModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        private void ToxModelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () =>
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+            {
+                if (e.PropertyName == "IsConnected")
                 {
-                    if (e.PropertyName == "IsConnected")
-                    {
-                        RaisePropertyChanged("Status");
-                    }
+                    RaisePropertyChanged("Status");
+                }
 
-                    RaisePropertyChanged(e.PropertyName);
-                });
+                RaisePropertyChanged(e.PropertyName);
+            });
         }
 
         private void UserAvatarChangedHandler(object sender, EventArgs eventArgs)

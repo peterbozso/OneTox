@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using Windows.ApplicationModel.Core;
 using Windows.Storage.Pickers;
-using Windows.UI.Core;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.Model.FileTransfers;
@@ -182,11 +181,9 @@ namespace OneTox.ViewModel.FileTransfers
             }
         }
 
-        private async void FileTransferAddedHandler(object sender, OneFileTransferModel e)
+        private void FileTransferAddedHandler(object sender, OneFileTransferModel e)
         {
-            await
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    () => { AddTransfer(e); });
+            DispatcherHelper.CheckBeginInvokeOnUI(() => { AddTransfer(e); });
         }
 
         #endregion File sending/receiving

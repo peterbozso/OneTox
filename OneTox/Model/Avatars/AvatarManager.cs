@@ -4,13 +4,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
+using GalaSoft.MvvmLight.Threading;
 using SharpTox.Core;
 
 namespace OneTox.Model.Avatars
@@ -21,7 +20,6 @@ namespace OneTox.Model.Avatars
         private const int KMaxPictureSizeInBytes = 1 << 16;
         private readonly AvatarTransferManager _avatarTransferManager;
 
-        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly IToxModel _toxModel;
         private StorageFolder _avatarsFolder;
         private bool _isUserAvatarSet;
@@ -75,10 +73,10 @@ namespace OneTox.Model.Avatars
 
         #region Friend avatar management
 
-        public async void ChangeFriendAvatar(int friendNumber, MemoryStream avatarStream)
+        public async Task ChangeFriendAvatar(int friendNumber, MemoryStream avatarStream)
         {
             var file = await SaveFriendAvatar(friendNumber, avatarStream);
-            await SetFriendAvatar(friendNumber, file);
+            SetFriendAvatar(friendNumber, file);
         }
 
         public async Task<Stream> GetFriendAvatarStream(int friendNumber)
@@ -89,9 +87,9 @@ namespace OneTox.Model.Avatars
             return (await friendAvatarFile.OpenReadAsync()).AsStreamForRead();
         }
 
-        public async Task RemoveFriendAvatar(int friendNumber)
+        public void RemoveFriendAvatar(int friendNumber)
         {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            DispatcherHelper.CheckBeginInvokeOnUI(async () =>
             {
                 FriendAvatars.Remove(friendNumber);
                 RaiseFriendAvatarChanged(friendNumber);
@@ -132,9 +130,9 @@ namespace OneTox.Model.Avatars
             return file;
         }
 
-        private async Task SetFriendAvatar(int friendNumber, StorageFile file)
+        private void SetFriendAvatar(int friendNumber, StorageFile file)
         {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            DispatcherHelper.CheckBeginInvokeOnUI(async () =>
             {
                 using (var stream = await file.OpenAsync(FileAccessMode.Read))
                 {
@@ -201,7 +199,7 @@ namespace OneTox.Model.Avatars
                 if (file == null)
                     continue;
 
-                await SetFriendAvatar(friendNumber, file);
+                SetFriendAvatar(friendNumber, file);
             }
         }
 

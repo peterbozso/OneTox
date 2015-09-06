@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
 using OneTox.Model;
 using OneTox.ViewModel.Friends;
@@ -12,7 +11,6 @@ namespace OneTox.ViewModel.Messaging
 {
     public class SentMessageViewModel : ToxMessageViewModelBase
     {
-        private readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private readonly FriendViewModel _target;
         private readonly IToxModel _toxModel;
         private RelayCommand _resendMessageCommand;
@@ -62,16 +60,14 @@ namespace OneTox.ViewModel.Messaging
                 ResendMessage();
         }
 
-        private async void ReadReceiptReceivedHandler(object sender, ToxEventArgs.ReadReceiptEventArgs e)
+        private void ReadReceiptReceivedHandler(object sender, ToxEventArgs.ReadReceiptEventArgs e)
         {
             if (e.FriendNumber != _target.FriendNumber)
                 return;
 
             if (Id == e.Receipt)
             {
-                await
-                    _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                        () => { State = MessageDeliveryState.Delivered; });
+                DispatcherHelper.CheckBeginInvokeOnUI(() => { State = MessageDeliveryState.Delivered; });
             }
         }
 
