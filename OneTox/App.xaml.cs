@@ -15,6 +15,7 @@ using OneTox.Common;
 using OneTox.Config;
 using OneTox.Model;
 using OneTox.Model.Avatars;
+using OneTox.Model.Tox;
 using OneTox.View.Pages;
 using OneTox.ViewModel;
 

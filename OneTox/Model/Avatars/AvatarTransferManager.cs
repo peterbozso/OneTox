@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using OneTox.Model.FileTransfers;
+using OneTox.Model.Tox;
 using SharpTox.Core;
 
 namespace OneTox.Model.Avatars

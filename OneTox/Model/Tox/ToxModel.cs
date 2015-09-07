@@ -9,7 +9,7 @@ using OneTox.ViewModel;
 using SharpTox.Core;
 using SharpTox.Encryption;
 
-namespace OneTox.Model
+namespace OneTox.Model.Tox
 {
     public class ToxModel : ObservableObject, IToxModel
     {

@@ -2,9 +2,9 @@
 using SharpTox.Core;
 using SharpTox.Encryption;
 
-namespace OneTox.Model
+namespace OneTox.Model.Tox
 {
-    public class ExtendedTox : Tox
+    public class ExtendedTox : SharpTox.Core.Tox
     {
         public ExtendedTox(ToxOptions options)
             : base(options)

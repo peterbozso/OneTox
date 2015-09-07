@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using OneTox.Model.Tox;
 
 namespace OneTox.Model.FileTransfers
 {

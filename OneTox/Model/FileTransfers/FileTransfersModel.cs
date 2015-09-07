@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Windows.Storage;
 using OneTox.Config;
+using OneTox.Model.Tox;
 using SharpTox.Core;
 
 namespace OneTox.Model.FileTransfers

@@ -6,6 +6,7 @@ using Windows.Storage;
 using Windows.UI.Xaml;
 using OneTox.Config;
 using OneTox.Helpers;
+using OneTox.Model.Tox;
 using SharpTox.Core;
 
 namespace OneTox.Model.FileTransfers

@@ -3,8 +3,8 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Storage;
 using OneTox.Config;
-using OneTox.Model;
 using OneTox.Model.Avatars;
+using OneTox.Model.Tox;
 using SharpTox.Core;
 
 namespace OneTox.ViewModel.ProfileSettings

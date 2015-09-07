@@ -10,6 +10,7 @@ using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 using GalaSoft.MvvmLight.Threading;
+using OneTox.Model.Tox;
 using SharpTox.Core;
 
 namespace OneTox.Model.Avatars

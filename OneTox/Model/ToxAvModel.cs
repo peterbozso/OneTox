@@ -1,4 +1,5 @@
 ﻿using System;
+using OneTox.Model.Tox;
 using OneTox.ViewModel;
 using SharpTox.Av;
 

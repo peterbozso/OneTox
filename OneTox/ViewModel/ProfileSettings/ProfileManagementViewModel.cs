@@ -8,8 +8,8 @@ using Windows.UI.Popups;
 using GalaSoft.MvvmLight.Command;
 using OneTox.Config;
 using OneTox.Helpers;
-using OneTox.Model;
 using OneTox.Model.Avatars;
+using OneTox.Model.Tox;
 using SharpTox.Core;
 using SharpTox.Encryption;
 

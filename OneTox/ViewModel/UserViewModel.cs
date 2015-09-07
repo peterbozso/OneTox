@@ -6,6 +6,7 @@ using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.Model;
 using OneTox.Model.Avatars;
+using OneTox.Model.Tox;
 using SharpTox.Core;
 
 namespace OneTox.ViewModel

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using SharpTox.Core;
 using SharpTox.Encryption;
 
-namespace OneTox.Model
+namespace OneTox.Model.Tox
 {
     internal class MockToxModel : IToxModel
     {
