@@ -1,5 +1,4 @@
-﻿using OneTox.Model;
-using OneTox.Model.Avatars;
+﻿using OneTox.Model.Avatars;
 using OneTox.Model.FileTransfers;
 using OneTox.Model.Tox;
 

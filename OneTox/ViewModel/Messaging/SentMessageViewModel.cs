@@ -3,7 +3,6 @@ using System.Threading;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
-using OneTox.Model;
 using OneTox.Model.Tox;
 using OneTox.ViewModel.Friends;
 using SharpTox.Core;

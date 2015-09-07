@@ -13,7 +13,6 @@ using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
 using OneTox.Common;
 using OneTox.Config;
-using OneTox.Model;
 using OneTox.Model.Avatars;
 using OneTox.Model.Tox;
 using OneTox.View.Pages;

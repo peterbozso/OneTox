@@ -24,15 +24,18 @@
             <converters:FileTransferCountToVisibilityConverter x:Key="FileTransferCountToVisibilityConverter" />
 
             <Storyboard x:Name="MessageAddedNotificationAnimation">
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MessageAddedNotificationEllipse" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MessageAddedNotificationEllipse"
+                                               Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
                     <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2" />
                     <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
                 </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MessageAddedNotificationEllipse" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MessageAddedNotificationEllipse"
+                                               Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
                     <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2" />
                     <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
                 </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MessageAddedNotificationIcon" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MessageAddedNotificationIcon"
+                                               Storyboard.TargetProperty="(UIElement.Opacity)">
                     <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0.5" />
                     <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
                 </DoubleAnimationUsingKeyFrames>

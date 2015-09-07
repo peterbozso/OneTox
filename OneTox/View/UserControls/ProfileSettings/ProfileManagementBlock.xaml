@@ -103,7 +103,8 @@
                                           Path=SelectedItem.StatusMessage}"
                            TextWrapping="WrapWholeWords" />
                 <TextBlock FontSize="17">Status</TextBlock>
-                <TextBlock Margin="8,4,0,8" Text="{Binding ElementName=ProfileList, Path=SelectedItem.Status, Converter={StaticResource UserStatusToStringConverter}}" />
+                <TextBlock Margin="8,4,0,8"
+                           Text="{Binding ElementName=ProfileList, Path=SelectedItem.Status, Converter={StaticResource UserStatusToStringConverter}}" />
 
                 <Grid>
                     <Grid.ColumnDefinitions>

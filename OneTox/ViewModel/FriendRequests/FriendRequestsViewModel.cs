@@ -6,7 +6,6 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using OneTox.Model;
 using OneTox.Model.Tox;
 using SharpTox.Core;
 

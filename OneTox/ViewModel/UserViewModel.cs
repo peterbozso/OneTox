@@ -4,7 +4,6 @@ using Windows.UI.Xaml.Media.Imaging;
 using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
 using OneTox.Helpers;
-using OneTox.Model;
 using OneTox.Model.Avatars;
 using OneTox.Model.Tox;
 using SharpTox.Core;

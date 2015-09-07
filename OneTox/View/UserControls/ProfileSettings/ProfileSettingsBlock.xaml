@@ -113,7 +113,8 @@
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
-                                        <TextBlock FontSize="16" Text="{Binding Converter={StaticResource UserStatusToStringConverter}}" />
+                                        <TextBlock FontSize="16"
+                                                   Text="{Binding Converter={StaticResource UserStatusToStringConverter}}" />
                                     </Grid>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
