@@ -45,12 +45,9 @@ namespace OneTox.View.Pages
             _mainViewModel.FriendList.SelectedFriend = null;
             SetRightPanelContent(new AddFriendBlock());
         }
-
-        private void FriendListSelectionChanged(object sender, SelectionChangedEventArgs e)
+        
+        private void FriendListItemClick(object sender, ItemClickEventArgs e)
         {
-            if (FriendList.SelectedItem == null)
-                return;
-
             if (!(_rightPanelContent is ChatBlock))
             {
                 SetRightPanelContent(new ChatBlock());
