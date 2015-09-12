@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Popups;
+using Windows.UI.Xaml;
+using GalaSoft.MvvmLight.Threading;
+using OneTox.Helpers;
 using OneTox.Model.Tox;
 using SharpTox.Core;
 
 namespace OneTox.ViewModel.FriendRequests
 {
-    public class FriendRequestsViewModel
+    public class FriendRequestsViewModel : ObservableObject
     {
         public enum FriendRequestAnswer
         {
@@ -21,8 +24,9 @@ namespace OneTox.ViewModel.FriendRequests
         }
 
         private const string KFileName = "FriendRequests";
-        private readonly SemaphoreSlim _semaphore;
         private readonly IToxModel _toxModel;
+
+        private Visibility _friendRequestsListVisibility;
 
         public FriendRequestsViewModel(IToxModel toxModel)
         {
@@ -31,16 +35,50 @@ namespace OneTox.ViewModel.FriendRequests
             Requests = new ObservableCollection<OneFriendRequestViewModel>();
             Requests.CollectionChanged += FriendRequestsCollectionChangedHandler;
             _toxModel.FriendRequestReceived += FriendRequestReceivedHandler;
-            _semaphore = new SemaphoreSlim(1);
 
             RestoreData();
+
+            DecideFriendRequestsListVisibility();
+        }
+
+        public Visibility FriendRequestsListVisibility
+        {
+            get { return _friendRequestsListVisibility; }
+            set
+            {
+                if (value == _friendRequestsListVisibility)
+                    return;
+                _friendRequestsListVisibility = value;
+                RaisePropertyChanged();
+            }
         }
 
         public ObservableCollection<OneFriendRequestViewModel> Requests { get; }
 
-        public event EventHandler<ToxEventArgs.FriendRequestEventArgs> FriendRequestReceived;
+        private void DecideFriendRequestsListVisibility()
+        {
+            FriendRequestsListVisibility = Requests.Count > 0
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
 
-        public void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e)
+        private void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
+        {
+            // TODO: Turn it into a toast notification.
+            DispatcherHelper.CheckBeginInvokeOnUI(async () =>
+            {
+                var message = "From: " + e.PublicKey + "\n" + "Message: " + e.Message;
+                var msgDialog = new MessageDialog(message, "Friend request received");
+                msgDialog.Commands.Add(new UICommand("Accept", null, FriendRequestAnswer.Accept));
+                msgDialog.Commands.Add(new UICommand("Decline", null,
+                    FriendRequestAnswer.Decline));
+                msgDialog.Commands.Add(new UICommand("Later", null, FriendRequestAnswer.Later));
+                var answer = await msgDialog.ShowAsync();
+                HandleFriendRequestAnswer((FriendRequestAnswer) answer.Id, e);
+            });
+        }
+
+        private void HandleFriendRequestAnswer(FriendRequestAnswer answer, ToxEventArgs.FriendRequestEventArgs e)
         {
             switch (answer)
             {
@@ -57,7 +95,30 @@ namespace OneTox.ViewModel.FriendRequests
             }
         }
 
-        public async Task RestoreData()
+        private async void FriendRequestsCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            DecideFriendRequestsListVisibility();
+            await SaveDataAsync();
+        }
+
+        private async Task SaveDataAsync()
+        {
+            var file = await ApplicationData.Current.RoamingFolder.CreateFileAsync(
+                KFileName, CreationCollisionOption.ReplaceExisting);
+
+            var requestStrings = new List<string>();
+            foreach (var friendRequest in Requests)
+            {
+                var oneRequestString = new string[2];
+                oneRequestString[0] = friendRequest.PublicKey;
+                oneRequestString[1] = friendRequest.Message;
+                requestStrings.AddRange(oneRequestString);
+            }
+
+            await FileIO.WriteLinesAsync(file, requestStrings);
+        }
+
+        private async Task RestoreData()
         {
             try
             {
@@ -75,43 +136,9 @@ namespace OneTox.ViewModel.FriendRequests
             }
             catch (FileNotFoundException)
             {
-                // The file was not there, so we cannot restore state, but no problem: keep going as if nothing had happened!
+                // The file was not there, so we cannot restore state, but it's not a problem:
+                // it means we haven't saved any requests previously. So just keep going as if nothing had happened!
             }
-        }
-
-        public async Task SaveDataAsync()
-        {
-            await _semaphore.WaitAsync();
-            try
-            {
-                var file = await ApplicationData.Current.RoamingFolder.CreateFileAsync(
-                    KFileName, CreationCollisionOption.ReplaceExisting);
-
-                var requestStrings = new List<string>();
-                foreach (var friendRequest in Requests)
-                {
-                    var oneRequestString = new string[2];
-                    oneRequestString[0] = friendRequest.PublicKey;
-                    oneRequestString[1] = friendRequest.Message;
-                    requestStrings.AddRange(oneRequestString);
-                }
-
-                await FileIO.WriteLinesAsync(file, requestStrings);
-            }
-            finally
-            {
-                _semaphore.Release();
-            }
-        }
-
-        private void FriendRequestReceivedHandler(object sender, ToxEventArgs.FriendRequestEventArgs e)
-        {
-            FriendRequestReceived?.Invoke(sender, e);
-        }
-
-        private async void FriendRequestsCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            await SaveDataAsync();
         }
     }
 }

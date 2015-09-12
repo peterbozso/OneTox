@@ -38,7 +38,7 @@
             <Grid x:Name="FriendRequests"
                   Grid.Row="0"
                   Margin="0,12"
-                  Visibility="{Binding FriendRequestsListVisibility}">
+                  Visibility="{Binding FriendRequests.FriendRequestsListVisibility}">
                 <friendRequests:FriendRequestsList DataContext="{Binding FriendRequests}" />
             </Grid>
 
