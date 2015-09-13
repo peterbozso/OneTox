@@ -43,8 +43,8 @@ namespace OneTox.View.Pages
 
         private void FriendListItemClick(object sender, ItemClickEventArgs e)
         {
-            var mainViewModel = DataContext as MainViewModel;
-            mainViewModel.FriendList.SelectedFriend = e.ClickedItem as FriendViewModel;
+            var friendListViewModel = DataContext as FriendListViewModel;
+            friendListViewModel.SelectedFriend = e.ClickedItem as FriendViewModel;
 
             Frame.Navigate(typeof (ChatPage));
         }

@@ -6,19 +6,20 @@ using OneTox.View.UserControls.Friends;
 using OneTox.View.UserControls.Messaging;
 using OneTox.View.UserControls.ProfileSettings;
 using OneTox.ViewModel;
+using OneTox.ViewModel.Friends;
 
 namespace OneTox.View.Pages
 {
     public sealed partial class MainPage : Page
     {
-        private readonly MainViewModel _mainViewModel;
+        private readonly FriendListViewModel _friendList;
         private UserControl _rightPanelContent;
 
         public MainPage()
         {
             InitializeComponent();
 
-            _mainViewModel = DataContext as MainViewModel;
+            _friendList = DataContext as FriendListViewModel;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -42,7 +43,7 @@ namespace OneTox.View.Pages
 
         private void AddFriendButtonClick(object sender, RoutedEventArgs e)
         {
-            _mainViewModel.FriendList.SelectedFriend = null;
+            _friendList.SelectedFriend = null;
             SetRightPanelContent(new AddFriendBlock());
         }
 
@@ -74,7 +75,7 @@ namespace OneTox.View.Pages
 
         private void SettingsButtonClick(object sender, RoutedEventArgs e)
         {
-            _mainViewModel.FriendList.SelectedFriend = null;
+            _friendList.SelectedFriend = null;
             SetRightPanelContent(new ProfileSettingsBlock());
         }
 

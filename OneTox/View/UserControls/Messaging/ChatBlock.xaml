@@ -8,7 +8,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:messaging="using:OneTox.View.UserControls.Messaging"
              DataContext="{Binding Source={StaticResource ViewModelLocator},
-                                   Path=Main.FriendList.SelectedFriend}"
+                                   Path=FriendList.SelectedFriend}"
              DataContextChanged="ChatBlockDataContextChanged"
              d:DesignHeight="800"
              d:DesignWidth="600"

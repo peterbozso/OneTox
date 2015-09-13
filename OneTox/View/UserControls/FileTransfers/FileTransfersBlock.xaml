@@ -10,7 +10,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              x:Name="FileTransferBlockUserControl"
              DataContext="{Binding Source={StaticResource ViewModelLocator},
-                                   Path=Main.FriendList.SelectedFriend.FileTransfers}"
+                                   Path=FriendList.SelectedFriend.FileTransfers}"
              DataContextChanged="FileTransferBlockDataContextChanged"
              Loaded="FileTransfersBlockLoaded"
              d:DesignHeight="68"

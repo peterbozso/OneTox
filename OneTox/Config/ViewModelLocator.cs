@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Views;
 using Microsoft.Practices.ServiceLocation;
 using OneTox.ViewModel;
+using OneTox.ViewModel.FriendRequests;
 using OneTox.ViewModel.Friends;
 using OneTox.ViewModel.ProfileSettings;
 
@@ -21,7 +22,9 @@ namespace OneTox.Config
             RegisterViewModels();
         }
 
-        public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
+        public FriendListViewModel FriendList => ServiceLocator.Current.GetInstance<FriendListViewModel>();
+
+        public FriendRequestsViewModel FriendRequests => ServiceLocator.Current.GetInstance<FriendRequestsViewModel>();
 
         public ProfileSettingsViewModel ProfileSettings
             => ServiceLocator.Current.GetInstance<ProfileSettingsViewModel>();
@@ -64,7 +67,8 @@ namespace OneTox.Config
 
         private static void RegisterViewModels()
         {
-            SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<FriendListViewModel>();
+            SimpleIoc.Default.Register<FriendRequestsViewModel>();
             SimpleIoc.Default.Register<ProfileSettingsViewModel>();
             SimpleIoc.Default.Register<ProfileManagementViewModel>();
             SimpleIoc.Default.Register<AddFriendViewModel>();

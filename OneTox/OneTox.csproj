@@ -143,7 +143,6 @@
     <Compile Include="ViewModel\Friends\FriendListViewModel.cs" />
     <Compile Include="ViewModel\Friends\FriendViewModel.cs" />
     <Compile Include="ViewModel\IToxUserViewModel.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\Messaging\ConversationViewModel.cs" />
     <Compile Include="ViewModel\Messaging\MessageGroupViewModel.cs" />
     <Compile Include="ViewModel\Messaging\ReceivedMessageViewModel.cs" />

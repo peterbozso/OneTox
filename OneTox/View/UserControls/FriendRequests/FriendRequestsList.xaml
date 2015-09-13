@@ -6,20 +6,32 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              d:DesignHeight="300"
              d:DesignWidth="400"
-             mc:Ignorable="d">
+             mc:Ignorable="d"
+             DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=FriendRequests}">
 
     <UserControl.Resources>
-        <Style x:Key="FriendRequestsListViewItemStyle" TargetType="ListViewItem">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
-            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
-            <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
-            <Setter Property="IsHoldingEnabled" Value="True" />
-            <Setter Property="MinHeight" Value="{ThemeResource ListViewItemMinHeight}" />
-            <Setter Property="MinWidth" Value="{ThemeResource ListViewItemMinWidth}" />
-            <Setter Property="Padding" Value="12,0,12,0" />
-            <Setter Property="TabNavigation" Value="Local" />
+        <Style x:Key="FriendRequestsListViewItemStyle"
+               TargetType="ListViewItem">
+            <Setter Property="Background"
+                    Value="Transparent" />
+            <Setter Property="FontFamily"
+                    Value="{ThemeResource ContentControlThemeFontFamily}" />
+            <Setter Property="FontSize"
+                    Value="{ThemeResource ControlContentThemeFontSize}" />
+            <Setter Property="Foreground"
+                    Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+            <Setter Property="HorizontalContentAlignment"
+                    Value="Left" />
+            <Setter Property="IsHoldingEnabled"
+                    Value="True" />
+            <Setter Property="MinHeight"
+                    Value="{ThemeResource ListViewItemMinHeight}" />
+            <Setter Property="MinWidth"
+                    Value="{ThemeResource ListViewItemMinWidth}" />
+            <Setter Property="Padding"
+                    Value="12,0,12,0" />
+            <Setter Property="TabNavigation"
+                    Value="Local" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListViewItem">
@@ -154,74 +166,79 @@
                                 <VisualStateGroup x:Name="MultiSelectStates">
                                     <VisualState x:Name="MultiSelectDisabled">
                                         <Storyboard>
-                                            <DoubleAnimationUsingKeyFrames
-                                                Storyboard.TargetName="MultiSelectCheckBoxTransform"
-                                                Storyboard.TargetProperty="X">
-                                                <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectCheckBoxTransform"
+                                                                           Storyboard.TargetProperty="X">
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0"
+                                                                      Value="0" />
                                                 <SplineDoubleKeyFrame KeySpline="0.1,0.9,0.2,1"
                                                                       KeyTime="0:0:0.333"
                                                                       Value="-32" />
                                             </DoubleAnimationUsingKeyFrames>
-                                            <DoubleAnimationUsingKeyFrames
-                                                Storyboard.TargetName="MultiSelectClipTransform"
-                                                Storyboard.TargetProperty="X">
-                                                <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectClipTransform"
+                                                                           Storyboard.TargetProperty="X">
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0"
+                                                                      Value="0" />
                                                 <SplineDoubleKeyFrame KeySpline="0.1,0.9,0.2,1"
                                                                       KeyTime="0:0:0.333"
                                                                       Value="32" />
                                             </DoubleAnimationUsingKeyFrames>
-                                            <DoubleAnimationUsingKeyFrames
-                                                Storyboard.TargetName="ContentPresenterTranslateTransform"
-                                                Storyboard.TargetProperty="X">
-                                                <EasingDoubleKeyFrame KeyTime="0:0:0" Value="32" />
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenterTranslateTransform"
+                                                                           Storyboard.TargetProperty="X">
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0"
+                                                                      Value="32" />
                                                 <SplineDoubleKeyFrame KeySpline="0.1,0.9,0.2,1"
                                                                       KeyTime="0:0:0.333"
                                                                       Value="0" />
                                             </DoubleAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectSquare"
                                                                            Storyboard.TargetProperty="Visibility">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
-                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.333" Value="Collapsed" />
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="Visible" />
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.333"
+                                                                        Value="Collapsed" />
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="MultiSelectEnabled">
                                         <Storyboard>
-                                            <DoubleAnimationUsingKeyFrames
-                                                Storyboard.TargetName="MultiSelectCheckBoxTransform"
-                                                Storyboard.TargetProperty="X">
-                                                <EasingDoubleKeyFrame KeyTime="0:0:0" Value="-32" />
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectCheckBoxTransform"
+                                                                           Storyboard.TargetProperty="X">
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0"
+                                                                      Value="-32" />
                                                 <SplineDoubleKeyFrame KeySpline="0.1,0.9,0.2,1"
                                                                       KeyTime="0:0:0.333"
                                                                       Value="0" />
                                             </DoubleAnimationUsingKeyFrames>
-                                            <DoubleAnimationUsingKeyFrames
-                                                Storyboard.TargetName="MultiSelectClipTransform"
-                                                Storyboard.TargetProperty="X">
-                                                <EasingDoubleKeyFrame KeyTime="0:0:0" Value="32" />
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectClipTransform"
+                                                                           Storyboard.TargetProperty="X">
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0"
+                                                                      Value="32" />
                                                 <SplineDoubleKeyFrame KeySpline="0.1,0.9,0.2,1"
                                                                       KeyTime="0:0:0.333"
                                                                       Value="0" />
                                             </DoubleAnimationUsingKeyFrames>
-                                            <DoubleAnimationUsingKeyFrames
-                                                Storyboard.TargetName="ContentPresenterTranslateTransform"
-                                                Storyboard.TargetProperty="X">
-                                                <EasingDoubleKeyFrame KeyTime="0:0:0" Value="-32" />
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenterTranslateTransform"
+                                                                           Storyboard.TargetProperty="X">
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0"
+                                                                      Value="-32" />
                                                 <SplineDoubleKeyFrame KeySpline="0.1,0.9,0.2,1"
                                                                       KeyTime="0:0:0.333"
                                                                       Value="0" />
                                             </DoubleAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectSquare"
                                                                            Storyboard.TargetProperty="Visibility">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="Visible" />
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectCheck"
                                                                            Storyboard.TargetProperty="Visibility">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="Visible" />
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenterGrid"
                                                                            Storyboard.TargetProperty="Margin">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="32,0,0,0" />
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="32,0,0,0" />
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -232,11 +249,13 @@
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlaceholderTextBlock"
                                                                            Storyboard.TargetProperty="Visibility">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="Visible" />
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlaceholderRect"
                                                                            Storyboard.TargetProperty="Visibility">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="Visible" />
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -272,7 +291,8 @@
                                         </Storyboard>
                                     </VisualState>
                                     <VisualStateGroup.Transitions>
-                                        <VisualTransition GeneratedDuration="0:0:0.2" To="NoReorderHint" />
+                                        <VisualTransition GeneratedDuration="0:0:0.2"
+                                                          To="NoReorderHint" />
                                     </VisualStateGroup.Transitions>
                                 </VisualStateGroup>
                                 <VisualStateGroup x:Name="DragStates">
@@ -325,7 +345,8 @@
                                         </Storyboard>
                                     </VisualState>
                                     <VisualStateGroup.Transitions>
-                                        <VisualTransition GeneratedDuration="0:0:0.2" To="NotDragging" />
+                                        <VisualTransition GeneratedDuration="0:0:0.2"
+                                                          To="NotDragging" />
                                     </VisualStateGroup.Transitions>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
@@ -412,17 +433,20 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Setter Property="UseSystemFocusVisuals" Value="True" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="UseSystemFocusVisuals"
+                    Value="True" />
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center" />
         </Style>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid Visibility="{Binding FriendRequestsListVisibility}"
+          Margin="0,12">
         <StackPanel>
             <TextBlock x:Name="FriendRequestsHeaderText"
                        Margin="16,0,0,8"
                        FontSize="20">
-                Received friend requests
+                Friend requests
             </TextBlock>
 
             <Rectangle x:Name="FriendRequestsHeaderLine"

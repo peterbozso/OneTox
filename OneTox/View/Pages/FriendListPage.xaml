@@ -7,7 +7,7 @@
       xmlns:local="using:OneTox.View.Pages"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       DataContext="{Binding Source={StaticResource ViewModelLocator},
-                            Path=Main}"
+                            Path=FriendList}"
       Loaded="FriendListPageLoaded"
       Unloaded="FriendListPageUnloaded"
       mc:Ignorable="d">
@@ -27,19 +27,15 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid x:Name="FriendRequests"
-              Grid.Row="0"
-              Margin="0,12"
-              Visibility="{Binding FriendRequests.FriendRequestsListVisibility}">
-            <friendRequests:FriendRequestsList DataContext="{Binding FriendRequests}" />
-        </Grid>
+        <friendRequests:FriendRequestsList x:Name="FriendRequests"
+                                           Grid.Row="0" />
 
         <ListView x:Name="FriendList"
                   Grid.Row="1"
                   IsItemClickEnabled="True"
                   ItemClick="FriendListItemClick"
                   ItemContainerStyle="{StaticResource ListViewItemWithoutPressedVisualStateStyle}"
-                  ItemsSource="{Binding FriendList.Friends}"
+                  ItemsSource="{Binding Friends}"
                   SelectionMode="Single">
             <ListView.ItemTemplate>
                 <DataTemplate>

@@ -8,6 +8,7 @@ using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using GalaSoft.MvvmLight.Threading;
+using OneTox.Config;
 using OneTox.Helpers;
 using OneTox.Model.Tox;
 using SharpTox.Core;
@@ -28,9 +29,9 @@ namespace OneTox.ViewModel.FriendRequests
 
         private Visibility _friendRequestsListVisibility;
 
-        public FriendRequestsViewModel(IToxModel toxModel)
+        public FriendRequestsViewModel(IDataService dataService)
         {
-            _toxModel = toxModel;
+            _toxModel = dataService.ToxModel;
 
             Requests = new ObservableCollection<OneFriendRequestViewModel>();
             Requests.CollectionChanged += FriendRequestsCollectionChangedHandler;
