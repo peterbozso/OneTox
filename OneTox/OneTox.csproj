@@ -153,75 +153,74 @@
     <Compile Include="ViewModel\ProfileSettings\ProfileViewModel.cs" />
     <Compile Include="ViewModel\ToxErrorViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
-    <Compile Include="View\Converters\BoolToOpacityConverter.cs" />
-    <Compile Include="View\Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="View\Converters\CallStateToStringConverter.cs" />
-    <Compile Include="View\Converters\DateTimeConverter.cs" />
-    <Compile Include="View\Converters\DeliveryStateToStringConverter.cs" />
-    <Compile Include="View\Converters\FileTransferCountToPlaceholderTextConverter.cs" />
-    <Compile Include="View\Converters\FileTransferCountToVisibilityConverter.cs" />
-    <Compile Include="View\Converters\FriendNameToTypingStatusConverter.cs" />
-    <Compile Include="View\Converters\IsMutedToBackgroundColorConverter.cs" />
-    <Compile Include="View\Converters\MessageToTextColorConverter.cs" />
-    <Compile Include="View\Converters\SelectedItemToVisibilityConverter.cs" />
-    <Compile Include="View\Converters\SenderTypeToMessageBackgroundColorConverter.cs" />
-    <Compile Include="View\Converters\SenderTypeToHorizontalAlignmentConverter.cs" />
-    <Compile Include="View\Converters\SenderTypeToMessageMarginConverter.cs" />
-    <Compile Include="View\Converters\SenderTypeToTextAlignmentConverter.cs" />
-    <Compile Include="View\Converters\StatusToColorConverter.cs" />
-    <Compile Include="View\Converters\TransfersBlockStateToStringConverter.cs" />
-    <Compile Include="View\Converters\TransferStateToStringConverter.cs" />
-    <Compile Include="View\Converters\UserStatusToStringConverter.cs" />
-    <Compile Include="View\Pages\AddFriendPage.xaml.cs">
+    <Compile Include="View\ProfileSettings\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="View\Calls\Converters\CallStateToStringConverter.cs" />
+    <Compile Include="View\Messaging\Converters\DateTimeConverter.cs" />
+    <Compile Include="View\Messaging\Converters\DeliveryStateToStringConverter.cs" />
+    <Compile Include="View\FileTransfers\Converters\FileTransferCountToPlaceholderTextConverter.cs" />
+    <Compile Include="View\FileTransfers\Converters\FileTransferCountToVisibilityConverter.cs" />
+    <Compile Include="View\Messaging\Converters\FriendNameToTypingStatusConverter.cs" />
+    <Compile Include="View\Calls\Converters\IsMutedToBackgroundColorConverter.cs" />
+    <Compile Include="View\Messaging\Converters\MessageToTextColorConverter.cs" />
+    <Compile Include="View\ProfileSettings\Converters\SelectedItemToVisibilityConverter.cs" />
+    <Compile Include="View\Messaging\Converters\SenderTypeToMessageBackgroundColorConverter.cs" />
+    <Compile Include="View\Messaging\Converters\SenderTypeToHorizontalAlignmentConverter.cs" />
+    <Compile Include="View\Messaging\Converters\SenderTypeToMessageMarginConverter.cs" />
+    <Compile Include="View\Messaging\Converters\SenderTypeToTextAlignmentConverter.cs" />
+    <Compile Include="View\StatusToColorConverter.cs" />
+    <Compile Include="View\FileTransfers\Converters\TransfersBlockStateToStringConverter.cs" />
+    <Compile Include="View\FileTransfers\Converters\TransferStateToStringConverter.cs" />
+    <Compile Include="View\ProfileSettings\Converters\UserStatusToStringConverter.cs" />
+    <Compile Include="View\Friends\Pages\AddFriendPage.xaml.cs">
       <DependentUpon>AddFriendPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Pages\ChatPage.xaml.cs">
+    <Compile Include="View\Messaging\Pages\ChatPage.xaml.cs">
       <DependentUpon>ChatPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Pages\FriendListPage.xaml.cs">
+    <Compile Include="View\Friends\Pages\FriendListPage.xaml.cs">
       <DependentUpon>FriendListPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Pages\MainPage.xaml.cs">
+    <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Pages\NarrowPageBase.cs" />
-    <Compile Include="View\Pages\SettingsPage.xaml.cs">
+    <Compile Include="View\NarrowPageBase.cs" />
+    <Compile Include="View\ProfileSettings\Pages\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\CallBlock.xaml.cs">
+    <Compile Include="View\Calls\Controls\CallBlock.xaml.cs">
       <DependentUpon>CallBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\Friends\AddFriendBlock.xaml.cs">
+    <Compile Include="View\Friends\Controls\AddFriendBlock.xaml.cs">
       <DependentUpon>AddFriendBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\Messaging\ChatBlock.xaml.cs">
+    <Compile Include="View\Messaging\Controls\ChatBlock.xaml.cs">
       <DependentUpon>ChatBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\FileTransfers\FileTransferRibbon.xaml.cs">
+    <Compile Include="View\FileTransfers\Controls\FileTransferRibbon.xaml.cs">
       <DependentUpon>FileTransferRibbon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\FileTransfers\FileTransfersBlock.xaml.cs">
+    <Compile Include="View\FileTransfers\Controls\FileTransfersBlock.xaml.cs">
       <DependentUpon>FileTransfersBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\Friends\FriendListItem.xaml.cs">
+    <Compile Include="View\Friends\Controls\FriendListItem.xaml.cs">
       <DependentUpon>FriendListItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\FriendRequests\FriendRequestsList.xaml.cs">
+    <Compile Include="View\FriendRequests\FriendRequestsList.xaml.cs">
       <DependentUpon>FriendRequestsList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\FriendRequests\FriendRequestsListItem.xaml.cs">
+    <Compile Include="View\FriendRequests\FriendRequestsListItem.xaml.cs">
       <DependentUpon>FriendRequestsListItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\Messaging\MessageBlock.xaml.cs">
+    <Compile Include="View\Messaging\Controls\MessageBlock.xaml.cs">
       <DependentUpon>MessageBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\Messaging\MessageRibbon.xaml.cs">
+    <Compile Include="View\Messaging\Controls\MessageRibbon.xaml.cs">
       <DependentUpon>MessageRibbon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\ProfileSettings\ProfileManagementBlock.xaml.cs">
+    <Compile Include="View\ProfileSettings\Controls\ProfileManagementBlock.xaml.cs">
       <DependentUpon>ProfileManagementBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UserControls\ProfileSettings\ProfileSettingsBlock.xaml.cs">
+    <Compile Include="View\ProfileSettings\Controls\ProfileSettingsBlock.xaml.cs">
       <DependentUpon>ProfileSettingsBlock.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -260,80 +259,80 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="View\Pages\AddFriendPage.xaml">
+    <Page Include="View\Friends\Pages\AddFriendPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Pages\ChatPage.xaml">
+    <Page Include="View\Messaging\Pages\ChatPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Pages\FriendListPage.xaml">
+    <Page Include="View\Friends\Pages\FriendListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Pages\MainPage.xaml">
+    <Page Include="View\MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Pages\SettingsPage.xaml">
+    <Page Include="View\ProfileSettings\Pages\SettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ResourceDictionaries\ChatBlockDictionary.xaml">
+    <Page Include="View\Messaging\Controls\ChatBlockDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ResourceDictionaries\MainPageDictionary.xaml">
+    <Page Include="View\MainPageDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
-    <Page Include="View\UserControls\CallBlock.xaml">
+    <Page Include="View\Calls\Controls\CallBlock.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\UserControls\Friends\AddFriendBlock.xaml">
+    <Page Include="View\Friends\Controls\AddFriendBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\UserControls\Messaging\ChatBlock.xaml">
+    <Page Include="View\Messaging\Controls\ChatBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\UserControls\FileTransfers\FileTransferRibbon.xaml">
+    <Page Include="View\FileTransfers\Controls\FileTransferRibbon.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\UserControls\FileTransfers\FileTransfersBlock.xaml">
+    <Page Include="View\FileTransfers\Controls\FileTransfersBlock.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\UserControls\Friends\FriendListItem.xaml">
+    <Page Include="View\Friends\Controls\FriendListItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\UserControls\FriendRequests\FriendRequestsList.xaml">
+    <Page Include="View\FriendRequests\FriendRequestsList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\UserControls\FriendRequests\FriendRequestsListItem.xaml">
+    <Page Include="View\FriendRequests\FriendRequestsListItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\UserControls\Messaging\MessageBlock.xaml">
+    <Page Include="View\Messaging\Controls\MessageBlock.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\UserControls\Messaging\MessageRibbon.xaml">
+    <Page Include="View\Messaging\Controls\MessageRibbon.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\UserControls\ProfileSettings\ProfileManagementBlock.xaml">
+    <Page Include="View\ProfileSettings\Controls\ProfileManagementBlock.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\UserControls\ProfileSettings\ProfileSettingsBlock.xaml">
+    <Page Include="View\ProfileSettings\Controls\ProfileSettingsBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

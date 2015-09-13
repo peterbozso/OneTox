@@ -1,0 +1,245 @@
+﻿<UserControl x:Class="OneTox.View.FileTransfers.Controls.FileTransfersBlock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="using:OneTox.View.FileTransfers.Converters"
+             xmlns:controls="using:OneTox.View.FileTransfers.Controls"
+             x:Name="FileTransferBlockUserControl"
+             DataContext="{Binding Source={StaticResource ViewModelLocator},
+                                   Path=FriendList.SelectedFriend.FileTransfers}"
+             DataContextChanged="FileTransferBlockDataContextChanged"
+             Loaded="FileTransfersBlockLoaded"
+             d:DesignHeight="68"
+             d:DesignWidth="800"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:FileTransferCountToPlaceholderTextConverter x:Key="FileTransferCountToPlaceholderTextConverter" />
+        <converters:TransfersBlockStateToStringConverter x:Key="TransfersBlockStateToStringConverter" />
+    </UserControl.Resources>
+
+    <Grid x:Name="RootGrid" Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        <interactivity:Interaction.Behaviors>
+            <core:DataTriggerBehavior
+                Binding="{Binding VisualStates.BlockState, Converter={StaticResource TransfersBlockStateToStringConverter}}"
+                Value="Open">
+                <core:GoToStateAction StateName="Open" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior
+                Binding="{Binding VisualStates.BlockState, Converter={StaticResource TransfersBlockStateToStringConverter}}"
+                Value="Collapsed">
+                <core:GoToStateAction StateName="Collapsed" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior
+                Binding="{Binding VisualStates.BlockState, Converter={StaticResource TransfersBlockStateToStringConverter}}"
+                Value="Invisible">
+                <core:GoToStateAction StateName="Invisible" />
+            </core:DataTriggerBehavior>
+        </interactivity:Interaction.Behaviors>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualStateGroup.Transitions>
+                    <VisualTransition From="Open"
+                                      GeneratedDuration="0"
+                                      To="Collapsed">
+                        <Storyboard>
+                            <!--  Show placeholder text  -->
+                            <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True"
+                                                           Storyboard.TargetName="CollapsedContentGrid"
+                                                           Storyboard.TargetProperty="(FrameworkElement.Height)">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="30" />
+                            </DoubleAnimationUsingKeyFrames>
+
+                            <FadeInThemeAnimation Storyboard.TargetName="CollapsedContentGrid" />
+                            <!--    -->
+
+                            <!--  Hide scroll bar  -->
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TransferRibbonsScrollViewer"
+                                                           Storyboard.TargetProperty="(ScrollViewer.VerticalScrollBarVisibility)">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="Disabled" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <!--    -->
+
+                            <!--  Hide transfers  -->
+                            <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True"
+                                                           Storyboard.TargetName="OpenContentGrid"
+                                                           Storyboard.TargetProperty="(FrameworkElement.Height)">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+
+                            <FadeOutThemeAnimation Storyboard.TargetName="OpenContentGrid" />
+                            <!--    -->
+                        </Storyboard>
+                    </VisualTransition>
+                    <VisualTransition From="Collapsed"
+                                      GeneratedDuration="0"
+                                      To="Open">
+                        <Storyboard x:Name="CollapsedToOpenAnimation">
+                            <!--  Hide placeholder text  -->
+                            <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True"
+                                                           Storyboard.TargetName="CollapsedContentGrid"
+                                                           Storyboard.TargetProperty="(FrameworkElement.Height)">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+
+                            <FadeOutThemeAnimation Storyboard.TargetName="CollapsedContentGrid" />
+                            <!--    -->
+
+                            <!--  Show scroll bar  -->
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TransferRibbonsScrollViewer"
+                                                           Storyboard.TargetProperty="(ScrollViewer.VerticalScrollBarVisibility)">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.5" Value="Auto" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <!--    -->
+
+                            <!--  Show transfers  -->
+                            <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True"
+                                                           Storyboard.TargetName="OpenContentGrid"
+                                                           Storyboard.TargetProperty="(FrameworkElement.Height)">
+                                <EasingDoubleKeyFrame x:Name="ShowOpenContentGridAnimationEnd"
+                                                      KeyTime="0:0:0.5"
+                                                      Value="72" />
+                            </DoubleAnimationUsingKeyFrames>
+
+                            <FadeInThemeAnimation Storyboard.TargetName="OpenContentGrid" />
+                            <!--    -->
+                        </Storyboard>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
+
+                <VisualState x:Name="Open">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CollapsedContentGrid"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CollapsedContentGrid"
+                                                       Storyboard.TargetProperty="(FrameworkElement.Height)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0" />
+                        </ObjectAnimationUsingKeyFrames>
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OpenContentGrid"
+                                                       Storyboard.TargetProperty="(FrameworkElement.Height)">
+                            <DiscreteObjectKeyFrame x:Name="OpenContentGridHeight"
+                                                    KeyTime="0"
+                                                    Value="72" />
+                        </ObjectAnimationUsingKeyFrames>
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TransferRibbonsScrollViewer"
+                                                       Storyboard.TargetProperty="(ScrollViewer.VerticalScrollBarVisibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Auto" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="Collapsed">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OpenContentGrid"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CollapsedContentGrid"
+                                                       Storyboard.TargetProperty="(FrameworkElement.Height)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="30" />
+                        </ObjectAnimationUsingKeyFrames>
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OpenContentGrid"
+                                                       Storyboard.TargetProperty="(FrameworkElement.Height)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0" />
+                        </ObjectAnimationUsingKeyFrames>
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TransferRibbonsScrollViewer"
+                                                       Storyboard.TargetProperty="(ScrollViewer.VerticalScrollBarVisibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Disabled" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="Invisible">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Rectangle Grid.Row="0"
+                   Height="1"
+                   Stroke="{ThemeResource ApplicationForegroundThemeBrush}"
+                   StrokeThickness="0.5" />
+
+        <Grid x:Name="CollapsedContentGrid"
+              Grid.Row="1"
+              Height="32">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="PlaceholderTextBlock"
+                       Grid.Column="0"
+                       Margin="12,0,0,4"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       Text="{Binding Transfers.Count,
+                                      Converter={StaticResource FileTransferCountToPlaceholderTextConverter}}" />
+            <TextBlock x:Name="ShowTransfersIcon"
+                       Grid.Column="1"
+                       Margin="12,0,12,6"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Bottom"
+                       FontFamily="Segoe MDL2 Assets"
+                       FontSize="16"
+                       Tapped="ShowTransfersIconTapped"
+                       Text="&#xE015;" />
+        </Grid>
+
+        <Grid x:Name="OpenContentGrid"
+              Grid.Row="2"
+              Height="{Binding VisualStates.OpenContentGridHeight}">
+            <ScrollViewer x:Name="TransferRibbonsScrollViewer" VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="TransferRibbons"
+                              Margin="0,0,0,12"
+                              ItemsSource="{Binding Transfers}">
+                    <ItemsControl.ItemContainerTransitions>
+                        <TransitionCollection>
+                            <AddDeleteThemeTransition />
+                        </TransitionCollection>
+                    </ItemsControl.ItemContainerTransitions>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <controls:FileTransferRibbon />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <TextBlock x:Name="HideTransfersIcon"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Bottom"
+                       FontFamily="Segoe MDL2 Assets"
+                       FontSize="16"
+                       Tapped="HideTransfersIconTapped"
+                       Text="&#xE014;" />
+        </Grid>
+
+        <Rectangle Grid.Row="3"
+                   Height="1"
+                   Stroke="{ThemeResource ApplicationForegroundThemeBrush}"
+                   StrokeThickness="0.5" />
+    </Grid>
+</UserControl>

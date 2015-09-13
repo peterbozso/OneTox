@@ -3,7 +3,6 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Views;
 using Microsoft.Practices.ServiceLocation;
-using OneTox.ViewModel;
 using OneTox.ViewModel.FriendRequests;
 using OneTox.ViewModel.Friends;
 using OneTox.ViewModel.ProfileSettings;

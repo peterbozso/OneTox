@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="OneTox.View.FriendRequests.FriendRequestsListItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="28"
+             d:DesignWidth="360"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Flyout x:Key="FriendRequestInfoFlyout">
+            <Grid Width="300">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           FontSize="15"
+                           FontWeight="Bold"
+                           Text="From:" />
+                <TextBlock Grid.Row="1"
+                           FontSize="15"
+                           Text="{Binding PublicKey}"
+                           TextWrapping="Wrap" />
+
+                <TextBlock Grid.Row="2"
+                           Margin="0,5,0,0"
+                           FontSize="15"
+                           FontWeight="Bold"
+                           Text="Message:" />
+                <TextBlock Grid.Row="3"
+                           FontSize="15"
+                           Text="{Binding Message}"
+                           TextWrapping="Wrap" />
+            </Grid>
+        </Flyout>
+    </UserControl.Resources>
+
+    <Grid x:Name="ContentGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock x:Name="PublicKey"
+                   Grid.Column="0"
+                   Height="28"
+                   VerticalAlignment="Center"
+                   FlyoutBase.AttachedFlyout="{StaticResource FriendRequestInfoFlyout}"
+                   FontSize="16"
+                   Foreground="{ThemeResource SystemControlForegroundAccentBrush}"
+                   Tapped="PublicKeyTapped"
+                   Text="{Binding PublicKey}"
+                   TextTrimming="CharacterEllipsis"
+                   TextWrapping="Wrap" />
+
+        <StackPanel Grid.Column="1"
+                    Margin="12,0,0,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+            <Button x:Name="AcceptButton"
+                    Width="36"
+                    Height="36"
+                    Command="{Binding AcceptCommand}"
+                    Content="&#xE10B;"
+                    FontFamily="Segoe MDL2 Assets"
+                    Padding="0"
+                    Template="{StaticResource RoundButtonTemplate}" />
+            <Button x:Name="DeclineButton"
+                    Width="36"
+                    Height="36"
+                    Command="{Binding DeclineCommand}"
+                    Content="&#xE10A;"
+                    FontFamily="Segoe MDL2 Assets"
+                    Padding="0"
+                    Template="{StaticResource RoundButtonTemplate}" />
+        </StackPanel>
+    </Grid>
+</UserControl>
