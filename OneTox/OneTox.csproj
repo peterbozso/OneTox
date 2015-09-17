@@ -156,6 +156,9 @@
     <Compile Include="View\Friends\Controls\FriendListComponent.xaml.cs">
       <DependentUpon>FriendListComponent.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\NavigationBar.xaml.cs">
+      <DependentUpon>NavigationBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ProfileSettings\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="View\Calls\Converters\CallStateToStringConverter.cs" />
     <Compile Include="View\Messaging\Converters\DateTimeConverter.cs" />
@@ -282,6 +285,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\NavigationBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ProfileSettings\Pages\SettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -289,11 +296,6 @@
     <Page Include="View\Messaging\Controls\ChatBlockDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\MainPageDictionary.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="View\Calls\Controls\CallBlock.xaml">
       <Generator>MSBuild:Compile</Generator>

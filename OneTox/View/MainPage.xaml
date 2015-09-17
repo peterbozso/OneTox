@@ -4,24 +4,15 @@
       xmlns:controls="using:OneTox.View.Friends.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:friendRequests="using:OneTox.View.FriendRequests"
-      xmlns:friends="using:OneTox.View.Friends"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:view="using:OneTox.View"
       DataContext="{Binding Source={StaticResource ViewModelLocator},
                             Path=FriendList}"
       Loaded="MainPageLoaded"
       Unloaded="MainPageUnloaded"
       mc:Ignorable="d">
 
-    <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/View/MainPageDictionary.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Page.Resources>
-
-    <Grid x:Name="RootGrid"
-          Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
@@ -37,8 +28,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <friendRequests:FriendRequestsList x:Name="FriendRequests"
-                                               Grid.Row="0" />
+            <friendRequests:FriendRequestsList Grid.Row="0" />
 
             <controls:FriendListComponent Grid.Row="1"
                                           ItemClick="FriendListItemClick"
@@ -46,21 +36,9 @@
                                                                  Mode=TwoWay}"
                                           SelectionMode="Single" />
 
-            <StackPanel Grid.Row="2">
-                <Rectangle Height="1"
-                           Stroke="{ThemeResource SystemControlForegroundBaseLowBrush}"
-                           StrokeThickness="0.5" />
-                <CommandBar x:Name="ActionBar"
-                            Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
-                            Style="{StaticResource CommandBarWithoutMoreButtonStyle}">
-                    <AppBarButton x:Name="AddFriendButton"
-                                  Click="AddFriendButtonClick"
-                                  Icon="AddFriend" />
-                    <AppBarButton x:Name="SettingsButton"
-                                  Click="SettingsButtonClick"
-                                  Icon="Setting" />
-                </CommandBar>
-            </StackPanel>
+            <view:NavigationBar Grid.Row="2"
+                                AddFriendClick="AddFriendButtonClick"
+                                SettingsClick="SettingsButtonClick" />
         </Grid>
 
         <Grid x:Name="RightPanel"
