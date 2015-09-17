@@ -1,10 +1,10 @@
 ﻿using System;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml.Media.Imaging;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
-using OneTox.Helpers;
 using OneTox.Model.Avatars;
 using OneTox.Model.Tox;
 using OneTox.ViewModel.Calls;
@@ -14,7 +14,7 @@ using SharpTox.Core;
 
 namespace OneTox.ViewModel.Friends
 {
-    public class FriendViewModel : ObservableObject, IToxUserViewModel
+    public class FriendViewModel : ViewModelBase, IToxUserViewModel
     {
         private readonly IAvatarManager _avatarManager;
         private readonly IToxModel _toxModel;

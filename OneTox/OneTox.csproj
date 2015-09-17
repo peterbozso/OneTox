@@ -112,7 +112,6 @@
     <Compile Include="Config\ViewModelLocator.cs" />
     <Compile Include="Helpers\CloseFlyoutAction.cs" />
     <Compile Include="Helpers\DnsTools.cs" />
-    <Compile Include="Helpers\ObservableObject.cs" />
     <Compile Include="Model\Avatars\AvatarManager.cs" />
     <Compile Include="Model\Avatars\AvatarTransferManager.cs" />
     <Compile Include="Model\Avatars\IAvatarManager.cs" />

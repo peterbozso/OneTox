@@ -1,16 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
 using Windows.UI.Xaml.Media.Imaging;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
-using OneTox.Helpers;
 using OneTox.Model.Avatars;
 using OneTox.Model.Tox;
 using SharpTox.Core;
 
 namespace OneTox.ViewModel
 {
-    public class UserViewModel : ObservableObject, IToxUserViewModel
+    public class UserViewModel : ViewModelBase, IToxUserViewModel
     {
         private readonly IAvatarManager _avatarManager;
         private readonly IToxModel _toxModel;

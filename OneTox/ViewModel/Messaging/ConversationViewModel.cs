@@ -4,16 +4,16 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
-using OneTox.Helpers;
 using OneTox.Model.Tox;
 using OneTox.ViewModel.Friends;
 using SharpTox.Core;
 
 namespace OneTox.ViewModel.Messaging
 {
-    public class ConversationViewModel : ObservableObject
+    public class ConversationViewModel : ViewModelBase
     {
         private readonly IDataService _dataService;
         private readonly FriendViewModel _friendViewModel;

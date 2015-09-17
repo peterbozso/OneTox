@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
-using OneTox.Helpers;
 using OneTox.Model.Tox;
 using SharpTox.Core;
 
 namespace OneTox.ViewModel.FriendRequests
 {
-    public class FriendRequestsViewModel : ObservableObject
+    public class FriendRequestsViewModel : ViewModelBase
     {
         public enum FriendRequestAnswer
         {

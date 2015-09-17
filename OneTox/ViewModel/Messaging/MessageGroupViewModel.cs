@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using OneTox.Helpers;
+using GalaSoft.MvvmLight;
 
 namespace OneTox.ViewModel.Messaging
 {
-    public class MessageGroupViewModel : ObservableObject
+    public class MessageGroupViewModel : ViewModelBase
     {
         private DateTime _timestamp;
 

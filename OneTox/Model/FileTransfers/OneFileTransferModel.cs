@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Storage;
 using Windows.UI.Xaml;
+using GalaSoft.MvvmLight;
 using OneTox.Config;
-using OneTox.Helpers;
 using OneTox.Model.Tox;
 using SharpTox.Core;
 

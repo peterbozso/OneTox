@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
@@ -8,7 +9,7 @@ using SharpTox.Core;
 
 namespace OneTox.ViewModel.Friends
 {
-    public class AddFriendViewModel : ObservableObject
+    public class AddFriendViewModel : ViewModelBase
     {
         private readonly IToxModel _toxModel;
         private RelayCommand _addFriendCommand;

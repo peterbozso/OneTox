@@ -1,14 +1,14 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
-using OneTox.Helpers;
 using OneTox.Model;
 using OneTox.Model.Tox;
 
 namespace OneTox.ViewModel.Friends
 {
-    public class FriendListViewModel : ObservableObject
+    public class FriendListViewModel : ViewModelBase
     {
         private readonly IDataService _dataService;
         private readonly IToxModel _toxModel;

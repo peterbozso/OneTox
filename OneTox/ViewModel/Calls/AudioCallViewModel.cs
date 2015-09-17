@@ -7,15 +7,15 @@ using Windows.Media.Audio;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Media.Render;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
-using OneTox.Helpers;
 using OneTox.Model;
 using SharpTox.Av;
 
 namespace OneTox.ViewModel.Calls
 {
-    public class AudioCallViewModel : ObservableObject
+    public class AudioCallViewModel : ViewModelBase
     {
         public enum CallState
         {

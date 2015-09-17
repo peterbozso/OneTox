@@ -2,10 +2,10 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Windows.Storage.Pickers;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
-using OneTox.Helpers;
 using OneTox.Model.FileTransfers;
 
 namespace OneTox.ViewModel.FileTransfers
@@ -33,7 +33,7 @@ namespace OneTox.ViewModel.FileTransfers
         ///     This class's purpose is to supply (trough data binding) the current visual state of FileTransfersBlock and height
         ///     of OpenContentGrid.
         /// </summary>
-        public class FileTransfersVisualStates : ObservableObject
+        public class FileTransfersVisualStates : ViewModelBase
         {
             /// <summary>
             ///     Open: we have one or more file transfers for the current friend an we show "all" (4 max at once) of them.

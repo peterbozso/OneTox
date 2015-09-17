@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Popups;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using OneTox.Config;
-using OneTox.Helpers;
 using OneTox.Model.Avatars;
 using OneTox.Model.Tox;
 using SharpTox.Core;
@@ -15,7 +15,7 @@ using SharpTox.Encryption;
 
 namespace OneTox.ViewModel.ProfileSettings
 {
-    public class ProfileManagementViewModel : ObservableObject
+    public class ProfileManagementViewModel : ViewModelBase
     {
         private readonly IAvatarManager _avatarManager;
         private readonly IDataService _dataService;

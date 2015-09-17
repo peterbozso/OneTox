@@ -1,5 +1,5 @@
 ﻿using System;
-using OneTox.Helpers;
+using GalaSoft.MvvmLight;
 using SharpTox.Core;
 
 namespace OneTox.ViewModel.Messaging
@@ -11,7 +11,7 @@ namespace OneTox.ViewModel.Messaging
         Failed
     }
 
-    public class ToxMessageViewModelBase : ObservableObject
+    public class ToxMessageViewModelBase : ViewModelBase
     {
         private MessageDeliveryState _state;
         private string _text;

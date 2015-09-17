@@ -4,7 +4,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using OneTox.Helpers;
+using GalaSoft.MvvmLight;
 using OneTox.ViewModel;
 using SharpTox.Core;
 using SharpTox.Encryption;

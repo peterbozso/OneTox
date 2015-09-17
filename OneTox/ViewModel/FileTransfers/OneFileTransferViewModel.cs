@@ -3,14 +3,14 @@ using System.ComponentModel;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
-using OneTox.Helpers;
 using OneTox.Model.FileTransfers;
 
 namespace OneTox.ViewModel.FileTransfers
 {
-    public class OneFileTransferViewModel : ObservableObject
+    public class OneFileTransferViewModel : ViewModelBase
     {
         public OneFileTransferViewModel(FileTransfersViewModel fileTransfersViewModel,
             OneFileTransferModel oneFileTransferModel)
