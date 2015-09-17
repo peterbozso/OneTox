@@ -411,13 +411,7 @@ namespace OneTox.ViewModel.Calls
         public bool IsMuted
         {
             get { return _isMuted; }
-            set
-            {
-                if (value == _isMuted)
-                    return;
-                _isMuted = value;
-                RaisePropertyChanged();
-            }
+            set { Set(ref _isMuted, value); }
         }
 
         public CallState State

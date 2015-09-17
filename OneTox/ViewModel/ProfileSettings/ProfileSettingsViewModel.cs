@@ -115,13 +115,7 @@ namespace OneTox.ViewModel.ProfileSettings
         public WriteableBitmap QrCodeId
         {
             get { return _qrCodeId; }
-            set
-            {
-                if (value == _qrCodeId)
-                    return;
-                _qrCodeId = value;
-                RaisePropertyChanged();
-            }
+            set { Set(ref _qrCodeId, value); }
         }
 
         public RelayCommand RandomizeNoSpamCommand

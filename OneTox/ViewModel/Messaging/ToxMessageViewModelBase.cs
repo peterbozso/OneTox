@@ -21,13 +21,7 @@ namespace OneTox.ViewModel.Messaging
         public MessageDeliveryState State
         {
             get { return _state; }
-            protected set
-            {
-                if (value == _state)
-                    return;
-                _state = value;
-                RaisePropertyChanged();
-            }
+            protected set { Set(ref _state, value); }
         }
 
         public string Text

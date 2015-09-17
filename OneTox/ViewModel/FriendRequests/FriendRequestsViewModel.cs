@@ -45,13 +45,7 @@ namespace OneTox.ViewModel.FriendRequests
         public Visibility FriendRequestsListVisibility
         {
             get { return _friendRequestsListVisibility; }
-            set
-            {
-                if (value == _friendRequestsListVisibility)
-                    return;
-                _friendRequestsListVisibility = value;
-                RaisePropertyChanged();
-            }
+            set { Set(ref _friendRequestsListVisibility, value); }
         }
 
         public ObservableCollection<OneFriendRequestViewModel> Requests { get; }

@@ -101,49 +101,25 @@ namespace OneTox.ViewModel.Friends
         public bool IsConnected
         {
             get { return _isConnected; }
-            private set
-            {
-                if (value == _isConnected)
-                    return;
-                _isConnected = value;
-                RaisePropertyChanged();
-            }
+            private set { Set(ref _isConnected, value); }
         }
 
         public string Name
         {
             get { return _name; }
-            private set
-            {
-                if (value == _name)
-                    return;
-                _name = value;
-                RaisePropertyChanged();
-            }
+            private set { Set(ref _name, value); }
         }
 
         public ExtendedToxUserStatus Status
         {
             get { return _status; }
-            private set
-            {
-                if (value == _status)
-                    return;
-                _status = value;
-                RaisePropertyChanged();
-            }
+            private set { Set(ref _status, value); }
         }
 
         public string StatusMessage
         {
             get { return _statusMessage; }
-            private set
-            {
-                if (value == _statusMessage)
-                    return;
-                _statusMessage = value;
-                RaisePropertyChanged();
-            }
+            private set { Set(ref _statusMessage, value); }
         }
 
         private void SetFriendStatus(ToxUserStatus status)

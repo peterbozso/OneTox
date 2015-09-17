@@ -220,13 +220,7 @@ namespace OneTox.ViewModel.Messaging
         public bool IsFriendTyping
         {
             get { return _isFriendTyping; }
-            set
-            {
-                if (value == _isFriendTyping)
-                    return;
-                _isFriendTyping = value;
-                RaisePropertyChanged();
-            }
+            set { Set(ref _isFriendTyping, value); }
         }
 
         public void SetTypingStatus(bool isTyping)

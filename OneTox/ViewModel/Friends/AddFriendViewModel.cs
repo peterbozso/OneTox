@@ -67,37 +67,19 @@ namespace OneTox.ViewModel.Friends
         public string FriendId
         {
             get { return _friendId; }
-            set
-            {
-                if (value == _friendId)
-                    return;
-                _friendId = value.Trim();
-                RaisePropertyChanged();
-            }
+            set { Set(ref _friendId, value); }
         }
 
         public string FriendIdPlaceholder
         {
             get { return _friendIdPlaceholder; }
-            private set
-            {
-                if (value == _friendIdPlaceholder)
-                    return;
-                _friendIdPlaceholder = value;
-                RaisePropertyChanged();
-            }
+            private set { Set(ref _friendIdPlaceholder, value); }
         }
 
         public string InvitationMessage
         {
             get { return _invitationMessage; }
-            set
-            {
-                if (value == _invitationMessage)
-                    return;
-                _invitationMessage = value;
-                RaisePropertyChanged();
-            }
+            set { Set(ref _invitationMessage, value); }
         }
 
         private string GetInvitationMessage()

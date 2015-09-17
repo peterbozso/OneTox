@@ -67,13 +67,7 @@ namespace OneTox.ViewModel.FileTransfers
             public TransfersBlockState BlockState
             {
                 get { return _blockState; }
-                set
-                {
-                    if (value == _blockState)
-                        return;
-                    _blockState = value;
-                    RaisePropertyChanged();
-                }
+                set { Set(ref _blockState, value); }
             }
 
             /// <summary>
@@ -84,13 +78,7 @@ namespace OneTox.ViewModel.FileTransfers
             public double OpenContentGridHeight
             {
                 get { return _openContentGridHeight; }
-                private set
-                {
-                    if (value.Equals(_openContentGridHeight))
-                        return;
-                    _openContentGridHeight = value;
-                    RaisePropertyChanged();
-                }
+                private set { Set(ref _openContentGridHeight, value); }
             }
 
             private void CollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)

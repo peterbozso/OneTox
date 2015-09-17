@@ -22,13 +22,7 @@ namespace OneTox.ViewModel.Messaging
         public DateTime Timestamp
         {
             get { return _timestamp; }
-            private set
-            {
-                if (value == _timestamp)
-                    return;
-                _timestamp = value;
-                RaisePropertyChanged();
-            }
+            private set { Set(ref _timestamp, value); }
         }
 
         private void MessagesCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)

@@ -43,13 +43,7 @@ namespace OneTox.ViewModel.Friends
         public FriendViewModel SelectedFriend
         {
             get { return _selectedFriend; }
-            set
-            {
-                if (value == _selectedFriend)
-                    return;
-                _selectedFriend = value;
-                RaisePropertyChanged();
-            }
+            set { Set(ref _selectedFriend, value); }
         }
 
         private FriendViewModel FindFriend(int friendNumber)

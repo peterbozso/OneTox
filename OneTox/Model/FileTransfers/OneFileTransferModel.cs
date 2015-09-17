@@ -138,10 +138,7 @@ namespace OneTox.Model.FileTransfers
             get { return _state; }
             protected set
             {
-                if (value == _state)
-                    return;
-                _state = value;
-                RaisePropertyChanged();
+                Set(ref _state, value);
 
                 if (IsPlaceholder)
                 {

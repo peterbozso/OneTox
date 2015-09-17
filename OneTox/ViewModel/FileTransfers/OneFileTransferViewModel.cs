@@ -44,13 +44,7 @@ namespace OneTox.ViewModel.FileTransfers
         public double Progress
         {
             get { return _progress; }
-            set
-            {
-                if (value.Equals(_progress))
-                    return;
-                _progress = value;
-                RaisePropertyChanged();
-            }
+            set { Set(ref _progress, value); }
         }
 
         public FileTransferState State => _oneFileTransferModel.State;
