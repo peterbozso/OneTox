@@ -1,0 +1,34 @@
+﻿<UserControl
+    x:Class="OneTox.View.Friends.Controls.FriendListComponent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:OneTox.View.Friends.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="600"
+    d:DesignWidth="400"
+    DataContext="{Binding Source={StaticResource ViewModelLocator},
+                Path=FriendList}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/View/MainPageDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ListView IsItemClickEnabled="True"
+              ItemClick="ListViewItemClick"
+              ItemContainerStyle="{StaticResource ListViewItemWithoutPressedVisualStateStyle}"
+              ItemsSource="{Binding Friends}"
+              SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}"
+              SelectionMode="{x:Bind SelectionMode}">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <local:FriendListItem />
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</UserControl>

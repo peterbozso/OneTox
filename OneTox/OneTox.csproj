@@ -153,6 +153,9 @@
     <Compile Include="ViewModel\ProfileSettings\ProfileViewModel.cs" />
     <Compile Include="ViewModel\ToxErrorViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
+    <Compile Include="View\Friends\Controls\FriendListComponent.xaml.cs">
+      <DependentUpon>FriendListComponent.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ProfileSettings\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="View\Calls\Converters\CallStateToStringConverter.cs" />
     <Compile Include="View\Messaging\Converters\DateTimeConverter.cs" />
@@ -259,6 +262,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="View\Friends\Controls\FriendListComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\Friends\Pages\AddFriendPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
