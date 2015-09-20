@@ -1,5 +1,6 @@
 ﻿using OneTox.Model.Avatars;
 using OneTox.Model.FileTransfers;
+using OneTox.Model.Messaging;
 using OneTox.Model.Tox;
 
 namespace OneTox.Config
@@ -9,5 +10,6 @@ namespace OneTox.Config
         IToxModel ToxModel { get; }
         IAvatarManager AvatarManager { get; }
         IFileTransferResumer FileTransferResumer { get; }
+        IMessageHistoryManager MessageHistoryManager { get; }
     }
 }

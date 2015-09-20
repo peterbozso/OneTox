@@ -7,6 +7,7 @@ using System.Text;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Threading;
 using OneTox.Config;
+using OneTox.Model.Messaging;
 using OneTox.Model.Tox;
 using OneTox.ViewModel.Friends;
 using SharpTox.Core;
@@ -29,6 +30,8 @@ namespace OneTox.ViewModel.Messaging
             MessageGroups = new ObservableCollection<MessageGroupViewModel>();
             _toxModel.FriendMessageReceived += FriendMessageReceivedHandler;
             _toxModel.FriendTypingChanged += FriendTypingChangedHandler;
+
+            RestoreMessageHistory(dataService.MessageHistoryManager);
         }
 
         public ObservableCollection<MessageGroupViewModel> MessageGroups { get; set; }
@@ -46,7 +49,7 @@ namespace OneTox.ViewModel.Messaging
                 // We store the message with this ID in every case, no matter if the sending was unsuccessful.
                 // If it was, we will resend the message later, and change it's message ID.
                 StoreMessage(new SentMessageViewModel(_dataService, chunk, DateTime.Now, messageType, messageId,
-                    _friendViewModel));
+                    _friendViewModel, MessageDeliveryState.Pending));
             }
         }
 
@@ -200,17 +203,32 @@ namespace OneTox.ViewModel.Messaging
 
         private void StoreMessage(ToxMessageViewModelBase message)
         {
-            DispatcherHelper.CheckBeginInvokeOnUI(() =>
-            {
-                var successFulAppend = AppendToLastGroup(message);
-                if (successFulAppend)
-                    return;
+            DispatcherHelper.CheckBeginInvokeOnUI(() => { AddToMessages(message); });
+        }
 
-                var msgGroup = new MessageGroupViewModel(message.Sender);
-                msgGroup.Messages.Add(message);
-                MessageGroups.Add(msgGroup);
-                RaiseMessageAdded(message);
-            });
+        private void RestoreMessageHistory(IMessageHistoryManager messageHistoryManager)
+        {
+            var messageHistory = messageHistoryManager.GetMessageHistoryForFriend(_friendViewModel);
+
+            if (messageHistory == null)
+                return;
+
+            foreach (var message in messageHistory)
+            {
+                AddToMessages(message);
+            }
+        }
+
+        private void AddToMessages(ToxMessageViewModelBase message)
+        {
+            var successFulAppend = AppendToLastGroup(message);
+            if (successFulAppend)
+                return;
+
+            var msgGroup = new MessageGroupViewModel(message.Sender);
+            msgGroup.Messages.Add(message);
+            MessageGroups.Add(msgGroup);
+            RaiseMessageAdded(message);
         }
 
         #endregion Common

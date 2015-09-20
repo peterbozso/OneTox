@@ -116,6 +116,9 @@
     <Compile Include="Model\Avatars\AvatarTransferManager.cs" />
     <Compile Include="Model\Avatars\IAvatarManager.cs" />
     <Compile Include="Model\Avatars\MockAvatarManager.cs" />
+    <Compile Include="Model\Messaging\IMessageHistoryManager.cs" />
+    <Compile Include="Model\Messaging\MessageHistoryManager.cs" />
+    <Compile Include="Model\Messaging\MockMessageHistoryManager.cs" />
     <Compile Include="Model\Tox\ExtendedTox.cs" />
     <Compile Include="Model\FileTransfers\FileTransferResumer.cs" />
     <Compile Include="Model\FileTransfers\FileTransfersModel.cs" />
@@ -359,9 +362,7 @@
       <Name>SharpTox Portable</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\Messaging\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

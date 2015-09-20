@@ -18,8 +18,7 @@ namespace OneTox.ViewModel.Messaging
         private int _timerCallbackFired;
 
         public SentMessageViewModel(IDataService dataService, string text, DateTime timestamp,
-            ToxMessageType messageType, int id,
-            FriendViewModel target)
+            ToxMessageType messageType, int id, FriendViewModel target, MessageDeliveryState state)
         {
             _toxModel = dataService.ToxModel;
 
@@ -27,14 +26,17 @@ namespace OneTox.ViewModel.Messaging
             Timestamp = timestamp;
             MessageType = messageType;
             Sender = new UserViewModel(dataService);
-            State = MessageDeliveryState.Pending;
             Id = id;
             _target = target;
+            State = state;
 
-            _toxModel.ReadReceiptReceived += ReadReceiptReceivedHandler;
-            _toxModel.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
+            if (state == MessageDeliveryState.Pending)
+            {
+                _toxModel.ReadReceiptReceived += ReadReceiptReceivedHandler;
+                _toxModel.FriendConnectionStatusChanged += FriendConnectionStatusChangedHandler;
 
-            SetupAndStartResendTimer();
+                SetupAndStartResendTimer();
+            }
         }
 
         public int Id { get; private set; }
