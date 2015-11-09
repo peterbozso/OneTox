@@ -74,10 +74,11 @@ namespace OneTox.Model
 
         public bool SetAudioBitrate(int friendNumber, int bitrate, bool force)
         {
-            ToxAvErrorSetBitrate error;
-            var retVal = _toxAv.SetAudioBitrate(friendNumber, bitrate, force, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            return retVal;
+            //ToxAvErrorSetBitrate error;
+            //var retVal = _toxAv.SetAudioBitrate(friendNumber, bitrate, force, out error);
+            //ToxErrorViewModel.Instance.RelayError(error);
+            //return retVal;
+            return true;
         }
 
         public void SetCurrent(ExtendedTox tox)
@@ -91,10 +92,11 @@ namespace OneTox.Model
 
         public bool SetVideoBitrate(int friendNumber, int bitrate, bool force)
         {
-            ToxAvErrorSetBitrate error;
-            var retVal = _toxAv.SetVideoBitrate(friendNumber, bitrate, force, out error);
-            ToxErrorViewModel.Instance.RelayError(error);
-            return retVal;
+            //ToxAvErrorSetBitrate error;
+            //var retVal = _toxAv.SetVideoBitrate(friendNumber, bitrate, force, out error);
+            //ToxErrorViewModel.Instance.RelayError(error);
+            //return retVal;
+            return true;
         }
 
         public void Start()
@@ -106,8 +108,8 @@ namespace OneTox.Model
         {
             _toxAv.OnCallRequestReceived += CallRequestReceivedHandler;
             _toxAv.OnCallStateChanged += CallStateChangedHandler;
-            _toxAv.OnAudioBitrateChanged += AudioBitrateChangedHandler;
-            _toxAv.OnVideoBitrateChanged += VideoBitrateChangedHandler;
+            //_toxAv.OnAudioBitrateChanged += AudioBitrateChangedHandler;
+            //_toxAv.OnVideoBitrateChanged += VideoBitrateChangedHandler;
             _toxAv.OnAudioFrameReceived += AudioFrameReceivedHandler;
             _toxAv.OnVideoFrameReceived += VideoFrameReceivedHandler;
         }
