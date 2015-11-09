@@ -1,16 +1,19 @@
 ﻿<Page x:Class="OneTox.View.MainPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:controls="using:OneTox.View.Friends.Controls"
+      xmlns:friends="using:OneTox.View.Friends.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:friendRequests="using:OneTox.View.FriendRequests"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:view="using:OneTox.View"
+      xmlns:messaging="using:OneTox.View.Messaging.Controls"
       DataContext="{Binding Source={StaticResource ViewModelLocator},
                             Path=FriendList}"
       Loaded="MainPageLoaded"
       Unloaded="MainPageUnloaded"
-      mc:Ignorable="d">
+      mc:Ignorable="d"
+      d:DesignWidth="1000"
+      d:DesignHeight="800">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
@@ -30,11 +33,11 @@
 
             <friendRequests:FriendRequestsList Grid.Row="0" />
 
-            <controls:FriendListComponent Grid.Row="1"
-                                          ItemClick="FriendListItemClick"
-                                          SelectedItem="{Binding SelectedFriend,
+            <friends:FriendListComponent Grid.Row="1"
+                                         ItemClick="FriendListItemClick"
+                                         SelectedItem="{Binding SelectedFriend,
                                                                  Mode=TwoWay}"
-                                          SelectionMode="Single" />
+                                         SelectionMode="Single" />
 
             <view:NavigationBar Grid.Row="2"
                                 AddFriendClick="AddFriendButtonClick"
@@ -42,6 +45,8 @@
         </Grid>
 
         <Grid x:Name="RightPanel"
-              Grid.Column="1" />
+              Grid.Column="1">
+            <messaging:ChatBlock />
+        </Grid>
     </Grid>
 </Page>
