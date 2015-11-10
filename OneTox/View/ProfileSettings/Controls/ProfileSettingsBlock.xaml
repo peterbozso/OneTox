@@ -23,8 +23,15 @@
     <Grid Margin="20,0,20,20" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
-                <VisualState x:Name="WideState" />
+                <VisualState x:Name="WideState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="930"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
                 <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="UserAvatarWithStatusColorBorder.(FrameworkElement.Width)" Value="140" />
                         <Setter Target="UserAvatarWithStatusColorBorder.(FrameworkElement.Height)" Value="140" />

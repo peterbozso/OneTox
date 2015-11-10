@@ -72,7 +72,6 @@ namespace OneTox.View
             RightPanel.Children.Clear();
             RightPanel.Children.Add(userControl);
             _rightPanelContent = userControl;
-            VisualStateManager.GoToState(_rightPanelContent, "WideState", false);
         }
 
         private void SettingsButtonClick(object sender, RoutedEventArgs e)

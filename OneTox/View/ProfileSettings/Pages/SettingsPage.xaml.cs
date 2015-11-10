@@ -8,8 +8,6 @@ namespace OneTox.View.ProfileSettings.Pages
         public SettingsPage()
         {
             InitializeComponent();
-
-            VisualStateManager.GoToState(ProfileSettingsBlock, "NarrowState", false);
         }
 
         protected override void WindowSizeChanged(object sender, WindowSizeChangedEventArgs e)

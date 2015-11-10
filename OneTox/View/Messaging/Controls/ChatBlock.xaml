@@ -47,6 +47,9 @@
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
                 <VisualState x:Name="WideState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="930" />
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="FriendInfo.(UIElement.Visibility)" Value="Collapsed" />
                         <Setter Target="TopActionBar.(UIElement.Visibility)" Value="Visible" />
@@ -54,6 +57,9 @@
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="FriendInfo.(UIElement.Visibility)" Value="Visible" />
                         <Setter Target="TopActionBar.(UIElement.Visibility)" Value="Collapsed" />

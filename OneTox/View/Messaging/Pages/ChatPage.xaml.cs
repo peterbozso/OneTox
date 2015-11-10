@@ -8,8 +8,6 @@ namespace OneTox.View.Messaging.Pages
         public ChatPage()
         {
             InitializeComponent();
-
-            VisualStateManager.GoToState(ChatBlock, "NarrowState", false);
         }
 
         protected override void WindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
