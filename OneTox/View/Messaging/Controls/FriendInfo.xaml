@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="OneTox.View.Messaging.Controls.FriendInfo"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:view="using:OneTox.View"
+             d:DesignHeight="300"
+             d:DesignWidth="400"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <view:StatusToColorConverter x:Key="StatusToColorConverter" />
+    </UserControl.Resources>
+
+    <StackPanel>
+        <Grid Margin="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Ellipse x:Name="FriendAvatarWithStatusColorBorder"
+                     Grid.Column="0"
+                     Width="60"
+                     Height="60"
+                     Stroke="{Binding Status,
+                                      Converter={StaticResource StatusToColorConverter}}"
+                     StrokeThickness="3">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="{Binding Avatar}" />
+                </Ellipse.Fill>
+            </Ellipse>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock x:Name="FriendName"
+                           Grid.Row="0"
+                           Margin="8,0,0,0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Bottom"
+                           FontSize="20"
+                           Text="{Binding Name}"
+                           TextTrimming="CharacterEllipsis" />
+                <TextBlock x:Name="FriendStatusMessage"
+                           Grid.Row="1"
+                           Margin="8,0,0,0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           FontSize="16"
+                           Foreground="{ThemeResource SystemControlForegroundAccentBrush}"
+                           Text="{Binding StatusMessage}"
+                           TextTrimming="WordEllipsis" />
+            </Grid>
+        </Grid>
+    </StackPanel>
+</UserControl>

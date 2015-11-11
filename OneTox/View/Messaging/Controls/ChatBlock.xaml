@@ -1,12 +1,12 @@
 ﻿<UserControl x:Class="OneTox.View.Messaging.Controls.ChatBlock"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:view="using:OneTox.View"
              xmlns:converters="using:OneTox.View.FileTransfers.Converters"
-             xmlns:controls="using:OneTox.View.FileTransfers.Controls"
-             xmlns:controls1="using:OneTox.View.Messaging.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:filetransfers="using:OneTox.View.FileTransfers.Controls"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:messaging="using:OneTox.View.Messaging.Controls"
+             xmlns:view="using:OneTox.View"
              DataContext="{Binding Source={StaticResource ViewModelLocator},
                                    Path=FriendList.SelectedFriend}"
              DataContextChanged="ChatBlockDataContextChanged"
@@ -20,22 +20,16 @@
                 <ResourceDictionary Source="/View/Messaging/Controls/ChatBlockDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <view:StatusToColorConverter x:Key="StatusToColorConverter" />
-            <converters:FileTransferCountToVisibilityConverter x:Key="FileTransferCountToVisibilityConverter" />
-
             <Storyboard x:Name="MessageAddedNotificationAnimation">
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MessageAddedNotificationEllipse"
-                                               Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MessageAddedNotificationEllipse" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
                     <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2" />
                     <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
                 </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MessageAddedNotificationEllipse"
-                                               Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MessageAddedNotificationEllipse" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
                     <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2" />
                     <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
                 </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MessageAddedNotificationIcon"
-                                               Storyboard.TargetProperty="(UIElement.Opacity)">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MessageAddedNotificationIcon" Storyboard.TargetProperty="(UIElement.Opacity)">
                     <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0.5" />
                     <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
                 </DoubleAnimationUsingKeyFrames>
@@ -90,60 +84,9 @@
         <StackPanel x:Name="HeaderBlock"
                     Grid.Row="1"
                     Margin="20,0">
-            <StackPanel x:Name="FriendInfo" Margin="0,8,0,0">
-                <Grid Margin="8">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
 
-                    <Ellipse x:Name="FriendAvatarWithStatusColorBorder"
-                             Grid.Column="0"
-                             Width="60"
-                             Height="60"
-                             Stroke="{Binding Status,
-                                              Converter={StaticResource StatusToColorConverter}}"
-                             StrokeThickness="3">
-                        <Ellipse.Fill>
-                            <ImageBrush ImageSource="{Binding Avatar}" />
-                        </Ellipse.Fill>
-                    </Ellipse>
-
-                    <Grid Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-
-                        <TextBlock x:Name="FriendName"
-                                   Grid.Row="0"
-                                   Margin="8,0,0,0"
-                                   HorizontalAlignment="Left"
-                                   VerticalAlignment="Bottom"
-                                   FontSize="20"
-                                   Text="{Binding Name}"
-                                   TextTrimming="CharacterEllipsis" />
-                        <TextBlock x:Name="FriendStatusMessage"
-                                   Grid.Row="1"
-                                   Margin="8,0,0,0"
-                                   HorizontalAlignment="Left"
-                                   VerticalAlignment="Top"
-                                   FontSize="16"
-                                   Foreground="{ThemeResource SystemControlForegroundAccentBrush}"
-                                   Text="{Binding StatusMessage}"
-                                   TextTrimming="WordEllipsis" />
-                    </Grid>
-                </Grid>
-
-                <Rectangle x:Name="FriendInfoFooterLine"
-                           Height="1"
-                           Stroke="{ThemeResource ApplicationForegroundThemeBrush}"
-                           StrokeThickness="0.5"
-                           Visibility="{Binding FileTransfers.Transfers.Count,
-                                                Converter={StaticResource FileTransferCountToVisibilityConverter}}" />
-            </StackPanel>
-
-            <controls:FileTransfersBlock x:Name="FileTransfersBlock" />
+            <messaging:FriendInfo x:Name="FriendInfo" Margin="0,8,0,0" />
+            <filetransfers:FileTransfersBlock x:Name="FileTransfersBlock" />
         </StackPanel>
 
         <ListView x:Name="MessagesListView"
@@ -157,7 +100,7 @@
                   SelectionMode="None">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <controls1:MessageBlock Margin="0,24,0,0" />
+                    <messaging:MessageBlock Margin="0,24,0,0" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
