@@ -5,7 +5,7 @@
   <Properties>
     <DisplayName>OneTox</DisplayName>
     <PublisherDisplayName>Peter</PublisherDisplayName>
-    <Logo>Assets\Square44x44Logo.scale-400.png</Logo>
+    <Logo>Assets\Square44x44Logo.png</Logo>
   </Properties>
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
