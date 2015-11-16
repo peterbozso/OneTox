@@ -39,7 +39,7 @@ namespace OneTox.View
             else
             {
                 // TODO: Display a splash screen or something if the user doesn't have any friends!
-                SetRightPanelContent(new ChatBlock());
+                SetRightPanelContent(_friendList.Friends.Count == 0 ? null : new ChatBlock());
             }
         }
 
@@ -70,7 +70,9 @@ namespace OneTox.View
         private void SetRightPanelContent(UserControl userControl)
         {
             RightPanel.Children.Clear();
-            RightPanel.Children.Add(userControl);
+            if (userControl != null) { 
+                RightPanel.Children.Add(userControl);
+            }
             _rightPanelContent = userControl;
         }
 
