@@ -52,10 +52,10 @@ namespace OneTox.View.Messaging.Controls
 
         private void MessagesListViewLoaded(object sender, RoutedEventArgs e)
         {
-            _scrollManager?.DeregisterHandlers();
-            _scrollManager = new ScrollManager(MessagesListView, _friendViewModel.Conversation,
-                MessageAddedNotificationGrid, MessageAddedNotificationAnimation);
-            _scrollManager.RegisterHandlers();
+            //_scrollManager?.DeregisterHandlers();
+            //_scrollManager = new ScrollManager(MessagesListView, _friendViewModel.Conversation,
+            //    MessageAddedNotificationGrid, MessageAddedNotificationAnimation);
+            //_scrollManager.RegisterHandlers();
         }
 
         #region Management of scrolling of MessagesListView
