@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.ObjectModel;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
+using Windows.UI.Xaml.Media;
 using OneTox.ViewModel.Messaging;
 
 namespace OneTox.View.Messaging.Controls
@@ -51,10 +53,40 @@ namespace OneTox.View.Messaging.Controls
         {
             foreach (ToxMessageViewModelBase message in messages)
             {
-                paragraph.Inlines.Add(new LineBreak());
-                paragraph.Inlines.Add(new Run
+                if (paragraph.Inlines.Count != 0)
                 {
-                    Text = message.Text
+                    paragraph.Inlines.Add(new LineBreak());
+                }
+                
+                //paragraph.Inlines.Add(new Run
+                //{
+                //    Text = message.Text
+                //});
+
+                paragraph.Inlines.Add(new InlineUIContainer
+                {
+                    Child = new Grid
+                    {
+                        Children =
+                        {
+                            new RichTextBlock
+                            {
+                                Blocks =
+                                {
+                                    new Paragraph
+                                    {
+                                        Inlines =
+                                        {
+                                            new Run {
+                                                Text = message.Text
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        Background = new SolidColorBrush(Colors.Aquamarine)
+                    }
                 });
             }
         }
