@@ -6,6 +6,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
+using OneTox.ViewModel.Friends;
 using OneTox.ViewModel.Messaging;
 
 namespace OneTox.View.Messaging.Controls
@@ -41,7 +42,12 @@ namespace OneTox.View.Messaging.Controls
         {
             foreach (MessageGroupViewModel group in messageGroups)
             {
-                var paragraph = new Paragraph();
+                var paragraph = new Paragraph
+                {
+                    TextAlignment = group.Sender is FriendViewModel ? TextAlignment.Left : TextAlignment.Right,
+                    Margin = group.Sender is FriendViewModel ? new Thickness(12, 0, 120, 16) : new Thickness(120, 0, 12, 16)
+                };
+                
                 AddNewMessages(paragraph, group.Messages);
                 richTextBlock.Blocks.Add(paragraph);
 
@@ -57,37 +63,37 @@ namespace OneTox.View.Messaging.Controls
                 {
                     paragraph.Inlines.Add(new LineBreak());
                 }
-                
-                //paragraph.Inlines.Add(new Run
-                //{
-                //    Text = message.Text
-                //});
 
-                paragraph.Inlines.Add(new InlineUIContainer
+                paragraph.Inlines.Add(new Run
                 {
-                    Child = new Grid
-                    {
-                        Children =
-                        {
-                            new RichTextBlock
-                            {
-                                Blocks =
-                                {
-                                    new Paragraph
-                                    {
-                                        Inlines =
-                                        {
-                                            new Run {
-                                                Text = message.Text
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        Background = new SolidColorBrush(Colors.Aquamarine)
-                    }
+                    Text = message.Text
                 });
+
+                //paragraph.Inlines.Add(new InlineUIContainer
+                //{
+                //    Child = new Grid
+                //    {
+                //        Children =
+                //        {
+                //            new RichTextBlock
+                //            {
+                //                Blocks =
+                //                {
+                //                    new Paragraph
+                //                    {
+                //                        Inlines =
+                //                        {
+                //                            new Run {
+                //                                Text = message.Text
+                //                            }
+                //                        }
+                //                    }
+                //                }
+                //            }
+                //        },
+                //        Background = new SolidColorBrush(Colors.Aquamarine)
+                //    }
+                //});
             }
         }
 
