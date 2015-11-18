@@ -87,8 +87,7 @@
             <filetransfers:FileTransfersBlock x:Name="FileTransfersBlock" />
         </StackPanel>
 
-        <RichTextBlock Grid.Row="2"
-                       messaging:RichTextBlockExtension.Messages="{Binding Conversation.MessageGroups}" />
+        <messaging:MessagesControl Grid.Row="2" />
 
         <Grid x:Name="MessageInputBlock" Grid.Row="3">
             <Grid.ColumnDefinitions>

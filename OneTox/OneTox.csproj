@@ -166,7 +166,9 @@
     <Compile Include="View\Messaging\Controls\FriendInfo.xaml.cs">
       <DependentUpon>FriendInfo.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Messaging\Controls\RichTextBlockExtension.cs" />
+    <Compile Include="View\Messaging\Controls\MessagesControl.xaml.cs">
+      <DependentUpon>MessagesControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\NavigationBar.xaml.cs">
       <DependentUpon>NavigationBar.xaml</DependentUpon>
     </Compile>
@@ -286,6 +288,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Messaging\Controls\FriendInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Messaging\Controls\MessagesControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
