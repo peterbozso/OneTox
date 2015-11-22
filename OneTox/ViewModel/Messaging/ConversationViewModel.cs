@@ -34,7 +34,7 @@ namespace OneTox.ViewModel.Messaging
             RestoreMessageHistory(dataService.MessageHistoryManager);
         }
 
-        public ObservableCollection<MessageGroupViewModel> MessageGroups { get; set; }
+        public ObservableCollection<MessageGroupViewModel> MessageGroups { get; }
 
         #region Message sending
 

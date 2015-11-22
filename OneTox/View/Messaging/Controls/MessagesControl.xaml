@@ -8,10 +8,14 @@
              d:DesignWidth="400"
              mc:Ignorable="d"
              DataContext="{Binding Source={StaticResource ViewModelLocator},
-                                   Path=FriendList.SelectedFriend.Conversation.MessageGroups}">
+                                   Path=FriendList.SelectedFriend.Conversation.MessageGroups}"
+             Unloaded="MessagesControlUnloaded"
+             Loaded="MessagesControlLoaded">
 
     <Grid>
         <Canvas x:Name="BubbleRects"/>
-        <RichTextBlock x:Name="Messages" SelectionChanged="Messages_SelectionChanged" />
+        <RichTextBlock x:Name="Messages" />
+
+        <Button Click="ButtonBase_OnClick">log</Button>
     </Grid>
 </UserControl>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using GalaSoft.MvvmLight;
@@ -28,6 +29,12 @@ namespace OneTox.ViewModel.Messaging
         private void MessagesCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
         {
             Timestamp = ((ToxMessageViewModelBase) e.NewItems[e.NewItems.Count - 1]).Timestamp;
+
+            if (e.Action == NotifyCollectionChangedAction.Add) { 
+                MessagesAdded?.Invoke(this, e.NewItems);
+            }
         }
+
+        public event EventHandler<IList> MessagesAdded;
     }
 }

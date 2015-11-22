@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Diagnostics;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -14,25 +17,50 @@ namespace OneTox.View.Messaging.Controls
 {
     public sealed partial class MessagesControl : UserControl
     {
-        private readonly ObservableCollection<MessageGroupViewModel> _messageGroups;
+        private readonly Dictionary<MessageGroupViewModel, Paragraph> _paragraphs =
+            new Dictionary<MessageGroupViewModel, Paragraph>();
+
+        private readonly Dictionary<Paragraph, Rectangle> _rectangles = new Dictionary<Paragraph, Rectangle>();
+
+        private ObservableCollection<MessageGroupViewModel> _messageGroups;
 
         public MessagesControl()
         {
             InitializeComponent();
+        }
+
+        private void MessagesControlUnloaded(object sender, RoutedEventArgs e)
+        {
+            // Deregister event handlers.
+
+            _messageGroups.CollectionChanged -= MessageGroupsChangedHandler;
+
+            foreach (var group in _messageGroups)
+            {
+                group.MessagesAdded -= MessagesAddedHandler;
+            }
+        }
+
+        private void MessagesControlLoaded(object sender, RoutedEventArgs e)
+        {
+            // Register event handlers.
 
             _messageGroups = DataContext as ObservableCollection<MessageGroupViewModel>;
 
             Messages.Blocks.Clear();
-            AddNewMessageGroups(Messages, _messageGroups);
+            AddNewMessageGroups(_messageGroups);
 
-            _messageGroups.CollectionChanged +=
-                (o, eventArgs) => { AddNewMessageGroups(Messages, eventArgs.NewItems); };
+            _messageGroups.CollectionChanged += MessageGroupsChangedHandler;
         }
 
-
-        private static void AddNewMessageGroups(RichTextBlock richTextBlock, IList messageGroups)
+        private void MessageGroupsChangedHandler(object sender, NotifyCollectionChangedEventArgs eventArgs)
         {
-            foreach (MessageGroupViewModel group in messageGroups)
+            AddNewMessageGroups(eventArgs.NewItems);
+        }
+
+        private void AddNewMessageGroups(IList newMessageGroups)
+        {
+            foreach (MessageGroupViewModel group in newMessageGroups)
             {
                 var paragraph = new Paragraph
                 {
@@ -41,16 +69,26 @@ namespace OneTox.View.Messaging.Controls
                         group.Sender is FriendViewModel ? new Thickness(12, 0, 120, 16) : new Thickness(120, 0, 12, 16)
                 };
 
+                Messages.Blocks.Add(paragraph);
                 AddNewMessages(paragraph, group.Messages);
-                richTextBlock.Blocks.Add(paragraph);
 
-                group.Messages.CollectionChanged += (sender, args) => { AddNewMessages(paragraph, args.NewItems); };
+                _paragraphs[group] = paragraph;
+
+                group.MessagesAdded += MessagesAddedHandler;
             }
         }
 
-        private static void AddNewMessages(Paragraph paragraph, IList messages)
+        private void MessagesAddedHandler(object sender, IList list)
         {
-            foreach (ToxMessageViewModelBase message in messages)
+            var group = sender as MessageGroupViewModel;
+            if (!_paragraphs.ContainsKey(group))
+                return;
+            AddNewMessages(_paragraphs[group], list);
+        }
+
+        private void AddNewMessages(Paragraph paragraph, IList newMessages)
+        {
+            foreach (ToxMessageViewModelBase message in newMessages)
             {
                 if (paragraph.Inlines.Count != 0)
                 {
@@ -62,12 +100,27 @@ namespace OneTox.View.Messaging.Controls
                     Text = message.Text
                 });
             }
+
+            ListParagraphs();
+            //RefreshRectangleOnCavas(paragraph);
         }
 
-        private void Messages_SelectionChanged(object sender, RoutedEventArgs e)
+        private void RefreshRectangleOnCavas(Paragraph paragraph)
         {
-            var start = Messages.ContentStart.GetCharacterRect(LogicalDirection.Forward);
-            var end = Messages.ContentEnd.GetCharacterRect(LogicalDirection.Forward);
+            var newRectangle = GetRectangleForParagraph(paragraph);
+            if (_rectangles.ContainsKey(paragraph))
+            {
+                var oldRectangle = _rectangles[paragraph];
+                BubbleRects.Children.Remove(oldRectangle);
+            }
+            _rectangles[paragraph] = newRectangle;
+            BubbleRects.Children.Add(newRectangle);
+        }
+
+        private Rectangle GetRectangleForParagraph(Paragraph paragraph)
+        {
+            var start = paragraph.ElementStart.GetCharacterRect(LogicalDirection.Forward);
+            var end = paragraph.ElementEnd.GetCharacterRect(LogicalDirection.Backward);
             var bubbleRect = new Rectangle
             {
                 Width = Math.Abs(start.Left - end.Right),
@@ -76,7 +129,24 @@ namespace OneTox.View.Messaging.Controls
             };
             bubbleRect.SetValue(Canvas.LeftProperty, start.Left);
             bubbleRect.SetValue(Canvas.TopProperty, start.Top);
-            BubbleRects.Children.Add(bubbleRect);
+            return bubbleRect;
+        }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            ListParagraphs();
+        }
+
+        private void ListParagraphs()
+        {
+            foreach (Paragraph paragraph in Messages.Blocks)
+            {
+                var start = paragraph.ElementStart.GetCharacterRect(LogicalDirection.Forward);
+                var end = paragraph.ElementEnd.GetCharacterRect(LogicalDirection.Backward);
+                Debug.WriteLine(start.Left + " " + start.Top);
+                Debug.WriteLine(end.Left + " " + end.Top);
+                Debug.WriteLine("");
+            }
         }
     }
 }
