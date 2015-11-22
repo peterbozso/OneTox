@@ -28,6 +28,18 @@ namespace OneTox.View.Messaging.Controls
         {
             InitializeComponent();
         }
+        
+        private void MessagesControlLoaded(object sender, RoutedEventArgs e)
+        {
+            // Register event handlers.
+
+            _messageGroups = DataContext as ObservableCollection<MessageGroupViewModel>;
+
+            Messages.Blocks.Clear();
+            AddNewMessageGroups(_messageGroups);
+
+            _messageGroups.CollectionChanged += MessageGroupsChangedHandler;
+        }
 
         private void MessagesControlUnloaded(object sender, RoutedEventArgs e)
         {
@@ -39,18 +51,6 @@ namespace OneTox.View.Messaging.Controls
             {
                 group.MessagesAdded -= MessagesAddedHandler;
             }
-        }
-
-        private void MessagesControlLoaded(object sender, RoutedEventArgs e)
-        {
-            // Register event handlers.
-
-            _messageGroups = DataContext as ObservableCollection<MessageGroupViewModel>;
-
-            Messages.Blocks.Clear();
-            AddNewMessageGroups(_messageGroups);
-
-            _messageGroups.CollectionChanged += MessageGroupsChangedHandler;
         }
 
         private void MessageGroupsChangedHandler(object sender, NotifyCollectionChangedEventArgs eventArgs)
@@ -78,12 +78,12 @@ namespace OneTox.View.Messaging.Controls
             }
         }
 
-        private void MessagesAddedHandler(object sender, IList list)
+        private void MessagesAddedHandler(object sender, IList newMessages)
         {
             var group = sender as MessageGroupViewModel;
             if (!_paragraphs.ContainsKey(group))
                 return;
-            AddNewMessages(_paragraphs[group], list);
+            AddNewMessages(_paragraphs[group], newMessages);
         }
 
         private void AddNewMessages(Paragraph paragraph, IList newMessages)
@@ -101,6 +101,7 @@ namespace OneTox.View.Messaging.Controls
                 });
             }
 
+            Messages.UpdateLayout();
             ListParagraphs();
             //RefreshRectangleOnCavas(paragraph);
         }
@@ -130,11 +131,6 @@ namespace OneTox.View.Messaging.Controls
             bubbleRect.SetValue(Canvas.LeftProperty, start.Left);
             bubbleRect.SetValue(Canvas.TopProperty, start.Top);
             return bubbleRect;
-        }
-
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
-        {
-            ListParagraphs();
         }
 
         private void ListParagraphs()

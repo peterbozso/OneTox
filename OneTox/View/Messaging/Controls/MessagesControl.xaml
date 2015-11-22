@@ -15,7 +15,5 @@
     <Grid>
         <Canvas x:Name="BubbleRects"/>
         <RichTextBlock x:Name="Messages" />
-
-        <Button Click="ButtonBase_OnClick">log</Button>
     </Grid>
 </UserControl>
