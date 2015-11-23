@@ -12,8 +12,10 @@
              Unloaded="MessagesControlUnloaded"
              Loaded="MessagesControlLoaded">
 
-    <Grid>
-        <Canvas x:Name="BubbleRects"/>
-        <RichTextBlock x:Name="Messages" />
-    </Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Canvas x:Name="BubbleRects"/>
+            <RichTextBlock x:Name="Messages" />
+        </Grid>
+    </ScrollViewer>
 </UserControl>
