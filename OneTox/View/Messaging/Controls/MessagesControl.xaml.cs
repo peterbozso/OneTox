@@ -142,26 +142,41 @@ namespace OneTox.View.Messaging.Controls
                 var top = start.Top;
                 var bottom = end.Bottom;
 
-                double left;
-                if (sender is UserViewModel)
-                {
-                    left = (from inline in paragraph.Inlines
-                        select inline.ContentStart.GetCharacterRect(LogicalDirection.Backward).Left).Min();
-                }
-                else
+                double left, right;
+
+                if (paragraph.Inlines.Count == 1)
                 {
                     left = start.Left;
-                }
-
-                double right;
-                if (sender is FriendViewModel)
-                {
-                    right = (from inline in paragraph.Inlines
-                        select inline.ContentEnd.GetCharacterRect(LogicalDirection.Forward).Right).Max();
+                    right = end.Right;
                 }
                 else
                 {
-                    right = end.Right;
+                    var oldRectangle = _rectangles[paragraph];
+                    var lastLine = paragraph.Inlines.Last();
+
+                    if (sender is UserViewModel)
+                    {
+                        var oldLeft = (double) oldRectangle.GetValue(Canvas.LeftProperty);
+                        var lastLineLeft = lastLine.ContentStart.GetCharacterRect(LogicalDirection.Backward).Left;
+
+                        left = lastLineLeft < oldLeft ? lastLineLeft : oldLeft;
+                    }
+                    else
+                    {
+                        left = start.Left;
+                    }
+
+                    if (sender is FriendViewModel)
+                    {
+                        var oldRight = (double) oldRectangle.GetValue(Canvas.LeftProperty) + oldRectangle.ActualWidth;
+                        var lastLineRight = lastLine.ContentEnd.GetCharacterRect(LogicalDirection.Forward).Right;
+
+                        right = lastLineRight > oldRight ? lastLineRight : oldRight;
+                    }
+                    else
+                    {
+                        right = end.Right;
+                    }
                 }
 
                 var bubbleRect = new Rectangle
