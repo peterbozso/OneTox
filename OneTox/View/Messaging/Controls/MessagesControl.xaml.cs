@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -17,18 +16,20 @@ namespace OneTox.View.Messaging.Controls
 {
     public sealed partial class MessagesControl : UserControl
     {
+        private readonly BubblePainter _bubblePainter;
+
         private readonly Dictionary<MessageGroupViewModel, Paragraph> _paragraphs =
             new Dictionary<MessageGroupViewModel, Paragraph>();
-
-        private readonly Dictionary<Paragraph, Rectangle> _rectangles = new Dictionary<Paragraph, Rectangle>();
 
         private ObservableCollection<MessageGroupViewModel> _messageGroups;
 
         public MessagesControl()
         {
             InitializeComponent();
+
+            _bubblePainter = new BubblePainter(BubbleRects);
         }
-        
+
         private void MessagesControlLoaded(object sender, RoutedEventArgs e)
         {
             // Register event handlers.
@@ -102,46 +103,48 @@ namespace OneTox.View.Messaging.Controls
             }
 
             Messages.UpdateLayout();
-            ListParagraphs();
-            //RefreshRectangleOnCavas(paragraph);
+            _bubblePainter.PaintBubbleForParagraph(paragraph);
         }
-
-        private void RefreshRectangleOnCavas(Paragraph paragraph)
+        
+        /// <summary>
+        /// This class' responsibility is to draw the chat bubbles for message groups/paragraphs.
+        /// </summary>
+        private class BubblePainter
         {
-            var newRectangle = GetRectangleForParagraph(paragraph);
-            if (_rectangles.ContainsKey(paragraph))
+            private readonly Canvas _bubbleRects;
+
+            private readonly Dictionary<Paragraph, Rectangle> _rectangles = new Dictionary<Paragraph, Rectangle>();
+
+            public BubblePainter(Canvas bubbleRects)
             {
-                var oldRectangle = _rectangles[paragraph];
-                BubbleRects.Children.Remove(oldRectangle);
+                _bubbleRects = bubbleRects;
             }
-            _rectangles[paragraph] = newRectangle;
-            BubbleRects.Children.Add(newRectangle);
-        }
 
-        private Rectangle GetRectangleForParagraph(Paragraph paragraph)
-        {
-            var start = paragraph.ElementStart.GetCharacterRect(LogicalDirection.Forward);
-            var end = paragraph.ElementEnd.GetCharacterRect(LogicalDirection.Backward);
-            var bubbleRect = new Rectangle
+            public void PaintBubbleForParagraph(Paragraph paragraph)
             {
-                Width = Math.Abs(start.Left - end.Right),
-                Height = Math.Abs(start.Top - end.Bottom),
-                Fill = new SolidColorBrush(Colors.Aqua)
-            };
-            bubbleRect.SetValue(Canvas.LeftProperty, start.Left);
-            bubbleRect.SetValue(Canvas.TopProperty, start.Top);
-            return bubbleRect;
-        }
+                var newRectangle = GetRectangleForParagraph(paragraph);
+                if (_rectangles.ContainsKey(paragraph))
+                {
+                    var oldRectangle = _rectangles[paragraph];
+                    _bubbleRects.Children.Remove(oldRectangle);
+                }
+                _rectangles[paragraph] = newRectangle;
+                _bubbleRects.Children.Add(newRectangle);
+            }
 
-        private void ListParagraphs()
-        {
-            foreach (Paragraph paragraph in Messages.Blocks)
+            private Rectangle GetRectangleForParagraph(Paragraph paragraph)
             {
-                var start = paragraph.ElementStart.GetCharacterRect(LogicalDirection.Forward);
-                var end = paragraph.ElementEnd.GetCharacterRect(LogicalDirection.Backward);
-                Debug.WriteLine(start.Left + " " + start.Top);
-                Debug.WriteLine(end.Left + " " + end.Top);
-                Debug.WriteLine("");
+                var start = paragraph.ElementStart.GetCharacterRect(LogicalDirection.Backward);
+                var end = paragraph.ElementEnd.GetCharacterRect(LogicalDirection.Forward);
+                var bubbleRect = new Rectangle
+                {
+                    Width = Math.Abs(start.Left - end.Right),
+                    Height = Math.Abs(start.Top - end.Bottom),
+                    Fill = new SolidColorBrush(Colors.Aqua)
+                };
+                bubbleRect.SetValue(Canvas.LeftProperty, start.Left);
+                bubbleRect.SetValue(Canvas.TopProperty, start.Top);
+                return bubbleRect;
             }
         }
     }
