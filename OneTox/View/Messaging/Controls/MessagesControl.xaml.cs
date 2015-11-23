@@ -9,8 +9,11 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
+using OneTox.View.Messaging.Converters;
+using OneTox.ViewModel;
 using OneTox.ViewModel.Friends;
 using OneTox.ViewModel.Messaging;
+using SharpTox.Core;
 
 namespace OneTox.View.Messaging.Controls
 {
@@ -71,7 +74,7 @@ namespace OneTox.View.Messaging.Controls
                 };
 
                 Messages.Blocks.Add(paragraph);
-                AddNewMessages(paragraph, group.Messages);
+                AddNewMessages(paragraph, group.Messages, group.Sender);
 
                 _paragraphs[group] = paragraph;
 
@@ -84,10 +87,10 @@ namespace OneTox.View.Messaging.Controls
             var group = sender as MessageGroupViewModel;
             if (!_paragraphs.ContainsKey(group))
                 return;
-            AddNewMessages(_paragraphs[group], newMessages);
+            AddNewMessages(_paragraphs[group], newMessages, group.Sender);
         }
 
-        private void AddNewMessages(Paragraph paragraph, IList newMessages)
+        private void AddNewMessages(Paragraph paragraph, IList newMessages, IToxUserViewModel sender)
         {
             foreach (ToxMessageViewModelBase message in newMessages)
             {
@@ -95,15 +98,16 @@ namespace OneTox.View.Messaging.Controls
                 {
                     paragraph.Inlines.Add(new LineBreak());
                 }
-
+                
                 paragraph.Inlines.Add(new Run
                 {
-                    Text = message.Text
+                    Text = message.Text,
+                    Foreground = new MessageToTextColorConverter().Convert(message, null, null, "") as SolidColorBrush
                 });
             }
 
             Messages.UpdateLayout();
-            _bubblePainter.PaintBubbleForParagraph(paragraph);
+            _bubblePainter.PaintBubbleForParagraph(paragraph, sender);
         }
         
         /// <summary>
@@ -120,9 +124,9 @@ namespace OneTox.View.Messaging.Controls
                 _bubbleRects = bubbleRects;
             }
 
-            public void PaintBubbleForParagraph(Paragraph paragraph)
+            public void PaintBubbleForParagraph(Paragraph paragraph, IToxUserViewModel sender)
             {
-                var newRectangle = GetRectangleForParagraph(paragraph);
+                var newRectangle = GetRectangleForParagraph(paragraph, sender);
                 if (_rectangles.ContainsKey(paragraph))
                 {
                     var oldRectangle = _rectangles[paragraph];
@@ -132,7 +136,7 @@ namespace OneTox.View.Messaging.Controls
                 _bubbleRects.Children.Add(newRectangle);
             }
 
-            private Rectangle GetRectangleForParagraph(Paragraph paragraph)
+            private Rectangle GetRectangleForParagraph(Paragraph paragraph, IToxUserViewModel sender)
             {
                 var start = paragraph.ContentStart.GetCharacterRect(LogicalDirection.Backward);
                 var end = paragraph.ContentEnd.GetCharacterRect(LogicalDirection.Forward);
@@ -140,7 +144,7 @@ namespace OneTox.View.Messaging.Controls
                 {
                     Width = Math.Abs(start.Left - end.Right),
                     Height = Math.Abs(start.Top - end.Bottom),
-                    Fill = new SolidColorBrush(Colors.Aqua)
+                    Fill = new SenderTypeToMessageBackgroundColorConverter().Convert(sender, null, null, "") as SolidColorBrush
                 };
                 bubbleRect.SetValue(Canvas.LeftProperty, start.Left);
                 bubbleRect.SetValue(Canvas.TopProperty, start.Top);
