@@ -70,11 +70,15 @@ namespace OneTox.View.Messaging.Controls
         {
             foreach (MessageGroupViewModel group in newMessageGroups)
             {
+                var bubbleMargin = BubblePainter.KBubbleMargin;
+
                 var paragraph = new Paragraph
                 {
                     TextAlignment = group.Sender is FriendViewModel ? TextAlignment.Left : TextAlignment.Right,
                     Margin =
-                        group.Sender is FriendViewModel ? new Thickness(12, 0, 120, 16) : new Thickness(120, 0, 12, 16)
+                        group.Sender is FriendViewModel
+                            ? new Thickness(12 + bubbleMargin, 0 + bubbleMargin, 120 + bubbleMargin, 16 + bubbleMargin)
+                            : new Thickness(120 + bubbleMargin, 0 + bubbleMargin, 12 + bubbleMargin, 16 + bubbleMargin),
                 };
 
                 Messages.Blocks.Add(paragraph);
@@ -106,7 +110,7 @@ namespace OneTox.View.Messaging.Controls
                 paragraph.Inlines.Add(new Run
                 {
                     Text = message.Text,
-                    Foreground = new MessageToTextColorConverter().Convert(message, null, null, "") as SolidColorBrush
+                    Foreground = new MessageToTextColorConverter().Convert(message, null, null, "") as SolidColorBrush,
                 });
             }
 
@@ -119,6 +123,8 @@ namespace OneTox.View.Messaging.Controls
         /// </summary>
         private class BubblePainter
         {
+            public const int KBubbleMargin = 8;
+
             private readonly Canvas _bubbleRects;
 
             private readonly Dictionary<Paragraph, Rectangle> _rectangles = new Dictionary<Paragraph, Rectangle>();
@@ -201,7 +207,7 @@ namespace OneTox.View.Messaging.Controls
 
                         if (sender is UserViewModel)
                         {
-                            var oldLeft = (double) oldRectangle.GetValue(Canvas.LeftProperty);
+                            var oldLeft = (double) oldRectangle.GetValue(Canvas.LeftProperty) + KBubbleMargin;
                             var lastLineLeft = lastLine.ContentStart.GetCharacterRect(LogicalDirection.Backward).Left;
 
                             left = lastLineLeft < oldLeft ? lastLineLeft : oldLeft;
@@ -214,7 +220,7 @@ namespace OneTox.View.Messaging.Controls
                         if (sender is FriendViewModel)
                         {
                             var oldRight = (double) oldRectangle.GetValue(Canvas.LeftProperty) +
-                                           oldRectangle.ActualWidth;
+                                           oldRectangle.ActualWidth - KBubbleMargin;
                             var lastLineRight = lastLine.ContentEnd.GetCharacterRect(LogicalDirection.Forward).Right;
 
                             right = lastLineRight > oldRight ? lastLineRight : oldRight;
@@ -226,6 +232,11 @@ namespace OneTox.View.Messaging.Controls
                     }
                 }
 
+                left -= KBubbleMargin;
+                top -= KBubbleMargin;
+                right += KBubbleMargin;
+                bottom += KBubbleMargin;
+
                 var bubbleRect = new Rectangle
                 {
                     Width = Math.Abs(left - right),
@@ -236,6 +247,7 @@ namespace OneTox.View.Messaging.Controls
                 };
                 bubbleRect.SetValue(Canvas.LeftProperty, left);
                 bubbleRect.SetValue(Canvas.TopProperty, top);
+
                 return bubbleRect;
             }
         }

@@ -16,7 +16,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid>
             <Canvas x:Name="BubbleRects"/>
-            <RichTextBlock x:Name="Messages" />
+            <RichTextBlock x:Name="Messages"/>
         </Grid>
     </ScrollViewer>
 </UserControl>
