@@ -134,8 +134,8 @@ namespace OneTox.View.Messaging.Controls
 
             private Rectangle GetRectangleForParagraph(Paragraph paragraph)
             {
-                var start = paragraph.ElementStart.GetCharacterRect(LogicalDirection.Backward);
-                var end = paragraph.ElementEnd.GetCharacterRect(LogicalDirection.Forward);
+                var start = paragraph.ContentStart.GetCharacterRect(LogicalDirection.Backward);
+                var end = paragraph.ContentEnd.GetCharacterRect(LogicalDirection.Forward);
                 var bubbleRect = new Rectangle
                 {
                     Width = Math.Abs(start.Left - end.Right),
