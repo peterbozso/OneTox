@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using Windows.UI;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
@@ -13,7 +13,6 @@ using OneTox.View.Messaging.Converters;
 using OneTox.ViewModel;
 using OneTox.ViewModel.Friends;
 using OneTox.ViewModel.Messaging;
-using SharpTox.Core;
 
 namespace OneTox.View.Messaging.Controls
 {
@@ -98,7 +97,7 @@ namespace OneTox.View.Messaging.Controls
                 {
                     paragraph.Inlines.Add(new LineBreak());
                 }
-                
+
                 paragraph.Inlines.Add(new Run
                 {
                     Text = message.Text,
@@ -109,9 +108,9 @@ namespace OneTox.View.Messaging.Controls
             Messages.UpdateLayout();
             _bubblePainter.PaintBubbleForParagraph(paragraph, sender);
         }
-        
+
         /// <summary>
-        /// This class' responsibility is to draw the chat bubbles for message groups/paragraphs.
+        ///     This class' responsibility is to draw the chat bubbles for message groups/paragraphs.
         /// </summary>
         private class BubblePainter
         {
@@ -140,14 +139,41 @@ namespace OneTox.View.Messaging.Controls
             {
                 var start = paragraph.ContentStart.GetCharacterRect(LogicalDirection.Backward);
                 var end = paragraph.ContentEnd.GetCharacterRect(LogicalDirection.Forward);
+                var top = start.Top;
+                var bottom = end.Bottom;
+
+                double left;
+                if (sender is UserViewModel)
+                {
+                    left = (from inline in paragraph.Inlines
+                        select inline.ContentStart.GetCharacterRect(LogicalDirection.Backward).Left).Min();
+                }
+                else
+                {
+                    left = start.Left;
+                }
+
+                double right;
+                if (sender is FriendViewModel)
+                {
+                    right = (from inline in paragraph.Inlines
+                        select inline.ContentEnd.GetCharacterRect(LogicalDirection.Forward).Right).Max();
+                }
+                else
+                {
+                    right = end.Right;
+                }
+
                 var bubbleRect = new Rectangle
                 {
-                    Width = Math.Abs(start.Left - end.Right),
-                    Height = Math.Abs(start.Top - end.Bottom),
-                    Fill = new SenderTypeToMessageBackgroundColorConverter().Convert(sender, null, null, "") as SolidColorBrush
+                    Width = Math.Abs(left - right),
+                    Height = Math.Abs(top - bottom),
+                    Fill =
+                        new SenderTypeToMessageBackgroundColorConverter().Convert(sender, null, null, "") as
+                            SolidColorBrush
                 };
-                bubbleRect.SetValue(Canvas.LeftProperty, start.Left);
-                bubbleRect.SetValue(Canvas.TopProperty, start.Top);
+                bubbleRect.SetValue(Canvas.LeftProperty, left);
+                bubbleRect.SetValue(Canvas.TopProperty, top);
                 return bubbleRect;
             }
         }
