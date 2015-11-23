@@ -56,6 +56,11 @@ namespace OneTox.View.Messaging.Controls
             }
         }
 
+        private void MessagesControlSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            _bubblePainter.RepaintAllBubbles(_paragraphs);
+        }
+
         private void MessageGroupsChangedHandler(object sender, NotifyCollectionChangedEventArgs eventArgs)
         {
             AddNewMessageGroups(eventArgs.NewItems);
@@ -123,6 +128,17 @@ namespace OneTox.View.Messaging.Controls
                 _bubbleRects = bubbleRects;
             }
 
+            public void RepaintAllBubbles(Dictionary<MessageGroupViewModel, Paragraph> paragraphs)
+            {
+                _bubbleRects.Children.Clear();
+                _rectangles.Clear();
+
+                foreach (var pair in paragraphs)
+                {
+                    PaintBubbleForParagraph(pair.Value, pair.Key.Sender);
+                }
+            }
+
             public void PaintBubbleForParagraph(Paragraph paragraph, IToxUserViewModel sender)
             {
                 var newRectangle = GetRectangleForParagraph(paragraph, sender);
@@ -144,38 +160,69 @@ namespace OneTox.View.Messaging.Controls
 
                 double left, right;
 
-                if (paragraph.Inlines.Count == 1)
+                if (paragraph.Inlines.Count == 1) // Not much fuss if there is only one line.
                 {
                     left = start.Left;
                     right = end.Right;
                 }
                 else
                 {
-                    var oldRectangle = _rectangles[paragraph];
-                    var lastLine = paragraph.Inlines.Last();
-
-                    if (sender is UserViewModel)
+                    if (!_rectangles.ContainsKey(paragraph))
                     {
-                        var oldLeft = (double) oldRectangle.GetValue(Canvas.LeftProperty);
-                        var lastLineLeft = lastLine.ContentStart.GetCharacterRect(LogicalDirection.Backward).Left;
+                        // It means we just resized the window/control, and cleared all rectangles in order to redraw them.
+                        // So we have to look for the leftmost and rightmost bounds for each paragraph:
 
-                        left = lastLineLeft < oldLeft ? lastLineLeft : oldLeft;
+                        if (sender is UserViewModel)
+                        {
+                            left = (from inline in paragraph.Inlines
+                                select inline.ContentStart.GetCharacterRect(LogicalDirection.Backward).Left).Min();
+                        }
+                        else
+                        {
+                            left = start.Left;
+                        }
+
+                        if (sender is FriendViewModel)
+                        {
+                            right = (from inline in paragraph.Inlines
+                                select inline.ContentEnd.GetCharacterRect(LogicalDirection.Forward).Right).Max();
+                        }
+                        else
+                        {
+                            right = end.Right;
+                        }
                     }
                     else
                     {
-                        left = start.Left;
-                    }
+                        // Otherwise there is already a rectangle for the given paragraph, so we just have to adjust it. If we have to at all!
 
-                    if (sender is FriendViewModel)
-                    {
-                        var oldRight = (double) oldRectangle.GetValue(Canvas.LeftProperty) + oldRectangle.ActualWidth;
-                        var lastLineRight = lastLine.ContentEnd.GetCharacterRect(LogicalDirection.Forward).Right;
+                        var oldRectangle = _rectangles[paragraph];
+                        var lastLine = paragraph.Inlines.Last();
 
-                        right = lastLineRight > oldRight ? lastLineRight : oldRight;
-                    }
-                    else
-                    {
-                        right = end.Right;
+                        if (sender is UserViewModel)
+                        {
+                            var oldLeft = (double) oldRectangle.GetValue(Canvas.LeftProperty);
+                            var lastLineLeft = lastLine.ContentStart.GetCharacterRect(LogicalDirection.Backward).Left;
+
+                            left = lastLineLeft < oldLeft ? lastLineLeft : oldLeft;
+                        }
+                        else
+                        {
+                            left = start.Left;
+                        }
+
+                        if (sender is FriendViewModel)
+                        {
+                            var oldRight = (double) oldRectangle.GetValue(Canvas.LeftProperty) +
+                                           oldRectangle.ActualWidth;
+                            var lastLineRight = lastLine.ContentEnd.GetCharacterRect(LogicalDirection.Forward).Right;
+
+                            right = lastLineRight > oldRight ? lastLineRight : oldRight;
+                        }
+                        else
+                        {
+                            right = end.Right;
+                        }
                     }
                 }
 

@@ -10,7 +10,8 @@
              DataContext="{Binding Source={StaticResource ViewModelLocator},
                                    Path=FriendList.SelectedFriend.Conversation.MessageGroups}"
              Unloaded="MessagesControlUnloaded"
-             Loaded="MessagesControlLoaded">
+             Loaded="MessagesControlLoaded"
+             SizeChanged="MessagesControlSizeChanged">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid>
