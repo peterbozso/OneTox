@@ -11,9 +11,10 @@ namespace OneTox.Model.Tox
         {
         }
 
-        public ExtendedTox(ToxOptions options, ToxData data = null, ToxEncryptionKey key = null) :
-            base(options, data, key)
+        public ExtendedTox(ToxOptions options, ToxData data) :
+            base(options, data)
         {
+            
         }
 
         public event EventHandler<FriendListChangedEventArgs> OnFriendListChanged;
