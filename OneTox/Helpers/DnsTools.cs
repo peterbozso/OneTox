@@ -100,7 +100,7 @@ namespace OneTox.Helpers
                 var split = domain.Split('@');
 
                 var toxDns = new ToxDns(new ToxKey(ToxKeyType.Public, publicKey));
-                uint requestId;
+                int requestId;
                 var dns3String = toxDns.GenerateDns3String(split[0], out requestId);
 
                 var query = string.Format("_{0}._tox.{1}", dns3String, split[1]);

@@ -308,7 +308,7 @@ namespace OneTox.Model.Tox
 
         public void SetNospam(uint nospam)
         {
-            _tox.SetNospam(nospam);
+            _tox.SetNospam(unchecked((int)nospam));
         }
 
         public void SetTypingStatus(int friendNumber, bool isTyping)
