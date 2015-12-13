@@ -30,30 +30,41 @@ namespace OneTox.View.Messaging.Controls
             InitializeComponent();
 
             _bubblePainter = new BubblePainter(BubbleRects);
+
+            // We can't do this in XAML, otherwise the RichTextBlock would be still null when this handler is called:
+            DataContextChanged += OnDataContextChanged;
         }
 
-        private void MessagesControlLoaded(object sender, RoutedEventArgs e)
+        private void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
-            // Register event handlers.
+            // Clean up after the old DataContext (if there is one):
+            if (_messageGroups != null)
+            {
+                // Deregister event handlers from previous DataContext:
+                _messageGroups.CollectionChanged -= MessageGroupsChangedHandler;
+                foreach (var group in _messageGroups)
+                {
+                    group.MessagesAdded -= MessagesAddedHandler;
+                }
 
+                // Also remove all paragraphs of the previous conversation we just switched from:
+                _paragraphs.Clear();
+            }
+
+            // If the new DataContext is null (we navigated from chatting to settings for example), there's nothing more to do:
+            if (DataContext == null)
+                return;
+
+            // Store the new DataContext and register event handlers for it:
             _messageGroups = DataContext as ObservableCollection<MessageGroupViewModel>;
+            _messageGroups.CollectionChanged += MessageGroupsChangedHandler;
 
+            // Add history:
             Messages.Blocks.Clear();
             AddNewMessageGroups(_messageGroups);
 
-            _messageGroups.CollectionChanged += MessageGroupsChangedHandler;
-        }
-
-        private void MessagesControlUnloaded(object sender, RoutedEventArgs e)
-        {
-            // Deregister event handlers.
-
-            _messageGroups.CollectionChanged -= MessageGroupsChangedHandler;
-
-            foreach (var group in _messageGroups)
-            {
-                group.MessagesAdded -= MessagesAddedHandler;
-            }
+            // And repaint the bubbles:
+            _bubblePainter.RepaintAllBubbles(_paragraphs);
         }
 
         private void MessagesControlSizeChanged(object sender, SizeChangedEventArgs e)
