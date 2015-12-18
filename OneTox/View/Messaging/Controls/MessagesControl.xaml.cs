@@ -179,8 +179,9 @@ namespace OneTox.View.Messaging.Controls
 
                 if (paragraph.Inlines.Count == 1) // Not much fuss if there is only one line.
                 {
-                    left = start.Left;
-                    right = end.Right;
+                    left = GetLeftMost(paragraph.Inlines[0]);
+                    right = GetRightMost(paragraph.Inlines[0]);
+                    ;
                 }
                 else
                 {
@@ -191,8 +192,7 @@ namespace OneTox.View.Messaging.Controls
 
                         if (sender is UserViewModel)
                         {
-                            left = (from inline in paragraph.Inlines
-                                select inline.ContentStart.GetCharacterRect(LogicalDirection.Backward).Left).Min();
+                            left = paragraph.Inlines.Select(GetLeftMost).Concat(new[] {Double.MaxValue}).Min();
                         }
                         else
                         {
@@ -201,8 +201,7 @@ namespace OneTox.View.Messaging.Controls
 
                         if (sender is FriendViewModel)
                         {
-                            right = (from inline in paragraph.Inlines
-                                select inline.ContentEnd.GetCharacterRect(LogicalDirection.Forward).Right).Max();
+                            right = paragraph.Inlines.Select(GetRightMost).Concat(new[] {Double.MinValue}).Max();
                         }
                         else
                         {
@@ -219,7 +218,7 @@ namespace OneTox.View.Messaging.Controls
                         if (sender is UserViewModel)
                         {
                             var oldLeft = (double) oldRectangle.GetValue(Canvas.LeftProperty) + KBubbleMargin;
-                            var lastLineLeft = lastLine.ContentStart.GetCharacterRect(LogicalDirection.Backward).Left;
+                            var lastLineLeft = GetLeftMost(lastLine);
 
                             left = lastLineLeft < oldLeft ? lastLineLeft : oldLeft;
                         }
@@ -232,7 +231,7 @@ namespace OneTox.View.Messaging.Controls
                         {
                             var oldRight = (double) oldRectangle.GetValue(Canvas.LeftProperty) +
                                            oldRectangle.ActualWidth - KBubbleMargin;
-                            var lastLineRight = lastLine.ContentEnd.GetCharacterRect(LogicalDirection.Forward).Right;
+                            var lastLineRight = GetRightMost(lastLine);
 
                             right = lastLineRight > oldRight ? lastLineRight : oldRight;
                         }
@@ -260,6 +259,48 @@ namespace OneTox.View.Messaging.Controls
                 bubbleRect.SetValue(Canvas.TopProperty, top);
 
                 return bubbleRect;
+            }
+
+            private double GetLeftMost(Inline inline)
+            {
+                var leftMost = Double.MaxValue;
+
+                for (int offset = 0;
+                    offset < inline.ContentEnd.Offset - inline.ContentStart.Offset;
+                    offset++)
+                {
+                    var currLeft =
+                        inline.ContentStart.GetPositionAtOffset(offset, LogicalDirection.Forward)
+                            .GetCharacterRect(LogicalDirection.Forward)
+                            .Left;
+                    if (currLeft < leftMost)
+                    {
+                        leftMost = currLeft;
+                    }
+                }
+
+                return leftMost;
+            }
+
+            private double GetRightMost(Inline inline)
+            {
+                var rightMost = Double.MinValue;
+
+                for (int offset = 0;
+                    offset < inline.ContentEnd.Offset - inline.ContentStart.Offset;
+                    offset++)
+                {
+                    var currRight =
+                        inline.ContentStart.GetPositionAtOffset(offset, LogicalDirection.Forward)
+                            .GetCharacterRect(LogicalDirection.Forward)
+                            .Right;
+                    if (currRight > rightMost)
+                    {
+                        rightMost = currRight;
+                    }
+                }
+
+                return rightMost;
             }
         }
     }
