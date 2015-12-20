@@ -36,3 +36,8 @@ This client is under heavy development and it's very far from being complete. Pu
 
 ## Compiling
 You'll need [libtox.dll](https://build.tox.chat/view/libtoxcore/job/libtoxcore_build_windows_x86_shared_release/). (It's in the 'bin' folder of the zip.) You have to copy it to the 'libs' folder of OneTox. Of course we plan to add this dependency to NuGet later.
+
+## Contact
+Are you interested in the progress of development of OneTox? Do you have any questions about or comments on the project? Then don't be shy: join us on freenode!
+
+[![Visit our IRC channel](https://kiwiirc.com/buttons/irc.freenode.net/tox-windows.png)](https://kiwiirc.com/client/irc.freenode.net/#tox-windows)
