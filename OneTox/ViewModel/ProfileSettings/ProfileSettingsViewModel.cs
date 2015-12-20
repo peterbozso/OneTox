@@ -142,6 +142,7 @@ namespace OneTox.ViewModel.ProfileSettings
             var dataPackage = new DataPackage {RequestedOperation = DataPackageOperation.Copy};
             dataPackage.SetText(TextId.ToString());
             Clipboard.SetContent(dataPackage);
+            Clipboard.Flush();
         }
 
         private void RefreshQrCodeId()
